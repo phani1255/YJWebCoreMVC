@@ -1,0 +1,223 @@
+﻿<!--
+ Hemanth 08/30/2024 created new form
+ Hemanth 08/31/2024 removed unnessasary calls and show common details from helper
+ Hemanth 09/24/2024 Drop downs design changed
+ Hemanth 10/10/2024 Alignment class added for total in summery
+ Hemanth 01/01/2025 changes added
+ Hemanth 02/10/2024 fix for print and pdf issues for mtd report
+ Hemanth 03/20/2024 common methods used for print prview,xl and pdf options
+-->
+@{
+
+    if (Session["UserID"] == null)
+    {
+        Layout = null;
+        Response.Redirect("~/Login/Index");
+    }
+    else
+    {
+        Layout = null;
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    ViewBag.Title = "MTD REPORT ";
+}
+
+<div id="content-center" class="row">
+
+    <div class="web-form page login-page col-sm-12">
+
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            From Date
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtFromDate" class="form-control activateFormRefreshBtn" style="font-size:13px;" value="@ViewBag.fromDate" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            To Date
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtToDate" class="form-control activateFormRefreshBtn" style="font-size:13px;" value="@ViewBag.toDate" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-right">
+
+                    <input type="checkbox" id="cbFillFromToDates" /> <span>All Dates</span>
+                    <input type="button" value="Last Month" class="formsGlobalUniqueBtn btnGetLastMonthDates" />
+                    <input type="button" value="Last Week" class="formsGlobalUniqueBtn btnGetLastWeekDates" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <div>
+                        <input type="checkbox" name="ChkIncludePartialSpecPayment" id="ChkIncludePartialSpecPayment" class="activateFormRefreshBtn" checked="checked" />&nbsp;Include Partial Spec. payment.
+                    </div>
+                </div>
+                <div class="col-md-3">
+
+                </div>
+                <div class="col-md-4 text-right">
+                    <input type="button" value="Reset" class="formsGlobalUniqueBtn btnResetFormValues" id="resetFormValues" />
+                    <input type="button" id="btnFormResultsSearch" value="Refresh" class="refresh_btn refreshBtnDefault" />
+
+                </div>
+            </div>
+
+
+            <div id="divImages" style="text-align:right;" class="col-lg-2">
+                <img id="image" src="" alt="" style="max-width: 133% !important;" />
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="mt-4 white-box pos-rel" id="divDataTableReport">
+        @{
+
+            if (ViewBag.htmlResults != null)
+            {
+                <div class="row col-md-6 report_buttons">
+
+                    <div style="margin:3px;">
+                        <input type="button" value="PDF" table-id="dataTableForStoreTotalSales" class="formsGlobalUniqueBtn" id="btnPDF1" onclick="pdfNormalHtml('printDivContent')" />
+                    </div>
+                    <div style="margin:3px;">
+                        <input type="button" value="Excel" table-id="dataTableForStoreTotalSales" class="formsGlobalUniqueBtn" onclick="excelFromNormalDivTable('printDivContent')" />
+                    </div>
+                    <div style="margin:3px;">
+                        <input type="button" value="Preview" table-id="dataTableForStoreTotalSales" id="btnDataTablePreview1" class="formsGlobalUniqueBtn" onclick="previewNormalContent('printDivContent')" />
+                    </div>
+                    <div style="margin:3px;">
+                        <input type="button" value="Print" table-id="dataTableForStoreTotalSales" id="printData" onclick="printNormalContent('printDivContent')" class="formsGlobalUniqueBtn" />
+                    </div>
+                    <div style="margin:3px;display:none;">
+                        <input type="button" value="Email" table-id="dataTableForStoreTotalSales" class="formsGlobalUniqueBtn" />
+                    </div>
+
+                    <div style="margin:3px;display:none;">
+                        <input type="button" value="Simple Excel" class="formsGlobalUniqueBtn" />
+                    </div>
+                </div>
+                <div><br /></div>
+                <div class="row printContent" id="printContent" style="font-size: 12px;">
+                    <div class="col-md-12">
+                        <div style="padding-top:40px; padding-left:20px;" class="printDivContent" id="printDivContent">
+                            @{
+                                if (ViewBag.htmlResults != null)
+                                {
+
+                                    @Html.Raw(@ViewBag.htmlResults)
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+<div class="printableLabels" style="display:none;"></div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#resetFormValues').on("click", function (e) {
+
+            var date1 = new Date();
+            var y = date1.getFullYear();
+            //alert(y);
+            date1.setDate(0); // date1 now contains the last day of the previous month.
+            var lastmonth = date1.getMonth();
+            lastmonth = ('0' + lastmonth).slice(-1);
+            var fromDate = y + "-0"+ lastmonth + "-01";
+            var toDate = y + "-0"+ lastmonth + "-" + date1.getDate();
+
+            $('#txtFromDate').val(fromDate);
+            $('#txtToDate').val(toDate);
+            $("#ChkIncludePartialSpecPayment").prop("checked", true);
+
+        });
+
+        $('#ChkIncludePartialSpecPayment').change(function () {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+
+        
+
+        $('#txtFromDate').val("@ViewBag.fromDate");
+        $('#txtToDate').val("@ViewBag.toDate");
+    });
+
+    function buttonStyleClassChange(btnId) {
+        $('#' + btnId).removeClass('refreshBtnDefault').addClass('needToRefreshBtn');
+        $('#' + btnId).val("Refresh *");
+    }
+
+    function existAutoFilledData() {
+
+        if ($('#txtFromDate').val() != "")
+            fromdate = $('#txtFromDate').val();
+        else
+            fromdate = "1990-01-01";
+
+        if ($('#txtToDate').val() != "")
+            todate = $('#txtToDate').val();
+        else
+            todate = "2099-12-31";
+
+
+
+        var ChkIncludePartialSpecPayment = ($('#ChkIncludePartialSpecPayment').prop('checked')) ? true : false;
+
+        var url = '@Url.Action("GetMTDReportDetails", "ListOfItemsSold", new { Area = "" })';
+        var url1 = 'GetMTDReportDetails?FROMDATE=' + fromdate + "&DateTo=" + todate + "&IncParialPay=" + ChkIncludePartialSpecPayment;
+        window.location = url1;
+        return false;
+
+     }
+
+    function previewNormalContent(divclass) {
+        previewNormalHtmlTable(divclass);
+
+    }
+    function printNormalContent(divclass) {
+        printNormalHtmlTable(divclass);
+        $(".closeModal").click();
+    }
+
+     function pdfNormalHtml(divclass) {
+         pdfNormalHtmlDiv(divclass);
+     }
+
+    function formatCurrency(total) {
+        var neg = false;
+        if (total < 0) {
+            neg = true;
+            total = Math.abs(total);
+        }
+        return (neg ? "-" : '') + parseFloat(total, 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString();
+    }
+
+</script>
+<style>
+
+    .table tbody tr td {
+        text-align: left !important;
+        border: 1px solid #ddd;
+    }
+
+    table td {
+        line-height: initial;
+        padding: 5px 5px;
+        border: 1px solid #ddd;
+    }
+</style>

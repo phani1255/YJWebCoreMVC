@@ -1,0 +1,65 @@
+﻿<!-- 04/21/2025 added by hemanth for print jobbag-->
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- link css  -->
+    <link rel="stylesheet" href="~/Styles/style.css">
+
+    <link rel="stylesheet" href="~/Styles/font-awesome.min.css">
+    <link rel="stylesheet" href="~/Styles/themify-icons.css">
+    <link rel="stylesheet" href="~/Styles/line-icons.css">
+    <link rel="stylesheet" href="~/Styles/bootstrap.min.css">
+    <link rel="stylesheet" href="~/Styles/animate.min.css">
+    <link rel="stylesheet" href="~/Styles/owl.carousel.css">
+    <link rel="stylesheet" href="~/Styles/perfect-scrollbar.min.css">
+
+    <link rel="stylesheet" href="~/Styles/color.css">
+    <link rel="stylesheet" href="~/Styles/responsive.css">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script src="~/Scripts/jquery.js"></script>
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/perfect-scrollbar.jquery.min.js"></script>
+    <script src="~/Scripts/owl.carousel.min.js"></script>
+    <script src="~/Scripts/custom.js"></script>
+    <script src="~/Scripts/custom-new.js"></script>
+
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.2.2/css/buttons.dataTables.min.css" />
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.3.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.0/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.14/jspdf.plugin.autotable.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap-typeahead.js"></script>
+</head>
+<body style="background-color:#fff;">
+    <div class="container-fluid" style="width: 100%; background-color: #fff;">
+        @Html.Raw(@ViewBag.htmlResults)
+    </div>
+
+    <style>
+        table td {
+            padding: 4px !important;
+        }
+
+        .ta td {
+            border: 1px solid #000;
+            padding: 4px !important;
+        }
+    </style>
+</body>
+
+</html>

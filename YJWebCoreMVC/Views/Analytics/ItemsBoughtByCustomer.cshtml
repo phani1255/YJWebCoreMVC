@@ -1,0 +1,1605 @@
+﻿<!--
+  * Created by Manoj 14-OCT-2025
+  * Manoj 10/22/2025 Fixed layout and  redirect issues
+  * Manoj 10/24/2025 Input Values and  Data table issues
+  * Manoj 10/27/2025 Input Values
+  * Manoj 11/06/2025 Added SendSMS alert
+-->
+@{
+    var getMessages = ViewBag.GetMessages as System.Data.DataTable;
+
+}
+
+@{
+
+    var isCustCode = "";
+    var DisableLayout = false;
+
+
+    if (Session["UserID"] == null)
+    {
+        Layout = null;
+        Response.Redirect("~/Login/Index");
+    }
+    else
+    {
+        ViewBag.Title = "List Of Items Bought By Customer";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+        isCustCode = ViewBag.isCustomer;
+        DisableLayout = ViewBag.DisableLayout;
+    }
+}
+@model YJWeb.Controllers.CustomerModel
+
+<h4 class="text-center heading mt-1">Items Bought By Customer</h4>
+<div id="content-center" class="row">
+    <div class="web-form page login-page col-md-9 mr-1" id="FormForItemsBoughtByCustomer" style="min-width: 83%; overflow:hidden">
+        <div class="form-horizontal">
+            <div class="row">
+                <input class="hidden" value="@DisableLayout.ToString().ToLower()" id="DisableLayout" />
+                <input class="hidden" value="@isCustCode" id="customerCode" />
+                <div class="col-md-4">
+                    <div id="customerFilterContainer">
+                        <div class="row">
+                            <label class="col-md-3 mt-1" style="font-size:13px !important; font-weight:500; text-align:start;">
+                                Customer Code
+                            </label>
+                            <div class="col-md-7">
+                                <div class="autocomplete-dropdown">
+                                    <div id="CustomerCodesForAutofill" class="d-none">@Html.Raw(Json.Encode(Model.CustomerCodes)) </div>
+                                    <input type="text" id="txtCustomerCode" class="form-control activateFormRefreshBtn" autocomplete="off" placeholder="Search..." />
+                                    <div id="autocomplete-list1" class="autocomplete-items"></div>
+                                </div>
+                                <div class="customerCodeSearchDiv">
+                                    <button class="formsGlobalUniqueBtn customerCodeSearchBtn1 showbsmodal activateFormRefreshBtn text-center" data-modal-id="selectCustomerAccModal" data-bs-toggle="modal" data-bs-target="#selectCustomerAccModal"><span class="navbar-toggler-icon"></span></button>
+                                </div>
+                            </div>
+                            <div class="col-md-2 mt-2">
+                                <input type="checkbox" id="cbFillCustomerNo" checked /> <span style="font-size:11px !important; font-weight:700; text-align:start;">All</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-2 small-date-container">
+                        <div id="allDatesContainer" class="row">
+                            <div class="row mb-1">
+                                <label id="DateFrm" class="col-sm-6 col-form-label-sm text-end">
+                                    From Date
+                                </label>
+                                <div class="col-sm-5">
+                                    <input type="date" id="txtFromDate1" class="form-control form-control-sm fs-13 resetFromDate activateFormRefreshBtn" />
+                                </div>
+                            </div>
+                            <div class="row mb-1">
+                                <label id="DateTo" class="col-sm-6 col-form-label-sm text-end">
+                                    To Date
+                                </label>
+                                <div class="col-sm-5">
+                                    <input type="date" id="txtToDate1" class="form-control form-control-sm fs-13 resetToDate activateFormRefreshBtn" />
+                                </div>
+                            </div>
+                            <div class="row mt-1 ml-1">
+                                <div class="col-sm-12 text-right">
+                                    <input type="checkbox" id="cbFillFromToDates" checked />
+                                    <span class="fs-13">All Dates</span>
+                                    <input type="button" value="Last Month" class="btn btn-xs formsGlobalUniqueBtn btnGetLastMonthDates" />
+                                    <input type="button" value="Last Week" class="btn btn-xs formsGlobalUniqueBtn btnGetLastWeekDates" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <div class="d-flex flex-row justify-content-between">
+                            <div class="mr-2">
+                                <label for="fromStyle" class="lable-style" style="font-size:13px !important;  text-align:start;">Styles Starting With</label>
+                                <input type="text" class="form-control" style="width: 160px; height: 28px; font-size: 13px;" id="fromStyle" />
+                            </div>
+
+                            <div class="mr-2">
+                                <label class="lable-style" for="vendorStyleTxt" style="font-size:13px !important; text-align:start;">Vendor Style #</label>
+                                <input type="text" class="form-control" id="vendorStyleTxt" style="width: 160px; height: 28px; font-size: 13px;" />
+                            </div>
+                        </div>
+                        <div class="mr-2">
+                            <label class="lable-style" for="isDescIncludeTxt" style="font-size:13px !important;  text-align:start;">Description Includes</label>
+                            <input type="text" class="form-control" style="height: 28px; font-size: 13px;" id="isDescIncludeTxt" />
+                        </div>
+                    </div>
+                    <div class="ml-2">
+                        <div class="row">
+                            <div class="me-1">
+                                <label style="font-size:12px !important;" for="totalPusrchasefrm">Total Purchase From</label>
+                                <input type="text" id="totalPusrchasefrm" value="0.00" style="width: 120px; height: 28px; font-size: 13px; border: 1px solid #ced4da; border-radius: .25rem;" class="activateFormRefreshBtn form-control-sm decimalVal" autocomplete="off" />
+                            </div>
+                            <div class="me-1 ml-1">
+                                <label style="font-size:12px !important;  text-align:start;" for="totalPusrchasethru">Thru</label>
+                                <input type="text" id="totalPusrchasethru" value="0.00" style="width: 120px; height: 28px; font-size: 13px; border: 1px solid #ced4da; border-radius: .25rem;" class="activateFormRefreshBtn form-control-sm decimalVal" autocomplete="off" />
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div>
+                        <div class="row">
+                            <label class="col-sm-3 mt-1" style="font-size:13px !important;  text-align:start;">
+                                Store
+                            </label>
+                            <div class="col-sm-6">
+                                @Html.DropDownListFor(x => x.AllStores, Model.AllStores, new { @class = "form-control resetSelectField activateFormRefreshBtn", @id = "ddlStoreList" })
+
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="form-check mt-1 mb-0">
+                                    <input type="checkbox" id="ddlStoreAll" class="form-check-input" checked />
+                                    <label for="ddlStoreAll" class="form-check-label" style="font-size:11px !important; font-weight:700; text-align:start;">All</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="row">
+                            <label class="col-sm-3 mt-1" style="font-size:13px !important;  text-align:start;">
+                                Metal
+                            </label>
+                            <div class="col-sm-6">
+                                @Html.DropDownListFor(x => x.MetalTypes, Model.MetalTypes, new { @class = "form-control resetSelectField activateFormRefreshBtn", @id = "ddlMetalsList" })
+
+                            </div>
+                            <div class="col-sm-2 ">
+                                <div class="form-check mt-1 mb-0">
+                                    <input type="checkbox" id="ddlMetalsAll" class="form-check-input" checked />
+                                    <label for="ddlMetalsAll" class="form-check-label" style="font-size:11px !important; font-weight:700; text-align:start;">All</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="row">
+                            <label class="col-sm-3 mt-1" style="font-size:13px !important; text-align:start;">
+                                Salesman
+                            </label>
+                            <div class="col-sm-6 pe-0" style="min-width:55%">
+                                @Html.DropDownListFor(x => x.AllSalesManList, Model.AllSalesManList, new { @class = "form-control resetSelectField activateFormRefreshBtn", @id = "ddlSalesrepList" })
+
+                            </div>
+                            <div class="col-sm-2 ps-1">
+                                <div class="form-check mt-1 mb-0">
+                                    <input type="checkbox" id="ddlSalesrepAll" class="form-check-input" checked />
+                                    <label for="ddlSalesrepAll" class="form-check-label" style="font-size:11px !important; font-weight:700; text-align:start;">All</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <div class="p-2" style="border: 2px groove; border-radius: 5px; position: relative;">
+                            <p class="report-title">Exculde Customers With Bank</p>
+                            <div class="form-check mr-2">
+                                <input type="checkbox" class="form-check-input activateFormRefreshBtn" id="isZipCodeCheck" />
+                                <label for="isZipCodeCheck" class="form-check-label" style="font-size:13px !important; ">Zip Code</label>
+                            </div>
+                            <div class="form-check mr-2">
+                                <input type="checkbox" class="form-check-input activateFormRefreshBtn" id="isPhoneNoCheck" />
+                                <label for="isPhoneNoCheck" class="form-check-label" style="font-size:13px !important;">Phone #</label>
+                            </div>
+
+                            <div class="form-check mr-2">
+                                <input type="checkbox" class="form-check-input activateFormRefreshBtn" id="ExculdeEmail" />
+                                <label for="ExculdeEmail" class="form-check-label" style="font-size:13px !important;">Email</label>
+                            </div>
+                        </div>
+                        <div class="form-check mr-2 mt-4">
+                            <input type="checkbox" class="form-check-input activateFormRefreshBtn" id="isCustInfoCheck" checked />
+                            <label for="isCustInfoCheck" class="form-check-label" style="font-size:13px !important; ">Customers Info Only</label>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-sm-4">
+                    <div>
+                        <div class="row">
+                            <label class="col-sm-3 mt-1" style="font-size:13px !important; text-align:start;">
+                                Category
+                            </label>
+                            <div class="col-sm-6">
+                                @Html.DropDownListFor(x => x.Categories, Model.Categories, new { @class = "form-control resetSelectField activateFormRefreshBtn", @id = "ddlCategory" })
+
+                            </div>
+
+                            <div class="col-sm-2 ps-1 me-1">
+                                <div class="form-check mt-1 mb-0">
+                                    <input type="checkbox" id="ddlCategoryAll" class="form-check-input" checked />
+                                    <label for="ddlCategoryAll" class="form-check-label" style="font-size:11px !important; font-weight:700; text-align:start;">All</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="row">
+                            <label class="col-sm-3 mt-1" style="font-size:13px !important;  text-align:start;">
+                                Sub Category
+                            </label>
+                            <div class="col-sm-6 ">
+                                @Html.DropDownListFor(x => x.SubCategories, Model.SubCategories, new { @class = "form-control resetSelectField activateFormRefreshBtn", @id = "ddlSubCategory" })
+                            </div>
+
+                            <div class="col-sm-2 ps-1 me-1">
+                                <div class="form-check mt-1 mb-0">
+                                    <input type="checkbox" id="ddlSubCategoryAll" class="form-check-input" checked />
+                                    <label for="ddlSubCategoryAll" class="form-check-label" style="font-size:11px !important; font-weight:700; text-align:start;">All</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="row">
+                            <label class="col-sm-3 mt-1" style="font-size:13px !important;  text-align:start;">
+                                Brand
+                            </label>
+                            <div class="col-sm-6">
+                                @Html.DropDownListFor(x => x.Brands, Model.Brands, new { @class = "form-control resetSelectField activateFormRefreshBtn", @id = "ddlBrandList" })
+
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="form-check mt-1 mb-0">
+                                    <input type="checkbox" id="ddlBrandAll" class="form-check-input" checked />
+                                    <label for="ddlBrandAll" class="form-check-label" style="font-size:11px !important; font-weight:700; text-align:start;">All</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="row">
+                            <label class="col-sm-3 mt-1" style="font-size:13px !important;  text-align:start;">
+                                Sub Brand
+                            </label>
+                            <div class="col-sm-6">
+                                @Html.DropDownListFor(x => x.subBrand, Model.subBrand, new { @class = "form-control resetSelectField activateFormRefreshBtn", @id = "ddlSubBrandList" })
+
+                            </div>
+
+                            <div class="col-sm-2 ps-1 me-2">
+                                <div class="form-check mt-1 mb-0">
+                                    <input type="checkbox" id="ddlSubBrandAll" class="form-check-input" checked />
+                                    <label for="ddlSubBrandAll" class="form-check-label" style="font-size:11px !important; font-weight:700; text-align:start;">All</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="row">
+                            <label class="col-sm-3 mt-1" style="font-size:13px !important;  text-align:start;">
+                                Group
+                            </label>
+                            <div class="col-sm-6">
+                                @Html.DropDownListFor(x => x.Groups, Model.Groups, new { @class = "form-control resetSelectField activateFormRefreshBtn", @id = "ddlGroupList" })
+
+                            </div>
+
+                            <div class="col-sm-2 ps-1 me-2">
+                                <div class="form-check mt-1 mb-0">
+                                    <input type="checkbox" id="ddlGroupAll" class="form-check-input" checked />
+                                    <label for="ddlGroupAll" class="form-check-label" style="font-size:11px !important; font-weight:700; text-align:start;">All</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <div class="col-sm-3  text-right mt-1">
+                            <input type="button" id="btnFormResultsSearch" value="Refresh" class="refresh_btn btn-xs refreshBtnDefault" />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+    <div class="col-md-2 web-form page login-page d-flex align-items-start justify-content-center" style="max-width: 100%; overflow: hidden">
+        <img class=" mt-2 img-fluid" id="styleImage" src="https://wjewel.dnsalias.org/styleimages/img_unavailable.jpg" style="max-width:180px; max-height:120px" alt="Style Image" />
+    </div>
+
+    <div class="mt-4 white-box pos-rel" id="divDataTableReport">
+
+        <div class="row col-md-6 report_buttons">
+            <div style="margin:3px;">
+                <input type="button" value="PDF" table-id="dataTableForItemsBoughtByCustomer" class="formsGlobalUniqueBtn ItemsBoughtTOCusbtnDataTableDownloadPDF" id="btnPDF" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Excel" table-id="dataTableForItemsBoughtByCustomer" class="formsGlobalUniqueBtn ItemsBoughtTOCusbtnDataTableDownloadExcel" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Preview" table-id="dataTableForItemsBoughtByCustomer" id="ItemsBoughtTOCusbtnDataTablePreview" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Print" table-id="dataTableForItemsBoughtByCustomer" id="ItemsBoughtTOCusBtnDataTablePrint" class="formsGlobalUniqueBtn" report-format="portrait" table-count="1" />
+            </div>
+        </div>
+        <div class="row dataTableReport">
+
+            <table id="dataTableForItemsBoughtByCustomer" class="dataTable display nowrap table" style="width:100%">
+                <thead>
+                    <tr>
+
+                        <th>Customer Name</th>
+                        <th>ADDR 1</th>
+                        <th>ADDR 2</th>
+                        <th>CITY</th>
+                        <th>STATE</th>
+                        <th>ZIP</th>
+                        <th>COUNTRY</th>
+                        <th>CUSTOMER CODE</th>
+                        <th>TEL</th>
+                        <th>DATE</th>
+                        <th>EMAIL</th>
+                        <th>VENDOR STYLES</th>
+                        <th>SALESMAN</th>
+                        <th><input type="checkbox" id="selectAllSms" class="form-check" /> SMS</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+
+            </table>
+            <br>
+
+        </div>
+    </div>
+
+    <div class="mt-4 white-box pos-rel" id="divDataTableReportForOccuasion">
+
+        <div class="row col-md-6 report_buttons">
+            <div style="margin:3px;">
+                <input type="button" value="PDF" table-id="dataTableForItemsBoughtByCustomerInfo" class="formsGlobalUniqueBtn temsBoughtByCustomerInfobtnDataTableDownloadPDF" id="btnPDF" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Excel" table-id="dataTableForItemsBoughtByCustomerInfo" class="formsGlobalUniqueBtn ItemsBoughtByCustomerInfobtnDataTableDownloadExcel" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Preview" table-id="dataTableForItemsBoughtByCustomerInfo" id="ItemsBoughtByCustomerInfobtnDataTablePreview" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Print" table-id="dataTableForItemsBoughtByCustomerInfo" id="ItemsBoughtByCustomerInfoBtnDataTablePrint" class="formsGlobalUniqueBtn" report-format="portrait" table-count="1" />
+            </div>
+        </div>
+        <div class="row dataTableReport">
+
+            <table id="dataTableForItemsBoughtByCustomerInfo" class="dataTable display nowrap table" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Purchase Date</th>
+                        <th>Invoice #</th>
+                        <th>Style</th>
+                        <th>Desc</th>
+                        <th>Vendor</th>
+                        <th>Customer Code</th>
+                        <th>First/Last Name</th>
+                        <th>Address</th>
+                        <th>City</th>
+                        <th>Sate</th>
+                        <th>Zip</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>VENDOR STYLES</th>
+                        <th>SALESMAN</th>
+                        <th><input type="checkbox" id="selectAllSms" class="form-check" /> SMS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+
+            </table>
+            <br>
+
+        </div>
+    </div>
+
+    <div class="mt-4 mb-3 white-box" style="width:100%">
+        <div class="row">
+            <div class="col-sm-7">
+                <h6 class="msgBoxHeading">Double Click on Any Message To Use</h6>
+                <div class="mt-2 white-box pos-rel" id="divDataTableReportSMSContent">
+                    <div class="row dataTableReport">
+                        <table id="dataTableForItemsBoughtByCustomerContent" style="overflow:auto !important; " class="dataTable display nowrap table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Message</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (getMessages != null && getMessages.Rows.Count > 0)
+                                {
+                                    foreach (System.Data.DataRow row in getMessages.Rows)
+                                    {
+                                        <tr>
+                                            <td>@row["NAME"]</td>
+                                            <td>@row["Message"]</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+
+                        </table>
+                        <br>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-5">
+                <h6 class="msgBoxHeading">Send Message</h6>
+                <div class="form-floating">
+                    <textarea class="form-control" placeholder="Enter Text Here!" id="smsMsgTextArea" style="height: 100px"></textarea>
+                </div>
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-6 justify-content-end">
+                            <div class="row">
+                                <input type="button" id="SendSMS" value="Send To All" class="btn btn-success ml-3" />
+                                <input type="button" id="BtnClose" value="Close" class="btn btn-danger  ml-3" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div id="pdfReportHeadingText"></div>
+
+
+
+</div>
+
+<div id="confirmModal2" class="modal" tabindex="-1" style="display: none; position: fixed; z-index: 1050; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4);">
+    <div style="background: white; margin: 10% auto; padding: 20px; width: 400px; border-radius: 6px; text-align: center;">
+        <p id="confirmMessage"></p>
+        <div style="margin-top: 20px;">
+            <button id="btnConfirmYes" class="btn btn-primary">Yes</button>
+            <button id="btnConfirmNo" class="btn btn-secondary">No</button>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    var lastMonthDate = "", todayDate = ""
+    var printPreviewLableList;
+    var filtertable;
+    var Flag = false;
+
+    function ClearControls() {
+        $('#ddlStateList').val('').change();
+        $('#ddlEMainventsList').val('').change();
+        $('#ddlPurchaseStoreAll').val('').change();
+        $('#ddlCountryList').val('').change();
+        $('#ddlMetalsList').val('').change();
+        $('#ddlSalesrepList').val('').change();
+        $('#ddlStoreList').val('').change();
+
+        existAutoFilledData();
+
+    }
+    function existAutoFilledData() {
+        if ($('#customerCode').val() != "")
+            accCode = $('#customerCode').val();
+         else
+            accCode = "";
+
+        if ($('#txtCustomerCode').val() != "")
+            CustomerCode = $('#txtCustomerCode').val();
+        else
+            CustomerCode = "";
+
+
+        if ($('#ddlSalesrepAll').prop('checked')) {
+
+            _stSalesman = "";
+
+        } else {
+            //_stSalesman = $('#ddlSalesrepList option:selected').val();
+            _stSalesman = ($('#ddlSalesrepList option:selected').val() != "All" && $('#ddlSalesrepList option:selected').val() != null)
+                ? $('#ddlSalesrepList option:selected').val() : "";
+        }
+
+        if ($('#ddlStoreAll').prop('checked')) {
+
+            _strstore = "";
+        }else {
+           // _strstore = $('#ddlStoreList option:selected').val();
+            _strstore = ($('#ddlStoreList option:selected').val() != "All" && $('#ddlStoreList option:selected').val() != null)
+                ? $('#ddlStoreList option:selected').val() : "";
+        }
+
+
+        if ($('#ddlCategoryAll').prop('checked')) {
+
+            _strCateg = "";
+        }else {
+
+            //_strCateg = $('#ddlCategory option:selected').val();
+            _strCateg = ($('#ddlCategory option:selected').val() != "All" && $('#ddlCategory option:selected').val() != null)
+                ? $('#ddlCategory option:selected').val() : "";
+        }
+
+        if ($('#ddlSubCategoryAll').prop('checked')) {
+
+            _strSubCateg = "";
+        } else {
+
+            //_strSubCateg = $('#ddlSubCategory option:selected').val();
+            _strSubCateg = ($('#ddlSubCategory option:selected').val() != "All" && $('#ddlSubCategory option:selected').val() != null)
+                ? $('#ddlSubCategory option:selected').val() : "";
+        }
+
+        if ($('#ddlBrandAll').prop('checked')) {
+
+            _strbrand1 = "";
+
+        } else {
+
+            //_strbrand1 = $('#ddlBrandList option:selected').val();
+            _strbrand1 = ($('#ddlBrandList option:selected').val() != "All" && $('#ddlBrandList option:selected').val() != null)
+                ? $('#ddlBrandList option:selected').val() : "";
+
+        }
+
+        if ($('#ddlSubBrandAll').prop('checked')) {
+
+            _strSubbrand1 = "";
+
+        }else {
+            //_strSubbrand1 = $('#ddlSubBrandList option:selected').val();
+            _strSubbrand1 = ($('#ddlSubBrandList option:selected').val() != "All" && $('#ddlSubBrandList option:selected').val() != null)
+                ? $('#ddlSubBrandList option:selected').val() : "";
+        }
+
+
+        if ($('#ddlGroupAll').prop('checked')) {
+
+            _strGroup1 = "";
+        }else {
+            _strGroup1 = ($('#ddlGroupList option:selected').val() != "All" && $('#ddlGroupList option:selected').val() != null)
+                ? $('#ddlGroupList option:selected').val() : "";
+
+        }
+
+
+        if ($('#ddlMetalsAll').prop('checked')) {
+            metal = "";
+        }
+        else {
+            //metal = $('#ddlMetalsList option:selected').val();
+            if ($('#ddlMetalsList option:selected').val() != "All" || $('#ddlMetalsList option:selected').val() != null) {
+                metal = $('#ddlMetalsList option:selected').val();
+             } else {
+                metal = "";
+
+             }
+        }
+
+
+
+
+        if ($('#fromStyle').val() !== "") {
+            _fromStyle = $('#fromStyle').val();
+        } else {
+            _fromStyle = "";
+        }
+        if ($('#vendorStyleTxt').val() !== "") {
+            vendorStyle = $('#vendorStyleTxt').val();
+        } else {
+            vendorStyle = "";
+        }
+        if ($('#isDescIncludeTxt').val() !== "") {
+            _isDescIncludeTxt = $('#isDescIncludeTxt').val();
+        } else {
+            _isDescIncludeTxt = "";
+        }
+
+        if ($('#totalPusrchasefrm').val() !== "") {
+            TotalPurchasefrom = $('#totalPusrchasefrm').val();
+        } else {
+            TotalPurchasefrom = 0;
+        }
+        if ($('#totalPusrchasethru').val() !== "") {
+             TotalPurchaseto = $('#totalPusrchasethru').val();
+        } else {
+            TotalPurchaseto = 0;
+        }
+
+        if ($('#txtFromDate1').val() != "")
+            fromDate1 = $('#txtFromDate1').val();
+        else
+            fromDate1 = "1990-01-01";
+
+        if ($('#txtToDate1').val() != "")
+            toDate1 = $('#txtToDate1').val();
+        else
+            toDate1 = "2099-12-31";
+
+        if ($('#isZipCodeCheck').prop('checked')) {
+            isZipCheck = true;
+        } else {
+            isZipCheck = false;
+        }
+
+        if ($('#isPhoneNoCheck').prop('checked')) {
+            isPhoneCheck = true;
+        } else {
+            isPhoneCheck = false;
+        }
+        if ($('#ExculdeEmail').prop('checked')) {
+            isEmailCheck   = true;
+        } else {
+            isEmailCheck = false;
+        }
+        if ($('#isCustInfoCheck').prop('checked')) {
+            isCustomerInfoCheck = true;
+        } else {
+            isCustomerInfoCheck = false;
+        }
+
+        BindBagsGivenToPerson(CustomerCode, metal, _stSalesman, _strstore,  _strCateg, _strSubCateg, _strbrand1, _strSubbrand1, _strGroup1,
+            _fromStyle, vendorStyle, _isDescIncludeTxt, TotalPurchasefrom, TotalPurchaseto,  fromDate1, toDate1, isZipCheck,
+            isPhoneCheck, isEmailCheck, isCustomerInfoCheck, accCode);
+    }
+
+    function getCheckbox(val) {
+        return '<div style="text-align:start;">' +
+                '<input type="checkbox" ' + (val ? 'checked ' : '') + 'onclick="return false;" />' +
+            '</div>';
+    }
+
+    function formatUSTel(tel) {
+        if (!tel || tel === "0" || tel === 0) return "";
+        let cleaned = ('' + tel).replace(/\D/g, '');
+        let match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+        if (match) {
+            return '(' + match[1] + ')-' + match[2] + ' ' + match[3];
+        }
+        return tel;
+    }
+
+    function BindBagsGivenToPerson(CustomerCode, metal, _stSalesman, _strstore, _strCateg, _strSubCateg, _strbrand1, _strSubbrand1, _strGroup1,
+        _fromStyle, vendorStyle, _isDescIncludeTxt, TotalPurchasefrom, TotalPurchaseto, fromDate1, toDate1, isZipCheck,
+        isPhoneCheck, isEmailCheck, isCustomerInfoCheck, accCode) {
+
+        if (parseFloat(TotalPurchasefrom) > parseFloat(TotalPurchaseto)) {
+            return alert("Invalid Total Purchase Range");
+        }
+
+        var url = '@Url.Action("GetListOfAllCustomerPurchase", "Sales", new { Area = "" })';
+
+
+        /*string ccode, string fdate, string tdate, string ct, string subct, string metalval,
+            string brandval, string subbrand, string group, string fromstyle, string tostyle,
+            decimal purchasefrom, decimal purchaseto, string store, string vendorstyle,
+            bool Excludezip, bool ExcludePhone, bool ExcludeMail, string DescInclude,
+            string Salesman = "", bool Cust_info = false, string strAcc = ""*/
+
+        var isCustcheckFlag = Flag ? false : isCustomerInfoCheck;
+
+        var data = {
+            ccode: CustomerCode,
+            fdate: fromDate1,
+            tdate: toDate1,
+            ct: _strCateg,
+            subct: _strSubCateg,
+            metalval: metal,
+            brandval: _strbrand1,
+            subbrand: _strSubbrand1,
+            group: _strGroup1,
+            fromStyle: _fromStyle,
+            tostyle: "",
+            purchasefrom: TotalPurchasefrom,
+            purchaseto: TotalPurchaseto,
+            store: _strstore,
+            vendorstyle: vendorStyle,
+            Excludezip: isZipCheck,
+            ExcludePhone: isPhoneCheck,
+            ExcludeMail: isEmailCheck,
+            DescInclude: _isDescIncludeTxt,
+            Salesman: _stSalesman,
+            Cust_info: isCustcheckFlag,
+            strAcc: accCode
+        };
+
+
+        var jqxhr = $.post(url, data, function () { })
+        .done(function (response) {
+            var json;
+            if (response instanceof Object)
+                json = response;
+
+            else
+                json = $.parseJSON(response);
+
+
+            if (json.length > 0) {
+                if (Flag == true || isCustomerInfoCheck == false) {
+                    $('#divDataTableReportForExcelData').hide();
+                    $('#divDataTableReportForOccuasion').show();
+                    $('#divDataTableReport').hide();
+                    var table4 = $('#dataTableForItemsBoughtByCustomerInfo').DataTable();
+                    table4.clear().draw();
+
+                    $("#dataTableForItemsBoughtByCustomerInfo tbody").empty();
+
+                    for (var j = 0; j < json.length; j++) {
+
+                        let InvoiceNo = (json[j].inv_no && json[j].inv_no.toString().toLowerCase() !== "null") ? json[j].inv_no : "";
+
+                        let CusCode = (json[j].Cust && json[j].Cust.toString().toLowerCase() !== "null") ? json[j].Cust : "";
+
+                        let cusCodeClass = "";
+                        let invoiceCls = "";
+                        if (!Flag && isCustomerInfoCheck === false) {
+                            cusCodeClass = "CusCodeVal";
+                            invoiceCls = "InviceNo";
+                        }
+                        table4.row.add([
+                            json[j].DATE ? json[j].DATE.split("T")[0] : "",
+                            '<div class="' + cusCodeClass + ' ' +  invoiceCls + '"  data-code="' + InvoiceNo + ' ">' + InvoiceNo + '</div>',
+                            '<div class="' + cusCodeClass + ' StyleNo2">' + (json[j].Style && json[j].Style !== "null" ? json[j].Style : "") + '</div>',
+                            '<div class="text-wrap description-col">' + (json[j].Desc && json[j].Desc !== "null" ?  json[j].Desc : "") +  '</div>',
+                            json[j].Vendor,
+                            '<div class="' + cusCodeClass + ' CusCode2">' + CusCode + '</div>',
+                            json[j].custname,
+                            json[j].Address,
+                            json[j].City,
+                            json[j].State,
+                            json[j].ZIP,
+                            formatUSTel(json[j].Phone),
+                            json[j].Email,
+                            json[j].Vnd_Style,
+                            json[j].Salesman,
+                            '<div style="text-align:start;"><input class="form-check isChecked" type="checkbox" ' + (json[j].SMS ? 'checked ' : '') + ' /></div>'
+                        ]);
+                    }
+                    table4.draw();
+
+                    if (table4.rows().count() > 0) {
+                        var styleImage = $('#dataTableForItemsBoughtByCustomerInfo tbody tr:first td').eq(2).text().trim();
+
+                          var baseUrl = '@Url.Action("GetImagesNew", "Images")';
+
+                          var body = {
+                              styleName: styleImage,
+                          }
+
+                          $.ajax({
+                              url: baseUrl,
+                              method: 'GET',
+                              data: body,
+                              success: function (result) {
+                                  if (result) {
+                                      $('#styleImage').attr("src", result[0]);
+                                  }
+                              },
+                              error: function (xhr, status, error) {
+                                  console.error("AJAX error:", status, error);
+                              }
+
+                          })
+                      }
+
+                } else {
+
+                    //divDataTableReportForOccuasion,divDataTableReport
+                    $('#divDataTableReportForOccuasion').hide();
+                    $('#divDataTableReportForExcelData').hide();
+                    $('#divDataTableReport').show();
+                   var table = $('#dataTableForItemsBoughtByCustomer').DataTable();
+                    table.clear().draw();
+
+                    $("#dataTableForItemsBoughtByCustomer tbody").empty();
+                    /*{"custname":"22","ADDR1":"address 1","ADDR2":"address 1","CITY1":"","STATE1":"","ZIP1":"","COUNTRY":"","CUST":"897662","TEL":"0","DATE":"2025-09-17T00:00:00","EMAIL":null,
+                    "IsText":1,"CELL":"","Style":"S1","vnd_Style":"S1VENDOR1FFDSFSAFSADFSAF","Salesman":"1266","SMS":false}*/
+                    for (var i = 0; i < json.length; i++) {
+
+                        let cusCode = (json[i].CUST && json[i].CUST.toString().toLowerCase() !== "null") ? json[i].CUST : "";
+                        table.row.add([
+                            json[i].custname,
+                            json[i].ADDR1,
+                            json[i].ADDR2,
+                            json[i].CITY1,
+                            json[i].STATE1,
+                            json[i].ZIP1,
+                            json[i].COUNTRY,
+                            '<div class="CusCodeVal CusCode" data-code="' + cusCode + '">' + cusCode + '</div>',
+                            formatUSTel(json[i].TEL),
+                            json[i].DATE ? json[i].DATE.split("T")[0] : "",
+                            json[i].EMAIL || "",
+                            json[i].vnd_Style || json[i].Vnd_Style || "",
+                            json[i].Salesman,
+                            '<div style="text-align:start;"><input class="form-check isChecked" type="checkbox" ' + (json[i].SMS ? 'checked ' : '') + ' /></div>',
+                            json[i].Style || json[i].STYLE || ""
+                        ]);
+                    }
+                    table.draw();
+
+                    if (table.rows().count() > 0) {
+                        table.column(14).visible(true);
+                        var styleImage = $('#dataTableForItemsBoughtByCustomer tbody tr:first td').eq(14).text().trim();
+
+
+                         var baseUrl = '@Url.Action("GetImagesNew", "Images")';
+
+                         var body = {
+                             styleName: styleImage,
+                         }
+
+                         $.ajax({
+                             url: baseUrl,
+                             method: 'GET',
+                             data: body,
+                             success: function (result) {
+                                 if (result) {
+                                     $('#styleImage').attr("src", result[0]);
+                                 }
+                             },
+                             error: function (xhr, status, error) {
+                                 console.error("AJAX error:", status, error);
+                             }
+
+                         })
+                        table.column(14).visible(false);
+                     }
+                }
+
+                filtertable = json;
+
+            } else {
+                var table = $('#dataTableForItemsBoughtByCustomer').DataTable();
+                table.clear().draw();
+                alert("No Data Found");
+            }
+
+            printPreviewLableList = json;
+        })
+        .fail(function (jqxhr, textStatus, error) {
+            var err = textStatus + ", " + error;
+            console.log("GETBagsGivenToPerson Request Failed: " + err);
+        });
+    }
+
+
+
+
+    function activateddlList(ddlId, CheckBoxId) {
+
+        if ($('#' + CheckBoxId).prop('checked')) {
+            $('#' + ddlId).prop('disabled', true);
+        } else {
+            $('#' + ddlId).prop('disabled', false);
+        }
+
+        $(document).on('change', '#' + CheckBoxId, function () {
+            if ($('#' + CheckBoxId).prop('checked')) {
+                $('#' + ddlId).prop('disabled', true);
+                $('#' + ddlId).val($('#' + ddlId + ' option:first').val());
+            } else {
+                $('#' + ddlId).prop('disabled', false);
+                $('#' + ddlId + ' option').prop('selected', false);
+            }
+        })
+    }
+
+
+
+    $(document).ready(function () {
+
+
+        var table = $('#dataTableForItemsBoughtByCustomer').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 10,
+            "aaSorting": []
+        });
+        table.column(14).visible(false);
+
+
+        var table2 = $('#dataTableForItemsBoughtByCustomerInfo').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 10,
+            "aaSorting": []
+        });
+        $('#dataTableForItemsBoughtByCustomer tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            } else {
+                table.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+
+
+        $('#dataTableForItemsBoughtByCustomerInfo tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            } else {
+                table2.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+
+
+        //dataTableForItemsBoughtByCustomerInfo
+
+        $('#divDataTableReportForOccuasion').hide();
+        $('#divDataTableReportForExcelData').hide();
+        $('#divDataTableReport').show();
+
+        //DDL List
+
+        activateddlList('ddlMetalsList', 'ddlMetalsAll')
+        activateddlList('ddlSalesrepList', 'ddlSalesrepAll')
+        activateddlList('ddlStoreList', 'ddlStoreAll')
+        activateddlList('ddlCategory', 'ddlCategoryAll')
+        activateddlList('ddlSubCategory', 'ddlSubCategoryAll')
+        activateddlList('ddlBrandList', 'ddlBrandAll')
+        activateddlList('ddlSubBrandList', 'ddlSubBrandAll')
+        activateddlList('ddlGroupList', 'ddlGroupAll')
+        //DDL END
+
+
+        if ($('#cbFillCustomerNo').prop('checked')) {
+            $('#txtCustomerCode').prop('disabled', true);
+            $('.customerCodeSearchBtn1').prop('disabled', true);
+
+        }
+
+
+
+        $(document).on('change', '#cbFillCustomerNo', function () {
+            if ($('#cbFillCustomerNo').prop('checked')) {
+                $('#txtCustomerCode').prop('disabled', true);
+                $('#txtCustomerCode').val('');
+                $('.customerCodeSearchBtn1').prop('disabled', true);
+            } else {
+                $('#txtCustomerCode').prop('disabled', false);
+                $('.customerCodeSearchBtn1').prop('disabled', false);
+            }
+        })
+        //Text sent successfully.,SendSMS
+
+        $('#SendSMS').off('click').on('click', function () {
+            alert("SMS sent successfully.")
+        })
+
+        $(document).on('input', '.decimalVal', function () {
+            let val = $(this).val();
+
+            // Allow only digits and one decimal point
+            val = val.replace(/[^0-9.]/g, '');
+            let parts = val.split('.');
+
+            // If more than one decimal, keep only first
+            if (parts.length > 2) {
+                val = parts[0] + '.' + parts[1];
+            }
+
+            // Restrict to 2 digits after decimal
+            if (parts.length === 2 && parts[1].length > 2) {
+                parts[1] = parts[1].substring(0, 2);
+                val = parts[0] + '.' + parts[1];
+            }
+
+            $(this).val(val);
+        });
+
+        $(document).on('blur', '.decimalVal', function () {
+            let num = parseFloat($(this).val());
+            if (isNaN(num)) num = 0;
+            $(this).val(num.toFixed(2)); // Format to always show 2 decimals
+        });
+
+        $('#dataTableForItemsBoughtByCustomer tbody').on('click', 'tr', function () {
+            table.column(14).visible(true);
+            var styleImage = $(this).find('td').eq(14).text().trim();
+
+             var baseUrl = '@Url.Action("GetImagesNew", "Images")';
+
+             var body = {
+                 styleName: styleImage,
+             }
+
+             $.ajax({
+                 url: baseUrl,
+                 method: 'GET',
+                 data: body,
+                 success: function (result) {
+                     if (result[0]) {
+                         $('#styleImage').attr("src", result[0]);
+                     } else {
+                         $('#styleImage').attr("src", "https://wjewel.dnsalias.org/styleimages/img_unavailable.jpg")
+                     }
+                 },
+                 error: function (xhr, status, error) {
+                     $("#styleImage").attr("src", "https://wjewel.dnsalias.org/styleimages/img_unavailable.jpg");
+                 }
+
+             })
+            table.column(14).visible(false);
+        });
+
+
+        $('#dataTableForItemsBoughtByCustomerInfo tbody').on('click', 'tr', function () {
+            var styleImage = $(this).find('td').eq(2).text().trim();
+            var baseUrl = '@Url.Action("GetImagesNew", "Images")';
+
+            var body = {
+                styleName: styleImage,
+            }
+
+            $.ajax({
+                url: baseUrl,
+                method: 'GET',
+                data: body,
+                success: function (result) {
+                    if (result[0]) {
+                        $('#styleImage').attr("src", result[0]);
+                    } else {
+                        $('#styleImage').attr("src", "https://wjewel.dnsalias.org/styleimages/img_unavailable.jpg")
+                    }
+                },
+                error: function (xhr, status, error) {
+                    $("#styleImage").attr("src", "https://wjewel.dnsalias.org/styleimages/img_unavailable.jpg");
+                }
+
+            })
+        });
+
+        //customerCode
+
+        $(document).on('click', '.CusCode', function () {
+
+            let btnColor = $('#btnFormResultsSearch').css('background-color');
+
+            if (btnColor === 'rgb(255, 247, 5)') {
+                alert('Please Click On Refresh First!');
+                return false;
+            }
+
+            let CusCodeNo = $(this).data('code');
+
+            if (CusCodeNo) {
+                const url = `/Sales/ItemsBoughtByCustomer?CusCodeNo=${encodeURIComponent(CusCodeNo)}&DisableLayout=true`;
+                window.open(url, '_blank');
+            }
+
+        })
+
+
+        if ($('#customerCode').val() != "") {
+            Flag = true;
+            $('#FormForItemsBoughtByCustomer :input, #btnFormResultsSearch').prop('disabled', true);
+            $('#btnFormResultsSearch').addClass('disabled-btn');
+            $('#smsMsgTextArea').prop('disabled', true);
+            existAutoFilledData();
+        }
+
+        $(document).on('click', '.InviceNo', function () {
+            let InvoiceVal = $(this).data('code');
+
+            if (InvoiceVal) {
+                    $.ajax({
+                        url: "/Invoice/GetInvoiceDate",
+                        type: "GET",
+                        data: { invoiceNo: InvoiceVal },
+                        success: function (res) {
+                            if (res.success) {
+                                var InvoiceUrl = "/Invoice/Index?invoiceInput=" + encodeURIComponent(InvoiceVal);
+
+                                window.open(InvoiceUrl, "_blank");
+                            } else {
+                                alert(res.message);
+                            }
+                        }
+                    });
+            }
+        })
+
+        //isCustInfoCheck
+
+        if ($('#isCustInfoCheck').prop('checked')) {
+            var data = "Dear {CUST_NAME} ({CUST_ACC})  ";
+            $('#smsMsgTextArea').val(data);
+        } else {
+            var data = "Dear {CUST_NAME} ({CUST_ACC}) ,";
+            var data2 = " Bought Item by Invoice# {INVOICE}";
+            $('#smsMsgTextArea').val(data + "\n" + data2) ;
+        }
+
+        $(document).on('change', '#isCustInfoCheck', function () {
+            if ($('#isCustInfoCheck').prop('checked')) {
+                var data = "Dear {CUST_NAME} ({CUST_ACC})  ";
+                $('#smsMsgTextArea').val(data);
+            } else {
+                var data = "Dear {CUST_NAME} ({CUST_ACC}) ,";
+                var data2 = " Bought Item by Invoice# {INVOICE}";
+                $('#smsMsgTextArea').val(data + "\n" + data2);
+            }
+        })
+
+
+        $('#dataTableForItemsBoughtByCustomerContent tbody').on('dblclick', 'tr',function () {
+            var rowData = $(this).find('td').eq(1).text().trim();
+            console.log(rowData);
+            $('#smsMsgTextArea').val(rowData);
+        })
+
+
+
+        var datatbl = $('#dataTableForItemsBoughtByCustomer').DataTable();
+
+        var selectedCount = 0;
+
+        $(document).on('change', '#selectAllSms', function () {
+            var checked = $(this).prop('checked');
+            if (checked) {
+                $('#dataTableForItemsBoughtByCustomer tbody .isChecked').prop('checked', checked);
+                selectedCount = checked ? $('#dataTableForItemsBoughtByCustomer tbody .isChecked').length : 0;
+                $('#selectSmsCount').text(selectedCount);
+            } else {
+                $('#dataTableForItemsBoughtByCustomer tbody .isChecked').prop('checked', checked);
+
+                selectedCount = checked ? $('#dataTableForItemsBoughtByCustomer tbody .isChecked').length : 0;
+
+                $('#selectSmsCount').text(selectedCount);
+            }
+
+        });
+
+        $(document).on('change', '.isChecked', function () {
+            var total = $('#dataTableForItemsBoughtByCustomer tbody .isChecked').length;
+            var checkedCount = $('#dataTableForItemsBoughtByCustomer tbody .isChecked:checked').length;
+
+            $('#selectAllSms').prop('checked', checkedCount === total);
+
+            selectedCount = checkedCount;
+
+            console.log("Selected count:", selectedCount);
+            $('#selectSmsCount').text(selectedCount);
+        });
+
+
+
+
+        $(document).on('click', '#BtnClose', function () {
+            $('#confirmMessage').html(
+                "OK to Discard the Changes and Close This Form?"
+            );
+
+            $('#confirmModal2').fadeIn();
+
+            $('#btnConfirmYes').off('click').on('click', function () {
+                $('#confirmModal2').fadeOut();
+                window.location.href = "../Home";
+            });
+
+            $('#btnConfirmNo').off('click').on('click', function () {
+                $('#confirmModal2').fadeOut();
+                console.log("User cancelled import.");
+                return;
+            });
+        })
+
+        //preview
+        $('#ItemsBoughtTOCusbtnDataTablePreview').off('click').on('click', function () {
+
+
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+            const tablesSubHeadings = $(this).attr("table-sub-headings");
+            var table = $('#' + tableid).DataTable();
+            setTimeout(function () {
+                table.column(11).visible(false);
+                table.column(12).visible(false);
+                table.column(13).visible(false);
+                table.column(7).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                previewDiv(tableid, tablesCount,tablesSubHeadings, "");
+                setTimeout(function () {
+                    table.column(11).visible(true);
+                    table.column(12).visible(true);
+                    table.column(13).visible(true);
+                    table.column(7).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+                }, 300);
+            }, 300)
+        })
+
+        //print
+        $('#ItemsBoughtTOCusBtnDataTablePrint',).off('click').on('click', function () {
+
+
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+            const tablesSubHeadings = $(this).attr("table-sub-headings");
+            var tableEl = $('#' + tableid);
+            var colCount = tableEl.find('thead tr th').length;
+            var reportFormat = (colCount > 8) ? "landscape" : "portrait";
+
+            setTimeout(function () {
+                table.column(11).visible(false);
+                table.column(12).visible(false);
+                table.column(13).visible(false);
+                table.column(7).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                printDiv(tableid, tablesCount,tablesSubHeadings, "", reportFormat);
+                setTimeout(function () {
+                    table.column(11).visible(true);
+                    table.column(12).visible(true);
+                    table.column(13).visible(true);
+                    table.column(7).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+                }, 300);
+            }, 300)
+        })
+
+
+        //excel
+        $('.ItemsBoughtTOCusbtnDataTableDownloadExcel',).off('click').on('click', function () {
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+            const tablesSubHeadings = $(this).attr("table-sub-headings");
+            var table = $('#' + tableid).DataTable();
+            setTimeout(function () {
+                table.column(11).visible(false);
+                table.column(12).visible(false);
+                table.column(13).visible(false);
+                table.column(7).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                exportToExcel(tableid, tablesCount);
+                setTimeout(function () {
+                    table.column(11).visible(true);
+                    table.column(12).visible(true);
+                    table.column(13).visible(true);
+                    table.column(7).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+                }, 300);
+            }, 300)
+        })
+
+        //pdf
+        $('.ItemsBoughtTOCusbtnDataTableDownloadPDF',).off('click').on('click', function () {
+
+
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+            const tablesSubHeadings = $(this).attr("table-sub-headings");
+            var table = $('#' + tableid).DataTable();
+            setTimeout(function () {
+                table.column(11).visible(false);
+                table.column(12).visible(false);
+                table.column(13).visible(false);
+                table.column(7).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                exportTableToPDF(tableid, tablesCount);
+                setTimeout(function () {
+                    table.column(11).visible(true);
+                    table.column(12).visible(true);
+                    table.column(13).visible(true);
+                    table.column(7).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+                }, 300);
+            }, 300)
+        })
+
+        //preview occasion
+        $('#ItemsBoughtByCustomerInfobtnDataTablePreview',).off('click').on('click', function () {
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+            const tablesSubHeadings = $(this).attr("table-sub-headings");
+            var table = $('#' + tableid).DataTable();
+
+            let columnWidths = [];
+            $('#' + tableid + ' thead th').each(function () {
+                columnWidths.push($(this).width());
+            });
+
+            setTimeout(function () {
+                table.column(8).visible(false);
+                table.column(13).visible(false);
+                table.column(14).visible(false);
+                table.column(15).visible(false);
+                table.column(1).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                table.column(2).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                table.column(5).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                table.column(3).nodes().to$().find('.description-col').removeClass('description-col').addClass("description-report");
+
+                $('#' + tableid + ' thead th').each(function (i) {
+                    $(this).css('width', columnWidths[i] + 'px');
+                });
+
+                previewDiv(tableid, tablesCount, tablesSubHeadings, "");
+                setTimeout(function () {
+                    table.column(8).visible(true);
+                    table.column(13).visible(true);
+                    table.column(14).visible(true);
+                    table.column(15).visible(true);
+                    //table.column(3).nodes().to$().addClass('description-col');
+                    table.column(3).nodes().to$().find('.description-report').removeClass('description-report').addClass('description-col');
+                    table.column(1).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+                    table.column(2).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+                    table.column(5).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+
+                    $('#' + tableid + ' thead th').each(function (i) {
+                        $(this).css('width', '');
+                    });
+                }, 300);
+            }, 300)
+        })
+        //print occasion
+        $('#ItemsBoughtByCustomerInfoBtnDataTablePrint',).off('click').on('click', function () {
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+            const tablesSubHeadings = $(this).attr("table-sub-headings");
+            var table = $('#' + tableid).DataTable();
+            var tableEl = $('#' + tableid);
+            var colCount = tableEl.find('thead tr th').length;
+            var reportFormat = (colCount > 8) ? "landscape" : "portrait";
+            let columnWidths = [];
+            $('#' + tableid + ' thead th').each(function () {
+                columnWidths.push($(this).width());
+            });
+            setTimeout(function () {
+                table.column(8).visible(false);
+                table.column(13).visible(false);
+                table.column(14).visible(false);
+                table.column(15).visible(false);
+                table.column(1).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                table.column(2).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                table.column(5).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                table.column(3).nodes().to$().find('.description-col').removeClass('description-col').addClass("description-report");
+
+                $('#' + tableid + ' thead th').each(function (i) {
+                    $(this).css('width', columnWidths[i] + 'px');
+                });
+                printDiv(tableid, tablesCount, tablesSubHeadings, "", reportFormat);
+                setTimeout(function () {
+                    table.column(8).visible(true);
+                    table.column(13).visible(true);
+                    table.column(14).visible(true);
+                    table.column(15).visible(true);
+                    table.column(1).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+                    table.column(2).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+                    table.column(5).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+                    table.column(3).nodes().to$().find('.description-report').removeClass('description-report').addClass('description-col');
+                    $('#' + tableid + ' thead th').each(function (i) {
+                        $(this).css('width', '');
+                    });
+                }, 300);
+            }, 300)
+        })
+        //Excel occasion
+        $('.ItemsBoughtByCustomerInfobtnDataTableDownloadExcel',).off('click').on('click', function () {
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+            const tablesSubHeadings = $(this).attr("table-sub-headings");
+            var table = $('#' + tableid).DataTable();
+            var tableEl = $('#' + tableid);
+            var colCount = tableEl.find('thead tr th').length;
+            var reportFormat = (colCount > 8) ? "landscape" : "portrait";
+
+            setTimeout(function () {
+                table.column(8).visible(false);
+                table.column(13).visible(false);
+                table.column(14).visible(false);
+                table.column(15).visible(false);
+                table.column(1).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                table.column(2).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                table.column(5).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                exportToExcel(tableid, tablesCount);
+                setTimeout(function () {
+                    table.column(8).visible(true);
+                    table.column(13).visible(true);
+                    table.column(14).visible(true);
+                    table.column(15).visible(true);
+                    table.column(1).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+                    table.column(2).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+                    table.column(5).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+                }, 300);
+            }, 300)
+        })
+        //pdf occasion
+        $('.temsBoughtByCustomerInfobtnDataTableDownloadPDF',).off('click').on('click', function () {
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+            const tablesSubHeadings = $(this).attr("table-sub-headings");
+            var table = $('#' + tableid).DataTable();
+            var tableEl = $('#' + tableid);
+            var colCount = tableEl.find('thead tr th').length;
+            var reportFormat = (colCount > 8) ? "landscape" : "portrait";
+
+            setTimeout(function () {
+                table.column(8).visible(false);
+                table.column(13).visible(false);
+                table.column(14).visible(false);
+                table.column(15).visible(false);
+                table.column(1).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                table.column(2).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                table.column(5).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                exportTableToPDF(tableid, tablesCount);
+                setTimeout(function () {
+                    table.column(8).visible(true);
+                    table.column(13).visible(true);
+                    table.column(14).visible(true);
+                    table.column(15).visible(true);
+                    table.column(1).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+                    table.column(2).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+                    table.column(5).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+                }, 300);
+            }, 300)
+        })
+
+    });
+
+
+
+
+</script>
+
+
+
+<style>
+    body {
+        color: black !important;
+        font-family: Arial;
+    }
+
+    .heading {
+        background-color: #036e07;
+        color: #fafafa;
+        font-family: 'sans-serif';
+    }
+
+    .msgBoxHeading {
+        background-color: #0f1cd4;
+        color: #fafafa;
+        font-family: 'sans-serif';
+        text-align: center;
+        height: 30px;
+        padding-top: 5px;
+    }
+
+    #dataTableForItemsBoughtByCustomer th,
+    #dataTableForItemsBoughtByCustomer td {
+        color: black !important;
+    }
+
+    #divDataTableReportForOccuasion th,
+    #divDataTableReportForOccuasion td {
+        color: black !important;
+    }
+
+    /*divDataTableReportForOccuasion*/
+
+    .CusCodeVal {
+        color: deeppink !important;
+    }
+
+    .reportTransNo {
+        color: black !important;
+    }
+
+    .highlight-row {
+        background-color: #ffffcc !important;
+    }
+
+    .bg-purple {
+        background-color: #7030a0 !important;
+        color: white;
+    }
+
+    .bg-orange {
+        background-color: #ed7d31 !important;
+        color: white;
+    }
+
+    #MassSmsExcelModel .modal-dialog {
+        max-width: 600px !important;
+        width: 100%;
+        margin: 1.75rem auto;
+    }
+
+    .bg-primary-custom {
+        background-color: #0aa8ed;
+        color: white;
+    }
+
+    .bg-orange-custom {
+        background-color: #f4a261;
+        color: white;
+    }
+
+    .bg-purple-custom {
+        background-color: #6f42c1;
+        color: white;
+    }
+
+    .text-center-custom {
+        text-align: center;
+    }
+
+    .custom-file-upload {
+        display: inline-flex;
+        align-items: center;
+        padding: 5px 12px;
+        font-size: 13px;
+        font-weight: bold;
+        color: #1f497d;
+        background-color: #dbeef3;
+        border: 1px solid #c6d9f1;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
+
+        .custom-file-upload:hover {
+            background-color: #cce4f7;
+        }
+
+        .custom-file-upload img {
+            height: 18px;
+            margin-right: 6px;
+        }
+
+    input[type="file"] {
+        display: none;
+    }
+
+    .report-title {
+        text-align: start;
+        position: absolute;
+        top: -14px;
+        left: 39%;
+        transform: translateX(-50%);
+        background: #fff;
+        padding: 0 10px;
+        font-weight: 600;
+        font-size: 10px;
+    }
+
+    .description-col {
+        white-space: normal !important;
+        word-wrap: break-word !important;
+        width: 400px !important;
+    }
+
+    .description-report {
+        white-space: normal !important;
+        word-wrap: break-word !important;
+        width: 100px;
+    }
+
+    .small-date-container label {
+        font-size: 13px;
+        padding-top: 3px;
+        padding-bottom: 0;
+    }
+
+    .small-date-container input[type="date"] {
+        width: 120px !important;
+        height: 24px !important;
+        font-size: 13px !important;
+        padding: 2px 4px !important;
+    }
+
+    .small-date-container .btn-xs {
+        padding: 1px 6px;
+        font-size: 12px;
+        height: 22px;
+    }
+
+    .disabled-btn {
+        background-color: #a6a4a4 !important;
+        cursor: not-allowed;
+    }
+
+    tr.selected {
+        background-color: #ffdd99 !important;
+    }
+</style>

@@ -1,0 +1,635 @@
+﻿<!--
+Hemanth 10/13/2024 Sales Summary Report
+-->
+@{
+
+    if (Session["UserID"] == null)
+    {
+        Layout = null;
+        Response.Redirect("~/Login/Index");
+    }
+    else
+    {
+        Layout = null;
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    ViewBag.Title = "Sales Summary  Report";
+}
+
+<div id="content-center" class="row">
+
+    <div class="web-form page login-page col-sm-12">
+
+        <div class="form-horizontal">
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            From
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtFromDate" class="form-control activateFormRefreshBtn" style="font-size:13px;" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            To Date
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtToDate" class="form-control activateFormRefreshBtn" style="font-size:13px;" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-right">
+                    <div class="mt-5px">
+                        <input type="checkbox" id="cbFillFromToDates" checked /> <span>All Dates</span>
+                        <input type="button" value="Last Month" class="formsGlobalUniqueBtn btnGetLastMonthDates" />
+                        <input type="button" value="Last Week" class="formsGlobalUniqueBtn btnGetLastWeekDates" />
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <input type="radio" value="rdoDateonly" class="activateFormRefreshBtn" id="rdoDateonly" name="rdoDateonly"/> Date
+                    &nbsp;&nbsp;&nbsp;
+                    <input type="radio" value="rdoPickupdate" class="activateFormRefreshBtn" id="rdoPickupdate" name="rdoDateonly" checked="checked" /> Pickup Date
+                </div>
+                <div class="col-md-4"><input type="checkbox" name="ChkIncludePartialSpecPayment" id="ChkIncludePartialSpecPayment">&nbsp;Include Partial Spec. payment.</div>
+                <div class="col-md-4 text-right">
+                    <input type="button" value="Reset" class="formsGlobalUniqueBtn btnResetFormValues" id="resetFormValues" />
+                    <input type="button" id="btnFormResultsSearch" value="Refresh" class="refresh_btn refreshBtnDefault" />
+                </div>
+            </div>
+            
+        </div>
+
+
+    </div>
+
+    <div class="mt-4 white-box pos-rel" id="divDataTableReport">
+
+        <div class="row col-md-6 report_buttons">
+            <div style="margin:3px;">
+                <input type="button" value="PDF" table-id="dataTableForSalesSummaryReport" class="formsGlobalUniqueBtn btnDataTableDownloadPDF" id="btnPDF" table-count="3" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Excel" table-id="dataTableForSalesSummaryReport" class="formsGlobalUniqueBtn btnDataTableDownloadExcel" table-count="3"/>
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Preview" table-id="dataTableForSalesSummaryReport" id="btnDataTablePreview" class="formsGlobalUniqueBtn" table-count="3" table-sub-headings="SALES,SALES BY STORE,SALES BY SALES PERSON" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Print" table-id="dataTableForSalesSummaryReport" id="btnDataTablePrint" class="formsGlobalUniqueBtn" table-count="3" table-sub-headings="SALES,SALES BY STORE,SALES BY SALES PERSON" />
+            </div>
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Email" table-id="dataTableForSalesSummaryReport" class="formsGlobalUniqueBtn" />
+            </div>
+
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Simple Excel" class="formsGlobalUniqueBtn" />
+            </div>
+        </div>
+        <div class="row" style="padding-top: 35px; padding-bottom: 15px;">
+            <div class="col-md-12"><b>SALES</b></div>
+        </div>
+        <div class="row dataTableReport" id="printContent">
+            <div><br /></div>
+            <table id="dataTableForSalesSummaryReport-1" class="dataTable display nowrap table" style="width:100%">
+                <thead>
+                    <tr>
+                        <th style="text-align:center !important;"></th>
+                        <th style="text-align:center !important;">Total Sales</th>
+                        <th style="text-align:center !important;">Sales Tax</th>
+                        <th style="text-align:center !important;">Cogs</th>
+                        <th style="text-align:center !important;">Gross Profit</th>
+                        <th style="text-align:center !important;">GP %</th>
+                        <th style="text-align:center !important;">Qty</th>
+                        <th style="text-align:center !important;">%Of Sale</th>
+                        <th style="text-align:center !important;">Avg Sale</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot id="tfooter-1">
+                    <tr>
+                        <th></th>
+                        <th id="summaryTotalSales" class="text-right numericColumns"></th>
+                        <th id="summarySalesTax" class="text-right numericColumns"></th>
+                        <th id="summaryCogs" class="text-right numericColumns"></th>
+                        <th id="summaryGrossProfit" class="text-right numericColumns"></th>
+                        <th id="summaryGp" class="text-right numericColumns"></th>
+                        <th id="summaryQty" class="text-right numericColumns"></th>
+                        <th id="summaryOfSale" class="text-right numericColumns"></th>
+                        <th id="summaryAvgSale" class="text-right numericColumns"></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div class="row" style="padding-top: 35px; padding-bottom: 15px;">
+            <div class="col-md-12"><b>SALES BY STORE</b></div>
+        </div>
+        <div class="row dataTableReport" id="printContent-1">
+            <div><br /></div>
+            <table id="dataTableForSalesSummaryReport-2" class="dataTable display nowrap table" style="width:100%">
+                <thead>
+                    <tr>
+                        <th style="text-align:center !important;"></th>
+                        <th style="text-align:center !important;">Total Sales</th>
+                        <th style="text-align:center !important;">Sales Tax</th>
+                        <th style="text-align:center !important;">Cogs</th>
+                        <th style="text-align:center !important;">Gross Profit</th>
+                        <th style="text-align:center !important;">GP %</th>
+                        <th style="text-align:center !important;">Qty</th>
+                        <th style="text-align:center !important;">%Of Sale</th>
+                        <th style="text-align:center !important;">Avg Sale</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot id="tfooter-2">
+                    <tr>
+                        <th></th>
+                        <th id="summaryTotalSales1" class="text-right numericColumns"></th>
+                        <th id="summarySalesTax1" class="text-right numericColumns"></th>
+                        <th id="summaryCogs1" class="text-right numericColumns"></th>
+                        <th id="summaryGrossProfit1" class="text-right numericColumns"></th>
+                        <th id="summaryGp1" class="text-right numericColumns"></th>
+                        <th id="summaryQty1" class="text-right numericColumns"></th>
+                        <th id="summaryOfSale1" class="text-right numericColumns"></th>
+                        <th id="summaryAvgSale1" class="text-right numericColumns"></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div class="row" style="padding-top: 35px; padding-bottom: 15px;">
+            <div class="col-md-12"><b>SALES BY SALES PERSON</b></div>
+        </div>
+        <div class="row dataTableReport" id="printContent-2">
+            <div><br /></div>
+            <table id="dataTableForSalesSummaryReport-3" class="dataTable display nowrap table" style="width:100%">
+                <thead>
+                    <tr>
+                        <th style="text-align:center !important;"></th>
+                        <th style="text-align:center !important;">Total Sales</th>
+                        <th style="text-align:center !important;">Sales Tax</th>
+                        <th style="text-align:center !important;">Cogs</th>
+                        <th style="text-align:center !important;">Gross Profit</th>
+                        <th style="text-align:center !important;">GP %</th>
+                        <th style="text-align:center !important;">Qty</th>
+                        <th style="text-align:center !important;">%Of Sale</th>
+                        <th style="text-align:center !important;">Avg Sale</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot id="tfooter-3">
+                    <tr>
+                        <th></th>
+                        <th id="summaryTotalSales2" class="text-right numericColumns"></th>
+                        <th id="summarySalesTax2" class="text-right numericColumns"></th>
+                        <th id="summaryCogs2" class="text-right numericColumns"></th>
+                        <th id="summaryGrossProfit2" class="text-right numericColumns"></th>
+                        <th id="summaryGp2" class="text-right numericColumns"></th>
+                        <th id="summaryQty2" class="text-right numericColumns"></th>
+                        <th id="summaryOfSale2" class="text-right numericColumns"></th>
+                        <th id="summaryAvgSale2" class="text-right numericColumns"></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var table1 = $('#dataTableForSalesSummaryReport-1').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 25,
+            bInfo: false,
+            aaSorting: [],
+            columnDefs: [{
+                class: 'req-col-1',
+                targets: 0
+            }],
+        })
+
+        var table2 = $('#dataTableForSalesSummaryReport-2').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 25,
+            bInfo: false,
+            aaSorting: [],
+            columnDefs: [{
+                class: 'req-col-1',
+                targets: 0
+            }],
+        })
+
+        var table3 = $('#dataTableForSalesSummaryReport-3').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 25,
+            bInfo: false,
+            aaSorting: [],
+            columnDefs: [{
+                class: 'req-col-1',
+                targets: 0
+            }],
+        })
+
+
+
+        $('#resetFormValues').on("click", function (e) {
+            $("#cbFillFromToDates").prop("checked", true);
+            fillFromToDates();
+            $('#cmbVendor').prop('selectedIndex', 0);
+            $('#ChkIncludePartialSpecPayment').prop('checked', false);
+            $('#rdoPickupdate').prop('checked', true);
+
+        });
+
+
+        $('#rdoDateonly').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        $('#rdoPickupdate').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        $('#ChkIncludePartialSpecPayment').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        
+
+        fillFromToDates();
+    });
+
+    function buttonStyleClassChange(btnId) {
+        $('#' + btnId).removeClass('refreshBtnDefault').addClass('needToRefreshBtn');
+        $('#' + btnId).val("Refresh *");
+    }
+
+    function existAutoFilledData() {
+
+        $('#summaryTotalSales').html('');
+        $('#summarySalesTax').html('');
+        $('#summaryCogs').html('');
+        $('#summaryGrossProfit').html('');
+        $('#summaryGp').html('');
+        $('#summaryQty').html('');
+        $('#summaryOfSale').html('');
+        $('#summaryAvgSale').html('');
+
+        $('#summaryTotalSales1').html('');
+        $('#summarySalesTax1').html('');
+        $('#summaryCogs1').html('');
+        $('#summaryGrossProfit1').html('');
+        $('#summaryGp1').html('');
+        $('#summaryQty1').html('');
+        $('#summaryOfSale1').html('');
+        $('#summaryAvgSale1').html('');
+
+        $('#summaryTotalSales2').html('');
+        $('#summarySalesTax2').html('');
+        $('#summaryCogs2').html('');
+        $('#summaryGrossProfit2').html('');
+        $('#summaryGp2').html('');
+        $('#summaryQty2').html('');
+        $('#summaryOfSale2').html('');
+        $('#summaryAvgSale2').html('');
+
+
+        if ($('#txtFromDate').val() != "")
+            fromdate = $('#txtFromDate').val();
+        else
+            fromdate = "1990-01-01";
+
+        if ($('#txtToDate').val() != "")
+            todate = $('#txtToDate').val();
+        else
+            todate = "2099-12-31";
+
+
+
+        let bypicdate = false;
+        let rdt = $("input[name='rdoDateonly']:checked").val();
+        if (rdt == "rdoPickupdate") {
+            bypicdate = true;
+        }
+       
+
+        var ChkIncludePartialSpecPayment = ($('#ChkIncludePartialSpecPayment').prop('checked')) ? true : false;
+
+
+        var url = '@Url.Action("GetSalesSummaryReport", "ListOfItemsSold", new { Area = "" })';
+
+        var data = {
+            FROMDATE: fromdate,
+            DateTo: todate,
+            ByWhichDate: bypicdate,
+            IncParialPay: ChkIncludePartialSpecPayment
+
+        };
+
+        var table1 = $('#dataTableForSalesSummaryReport-1').DataTable();
+        table1.clear().draw();
+
+        var table2 = $('#dataTableForSalesSummaryReport-2').DataTable();
+        table2.clear().draw();
+
+        var table3 = $('#dataTableForSalesSummaryReport-3').DataTable();
+        table3.clear().draw();
+
+        var jqxhr = $.post(url, data, function () { })
+            .done(function (response) {
+                var json;
+                if (response instanceof Object)
+                    json = response;
+                else
+                    json = $.parseJSON(response);
+                
+                summaryTotalSales = 0;
+                summarySalesTax = 0;
+                summaryCogs = 0;
+                summaryGrossProfit = 0;
+                summaryGp = 0;
+                summaryQty = 0;
+                summaryOfSale = 0;
+                summaryAvgSale = 0;
+                summaryNetAmount = 0;
+                for (var i = 0; i < json.sales.length; i++) {
+
+                    if (json.sales[i].TotalSales != '') {
+                        summaryTotalSales = summaryTotalSales + json.sales[i].TotalSales;
+                    }
+                    if (json.sales[i].GST != '') {
+                        summarySalesTax = summarySalesTax + json.sales[i].GST;
+                    }
+                    if (json.sales[i].COGS != '') {
+                        summaryCogs = summaryCogs + json.sales[i].COGS;
+                    }
+                    if (json.sales[i].GrossProfit != '') {
+                        summaryGrossProfit = summaryGrossProfit + json.sales[i].GrossProfit;
+                    }
+                    if (json.sales[i].Marginperc != '') {
+                        summaryGp = summaryGp + json.sales[i].Marginperc;
+                    }
+                    if (json.sales[i].QTY != '') {
+                        summaryQty = summaryQty + json.sales[i].QTY;
+                    }
+                    if (json.sales[i].AvgSales != '') {
+                        summaryOfSale = summaryOfSale + json.sales[i].AvgSales;
+                    }
+                    if (json.sales[i].TotalSales != '') {
+                        summaryAvgSale = summaryAvgSale + (json.sales[i].TotalSales / json.sales[i].QTY);
+                    }
+                    if (json.sales[i].NetAmount != '') {
+                        summaryNetAmount = summaryNetAmount + json.sales[i].NetAmount;
+                    }
+
+                    table1.row.add([
+                            json.sales[i].Grouped,
+                            formatCurrency(json.sales[i].TotalSales),
+                            formatCurrency(json.sales[i].GST),
+                            formatCurrency(json.sales[i].COGS),
+                            formatCurrency(json.sales[i].GrossProfit),
+                            formatCurrency(json.sales[i].Marginperc),
+                            formatCurrency(json.sales[i].QTY),
+                            formatCurrency(json.sales[i].AvgSales),
+                            formatCurrency((json.sales[i].TotalSales / json.sales[i].QTY))
+                    ]);
+                }
+                table1.draw();
+                
+                if (summaryNetAmount != 0) {
+                    summaryGp = 100 * (summaryGrossProfit / summaryNetAmount);
+                }
+                summaryAvgSale = summaryTotalSales / summaryQty;
+                $('#summaryTotalSales').html(formatCurrency(summaryTotalSales));
+                $('#summarySalesTax').html(formatCurrency(summarySalesTax));
+                $('#summaryCogs').html(formatCurrency(summaryCogs));
+                $('#summaryGrossProfit').html(formatCurrency(summaryGrossProfit));
+                $('#summaryGp').html(formatCurrency(summaryGp));
+                $('#summaryQty').html(formatCurrency(summaryQty));
+                $('#summaryOfSale').html(formatCurrency(summaryOfSale));
+                $('#summaryAvgSale').html(formatCurrency(summaryAvgSale));
+
+
+                summaryTotalSales1 = 0;
+                summarySalesTax1 = 0;
+                summaryCogs1 = 0;
+                summaryGrossProfit1 = 0;
+                summaryGp1 = 0;
+                summaryQty1 = 0;
+                summaryOfSale1 = 0;
+                summaryAvgSale1 = 0;
+                summaryNetAmount1 = 0;
+                for (var i = 0; i < json.store.length; i++) {
+
+                    if (json.store[i].TotalSales != '') {
+                        summaryTotalSales1 = summaryTotalSales1 + json.store[i].TotalSales;
+                    }
+                    if (json.store[i].GST != '') {
+                        summarySalesTax1 = summarySalesTax1 + json.store[i].GST;
+                    }
+                    if (json.store[i].COGS != '') {
+                        summaryCogs1 = summaryCogs1 + json.store[i].COGS;
+                    }
+                    if (json.store[i].GrossProfit != '') {
+                        summaryGrossProfit1 = summaryGrossProfit1 + json.store[i].GrossProfit;
+                    }
+                    if (json.store[i].Marginperc != '') {
+                        summaryGp1 = summaryGp1 + json.store[i].Marginperc;
+                    }
+                    if (json.store[i].QTY != '') {
+                        summaryQty1 = summaryQty1 + json.store[i].QTY;
+                    }
+                    if (json.store[i].AvgSales != '') {
+                        summaryOfSale1 = summaryOfSale1 + json.store[i].AvgSales;
+                    }
+                    if (json.store[i].TotalSales != '') {
+                        summaryAvgSale1 = summaryAvgSale1 + (json.store[i].TotalSales / json.store[i].QTY);
+                    }
+                    if (json.store[i].NetAmount != '') {
+                        summaryNetAmount1 = summaryNetAmount1 + json.store[i].NetAmount;
+                    }
+
+                    table2.row.add([
+                        json.store[i].Grouped,
+                        formatCurrency(json.store[i].TotalSales),
+                        formatCurrency(json.store[i].GST),
+                        formatCurrency(json.store[i].COGS),
+                        formatCurrency(json.store[i].GrossProfit),
+                        formatCurrency(json.store[i].Marginperc),
+                        formatCurrency(json.store[i].QTY),
+                        formatCurrency(json.store[i].AvgSales),
+                        formatCurrency((json.store[i].TotalSales / json.store[i].QTY))
+                    ]);
+                }
+                table2.draw();
+
+                if (summaryNetAmount1 != 0) {
+                    summaryGp1 = 100 * (summaryGrossProfit1 / summaryNetAmount1);
+                }
+                summaryAvgSale1 = summaryTotalSales1 / summaryQty1;
+                $('#summaryTotalSales1').html(formatCurrency(summaryTotalSales1));
+                $('#summarySalesTax1').html(formatCurrency(summarySalesTax1));
+                $('#summaryCogs1').html(formatCurrency(summaryCogs1));
+                $('#summaryGrossProfit1').html(formatCurrency(summaryGrossProfit1));
+                $('#summaryGp1').html(formatCurrency(summaryGp1));
+                $('#summaryQty1').html(formatCurrency(summaryQty1));
+                $('#summaryOfSale1').html(formatCurrency(summaryOfSale1));
+                $('#summaryAvgSale1').html(formatCurrency(summaryAvgSale1));
+
+                summaryTotalSales2 = 0;
+                summarySalesTax2 = 0;
+                summaryCogs2 = 0;
+                summaryGrossProfit2 = 0;
+                summaryGp2 = 0;
+                summaryQty2 = 0;
+                summaryOfSale2 = 0;
+                summaryAvgSale2 = 0;
+                summaryNetAmount2 = 0;
+                for (var i = 0; i < json.salesman.length; i++) {
+
+                    if (json.salesman[i].TotalSales != '') {
+                        summaryTotalSales2 = summaryTotalSales2 + json.salesman[i].TotalSales;
+                    }
+                    if (json.salesman[i].GST != '') {
+                        summarySalesTax2 = summarySalesTax2 + json.salesman[i].GST;
+                    }
+                    if (json.salesman[i].COGS != '') {
+                        summaryCogs2 = summaryCogs2 + json.salesman[i].COGS;
+                    }
+                    if (json.salesman[i].GrossProfit != '') {
+                        summaryGrossProfit2 = summaryGrossProfit2 + json.salesman[i].GrossProfit;
+                    }
+                    if (json.salesman[i].Marginperc != '') {
+                        summaryGp2 = summaryGp2 + json.salesman[i].Marginperc;
+                    }
+                    if (json.salesman[i].QTY != '') {
+                        summaryQty2 = summaryQty2 + json.salesman[i].QTY;
+                    }
+                    if (json.salesman[i].AvgSales != '') {
+                        summaryOfSale2 = summaryOfSale2 + json.salesman[i].AvgSales;
+                    }
+                    if (json.salesman[i].TotalSales != '') {
+                        summaryAvgSale2 = summaryAvgSale2 + (json.salesman[i].TotalSales / json.salesman[i].QTY);
+                    }
+                    if (json.salesman[i].NetAmount != '') {
+                        summaryNetAmount2 = summaryNetAmount2 + json.salesman[i].NetAmount;
+                    }
+
+                    table3.row.add([
+                        json.salesman[i].Grouped,
+                        formatCurrency(json.salesman[i].TotalSales),
+                        formatCurrency(json.salesman[i].GST),
+                        formatCurrency(json.salesman[i].COGS),
+                        formatCurrency(json.salesman[i].GrossProfit),
+                        formatCurrency(json.salesman[i].Marginperc),
+                        formatCurrency(json.salesman[i].QTY),
+                        formatCurrency(json.salesman[i].AvgSales),
+                        formatCurrency((json.salesman[i].TotalSales / json.salesman[i].QTY))
+                    ]);
+                }
+                table3.draw();
+
+                if (summaryNetAmount2 != 0) {
+                    summaryGp2 = 100 * (summaryGrossProfit2 / summaryNetAmount2);
+                }
+                summaryAvgSale2 = summaryTotalSales2 / summaryQty2;
+                $('#summaryTotalSales2').html(formatCurrency(summaryTotalSales2));
+                $('#summarySalesTax2').html(formatCurrency(summarySalesTax2));
+                $('#summaryCogs2').html(formatCurrency(summaryCogs2));
+                $('#summaryGrossProfit2').html(formatCurrency(summaryGrossProfit2));
+                $('#summaryGp2').html(formatCurrency(summaryGp2));
+                $('#summaryQty2').html(formatCurrency(summaryQty2));
+                $('#summaryOfSale2').html(formatCurrency(summaryOfSale2));
+                $('#summaryAvgSale2').html(formatCurrency(summaryAvgSale2));
+            })
+            .fail(function (jqxhr, textStatus, error) {
+                var err = textStatus + ", " + error;
+                console.log("GETSoldOrInstock Request Failed: " + err);
+            });
+
+    }
+
+    function formatCurrency(total) {
+        var neg = false;
+        if (total < 0) {
+            neg = true;
+            total = Math.abs(total);
+        }
+        return (neg ? "-" : '') + parseFloat(total, 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString();
+    }
+
+
+</script>
+<style>
+
+    .table tfoot tr th {
+        text-align: right !important;
+        padding: 0px !important;
+    }
+
+    .table tbody tr td {
+        text-align: left !important;
+    }
+
+    table tbody tr td:nth-child(2) {
+        text-align: right !important;
+        padding: 0px !important;
+    }
+
+    table tbody tr td:nth-child(3) {
+        text-align: right !important;
+        padding: 0px !important;
+    }
+
+    table tbody tr td:nth-child(4) {
+        text-align: right !important;
+        padding: 0px !important;
+    }
+
+    table tbody tr td:nth-child(5) {
+        text-align: right !important;
+        padding: 0px !important;
+    }
+
+    table tbody tr td:nth-child(6) {
+        text-align: right !important;
+        padding: 0px !important;
+    }
+    table tbody tr td:nth-child(7) {
+        text-align: right !important;
+        padding: 0px !important;
+    }
+    table tbody tr td:nth-child(8) {
+        text-align: right !important;
+        padding: 0px !important;
+    }
+    table tbody tr td:nth-child(9) {
+        text-align: right !important;
+        padding: 0px !important;
+    }
+
+    .padding-left-zero {
+        padding-left: 0px !important;
+    }
+
+    .req-col-1 {
+        width: 50px;
+        word-wrap: break-word;
+    }
+</style>

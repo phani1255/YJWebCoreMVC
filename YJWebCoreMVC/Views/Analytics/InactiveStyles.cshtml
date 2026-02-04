@@ -1,0 +1,950 @@
+﻿<!--
+  * Created by Manoj 05-DEC-2025
+  * 12/18/2025 Manoj Added functionality to download PDF, Excel, Print and Preview report
+  * 12/22/2025 Manoj Modified DataTable footer issues and fixed noOfDays text
+-->
+
+@{
+    if (Session["UserID"] == null)
+    {
+        Layout = null;
+        Response.Redirect("~/Login/Index");
+    }
+    else
+    {
+        ViewBag.Title = "Inactive Styles";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+
+    }
+
+    var StoreLogo = ViewBag.StoreLogo;
+}
+@model YJWeb.Models.AnalasysServiceModel
+
+<h4 class="text-center heading mt-1">INACTIVE STYLES</h4>
+<div id="content-center" class="row">
+    <div class="web-form page login-page col-md-9 mr-1" id="FormForItemsBoughtByCustomer" style="min-width: 83%; overflow:hidden">
+        <div class="form-horizontal">
+            @Html.AntiForgeryToken()
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="mr-2 mt-2">
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <label class="lable-style " for="noOfDays" style="font-size:13px !important;  text-align:start;">Not Sold In The Past</label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control text-right activateFormRefreshBtn resetFromDate" value="90" style="height: 28px; font-size: 13px;" id="noOfDays" />
+
+                            </div>
+                            <div class="col-sm-2">
+                                <span style="font-size:13px !important;  text-align:start;">Days</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-2 small-date-container">
+                        <div id="allDatesContainer" class="row">
+                            <div class="row mb-1">
+                                <label id="DateFrm" class="col-sm-6 col-form-label-sm text-end">
+                                    From Date
+                                </label>
+                                <div class="col-sm-5">
+                                    <input type="date" id="txtFromDate1" class="form-control form-control-sm fs-13 resetFromDate activateFormRefreshBtn" />
+                                </div>
+                            </div>
+                            <div class="row mb-1">
+                                <label id="DateTo" class="col-sm-6 col-form-label-sm text-end">
+                                    To Date
+                                </label>
+                                <div class="col-sm-5">
+                                    <input type="date" id="txtToDate1" class="form-control form-control-sm fs-13 resetToDate activateFormRefreshBtn" />
+                                </div>
+                            </div>
+                            <div class="row mt-1 ml-1">
+                                <div class="col-sm-12 text-right">
+                                    <input type="checkbox" id="cbFillFromToDates" class="activateFormRefreshBtn" checked />
+                                    <span class="fs-13">All Dates</span>
+                                    <input type="button" value="Last Month" class="btn btn-xs formsGlobalUniqueBtn btnGetLastMonthDates activateFormRefreshBtn" />
+                                    <input type="button" value="Last Week" class="btn btn-xs formsGlobalUniqueBtn btnGetLastWeekDates activateFormRefreshBtn" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <div class="d-flex flex-row justify-content-between">
+                            <div class="mr-2">
+                                <label for="fromStyle" class="lable-style" style="font-size:13px !important;  text-align:start;">Styles Starting With</label>
+                                <input type="text" class="form-control" style="width: 160px; height: 28px; font-size: 13px;" id="fromStyle" />
+                            </div>
+
+                            <div class="mr-2">
+                                <label class="lable-style" for="styleTo" style="font-size:13px !important; text-align:start;">Styles That Contain</label>
+                                <input type="text" class="form-control" id="styleTo" style="width: 160px; height: 28px; font-size: 13px;" />
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-sm-4">
+                    <div>
+                        <div class="row">
+                            <label class="col-sm-3 mt-1" style="font-size:13px !important;  text-align:start;">
+                                Stores
+                            </label>
+                            <div class="col-sm-6">
+                                @Html.DropDownListFor(x => x.AllStores, Model.AllStores, new { @class = "form-control resetSelectField activateFormRefreshBtn", @id = "ddlStoreList" })
+
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="form-check mt-1 mb-0">
+                                    <input type="checkbox" id="ddlStoreAll" class="form-check-input activateFormRefreshBtn" checked />
+                                    <label for="ddlStoreAll" class="form-check-label" style="font-size:11px !important; font-weight:700; text-align:start;">All</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="row">
+                            <label class="col-sm-3 mt-1" style="font-size:13px !important; text-align:start;">
+                                Category
+                            </label>
+                            <div class="col-sm-6">
+                                @Html.DropDownListFor(x => x.CategoryTypes, Model.CategoryTypes, new { @class = "form-control resetSelectField activateFormRefreshBtn", @id = "ddlCategory" })
+
+                            </div>
+
+                            <div class="col-sm-2 ps-1 me-1">
+                                <div class="form-check mt-1 mb-0">
+                                    <input type="checkbox" id="ddlCategoryAll" class="form-check-input activateFormRefreshBtn" checked />
+                                    <label for="ddlCategoryAll" class="form-check-label" style="font-size:11px !important; font-weight:700; text-align:start;">All</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="row">
+                            <label class="col-sm-3 mt-1" style="font-size:13px !important;  text-align:start;">
+                                Sub Category
+                            </label>
+                            <div class="col-sm-6 ">
+                                @Html.DropDownListFor(x => x.SubCategoryTypes, Model.SubCategoryTypes, new { @class = "form-control resetSelectField activateFormRefreshBtn", @id = "ddlSubCategory" })
+                            </div>
+
+                            <div class="col-sm-2 ps-1 me-1">
+                                <div class="form-check mt-1 mb-0">
+                                    <input type="checkbox" id="ddlSubCategoryAll" class="form-check-input activateFormRefreshBtn" checked />
+                                    <label for="ddlSubCategoryAll" class="form-check-label" style="font-size:11px !important; font-weight:700; text-align:start;">All</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-sm-4">
+
+                    <div>
+                        <div class="row">
+                            <label class="col-sm-3 mt-1" style="font-size:13px !important;  text-align:start;">
+                                Brand
+                            </label>
+                            <div class="col-sm-6">
+                                @Html.DropDownListFor(x => x.BrandTypes, Model.BrandTypes, new { @class = "form-control resetSelectField activateFormRefreshBtn", @id = "ddlBrandList" })
+
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="form-check mt-1 mb-0">
+                                    <input type="checkbox" id="ddlBrandAll" class="form-check-input activateFormRefreshBtn" checked />
+                                    <label for="ddlBrandAll" class="form-check-label" style="font-size:11px !important; font-weight:700; text-align:start;">All</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="row">
+                            <label class="col-sm-3 mt-1" style="font-size:13px !important;  text-align:start;">
+                                Vendor
+                            </label>
+                            <div class="col-sm-6">
+                                @Html.DropDownListFor(x => x.VenderTypes, Model.VenderTypes, new { @class = "form-control resetSelectField activateFormRefreshBtn", @id = "ddlVendorList" })
+
+                            </div>
+
+                            <div class="col-sm-2 ps-1 me-2">
+                                <div class="form-check mt-1 mb-0">
+                                    <input type="checkbox" id="ddlVendorAll" class="form-check-input activateFormRefreshBtn" checked />
+                                    <label for="ddlVendorAll" class="form-check-label" style="font-size:11px !important; font-weight:700; text-align:start;">All</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="row">
+                            <label class="col-sm-3 mt-1" style="font-size:13px !important;  text-align:start;">
+                                Metal
+                            </label>
+                            <div class="col-sm-6">
+                                @Html.DropDownListFor(x => x.MetalTypes, Model.MetalTypes, new { @class = "form-control resetSelectField activateFormRefreshBtn", @id = "ddlMetalList" })
+
+                            </div>
+
+                            <div class="col-sm-2 ps-1 me-2">
+                                <div class="form-check mt-1 mb-0">
+                                    <input type="checkbox" id="ddlMetalAll" class="form-check-input activateFormRefreshBtn" checked />
+                                    <label for="ddlMetalAll" class="form-check-label" style="font-size:11px !important; font-weight:700; text-align:start;">All</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <div class="col-sm-3  text-right mt-1">
+                            <input type="button" id="btnFormResultsSearch" value="Refresh" class="refresh_btn btn-xs refreshBtnDefault" />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+    <div class="col-md-2 web-form page login-page d-flex align-items-start justify-content-center" style="max-width: 100%; overflow: hidden">
+        <img class=" mt-2 img-fluid" id="styleImage" src="https://wjewel.dnsalias.org/styleimages/img_unavailable.jpg" style="max-width:180px; max-height:120px" alt="Style Image" />
+    </div>
+
+    <div class="mt-4 white-box pos-rel" id="divDataTableReport">
+
+        <div class="row col-md-6 report_buttons">
+            <div class="form-check mr-5" style="margin:3px;">
+                <input type="checkbox" class="form-check-input" id="printWithImage" />
+                <label for="printWithImage" class="form-check-label"> Print Images</label>
+            </div>
+
+            <div style="margin:3px;">
+                <input type="button" value="PDF" table-id="dataTableForInactiveStyles" class="formsGlobalUniqueBtn inactiveStylesbtnDataTableDownloadPDF" id="btnPDF" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Excel" table-id="dataTableForInactiveStyles" class="formsGlobalUniqueBtn inactiveStylesbtnDataTableDownloadExcel" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Preview" table-id="dataTableForInactiveStyles" id="inactiveStylesbtnDataTablePreview" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Print" table-id="dataTableForInactiveStyles" id="inactiveStylesBtnDataTablePrint" class="formsGlobalUniqueBtn" report-format="portrait" table-count="1" />
+            </div>
+        </div>
+        <div class="row dataTableReport">
+
+            <table id="dataTableForInactiveStyles" class="dataTable display nowrap table" style="width:100%">
+                <thead>
+                    <tr>
+
+                        <th>STYLE</th>
+                        <th>Image</th>
+                        <th>CATEGORY</th>
+                        <th>SUBCAT</th>
+                        <th>METAL</th>
+                        <th>INSTOCK</th>
+                        <th>AGE </th>
+                        <th>COST</th>
+                        <th>PRICE</th>
+                        <th> CASE #</th>
+                        <th>CAST CODE</th>
+                        <th>VND STYLE</th>
+                        <th>STORE NO</th>
+                        <th>CLASS GL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>Total :</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th class="numericColumns"></th>
+                        <th></th>
+                        <th class="numericColumns"></th>
+                        <th class="numericColumns"></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+            </table>
+            <br>
+
+        </div>
+    </div>
+
+    <div id="pdfReportHeadingText"></div>
+
+</div>
+
+<div id="confirmModal2" class="modal" tabindex="-1" style="display: none; position: fixed; z-index: 1050; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4);">
+    <div style="background: white; margin: 10% auto; padding: 20px; width: 400px; border-radius: 6px; text-align: center;">
+        <p id="confirmMessage"></p>
+        <div style="margin-top: 20px;">
+            <button id="btnConfirmYes" class="btn btn-primary">Yes</button>
+            <button id="btnConfirmNo" class="btn btn-secondary">No</button>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    var lastMonthDate = "", todayDate = ""
+    var printPreviewLableList;
+    var filtertable;
+    var Flag = false;
+
+    function ClearControls() {
+        $('#ddlMetalsList').val('').change();
+        $('#ddlSalesrepList').val('').change();
+        $('#ddlStoreList').val('').change();
+
+        existAutoFilledData();
+
+    }
+    function existAutoFilledData() {
+
+         accCode = "";
+
+        if ($('#ddlStoreAll').prop('checked')) {
+
+            _strstore = "";
+        }else {
+           // _strstore = $('#ddlStoreList option:selected').val();
+            _strstore = ($('#ddlStoreList option:selected').val() != "All" && $('#ddlStoreList option:selected').val() != null)
+                ? $('#ddlStoreList option:selected').val() : "";
+        }
+
+
+        if ($('#ddlCategoryAll').prop('checked')) {
+
+            _strCateg = "";
+        }else {
+
+            //_strCateg = $('#ddlCategory option:selected').val();
+            _strCateg = ($('#ddlCategory option:selected').val() != "All" && $('#ddlCategory option:selected').val() != null)
+                ? $('#ddlCategory option:selected').val() : "";
+        }
+
+        if ($('#ddlSubCategoryAll').prop('checked')) {
+
+            _strSubCateg = "";
+        } else {
+
+            //_strSubCateg = $('#ddlSubCategory option:selected').val();
+            _strSubCateg = ($('#ddlSubCategory option:selected').val() != "All" && $('#ddlSubCategory option:selected').val() != null)
+                ? $('#ddlSubCategory option:selected').val() : "";
+        }
+
+        if ($('#ddlBrandAll').prop('checked')) {
+
+            _strbrand1 = "";
+
+        } else {
+
+            //_strbrand1 = $('#ddlBrandList option:selected').val();
+            _strbrand1 = ($('#ddlBrandList option:selected').val() != "All" && $('#ddlBrandList option:selected').val() != null)
+                ? $('#ddlBrandList option:selected').val() : "";
+
+        }
+
+        if ($('#ddlVendorAll').prop('checked')) {
+
+            vendor = "";
+
+        }else {
+            vendor = ($('#ddlVendorList option:selected').val() != "All" && $('#ddlVendorList option:selected').val() != null)
+                ? $('#ddlVendorList option:selected').val() : "";
+        }
+
+
+        if ($('#ddlMetalAll').prop('checked')) {
+
+            metal = "";
+        }else {
+            metal = ($('#ddlMetalList option:selected').val() != "All" && $('#ddlMetalList option:selected').val() != null)
+                ? $('#ddlMetalList option:selected').val() : "";
+
+        }
+
+        if ($('#fromStyle').val() !== "") {
+            _fromStyle = $('#fromStyle').val();
+        } else {
+            _fromStyle = "";
+        }
+        if ($('#styleTo').val() !== "") {
+            toStyle = $('#styleTo').val();
+        } else {
+            toStyle = "";
+        }
+        if ($('#noOfDays').val() !== "") {
+            _noOfDays = $('#noOfDays').val();
+        } else {
+            _noOfDays = "";
+        }
+
+        if ($('#txtFromDate1').val() != "")
+            fromDate1 = $('#txtFromDate1').val();
+        else
+            fromDate1 = "1990-01-01";
+
+        if ($('#txtToDate1').val() != "")
+            toDate1 = $('#txtToDate1').val();
+        else
+            toDate1 = "2099-12-31";
+
+        //accCode,_strstore,_strCateg,_strSubCateg,_strbrand1,vendor,metal,_fromStyle,toStyle,_noOfDays,fromDate1,toDate1
+
+        BindBagsGivenToPerson(accCode, _strstore, _strCateg, _strSubCateg, _strbrand1, vendor, metal, _fromStyle, toStyle, _noOfDays, fromDate1, toDate1);
+    }
+
+
+
+    function getStyleImage(styleImage,isTable = false) {
+          var baseUrl = '@Url.Action("GetImagesNew", "Images")';
+
+          var body = {
+              styleName: styleImage,
+        }
+
+          $.ajax({
+              url: baseUrl,
+              method: 'GET',
+              data: body,
+              success: function (result) {
+
+
+                  if (result[0]) {
+                      $('#styleImage').attr("src", result[0]);
+                  } else {
+                      $('#styleImage').attr("src", "https://wjewel.dnsalias.org/styleimages/img_unavailable.jpg")
+                  }
+              },
+              error: function (xhr, status, error) {
+                  $("#styleImage").attr("src", "https://wjewel.dnsalias.org/styleimages/img_unavailable.jpg");
+              }
+
+          })
+    }
+
+
+
+
+    function BindBagsGivenToPerson(accCode, _strstore, _strCateg, _strSubCateg, _strbrand1, vendor, metal, _fromStyle, toStyle, _noOfDays, fromDate1, toDate1) {
+
+        //string ccode, int noOfDay, string ct, string subct, string metalval, string brandval, string fromstyle, string tostyle, string strVendor, string frmdate, string todate, string storeno = ""
+
+        var url = '@Url.Action("GetListOfInactiveStyles", "Analysis", new { Area = "" })';
+
+        //var isCustcheckFlag = Flag ? false : isCustomerInfoCheck;
+
+        var data = {
+            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val(),
+            ccode: accCode,
+            noOfDay: _noOfDays,
+            ct: _strCateg,
+            subct: _strSubCateg,
+            metalval: metal,
+            brandval: _strbrand1,
+            fromStyle: _fromStyle,
+            tostyle: toStyle,
+            strVendor: vendor,
+            frmdate: fromDate1,
+            todate: toDate1,
+            storeno: _strstore
+
+        };
+
+
+        var jqxhr = $.post(url, data, function () { })
+            .done(function (response) {
+                var json;
+                if (response instanceof Object)
+                    json = response;
+
+                else
+                    json = $.parseJSON(response);
+
+
+                if (json.length > 0) {
+
+                    //{"Style":"1002","Desc":"Quick Style","Category":"","Subcat":"","Metal":"","In_Stock":5.00,
+                    //"Age": 706, "Cost": 0.00, "Price": 0.00, "Case_no": "", "CAST_CODE": "", "VND_STYLE": "", "store_no": "IT SOLUTIO", "Class_GL": "ASSET", "SHOP_STAT": "", "Qty_Avble": 5.0
+
+
+                   var table = $('#dataTableForInactiveStyles').DataTable();
+                    table.clear().draw();
+                    //table.column(1).visible(true);
+                    $("#dataTableForInactiveStyles tbody").empty();
+                    $('#dataTableForInactiveStyles tfoot').show();
+                    var inStockToal = 0,totalCost=0,totalPrice = 0
+
+                    for (var i = 0; i < json.length; i++) {
+                        inStockToal += parseFloat(json[i].In_Stock);
+                        totalCost += parseFloat(json[i].Cost);
+                        totalPrice += parseFloat(json[i].Price);
+
+                        let styleCode = (json[i].Style && json[i].Style.toString().toLowerCase() !== "null") ? json[i].Style : "";
+                        var imgHtml =
+                            '<div class="img-cell" data-style="' + styleCode + '">' +
+                            '<img class="style-img" ' +
+                            'src="https://wjewel.dnsalias.org/styleimages/img_unavailable.jpg" ' +
+                            'style="width:60px;height:60px;object-fit:contain;" />' +
+                            '</div>';
+
+
+                        table.row.add([
+                            '<div class="CusCodeVal CusCode" data-code="' + styleCode + '">' + styleCode + '</div>',
+                            '<div class="img-cell" data-style="' + styleCode + '">' +
+                            '<img class="style-img" ' +
+                            'src="' + (json[i].Image ? "data:image/jpeg;base64," + json[i].Image : "") +'" ' +
+                            'style="width:60px;height:60px;object-fit:contain;" />' +
+                            '</div>',
+                            json[i].Category || "",
+                            json[i].Subcat,
+                            json[i].Metal,
+                            '<div style="text-align:right !important;">' + numberWithCommas(json[i].In_Stock) + '</div>',
+                            '<div style="text-align:right !important;">' + numberWithCommas(json[i].Age) + '</div>',
+                            '<div style="text-align:right !important;">' + numberWithCommas(json[i].Cost) + '</div>',
+                            '<div style="text-align:right !important;">' + numberWithCommas(json[i].Price) + '</div>',
+                            json[i].Case_no,
+                            json[i].CAST_CODE,
+                            json[i].VND_STYLE,
+                            json[i].store_no,
+                            json[i].Class_GL
+                        ]);
+                    }
+
+                    $("#dataTableForInactiveStyles tfoot").find('th').eq(5).text(numberWithCommas(inStockToal))
+                    $("#dataTableForInactiveStyles tfoot").find('th').eq(7).text(numberWithCommas(totalCost))
+                    $("#dataTableForInactiveStyles tfoot").find('th').eq(8).text(numberWithCommas(totalPrice))
+
+                    table.draw();
+
+                    if (table.rows().count() > 0) {
+
+                        var styleImage = $('#dataTableForInactiveStyles tbody tr:first td').eq(0).text().trim();
+                        getStyleImage(styleImage)
+                    }
+
+                   // var table = $('#dataTableForInactiveStyles').DataTable();
+
+
+
+
+
+                    filtertable = json;
+                    //table.column(1).visible(false);
+               }
+             else {
+                var table = $('#dataTableForInactiveStyles').DataTable();
+                    table.clear().draw();
+               $('#dataTableForInactiveStyles tfoot').hide();
+                alert("No Data Found");
+            }
+
+
+        })
+        .fail(function (jqxhr, textStatus, error) {
+            var err = textStatus + ", " + error;
+            console.log("GETBagsGivenToPerson Request Failed: " + err);
+        });
+    }
+
+
+
+
+    function activateddlList(ddlId, CheckBoxId) {
+
+        if ($('#' + CheckBoxId).prop('checked')) {
+            $('#' + ddlId).prop('disabled', true);
+        } else {
+            $('#' + ddlId).prop('disabled', false);
+        }
+
+        $(document).on('change', '#' + CheckBoxId, function () {
+            if ($('#' + CheckBoxId).prop('checked')) {
+                $('#' + ddlId).prop('disabled', true);
+                $('#' + ddlId).val($('#' + ddlId + ' option:first').val());
+            } else {
+                $('#' + ddlId).prop('disabled', false);
+                $('#' + ddlId + ' option').prop('selected', false);
+            }
+        })
+    }
+
+
+
+    function getReportHeadersData(reportType) {
+        let CategoryName = '';
+        if ($('#ddlCategoryAll').prop('checked')) {
+            CategoryName = '';
+        } else {
+            const val = $('#ddlCategory option:selected').val();
+            CategoryName = val && val !== "All" ? val : '';
+        }
+        let cate = CategoryName ? `( Categorys: ${CategoryName} )` : '( Categories: All )';
+
+
+        //Sub Category
+        let subCatName = '';
+        if ($('#ddlSubCategoryAll').prop('checked')) {
+            subCatName = '';
+        } else {
+            const val = $('#ddlSubCategory option:selected').val();
+            subCatName = val && val !== "All" ? val : '';
+        }
+        let Subcate = subCatName ? `( Sub Category: ${subCatName} )` : '( Sub Categorys: All )';
+
+        // Brand
+        let BrandName = '';
+        if ($('#ddlBrandAll').prop('checked')) {
+            BrandName = '';
+        } else {
+            const val = $('#ddlBrandList option:selected').val();
+            BrandName = val && val !== "All" ? val : '';
+        }
+        let brand = BrandName ? `( Brand: ${BrandName} )` : '( Brands: All )';
+
+        // vendor
+        let vendorName = '';
+        if ($('#ddlVendorAll').prop('checked')) {
+            vendorName = '';
+        } else {
+            const val = $('#ddlVendorList option:selected').val();
+            vendorName = val && val !== "All" ? val : '';
+        }
+        let Vendor = vendorName ? `( Vendor: ${vendorName} )` : '( Vendors: All )';
+
+        // metal
+        let metalName = '';
+        if ($('#ddlMetalAll').prop('checked')) {
+            metalName = '';
+        } else {
+            const val = $('#ddlMetalList option:selected').val();
+            metalName = val && val !== "All" ? val : '';
+        }
+        let Metal = metalName ? `( Metal: ${metalName} )` : '( Metals: All )';
+
+
+        // Dates
+        const fromdate = $('#txtFromDate1').val() || "1990-01-01";
+        const toDate = $('#txtToDate1').val() || "2099-12-31";
+
+        let datef = '';
+        if ($('#cbFillFromToDates').prop('checked')) {
+            datef = "Date: All";
+        } else {
+            datef = `Date From: ${fromdate} To: ${toDate}`;
+        }
+
+
+        if ($('#fromStyle').val() !== "") {
+            Stylefrom = $('#fromStyle').val();
+        } else {
+            Stylefrom = "";
+        }
+        if ($('#styleTo').val() !== "") {
+            StyleTo = $('#styleTo').val();
+        } else {
+            StyleTo = "";
+        }
+
+        var noDays = $('#noOfDays').val();
+        var Days = noDays;
+
+        isImagePropChecked = $('#printWithImage').is(':checked');
+
+
+        var data = {
+            type: reportType,
+            astSoldDay: Days ,
+            daterange: datef ,
+            cat: cate,
+            subcat: Subcate,
+            brand: brand,
+            metal: Metal,
+            vendor: Vendor,
+            frmsty: Stylefrom ,
+            tostyl: StyleTo ,
+            isImageCheck: isImagePropChecked,
+        }
+
+        return data
+    }
+
+    $(document).ready(function () {
+
+
+        var table = $('#dataTableForInactiveStyles').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 25,
+            "aaSorting": []
+        });
+        table.column(1).visible(false);
+
+        $('#dataTableForInactiveStyles tfoot').hide();
+        //DDL List
+
+        activateddlList('ddlStoreList', 'ddlStoreAll')
+        activateddlList('ddlCategory', 'ddlCategoryAll')
+        activateddlList('ddlSubCategory', 'ddlSubCategoryAll')
+        activateddlList('ddlBrandList', 'ddlBrandAll')
+        activateddlList('ddlVendorList', 'ddlVendorAll')
+        activateddlList('ddlMetalList', 'ddlMetalAll')
+        //DDL END
+
+
+        $('#dataTableForInactiveStyles tbody').on('click', 'tr', function () {
+            var styleImage = $(this).find('td').eq(0).text().trim();
+            getStyleImage(styleImage,false)
+        });
+
+
+        //isCustInfoCheck
+
+        $(document).on('click', '#BtnClose', function () {
+            $('#confirmMessage').html(
+                "OK to Discard the Changes and Close This Form?"
+            );
+
+            $('#confirmModal2').fadeIn();
+
+            $('#btnConfirmYes').off('click').on('click', function () {
+                $('#confirmModal2').fadeOut();
+                window.location.href = "../Home";
+            });
+
+            $('#btnConfirmNo').off('click').on('click', function () {
+                $('#confirmModal2').fadeOut();
+                console.log("User cancelled import.");
+                return;
+            });
+        })
+
+
+
+
+        //preview
+        $('#inactiveStylesbtnDataTablePreview').off('click').on('click',  function (e) {
+            //string astSoldDay, string daterange , string cat, string subcat, string brand, string metal,string vendor12,string frmsty, string tostyl,bool isImageCheck = false
+            e.preventDefault();
+
+            var jsonBody = getReportHeadersData("preview");
+           window.open('@Url.Action("GenerateReport", "Analysis")' + '?' + $.param(jsonBody), '_blank');
+
+
+
+
+        })
+
+        //print
+        $('#inactiveStylesBtnDataTablePrint',).off('click').on('click', function (e) {
+
+             e.preventDefault();
+
+             var jsonBody = getReportHeadersData("print");
+            window.open('@Url.Action("PrintViewer", "Analysis")' + '?' + $.param(jsonBody), '_blank');
+
+
+        })
+
+
+        //excel
+        $('.inactiveStylesbtnDataTableDownloadExcel').off('click').on('click', function (e) {
+
+            var jsonBody = getReportHeadersData("excel");
+
+            window.open(
+                '@Url.Action("GenerateReport", "Analysis")' + '?type=excel&' + $.param(jsonBody), '_blank'
+            );
+
+
+        })
+
+        //pdf
+        $('.inactiveStylesbtnDataTableDownloadPDF',).off('click').on('click', function (e) {
+
+            var jsonBody = getReportHeadersData("pdf");
+            window.open('@Url.Action("GenerateReport", "Analysis")' + '?type=pdf&' + $.param(jsonBody), '_blank');
+
+
+
+        })
+    });
+
+</script>
+
+
+
+<style>
+    body {
+        color: black !important;
+        font-family: Arial;
+    }
+
+    .heading {
+        background-color: #036e07;
+        color: #fafafa;
+        font-family: 'sans-serif';
+    }
+
+    .msgBoxHeading {
+        background-color: #0f1cd4;
+        color: #fafafa;
+        font-family: 'sans-serif';
+        text-align: center;
+        height: 30px;
+        padding-top: 5px;
+    }
+
+    #dataTableForInactiveStyles th,
+    #dataTableForInactiveStyles td {
+        color: black !important;
+    }
+
+    #divDataTableReportForOccuasion th,
+    #divDataTableReportForOccuasion td {
+        color: black !important;
+    }
+
+    /*divDataTableReportForOccuasion*/
+
+    .CusCodeVal {
+        color: deeppink !important;
+    }
+
+    .reportTransNo {
+        color: black !important;
+    }
+
+    .highlight-row {
+        background-color: #ffffcc !important;
+    }
+
+    .bg-purple {
+        background-color: #7030a0 !important;
+        color: white;
+    }
+
+    .bg-orange {
+        background-color: #ed7d31 !important;
+        color: white;
+    }
+
+    #MassSmsExcelModel .modal-dialog {
+        max-width: 600px !important;
+        width: 100%;
+        margin: 1.75rem auto;
+    }
+
+    .bg-primary-custom {
+        background-color: #0aa8ed;
+        color: white;
+    }
+
+    .bg-orange-custom {
+        background-color: #f4a261;
+        color: white;
+    }
+
+    .bg-purple-custom {
+        background-color: #6f42c1;
+        color: white;
+    }
+
+    .text-center-custom {
+        text-align: center;
+    }
+
+    .custom-file-upload {
+        display: inline-flex;
+        align-items: center;
+        padding: 5px 12px;
+        font-size: 13px;
+        font-weight: bold;
+        color: #1f497d;
+        background-color: #dbeef3;
+        border: 1px solid #c6d9f1;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
+
+        .custom-file-upload:hover {
+            background-color: #cce4f7;
+        }
+
+        .custom-file-upload img {
+            height: 18px;
+            margin-right: 6px;
+        }
+
+    input[type="file"] {
+        display: none;
+    }
+
+    .report-title {
+        text-align: start;
+        position: absolute;
+        top: -14px;
+        left: 39%;
+        transform: translateX(-50%);
+        background: #fff;
+        padding: 0 10px;
+        font-weight: 600;
+        font-size: 10px;
+    }
+
+    .description-col {
+        white-space: normal !important;
+        word-wrap: break-word !important;
+        width: 400px !important;
+    }
+
+    .description-report {
+        white-space: normal !important;
+        word-wrap: break-word !important;
+        width: 100px;
+    }
+
+    .small-date-container label {
+        font-size: 13px;
+        padding-top: 3px;
+        padding-bottom: 0;
+    }
+
+    .small-date-container input[type="date"] {
+        width: 120px !important;
+        height: 24px !important;
+        font-size: 13px !important;
+        padding: 2px 4px !important;
+    }
+
+    .small-date-container .btn-xs {
+        padding: 1px 6px;
+        font-size: 12px;
+        height: 22px;
+    }
+
+    .disabled-btn {
+        background-color: #a6a4a4 !important;
+        cursor: not-allowed;
+    }
+
+    tr.selected {
+        background-color: #ffdd99 !important;
+    }
+</style>

@@ -1,0 +1,362 @@
+<!--
+  * Created by Phanindra
+  * Phanindra 9/9/2024 Done changes for text align and decimals fixes and preview related
+-->
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    //ViewBag.Title = "Stock or Hand";
+}
+@using System.Text.Json
+
+@model YJWebCoreMVC.Models.AnalyticsModel
+@*@model IEnumerable<YJWeb.Models.AnalasysServiceModel>*@
+
+<div id="content-center" class="row">
+
+    <div class="web-form page login-page col-sm-12">
+
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            From Date
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtFromDate" class="form-control activateFormRefreshBtn" style="font-size:13px;" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            To Date
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtToDate" class="form-control activateFormRefreshBtn" style="font-size:13px;" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-right">
+                    <div class="mt-5px">
+                        <input type="checkbox" id="cbFillFromToDates" checked /> <span>All Dates</span>
+                        <input type="button" value="Last Month" class="formsGlobalUniqueBtn btnGetLastMonthDates" />
+                        <input type="button" value="Last Week" class="formsGlobalUniqueBtn btnGetLastWeekDates" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Customer
+                        </label>
+                        <div class="col-sm-8">
+                            <div class="autocomplete-dropdown">
+                                <div id="CustomerCodesForAutofill" class="d-none">
+                                    @Html.Raw(JsonSerializer.Serialize(Model.CustomerCodes))
+                                </div>
+                                <input type="text" id="txtCustomerCode" class="form-control activateFormRefreshBtn" placeholder="Search...">
+                                <div id="autocomplete-list1" class="autocomplete-items"></div>
+                            </div>
+                            <div class="customerCodeSearchDiv">
+                                <button class="formsGlobalUniqueBtn customerCodeSearchBtn1 showbsmodal activateFormRefreshBtn" data-modal-id="selectCustomerAccModal" data-bs-toggle="modal" data-bs-target="#selectCustomerAccModal">...</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Styles
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" id="txtStyleStartsWith" class="form-control activateFormRefreshBtn" placeholder="Start With" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Metal
+                        </label>
+                        <div class="col-sm-8">
+                            @Html.DropDownListFor(x => x.metal, Model.MetalTypes, new { @class = "form-control activateFormRefreshBtn", @id = "ddlMetal" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Vendor
+                        </label>
+                        <div class="col-sm-8">
+                            <div class="autocomplete-dropdown">
+                                <div id="VendorTypesForAutofill" class="d-none">
+                                    @Html.Raw(JsonSerializer.Serialize(Model.VenderTypes))
+                                </div>
+                                <input type="text" id="ddlVendor" class="form-control activateFormRefreshBtn" placeholder="Search...">
+                                <div id="autocomplete-list" class="autocomplete-items"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Styles
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" id="txtStyleContains" class="form-control activateFormRefreshBtn" placeholder="Contains" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Brand
+                        </label>
+                        <div class="col-sm-8">
+                            @Html.DropDownListFor(x => x.brand, Model.BrandTypes, new { @class = "form-control activateFormRefreshBtn", @id = "ddlBrand" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                </div>
+                <div class="col-md-4">
+                </div>
+                <div class="col-md-4">
+                    <div class=" text-right">
+                        <input type="button" id="btnFormResultsSearch" value="Refresh" class="refresh_btn refreshBtnDefault" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4" id="divUploadImage" style="display:none;">
+                    <input id="fileupload" type="file" /><br /><br />
+                    <input type="button" id="uploadButton" value="Upload" />
+                </div>
+            </div>
+            <div id="divImages" style="text-align:right;display:none;" class="col-lg-2">
+                <img id="image" src="" alt="" style="max-width: 133% !important;" />
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="mt-4 white-box pos-rel" id="divDataTableReport">
+
+        <div class="row col-md-6 report_buttons">
+            <div style="margin:3px;">
+                <input type="button" value="PDF" table-id="dataTableForBestSellerCategory" class="formsGlobalUniqueBtn btnDataTableDownloadPDF" id="btnPDF" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Excel" table-id="dataTableForBestSellerCategory" class="formsGlobalUniqueBtn btnDataTableDownloadExcel" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Preview" table-id="dataTableForBestSellerCategory" id="btnDataTablePreview" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Print" table-id="dataTableForBestSellerCategory" id="btnDataTablePrint" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Email" table-id="dataTableForBestSellerCategory" class="formsGlobalUniqueBtn" />
+            </div>
+
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Simple Excel" class="formsGlobalUniqueBtn" />
+            </div>
+        </div>
+        <div class="row dataTableReport">
+
+            <table id="dataTableForBestSellerCategory" class="dataTable display nowrap table" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th class="numericColumns">Qty</th>
+                        <th class="numericColumns">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot id="tfooter">
+                    <tr>
+                        <th class="text-right"></th>
+                        <th class="text-right numericColumns"></th>
+                        <th class="text-right numericColumns"></th>
+                    </tr>
+                </tfoot>
+
+            </table>
+            <br>
+
+        </div>
+    </div>
+
+</div>
+
+
+
+
+<script type="text/javascript">
+
+    var custcode = "", fromdate = "1990-01-01", todate = "2098-12-31", metal = "";
+    var brand = "", styleStarts = "", styleContains = "", vendor = "";
+    var filestyle = "";
+    function ClearControls() {
+        custcode = ""; fromdate = "1990-01-01"; todate = "2098-12-31"; metal = "";
+        brand = ""; styleStarts = ""; styleContains = ""; vendor = "";
+        $('#txtCustomerCode').val('');
+        $('#txtFromDate').val('');
+        $('#txtToDate').val('');
+        $('#txtStyleStartsWith').val('');
+        $('#txtStyleContains').val('');
+        $('#ddlMetal').val('All').change();
+        $('#ddlBrand').val('All').change();
+        $('#ddlVendor').val('All').change();
+
+        $('#divImages').hide();
+        $('#divPreviousNextImageBtns').hide();
+        $('#divUploadImage').hide();
+        var theImg = document.getElementById('image');
+        theImg.height = 0;
+        theImg.width = 0;
+
+        existAutoFilledData();
+    }
+    function existAutoFilledData() {
+        custcode = $('#txtCustomerCode').val();
+
+        if ($('#txtFromDate').val() != "")
+            fromdate = $('#txtFromDate').val();
+        else
+            fromdate = "1990-01-01";
+
+        if ($('#txtToDate').val() != "")
+            todate = $('#txtToDate').val();
+        else
+            todate = "2098-12-31";
+
+        if ($('#txtStyleStartsWith').val() != "")
+            styleStarts = $('#txtStyleStartsWith').val();
+        else
+            styleStarts = "";
+
+        if ($('#txtStyleContains').val() != "")
+            styleContains = $('#txtStyleContains').val();
+        else
+            styleContains = "";
+
+        if ($('#ddlMetal option:selected').val() != 'All')
+            metal = $('#ddlMetal option:selected').val();
+        else
+            metal = "";
+
+        if ($('#ddlBrand option:selected').val() != 'All')
+            brand = $('#ddlBrand option:selected').val();
+        else
+            brand = "";
+
+        if ($('#ddlVendor').val() != 'All')
+            vendor = $('#ddlVendor').val();
+        else
+            vendor = "";
+
+        BindSoldOrInstockIndex(custcode, fromdate, todate, metal, brand, styleStarts, styleContains, vendor);
+    }
+
+    function BindCustomerCodeSearchDetails(custcode) {
+        if (custcode != null) {
+            $('#hfCustomerId').val(custcode.Value);
+            $('#hfCustomerCode').val(custcode.Text);
+            console.log('ccode : ' + custcode.Value);
+            console.log('ccode : ' + custcode.Text);
+        }
+    }
+
+    function BindSoldOrInstockIndex(custcode, fromdate, todate, metal, brand, styleStarts, styleContains, vendor) {
+        var url = '@Url.Action("GetBestSellerCategoryReport", "Analysis", new { Area = "" })';
+        var data = {
+            ccode: custcode,
+            fdate: fromdate,
+            tdate: todate,
+            metalval: metal,
+            brandval: brand,
+            fromstyle: styleStarts,
+            tostyle: styleContains,
+            strVendor: vendor
+        };
+        var jqxhr = $.post(url, data, function () { })
+        .done(function (response) {
+            var json;
+            if (response instanceof Object)
+                json = response;
+            else
+                json = $.parseJSON(response);
+
+            var table = $('#dataTableForBestSellerCategory').DataTable();
+            table.clear().draw();
+
+
+            $("#dataTableForBestSellerCategory tbody").empty();
+            var trans = json;
+            var totalAmount1 = 0; var totalQty1 = 0, totalOnMemo1 = 0, totalInStock1 = 0;
+            var tr;
+            for (var i = 0; i < json.length; i++) {
+
+                totalQty1 += parseFloat(json[i].QTY);
+                totalAmount1 += parseFloat(json[i].PRICE);
+                totalOnMemo1 += parseFloat(json[i].On_memo);
+                totalInStock1 += parseFloat(json[i].In_STOCK);
+
+                table.row.add([
+                    json[i].category,
+                    numberWithCommas(json[i].QTY),
+                    numberWithCommas(json[i].PRICE),
+                ]);
+            }
+
+            $('#tfooter').find('th').eq(0).html("Grand Total");
+            $('#tfooter').find('th').eq(1).html(numberWithCommas(totalQty1));
+            $('#tfooter').find('th').eq(2).html(numberWithCommas(totalAmount1));
+
+            table.draw();
+            addNumericColumnsClasstoDT("dataTableForBestSellerCategory", [1, 2]);
+
+        })
+        .fail(function (jqxhr, textStatus, error) {
+            var err = textStatus + ", " + error;
+            console.log("Request Failed: " + err);
+        });
+    }
+
+    $(document).ready(function () {
+
+        var table = $('#dataTableForBestSellerCategory').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 25,
+            order: [[1, 'desc']]
+        });
+
+        $(document).on('click', ".paginate_button", function () {
+            addNumericColumnsClasstoDT("dataTableForBestSellerCategory", [1,2]);
+        });
+
+        fillFromToDates();
+
+    });
+
+</script>
+
+

@@ -1,0 +1,92 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+	  <Version>16.02.02.0</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="Views\Analytics\AnnualPaymentsReceived.cshtml" />
+    <Content Remove="Views\Analytics\AnnualSalesComparison.cshtml" />
+    <Content Remove="Views\Analytics\BestSellerCategoryReports.cshtml" />
+    <Content Remove="Views\Analytics\BestSellerReports.cshtml" />
+    <Content Remove="Views\Analytics\ComponentSalesAnalysis.cshtml" />
+    <Content Remove="Views\Analytics\DetailedCOG.cshtml" />
+    <Content Remove="Views\Analytics\EndofMonth.cshtml" />
+    <Content Remove="Views\Analytics\Follows.cshtml" />
+    <Content Remove="Views\Analytics\InactiveStyles.cshtml" />
+    <Content Remove="Views\Analytics\InStateOutStateSales.cshtml" />
+    <Content Remove="Views\Analytics\ItemsBoughtByCustomer.cshtml" />
+    <Content Remove="Views\Analytics\MonthlySalesProfit.cshtml" />
+    <Content Remove="Views\Analytics\MTDReport.cshtml" />
+    <Content Remove="Views\Analytics\PartnerSales.cshtml" />
+    <Content Remove="Views\Analytics\PrintJobBag.cshtml" />
+    <Content Remove="Views\Analytics\ReprintInvoice.cshtml" />
+    <Content Remove="Views\Analytics\SaleProfitPerStore.cshtml" />
+    <Content Remove="Views\Analytics\SalesBySalesman.cshtml" />
+    <Content Remove="Views\Analytics\SalesChartComparision.cshtml" />
+    <Content Remove="Views\Analytics\SalesCOGProfit.cshtml" />
+    <Content Remove="Views\Analytics\SalesProfitByCity.cshtml" />
+    <Content Remove="Views\Analytics\SalesProfitPerSource.cshtml" />
+    <Content Remove="Views\Analytics\SalesReportForReorder.cshtml" />
+    <Content Remove="Views\Analytics\SalesSummaryReport.cshtml" />
+    <Content Remove="Views\Analytics\StateSales.cshtml" />
+    <Content Remove="Views\Analytics\StockOrHand.cshtml" />
+    <Content Remove="Views\Analytics\TodaysCashFlow.cshtml" />
+    <Content Remove="Views\Analytics\TotalHourlySales.cshtml" />
+    <Content Remove="Views\Analytics\TotalMonthlySales.cshtml" />
+    <Content Remove="Views\Analytics\TotalMonthlySalesForACustomer.cshtml" />
+    <Content Remove="Views\Analytics\TotalSalesPerState.cshtml" />
+    <Content Remove="Views\Analytics\TotalWeeklySales.cshtml" />
+    <Content Remove="Views\Analytics\VendorSalesReport.cshtml" />
+    <Content Remove="Views\Analytics\VendorStylesPerformance.cshtml" />
+    <Content Remove="Views\Analytics\WorstSellerReports.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\css\animate.min.css" />
+    <None Include="wwwroot\css\bootstrap-5.3.8.min.css" />
+    <None Include="wwwroot\css\color.css" />
+    <None Include="wwwroot\css\font-awesome.min.css" />
+    <None Include="wwwroot\css\Fonts\fa-regular-400.woff2" />
+    <None Include="wwwroot\css\Fonts\fa-solid-900.woff2" />
+    <None Include="wwwroot\css\Fonts\fontastic.ttf" />
+    <None Include="wwwroot\css\Fonts\fontastic.woff" />
+    <None Include="wwwroot\css\jquery.dataTables.min.css" />
+    <None Include="wwwroot\css\line-icons.css" />
+    <None Include="wwwroot\css\logo.png" />
+    <None Include="wwwroot\css\owl.carousel.css" />
+    <None Include="wwwroot\css\responsive.css" />
+    <None Include="wwwroot\css\scanAccordion.css" />
+    <None Include="wwwroot\css\style.css" />
+    <None Include="wwwroot\css\themify-icons.css" />
+    <None Include="wwwroot\js\AddEditStyle.js" />
+    <None Include="wwwroot\js\admin.js" />
+    <None Include="wwwroot\js\bootstrap-5.3.8.bundle.min.js" />
+    <None Include="wwwroot\js\bootstrap-typeahead.js" />
+    <None Include="wwwroot\js\custom-new.js" />
+    <None Include="wwwroot\js\custom.js" />
+    <None Include="wwwroot\js\jquery-3.6.0.min.js" />
+    <None Include="wwwroot\js\jquery-ui.min.js" />
+    <None Include="wwwroot\js\refresh-button.js" />
+    <None Include="wwwroot\js\scanAccordion.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AspNetCore.Reporting" Version="2.1.0" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.12.4" />
+    <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.3.9" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
+    <PackageReference Include="System.Drawing.Common" Version="10.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\Analytics\" />
+  </ItemGroup>
+
+</Project>

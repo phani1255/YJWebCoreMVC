@@ -1,0 +1,469 @@
+﻿<!--
+ Hemanth 12/02/2024 created new form
+-->/
+@{
+
+    if (Session["UserID"] == null)
+    {
+        Layout = null;
+        Response.Redirect("~/Login/Index");
+    }
+    else
+    {
+        Layout = null;
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    ViewBag.Title = "Today's Cash Flow ";
+}
+
+<div id="content-center" class="row">
+
+    <div class="web-form page login-page col-sm-12">
+
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            From Date
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtFromDate" class="form-control activateFormRefreshBtn" style="font-size:13px;" value="@ViewBag.fromDate" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            To Date
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtToDate" class="form-control activateFormRefreshBtn" style="font-size:13px;" value="@ViewBag.toDate" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-right">
+
+                    <input type="checkbox" id="cbFillFromToDates" style="display:none;"/> 
+                    <input type="button" value="Last Month" class="formsGlobalUniqueBtn btnGetLastMonthDates" />
+                    <input type="button" value="Last Week" class="formsGlobalUniqueBtn btnGetLastWeekDates" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <div>
+                       
+                    </div>
+                </div>
+                <div class="col-md-3">
+
+                </div>
+                <div class="col-md-4 text-right">
+                    <input type="button" id="btnFormResultsSearch" value="Refresh" class="refresh_btn refreshBtnDefault" />
+
+                </div>
+            </div>
+
+
+            <div id="divImages" style="text-align:right;" class="col-lg-2">
+                <img id="image" src="" alt="" style="max-width: 133% !important;" />
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="mt-4 white-box pos-rel" id="divDataTableReport">
+
+        <div class="row col-md-6 report_buttons">
+            <div style="margin:3px;">
+                <input type="button" value="PDF" table-id="dataTableForTodayCashFlow" class="formsGlobalUniqueBtn btnDataTableDownloadPDF" id="btnPDF" table-count="3" table-sub-headings="LIST OF PAYMENTS RECEIVED,SUMMARY BY PAYMENT TYPE,CHECK REGISTER" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Excel" table-id="dataTableForTodayCashFlow" class="formsGlobalUniqueBtn btnDataTableDownloadExcel" table-count="3" table-sub-headings="LIST OF PAYMENTS RECEIVED,SUMMARY BY PAYMENT TYPE,CHECK REGISTER" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Preview" table-id="dataTableForTodayCashFlow" id="btnDataTablePreview" class="formsGlobalUniqueBtn" table-count="3" table-sub-headings="LIST OF PAYMENTS RECEIVED,SUMMARY BY PAYMENT TYPE,CHECK REGISTER" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Print" table-id="dataTableForTodayCashFlow" id="btnDataTablePrint" class="formsGlobalUniqueBtn" table-count="3" table-sub-headings="LIST OF PAYMENTS RECEIVED,SUMMARY BY PAYMENT TYPE,CHECK REGISTER" />
+            </div>
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Email" table-id="dataTableForTodayCashFlow" class="formsGlobalUniqueBtn" />
+            </div>
+
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Simple Excel" class="formsGlobalUniqueBtn" />
+            </div>
+        </div>
+        <div class="row">
+            <br />
+        </div>
+        <div class="row" id="">
+            <div class="col-md-12"><b>LIST OF PAYMENTS RECEIVED</b></div>
+        </div>
+        <div class="row">
+            <br />
+        </div>
+        <div class="row dataTableReport" id="printContent">
+            <div><br /></div>
+            <table id="dataTableForTodayCashFlow-1" class="dataTable display nowrap table" style="width:100%">
+                <thead>
+                    <tr>
+                        <th style="text-align:center !important;">Paym/Credit No</th>
+                        <th style="text-align:center !important;">Invoice#</th>
+                        <th style="text-align:center !important;">Customer Code</th>
+                        <th style="text-align:center !important;">Name</th>
+                        <th style="text-align:center !important;">Date</th>
+                        <th style="text-align:center !important;">Customer Ref No</th>
+                        <th style="text-align:center !important;">Total</th>
+                        <th style="text-align:center !important;">Payment Type</th>
+                        <th style="text-align:center !important;">Store</th>
+                        <th style="text-align:center !important;">Register</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot id="tfooter-1">
+                    <tr>
+                        <th id=""></th>
+                        <th id=""></th>
+                        <th id=""></th>
+                        <th id=""></th>
+                        <th id=""></th>
+                        <th id=""></th>
+                        <th id="summaryTotal" class="text-right numericColumns"></th>
+                        <th id=""></th>
+                        <th id=""></th>
+                        <th id=""></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div class="row">
+            <br />
+        </div>
+        <div class="row" id="">
+            <div class="col-md-12"><b>SUMMARY BY PAYMENT TYPE</b></div>
+        </div>
+        <div class="row">
+            <br />
+        </div>
+        <div class="row dataTableReport" id="">
+            <div><br /></div>
+            <table id="dataTableForTodayCashFlow-2" class="dataTable display nowrap table" style="width:100%">
+                <thead>
+                    <tr>
+                        <th style="text-align:center !important;">Payment Type</th>
+                        <th style="text-align:center !important;">Paid</th>
+                        <th style="text-align:center !important;">Applied</th>
+                        <th style="text-align:center !important;">Balance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot id="tfooter-2">
+                    <tr>
+                        <th id=""></th>
+                        <th id="summaryPaid" class="text-right numericColumns"></th>
+                        <th id="summaryApplied" class="text-right numericColumns"></th>
+                        <th id="summaryBalance" class="text-right numericColumns"></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div class="row">
+            <br />
+        </div>
+        <div class="row" id="">
+            <div class="col-md-12"><b>CHECK REGISTER</b></div>
+        </div>
+        <div class="row">
+            <br />
+        </div>
+        <div class="row dataTableReport" id="">
+            <div><br /></div>
+            <table id="dataTableForTodayCashFlow-3" class="dataTable display nowrap table" style="width:100%">
+                <thead>
+                    <tr>
+                        <th style="text-align:center !important;">Check No</th>
+                        <th style="text-align:center !important;">Vendor A/C</th>
+                        <th style="text-align:center !important;">Name</th>
+                        <th style="text-align:center !important;">Date</th>
+                        <th style="text-align:center !important;">Enter Date</th>
+                        <th style="text-align:center !important;">Bank</th>
+                        <th style="text-align:center !important;">G/L Code</th>
+                        <th style="text-align:center !important;">Amount</th>
+                        <th style="text-align:center !important;">Cleared</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot id="tfooter-3">
+                    <tr>
+                        <th id=""></th>
+                        <th id=""></th>
+                        <th id=""></th>
+                        <th id=""></th>
+                        <th id=""></th>
+                        <th id=""></th>
+                        <th id=""></th>
+                        <th id="summaryAmount" class="text-right numericColumns"></th>
+                        <th id=""></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var table1 = $('#dataTableForTodayCashFlow-1').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 25,
+            bInfo: false,
+            aaSorting: [],
+            columnDefs: [{
+                class: 'text-right',
+                targets: [6]
+            }, {
+                    class: 'set-width',
+                    targets: [0, 1, 2, 5,6]
+            }]
+        });
+
+        var table2 = $('#dataTableForTodayCashFlow-2').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 25,
+            bInfo: false,
+            aaSorting: [],
+            columnDefs: [{
+                class: 'text-right',
+                targets: [1,2,3]
+            }]
+        });
+
+        var table3 = $('#dataTableForTodayCashFlow-3').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 25,
+            bInfo: false,
+            aaSorting: [],
+            columnDefs: [{
+                class: 'text-right',
+                targets: [7]
+            }, {
+                    class: 'set-width',
+                    targets: [0, 1, 2, 3, 4, 5]
+            }]
+        });
+
+        var date1 = new Date();
+        //date1.setDate(0); // date1 now contains the last day of the previous month.
+        var day = ("0" + date1.getDate()).slice(-2);
+        var lastmonth = date1.getMonth() + 1;
+        lastmonth = ('0' + lastmonth).slice(-2);
+        var fromDate = date1.getFullYear() + "-" + lastmonth + "-" + day;
+       
+        $('#txtFromDate').val(fromDate);
+       // $('#txtToDate').val(fromDate);
+
+    });
+
+    function buttonStyleClassChange(btnId) {
+        $('#' + btnId).removeClass('refreshBtnDefault').addClass('needToRefreshBtn');
+        $('#' + btnId).val("Refresh *");
+    }
+
+    function existAutoFilledData() {
+
+        $('#summaryTotal').html("");
+
+        $('#summaryPaid').html("");
+        $('#summaryApplied').html("");
+        $('#summaryBalance').html("");
+
+        $('#summaryAmount').html("");
+
+         
+        if ($('#txtFromDate').val() != "")
+            fromdate = $('#txtFromDate').val();
+        else
+            fromdate = "1990-01-01";
+
+        if ($('#txtToDate').val() != "")
+            todate = $('#txtToDate').val();
+        else
+            todate = "2099-12-31";
+
+
+        var url = '@Url.Action("GetTodaysCashFlow", "ListOfItemsSold", new { Area = "" })';
+
+        var data = {
+            FROMDATE: fromdate,
+            DateTo: todate
+        };
+
+        var table1 = $('#dataTableForTodayCashFlow-1').DataTable();
+        table1.clear().draw();
+
+        var table2 = $('#dataTableForTodayCashFlow-2').DataTable();
+        table2.clear().draw();
+
+        var table3 = $('#dataTableForTodayCashFlow-3').DataTable();
+        table3.clear().draw();
+
+        var jqxhr = $.post(url, data, function () { })
+            .done(function (response) {
+                var json;
+                if (response instanceof Object)
+                    json = response;
+                else
+                    json = $.parseJSON(response);
+
+                var summaryTotal = 0;
+
+                if (json.credit != null) {
+
+                    for (var i = 0; i < json.credit.length; i++) {
+
+                        var orderdate = "";
+                        if (json.credit[i].DATE != "" && json.credit[i].DATE != null) {
+                            var date = new Date(json.credit[i].DATE);
+                            orderdate = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
+                        }
+                        summaryTotal = summaryTotal + json.credit[i].PAID;
+                        table1.row.add([
+                            json.credit[i].RTV_PAY + "/" + json.credit[i].INVOICE,
+                            json.credit[i].INVOICE,
+                            json.credit[i].ACC,
+                            json.credit[i].NAME,
+                            orderdate,
+                            json.credit[i].CHECK_NO,
+                            formatCurrency(json.credit[i].PAID),
+                            json.credit[i].PAYMENTTYPE,
+                            json.credit[i].store_no,
+                            json.credit[i].REGISTER]);
+                    }
+                    table1.draw();
+                    $('#summaryTotal').html(formatCurrency(summaryTotal));
+                }
+
+                var paidTotal = 0;
+                var appliedTotal = 0;
+                var balanceTotal = 0;
+                if (json.summary != null) {
+                    for (var i = 0; i < json.summary.length; i++) {
+
+                        var paid = 0;
+                        if (json.summary[i].Paid != undefined && json.summary[i].Paid != '') {
+                            paid = json.summary[i].Paid;
+                        }
+                        paidTotal = paidTotal + paid;
+                        var applied = 0;
+                        if (json.summary[i].Applied != undefined && json.summary[i].Applied != '') {
+                            applied = json.summary[i].Applied;
+                        }
+                        appliedTotal = appliedTotal + applied;
+                        var balance = 0;
+                        if (json.summary[i].Balance != undefined && json.summary[i].Balance != '') {
+                            balance = json.summary[i].Balance;
+                        }
+                        balanceTotal = balanceTotal + balance;
+
+                        table2.row.add([
+                            json.summary[i].Paymenttype,
+                            formatCurrency(paid),
+                            formatCurrency(applied),
+                            formatCurrency(balance)]);
+                    }
+
+                    table2.draw();
+
+                    $('#summaryPaid').html(formatCurrency(paidTotal));
+                    $('#summaryApplied').html(formatCurrency(appliedTotal));
+                    $('#summaryBalance').html(formatCurrency(balanceTotal));
+                }
+                var registerTotal = 0;
+                if (json.register != null) {
+                    for (var i = 0; i < json.register.length; i++) {
+
+                        var orderdate = "";
+                        if (json.register[i].date != "" && json.register[i].date != null) {
+                            var date = new Date(json.register[i].date);
+                            orderdate = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
+                        }
+
+                        var enterdate = "";
+                        if (json.register[i].enter_date != "" && json.register[i].enter_date != null) {
+                            var date = new Date(json.register[i].enter_date);
+                            enterdate = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
+                        }
+
+                        var registerAmount = 0;
+
+                        if (json.register[i].amount != "" && json.register[i].amount != null) {
+                            registerAmount = json.register[i].amount;
+                        }
+
+                        registerTotal = registerTotal + registerAmount;
+
+                        table3.row.add([
+                            json.register[i].CHECK_NO ?? "",
+                            json.register[i].acc,
+                            json.register[i].NAME,
+                            orderdate,
+                            enterdate,
+                            json.register[i].bank,
+                            json.register[i].gl_code,
+                            formatCurrency(registerAmount),
+                            json.register[i].cleared]);
+                    }
+                    table3.draw();
+
+                    $('#summaryAmount').html(formatCurrency(registerTotal));
+                }
+                
+            })
+            .fail(function (jqxhr, textStatus, error) {
+                var err = textStatus + ", " + error;
+                console.log("GETSoldOrInstock Request Failed: " + err);
+            });
+
+    }
+
+    function formatCurrency(total) {
+        var neg = false;
+        if (total < 0) {
+            neg = true;
+            total = Math.abs(total);
+        }
+        return (neg ? "-" : '') + parseFloat(total, 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString();
+    }
+
+</script>
+<style>
+
+    
+
+    #summaryTotal {
+        text-align: right !important;
+    }
+
+    .text-right {
+        text-align: right !important;
+    }
+    .set-width {
+        width: 80px;
+    }
+   
+</style>

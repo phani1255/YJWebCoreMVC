@@ -1,0 +1,432 @@
+﻿<!--
+//25-Aug-2024 - Created by hemanth to show sales summary report
+-->
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="content-center" class="row">
+
+    <div class="web-form page login-page col-sm-12">
+
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="col-sm-4">
+
+                    <div class="well">
+                        <label>
+                            From Date
+                        </label>
+                        <div>
+                            <input type="date" id="txtFromDate" class="form-control fs-13" name="dateFrom" />
+                        </div>
+
+                        <label>
+                            To Date
+                        </label>
+                        <div>
+                            <input type="date" id="txtToDate" class="form-control fs-13" name="dateTo" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div>
+                        <input type="checkbox" id="partialSpec" class="" style="font-size:12px;" name="ChkIncludePartialSpecPayment" /> Include Partial Spec. payments
+                    </div>
+                    <div>
+                        <div>
+                            <input type="radio" value="rdoDateonly" class="formsGlobalUniqueBtn" id="btnDateonly" name="rdoDate" /> Date
+                        </div>
+                        <div>
+                            <input type="radio" value="rdoPickupdate" class="formsGlobalUniqueBtn" id="btnPickupdate" name="rdoDate" checked="checked" /> Pickup Date
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row" style="margin-top: 10px;">
+                <div class="col-md-12 text-right">
+
+                    <input type="checkbox" id="cbFillFromToDates" checked /> <span>All Dates</span>
+                    <input type="button" value="Last Month" class="formsGlobalUniqueBtn btnGetLastMonthDates" />
+                    <input type="button" value="Last Week" class="formsGlobalUniqueBtn btnGetLastWeekDates" />
+                    <input type="button" value="Reset" class="formsGlobalUniqueBtn btnResetFormValues" id="resetFormValues" />
+                    <input type="button" id="btnFormResultsSearch" value="Refresh" class="refresh_btn refreshBtnDefault" />
+
+                </div>
+            </div>
+            <div id="divImages" style="text-align:right;" class="col-lg-2">
+                <img id="image" src="" alt="" style="max-width: 133% !important;" />
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="mt-4 white-box pos-rel" id="divDataTableReport">
+
+        <div class="row col-md-6 report_buttons">
+            <div style="margin:3px;">
+                <input type="button" value="PDF" table-id="dataTableForSalesSummary" table-count="3" class="formsGlobalUniqueBtn btnDataTableDownloadPDF" id="btnPDF" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Excel" table-id="dataTableForSalesSummary" table-count="3" class="formsGlobalUniqueBtn btnDataTableDownloadExcel" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Preview" table-id="dataTableForSalesSummary" table-count="3" id="btnDataTablePreview" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Print" table-id="dataTableForSalesSummary" table-count="3" id="btnDataTablePrint" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Email" table-id="dataTableForSalesSummary" table-count="3" class="formsGlobalUniqueBtn" />
+            </div>
+
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Simple Excel" class="formsGlobalUniqueBtn" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                &nbsp;
+            </div>
+        </div>
+
+        <div class="row dataTableReport" id="printContent">
+            <div class="row" style="font-size:18px;">
+                <div class="col-12">
+                    <span><b>Sales</b></span>
+                </div>
+            </div>
+            <table id="dataTableForSalesSummary-1" class="dataTable display nowrap table" style="width:100%">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Total Sales</th>
+                        <th>Sales Tax</th>
+                        <th>COGS</th>
+                        <th>Gross Profit</th>
+                        <th>GP%</th>
+                        <th>QTY</th>
+                        <th>% Of Sale</th>
+                        <th>Avg Sale</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot id="tfooter-1">
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+
+
+            </table>
+
+            <br />
+            <div class="row" style="font-size:18px;">
+                <div class="col-12">
+                    <span><b>Sales By Store</b></span>
+                </div>
+            </div>
+            <br />
+            <table id="dataTableForSalesSummary-2" class="dataTable display nowrap table" style="width:100%">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Total Sales</th>
+                        <th>Sales Tax</th>
+                        <th>COGS</th>
+                        <th>Gross Profit</th>
+                        <th>GP%</th>
+                        <th>QTY</th>
+                        <th>% Of Sale</th>
+                        <th>Avg Sale</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot id="tfooter-2">
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+
+
+            </table>
+            <br />
+            <div class="row" style="font-size:18px;">
+                <div class="col-12">
+                    <span><b>Sales By Sales Person</b></span>
+                </div>
+            </div>
+            <br />
+            <table id="dataTableForSalesSummary-3" class="dataTable display nowrap table" style="width:100%">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Total Sales</th>
+                        <th>Sales Tax</th>
+                        <th>COGS</th>
+                        <th>Gross Profit</th>
+                        <th>GP%</th>
+                        <th>QTY</th>
+                        <th>% Of Sale</th>
+                        <th>Avg Sale</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot id="tfooter-3">
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+
+
+            </table>
+
+        </div>
+    </div>
+
+</div>
+
+
+
+
+<script type="text/javascript">
+
+    var txtFromDate = "1990-01-01", txtToDate = "2099-12-31";
+    function ClearControls() {
+        txtFromDate = "1990-01-01"; txtToDate = "2099-12-31";
+        $('#txtFromDate').val('');
+        $('#txtToDate').val('');
+
+
+        existAutoFilledData();
+    }
+    function existAutoFilledData() {
+
+        if ($('#txtFromDate').val() != "")
+            fromdate = $('#txtFromDate').val();
+        else
+            fromdate = "1990-01-01";
+
+        if ($('#txtToDate').val() != "")
+            todate = $('#txtToDate').val();
+        else
+            todate = "2099-12-31";
+
+        let partialSpeckDate = $('#partialSpec').prop('checked') ? true : false;
+        let bypicdate = false;
+        let rdt = $("input[name='rdoDate']:checked").val();
+        if (rdt == "rdoPickupdate") {
+            bypicdate = true;
+        }
+
+
+        for (i = 1; i <= 3; i++) {
+            BindAnnualPaymentsReceived(fromdate, todate, partialSpeckDate, bypicdate,i);
+        }
+
+    }
+
+    function buttonStyleClassChange(btnId) {
+        $('#' + btnId).removeClass('refreshBtnDefault').addClass('needToRefreshBtn');
+        $('#' + btnId).val("Refresh *");
+    }
+
+
+    function BindAnnualPaymentsReceived(fromdate, todate,partialSpeckDate, bypicdate,dtId) {
+        var url = '@Url.Action("getSalesSummaryDetails", "SalesSummary", new { Area = "" })';
+            var data = {
+                fDate: fromdate,
+                tDate: todate,
+                partialSpeckDate: partialSpeckDate,
+                bypickdate: bypicdate,
+                type: dtId
+            };
+
+            var jqxhr = $.post(url, data, function () { })
+                .done(function (response) {
+                    var json;
+                    if (response instanceof Object)
+                        json = response;
+                    else
+                        json = $.parseJSON(response);
+
+                    var table = $('#dataTableForSalesSummary-' + dtId).DataTable();
+                    table.clear().draw();
+
+                    $("#dataTableForSalesSummary-"+dtId +" tbody").empty();
+                    var avgsale = 0;
+                    var totalSales = 0
+                    var gst = 0;
+                    var cogs = 0;
+                    var GrossProfit = 0;
+                    var Marginperc = 0;
+                    var QTY = 0;
+                    var AvgSales = 0;
+                    var totalavgsale = 0;
+
+                    for (var i = 0; i < json.length; i++) {
+                        avgsale = parseFloat(json[i].TotalSales) / parseFloat(json[i].QTY);
+                        totalSales += parseFloat(json[i].TotalSales);
+                        gst += parseFloat(json[i].GST);
+                        cogs += parseFloat(json[i].COGS);
+                        GrossProfit += parseFloat(json[i].GrossProfit);
+                        Marginperc += parseFloat(json[i].Marginperc);
+                        QTY += parseFloat(json[i].QTY);
+                        AvgSales += parseFloat(json[i].AvgSales);
+                        totalavgsale += parseFloat(avgsale);
+
+
+                        table.row.add([
+                            json[i].Grouped,
+                            formatCurrency(json[i].TotalSales),
+                            formatCurrency(json[i].GST),
+                            formatCurrency(json[i].COGS),
+                            formatCurrency(json[i].GrossProfit),
+                            formatCurrency(json[i].Marginperc),
+                            formatCurrency(json[i].QTY),
+                            formatCurrency(json[i].AvgSales),
+                            formatCurrency(avgsale)
+                        ]);
+
+                    }
+                    table.draw();
+                    $('#tfooter-' + dtId).find('th').eq(0).html();
+                    $('#tfooter-' + dtId).find('th').eq(1).html(formatCurrency(totalSales));
+                    $('#tfooter-' + dtId).find('th').eq(2).html(formatCurrency(gst));
+                    $('#tfooter-' + dtId).find('th').eq(3).html(formatCurrency(cogs));
+                    $('#tfooter-' + dtId).find('th').eq(4).html(formatCurrency(GrossProfit));
+                    $('#tfooter-' + dtId).find('th').eq(5).html(formatCurrency(Marginperc));
+                    $('#tfooter-' + dtId).find('th').eq(6).html(formatCurrency(QTY));
+                    $('#tfooter-' + dtId).find('th').eq(7).html(formatCurrency(AvgSales));
+                    $('#tfooter-' + dtId).find('th').eq(8).html(formatCurrency(totalavgsale));
+
+
+
+                    // TODO : Bind data to table
+                })
+                .fail(function (jqxhr, textStatus, error) {
+                    var err = textStatus + ", " + error;
+                    console.log("GETSoldOrInstock Request Failed: " + err);
+                });
+    }
+    function formatCurrency(total) {
+        var neg = false;
+        if (total < 0) {
+            neg = true;
+            total = Math.abs(total);
+        }
+        return (neg ? "-" : '') + parseFloat(total, 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString();
+    }
+
+    $(document).ready(function () {
+
+        var table = $('#dataTableForSalesSummary-1').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 25,
+            bInfo: false
+        });
+
+        var table2 = $('#dataTableForSalesSummary-2').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 25,
+            bInfo: false
+        });
+
+        var table3 = $('#dataTableForSalesSummary-3').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 25,
+            bInfo: false
+        });
+
+        fillFromToDates();
+
+        $('#btnFormResultsSearch').click(function () {
+            existAutoFilledData();
+            $('#btnFormResultsSearch').removeClass('needToRefreshBtn').addClass('refreshBtnDefault');
+            $('#btnFormResultsSearch').val("Refresh");
+        });
+
+        $('#txtFromDate').on("blur", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        $('#txtToDate').on("change", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        $('#partialSpec').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        $('#btnDateonly').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        $('#btnPickupdate').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        $('#resetFormValues').on("click", function (e) {
+            $("#cbFillFromToDates").prop("checked", true);
+            fillFromToDates();
+            $("#partialSpec").prop("checked", false);
+            $("#btnPickupdate").prop("checked", true);
+
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+    });
+
+</script>
+<style>
+    .dataTable tfoot th, table.dataTable tfoot td {
+         padding: 0px !important;
+         text-align:right !important;
+
+    }
+
+    .dataTable tfoot th {
+        padding: 8px 10px !important;
+    }
+
+    .table tbody tr td:last-child {
+        padding-right: 0px !important;
+    }
+
+    .dataTable tfoot th:last-child {
+        padding: 0px !important;
+    }
+</style>

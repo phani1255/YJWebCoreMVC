@@ -1,0 +1,711 @@
+﻿<!--
+Hemant 10/02/2024 Sales / SalesCOG Profit Report
+-->
+@{
+
+    if (Session["UserID"] == null)
+    {
+        Layout = null;
+        Response.Redirect("~/Login/Index");
+    }
+    else
+    {
+        Layout = null;
+        Layout = "~/Views/Shared/_Layout.cshtml";
+        
+    }
+    ViewBag.Title = "SALES/ COG / PROFIT  REPORT";
+}
+
+<div id="content-center" class="row">
+
+    <div class="web-form page login-page col-sm-12">
+
+        <div class="form-horizontal">
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            From
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtFromDate" class="form-control activateFormRefreshBtn" style="font-size:13px;" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            To Date
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtToDate" class="form-control activateFormRefreshBtn" style="font-size:13px;" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-right">
+                    <div class="mt-5px">
+                        <input type="checkbox" id="cbFillFromToDates" checked /> <span>All Dates</span>
+                        <input type="button" value="Last Month" class="formsGlobalUniqueBtn btnGetLastMonthDates" />
+                        <input type="button" value="Last Week" class="formsGlobalUniqueBtn btnGetLastWeekDates" />
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Customer
+                        </label>
+                        <div class="col-sm-8">
+                            <div class="autocomplete-dropdown">
+                                <div id="CustomerCodesForAutofill" class="d-none">@Html.Raw(Json.Encode(ViewBag.CustomerCodes)) </div>
+                                <input type="text" id="txtCustomerCode" class="form-control activateFormRefreshBtn" placeholder="Search..." disabled="disabled">
+                                <div id="autocomplete-list1" class="autocomplete-items"></div>
+                            </div>
+                            <div class="customerCodeSearchDiv">
+                                <button class="formsGlobalUniqueBtn customerCodeSearchBtn1 showbsmodal activateFormRefreshBtn" data-modal-id="selectCustomerAccModal" data-bs-toggle="modal" data-bs-target="#selectCustomerAccModal">...</button>
+                            </div>
+                            <input type="checkbox" id="chkAllCustomers" name="chkAllCustomers" checked="checked" /> All Customers
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-6">
+                            Style Starting With
+                        </label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control activateFormRefreshBtn" id="txtFromStyle" name="txtFromStyle" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-6">
+                            Style That Contains
+                        </label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control activateFormRefreshBtn" id="txtToStyle" name="txtToStyle" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Vendor
+                        </label>
+                        <div class="col-sm-8">
+                            <select id="cmbVendor" name="cmbVendor" class="form-control">
+                                @{
+                                    if (ViewBag.VenderTypes != null)
+                                    {
+                                        foreach (var cast_code in ViewBag.VenderTypes)
+                                        {
+                                            <option value="@cast_code.Value">@cast_code.Text</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Store
+                        </label>
+                        <div class="col-sm-8">
+                            <select id="store" name="store" class="form-control">
+                                @{
+                                    if (ViewBag.StoreData != null)
+                                    {
+                                        foreach (var store in ViewBag.StoreData)
+                                        {
+                                            <option value="@store.Value">@store.Text</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Metals
+                        </label>
+                        <div class="col-sm-8">
+                            <select id="metal" name="metal" class="form-control">
+                                @{
+                                    if (ViewBag.MetalTypes != null)
+                                    {
+                                        foreach (var metal in ViewBag.MetalTypes)
+                                        {
+                                            <option value="@metal.Value">@metal.Text</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Brand
+                        </label>
+                        <div class="col-sm-8">
+                            <select id="brand" name="brand" class="form-control">
+                                
+                                @{
+                                    if (ViewBag.BrandTypes != null)
+                                    {
+                                        foreach (var BRAND in ViewBag.BrandTypes)
+                                        {
+                                            <option value="@BRAND.Value">@BRAND.Text</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Category
+                        </label>
+                        <div class="col-sm-8">
+
+                            <select id="category" name="category" class="form-control">
+
+                                @{
+                                    if (ViewBag.CategoryData != null)
+                                    {
+                                        foreach (var category in ViewBag.CategoryData)
+                                        {
+                                            <option value="@category.Value">@category.Text</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Sub Category
+                        </label>
+                        <div class="col-sm-8">
+                            <select id="subcategory" name="subcategory" class="form-control">
+
+                                @{
+                                    if (ViewBag.SubCategoryData != null)
+                                    {
+                                        foreach (var subcat in ViewBag.SubCategoryData)
+                                        {
+                                            <option value="@subcat.Value">@subcat.Text</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Salesrep
+                        </label>
+                        <div class="col-sm-8">
+                            <select id="ddlSales" name="ddlSales" class="form-control">
+
+                                @{
+                                    if (ViewBag.SalesmanData != null)
+                                    {
+                                        foreach (var salesMan in ViewBag.SalesmanData)
+                                        {
+                                            <option value="@salesMan.Value">@salesMan.Text</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <input type="checkbox" name="chkSimpleExcel" id="chkSimpleExcel" />&nbsp;Export Simplified Excel
+                </div>
+                <div class="col-md-4">
+                    <input type="checkbox" name="chkinclubankfee" id="chkinclubankfee" />&nbsp;Include Bank Fee
+                </div>
+            </div>
+            <div class="row" style="padding-top:8px;">
+                <div class="col-md-4"><input type="checkbox" name="chkLayawaysUnpaid" id="chkLayawaysUnpaid" />&nbsp;Include Layaways, Unpaid Special Orders.</div>
+                <div class="col-md-4">
+                    <input type="radio" value="rdoDateonly" class="activateFormRefreshBtn" id="rdoDateonly" name="rdoDateonly" checked="checked"/> Invoice Date
+                    &nbsp;&nbsp;&nbsp;
+                    <input type="radio" value="rdoPickupdate" class="activateFormRefreshBtn" id="rdoPickupdate" name="rdoDateonly"  /> Pickup Date
+                </div>
+                <div class="col-md-4 text-right" style="padding-top: 8px;">
+                    <input type="button" value="Reset" class="formsGlobalUniqueBtn btnResetFormValues" id="resetFormValues" />
+                    <input type="button" id="btnFormResultsSearch" value="Refresh" class="refresh_btn refreshBtnDefault" />
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="mt-4 white-box pos-rel" id="divDataTableReport">
+
+        <div class="row col-md-6 report_buttons">
+            <div style="margin:3px;">
+                <input type="button" value="PDF" table-id="dataTableForSalesCogProfit" class="formsGlobalUniqueBtn btnDataTableDownloadPDF" id="btnPDF" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Excel" table-id="dataTableForSalesCogProfit" class="formsGlobalUniqueBtn btnDataTableDownloadExcel" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Preview" table-id="dataTableForSalesCogProfit" id="btnDataTablePreview" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Print" table-id="dataTableForSalesCogProfit" id="btnDataTablePrint" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Email" table-id="dataTableForSalesCogProfit" class="formsGlobalUniqueBtn" />
+            </div>
+
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Simple Excel" class="formsGlobalUniqueBtn" />
+            </div>
+        </div>
+        <div class="row dataTableReport" id="printContent">
+            <div><br /></div>
+            <table id="dataTableForSalesCogProfit" class="dataTable display nowrap table" style="width:100%">
+                <thead>
+                    <tr>
+                        <th style="text-align:center !important;">Dept</th>
+                        <th style="text-align:center !important;">Sub Total</th>
+                        <th style="text-align:center !important;">COGs</th>
+                        <th style="text-align:center !important;">Gross Profit</th>
+                        <th style="text-align:center !important;">Date</th>
+                        <th style="text-align:center !important;">Store</th>
+                        <th style="text-align:center !important;">Inv_no</th>
+                        <th style="text-align:center !important;">Sub Total</th>
+                        <th style="text-align:center !important;">COGS</th>
+                        <th style="text-align:center !important;">Margin%</th>
+                        <th style="text-align:center !important;">Month</th>
+                        <th style="text-align:center !important;">Day</th>
+                        <th style="text-align:center !important;">Salesman1</th>
+                        <th style="text-align:center !important;">Salesman2</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot id="tfooter">
+                    <tr>
+                        <th></th>
+                        <th id="SummarySubTotal"></th>
+                        <th id="SummaryCOGS"></th>
+                        <th id="SummaryGrossProfit"></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th id="SummaryExcelSubotal"></th>
+                        <th id="SummaryExcelcogs"></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var table = $('#dataTableForSalesCogProfit').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 25,
+            bInfo: false,
+            aaSorting: []
+        })
+
+        
+        table.column(4).visible(false);
+        table.column(5).visible(false);
+        table.column(6).visible(false);
+        table.column(7).visible(false);
+        table.column(8).visible(false);
+        table.column(9).visible(false);
+        table.column(10).visible(false);
+        table.column(11).visible(false);
+        table.column(12).visible(false);
+        table.column(13).visible(false);
+
+        $('#resetFormValues').on("click", function (e) {
+            $("#cbFillFromToDates").prop("checked", true);
+            fillFromToDates();
+            $('#txtCustomerCode').val('');
+            $('#chkAllCustomers').prop("checked", true);
+            $('#txtFromStyle').val('');
+            $('#txtToStyle').val('');
+            $('#cmbVendor').prop('selectedIndex', 0);
+            $('#metal').prop('selectedIndex', 0);
+            $('#brand').prop('selectedIndex', 0);
+            $('#category').prop('selectedIndex', 0);
+            $('#subcategory').prop('selectedIndex', 0);
+            $('#store').prop('selectedIndex', 0);
+            $('#ddlSales').prop('selectedIndex', 0);
+            
+            $('#rdoDateonly').prop('checked', true);
+            $('#chkLayawaysUnpaid').prop('checked', false);
+            $('#chkSimpleExcel').prop('checked', false);
+            $('#chkinclubankfee').prop('checked', false);
+
+        });
+
+        $('#chkAllCustomers').click(function () {
+
+            if ($("#chkAllCustomers").prop('checked') == true) {
+                $("#txtCustomerCode").val('');
+                $("#txtCustomerCode").prop('disabled', 'disabled');
+            } else {
+                $("#txtCustomerCode").removeAttr("disabled");
+            }
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        $('#ddlSales').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        $('#chkLayawaysUnpaid').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        $('#chkSimpleExcel').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        $('#chkinclubankfee').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        $('#rdoDateonly').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        $('#rdoPickupdate').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        $('#chkSeparateSM').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        $('#chkLayawaysUnpaid').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        $('#store').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        $('#chkSummaryByModel').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+
+        $('#cmbVendor').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+
+        $('#metal').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+
+        $('#brand').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+
+        $('#category').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+
+        $('#subcategory').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+
+
+
+        fillFromToDates();
+    });
+
+    function buttonStyleClassChange(btnId) {
+        $('#' + btnId).removeClass('refreshBtnDefault').addClass('needToRefreshBtn');
+        $('#' + btnId).val("Refresh *");
+    }
+
+    function existAutoFilledData() {
+
+        $('#SummarySubTotal').html('');
+        $('#SummaryCOGS').html('');
+        $('#SummaryGrossProfit').html('');
+        $('#SummaryExcelSubotal').html('');
+        $('#SummaryExcelcogs').html('');
+       
+       
+        if ($('#txtFromDate').val() != "")
+            fromdate = $('#txtFromDate').val();
+        else
+            fromdate = "1990-01-01";
+
+        if ($('#txtToDate').val() != "")
+            todate = $('#txtToDate').val();
+        else
+            todate = "2099-12-31";
+
+
+        var acc1 = $('#txtCustomerCode').val();
+
+        if ($('#chkAllCustomers').prop('checked') == false) {
+            if (acc1 == "") {
+                alert("Customer Code Required.");
+                return false;
+            }
+
+        }
+        let bypicdate = "DATE";
+        let rdt = $("input[name='rdoDateonly']:checked").val();
+        if (rdt == "rdoPickupdate") {
+            bypicdate = "PICKUPDATE";
+        }
+
+        var styleFrom = $('#txtFromStyle').val();
+        var styleTo = $('#txtToStyle').val();
+        var vendor = $('#cmbVendor').val();
+        var metal = $('#metal').val();
+        var brand = $('#brand').val();
+        var category = $('#category').val();
+        var subcategory = $('#subcategory').val();
+        var store = $('#store').val();
+        var sales = $('#ddlSales').val();
+        var ISLaySpe = $('#chkLayawaysUnpaid').prop("checked") ? true : false;
+        var chkSimpleExcel = $('#chkSimpleExcel').prop("checked") ? true : false;
+        var chkinclubankfee = $('#chkinclubankfee').prop("checked") ? true : false;
+
+
+        var url = '@Url.Action("GetSalesCOGProfit", "ListOfItemsSold", new { Area = "" })';
+
+        var data = {
+            Ccode: acc1,
+            FROMDATE: fromdate,
+            DateTo: todate,
+            Category: category,
+            SubCategory: subcategory,
+            Metal: metal,
+            Brand: brand,
+            FromStyle: styleFrom,
+            ToStyle: styleTo,
+            Vendor: vendor,
+            Store: store,
+            WithGP: true,
+            SeparateSM: false,
+            IsSalesCOG: true,
+            ByWhichDate: bypicdate,
+            IsLayaway: ISLaySpe,
+            Sales: sales,
+            Monthproft: false,
+            ISLaySpe: false,
+            Isinclbankfee: chkinclubankfee,
+            SimpleExcel: chkSimpleExcel
+        };
+
+        var table = $('#dataTableForSalesCogProfit').DataTable();
+        
+        if (chkSimpleExcel) {
+            table.column(0).visible(false);
+            table.column(1).visible(false);
+            table.column(2).visible(false);
+            table.column(3).visible(false);
+            table.column(4).visible(true);
+            table.column(5).visible(true);
+            table.column(6).visible(true);
+            table.column(7).visible(true);
+            table.column(8).visible(true);
+            table.column(9).visible(true);
+            table.column(10).visible(true);
+            table.column(11).visible(true);
+            table.column(12).visible(true);
+            table.column(13).visible(true);
+        } else {
+            table.column(0).visible(true);
+            table.column(1).visible(true);
+            table.column(2).visible(true);
+            table.column(3).visible(true);
+            table.column(4).visible(false);
+            table.column(5).visible(false);
+            table.column(6).visible(false);
+            table.column(7).visible(false);
+            table.column(8).visible(false);
+            table.column(9).visible(false);
+            table.column(10).visible(false);
+            table.column(11).visible(false);
+            table.column(12).visible(false);
+            table.column(13).visible(false);
+        }
+        table.clear().draw();
+        var jqxhr = $.post(url, data, function () { })
+            .done(function (response) {
+                var json;
+                if (response instanceof Object)
+                    json = response;
+                else
+                    json = $.parseJSON(response);
+
+
+                var totalsale = 0;
+                var totalcost = 0;
+                var totalprofit = 0;
+                var summaryTotal = 0;
+                var summaryCogs = 0;
+                
+                for (var i = 0; i < json.length; i++) {
+                    
+                    if (chkSimpleExcel) {
+                        var orderdate = '';
+                        if (json[i].pickupdate != '' && json[i].pickupdate != null) {
+                            var date = new Date(json[i].pickupdate);
+                            orderdate = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
+                        }
+                        if (json[i].subtotal != '') {
+                            summaryTotal = summaryTotal+json[i].subtotal
+                        }
+                        if (json[i].cogs != '') {
+                            summaryCogs = summaryCogs + json[i].cogs
+                        }
+                        table.row.add([
+                            "",
+                            "",
+                            "",
+                            "",
+                            orderdate,
+                            json[i].store_no,
+                            json[i].inv_no,
+                            formatCurrency(json[i].subtotal),
+                            formatCurrency(json[i].cogs),
+                            formatCurrency(json[i].margin),
+                            ((json[i].pickupmonth != null) ? json[i].pickupmonth : ''),
+                            ((json[i].pickupday != null) ? json[i].pickupday : ''),
+                            json[i].salesman1,
+                            json[i].salesman2
+                        ]);
+                    } else {
+                        if (json[i].amount != "") {
+                            totalsale = totalsale + json[i].amount;
+                        }
+                        if (json[i].cost != "") {
+                            totalcost = totalcost + json[i].cost;
+                        }
+                        if (json[i].profit != "") {
+                            totalprofit = totalprofit + json[i].profit;
+                        }
+
+
+                        table.row.add([
+                            json[i].dept,
+                            formatCurrency(json[i].amount),
+                            formatCurrency(json[i].cost),
+                            formatCurrency(json[i].profit),
+                            "",
+                            "",
+                            "",
+                            "",
+                            "",
+                            "",
+                            "",
+                            "",
+                            "",
+                            ""
+                        ]);
+                    }
+                }
+                table.draw();
+
+                $('#SummarySubTotal').html(formatCurrency(totalsale));
+                $('#SummaryCOGS').html(formatCurrency(totalcost));
+                $('#SummaryGrossProfit').html(formatCurrency(totalprofit));
+
+                $('#SummaryExcelSubotal').html(formatCurrency(summaryTotal));
+                $('#SummaryExcelcogs').html(formatCurrency(summaryCogs));
+
+
+            })
+            .fail(function (jqxhr, textStatus, error) {
+                var err = textStatus + ", " + error;
+                console.log("GETSoldOrInstock Request Failed: " + err);
+            });
+
+    }
+
+    function formatCurrency(total) {
+        var neg = false;
+        if (total < 0) {
+            neg = true;
+            total = Math.abs(total);
+        }
+        return (neg ? "-" : '') + parseFloat(total, 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString();
+    }
+
+
+</script>
+<style>
+
+    .table tfoot tr th {
+        text-align: right !important;
+        padding: 0px !important;
+    }
+
+    .table tbody tr td {
+        text-align: left !important;
+    }
+
+    table tbody tr td:nth-child(2) {
+        text-align: right !important;
+        padding: 0px !important;
+    }
+
+    table tbody tr td:nth-child(3) {
+        text-align: right !important;
+        padding: 0px !important;
+    }
+
+    table tbody tr td:nth-child(4) {
+        text-align: right !important;
+        padding: 0px !important;
+    }
+
+    table tbody tr td:nth-child(5) {
+        text-align: right !important;
+        padding: 0px !important;
+    }
+    table tbody tr td:nth-child(6) {
+        text-align: right !important;
+        padding: 0px !important;
+    }
+
+    .padding-left-zero {
+        padding-left: 0px !important;
+    }
+</style>

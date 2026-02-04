@@ -1,0 +1,303 @@
+﻿<!--
+ Hemanth 09/23/2024 created new form
+ Hemanth 10/10/2024 preview and print changes added
+ Hemanth 10/23/2024 date range changed from last 1 year
+-->
+@{
+
+    if (Session["UserID"] == null)
+    {
+        Layout = null;
+        Response.Redirect("~/Login/Index");
+    }
+    else
+    {
+        Layout = null;
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    ViewBag.Title = "TOTAL SALES PER STATE";
+}
+
+<div id="content-center" class="row">
+
+    <div class="web-form page login-page col-sm-12">
+
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-5">
+                            From Date
+                        </label>
+                        <div class="col-sm-7">
+                            <input type="date" id="txtFromDate" class="form-control activateFormRefreshBtn" name="dateFrom" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-5">
+                            To Date
+                        </label>
+                        <div class="col-sm-7">
+                            <input type="date" id="txtToDate" class="form-control activateFormRefreshBtn" name="dateTo" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-right">
+                    <div class="mt-5px">
+                        <input type="checkbox" id="cbFillFromToDates" checked /> <span>All Dates</span>
+                        <input type="button" value="Last Month" class="formsGlobalUniqueBtn btnGetLastMonthDates" />
+                        <input type="button" value="Last Week" class="formsGlobalUniqueBtn btnGetLastWeekDates" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+
+                    <input type="radio" value="rdoDateonly" class="activateFormRefreshBtn" id="rdoDateonly" name="rdoDateonly" /> Date
+                    &nbsp;&nbsp;&nbsp;
+                    <input type="radio" value="rdoPickupdate" class="activateFormRefreshBtn" id="rdoPickupdate" name="rdoDateonly" checked="checked" /> Pickup Date
+
+                </div>
+                <div class="col-md-5">
+                    <input type="checkbox" name="chkLayawaysUnpaid" id="chkLayawaysUnpaid" class="activateFormRefreshBtn" />&nbsp;Includes Layaways && Unpaid Special Orders
+                </div>
+                <div class="col-md-3 text-right">
+                    <div class="mt-5px">
+                        <input type="button" value="Reset" class="formsGlobalUniqueBtn btnResetFormValues" id="resetFormValues" />
+                        <input type="button" id="btnFormResultsSearch" value="Refresh" class="refresh_btn refreshBtnDefault" />
+                    </div>
+                </div>
+            </div>
+
+            <div id="divImages" style="text-align:right;" class="col-lg-2">
+                <img id="image" src="" alt="" style="max-width: 133% !important;" />
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="mt-4 white-box pos-rel" id="divDataTableReport">
+
+        <div class="row col-md-6 report_buttons">
+            <div style="margin:3px;">
+                <input type="button" value="PDF" table-id="dataTableForStateSales" class="formsGlobalUniqueBtn btnDataTableDownloadPDF" id="btnPDF" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Excel" table-id="dataTableForStateSales" class="formsGlobalUniqueBtn btnDataTableDownloadExcel" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Preview" table-id="dataTableForStateSales" id="btnDataTablePreview" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Print" table-id="dataTableForStateSales" id="btnDataTablePrint" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Email" table-id="dataTableForStateSales" class="formsGlobalUniqueBtn" />
+            </div>
+
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Simple Excel" class="formsGlobalUniqueBtn" />
+            </div>
+        </div>
+        <div class="row dataTableReport" id="printContent">
+            <div><br /></div>
+            <table id="dataTableForStateSales" class="dataTable display nowrap table" style="width:100%">
+                <thead>
+                    <tr>
+
+                        <th style="text-align:center !important;">State</th>
+                        <th style="text-align:center !important;">Amount</th>
+                        <th style="text-align:center !important;">Sales Tax</th>
+                        <th style="text-align:center !important;">Sales</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th id="summaryLabel" class="text-right numericColumns"></th>
+                        <th id="summaryTotalAmount" class="text-right numericColumns"></th>
+                        <th id="summaryTotalSalesTax" class="text-right numericColumns"></th>
+                        <th id="summaryTotalSales" class="text-right numericColumns"></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var table = $('#dataTableForStateSales').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 25,
+            bInfo: false,
+            aaSorting: []
+        });
+
+        $('#resetFormValues').on("click", function (e) {
+            $("#cbFillFromToDates").prop("checked", true);
+            fillFromToDates();
+            $("#rdoPickupdate").prop("checked", true);
+            $("#chkLayawaysUnpaid").prop("checked", false);
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        $('#chkLayawaysUnpaid').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        $('#rdoPickupdate').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        $('#rdoDateonly').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+
+
+        fillFromToDates();
+        $('#cbFillFromToDates').click();
+        function addDays(theDate, days) {
+            return new Date(theDate.getTime() + days * 24 * 60 * 60 * 1000);
+        }
+
+        var newDate = addDays(new Date(), -365);
+        var lastmonth = newDate.getMonth() + 1;
+
+        lastmonth = ('0' + lastmonth).slice(-2);
+        var newDay = ('0' + newDate.getDate()).slice(-2);
+        var fd = newDate.getFullYear() + "-" + lastmonth + "-" + newDay;
+        $('#txtFromDate').val(fd).prop('disabled', false);
+    });
+    function buttonStyleClassChange(btnId) {
+        $('#' + btnId).removeClass('refreshBtnDefault').addClass('needToRefreshBtn');
+        $('#' + btnId).val("Refresh *");
+    }
+
+    function existAutoFilledData() {
+
+        $('#summaryLabel').html('');
+        $('#summaryTotalAmount').html(formatCurrency(''));
+        $('#summaryTotalSalesTax').html(formatCurrency(''));
+        $('#summaryTotalSales').html(formatCurrency(''));
+
+        if ($('#txtFromDate').val() != "")
+            fromdate = $('#txtFromDate').val();
+        else
+            fromdate = "1990-01-01";
+
+
+        if ($('#txtToDate').val() != "")
+            todate = $('#txtToDate').val();
+        else
+            todate = "2099-12-31";
+
+        let bypicdate = false;
+        let rdt = $("input[name='rdoDateonly']:checked").val();
+        if (rdt == "rdoPickupdate") {
+            bypicdate = true;
+        }
+
+        var chkLayawaysUnpaid = ($('#chkLayawaysUnpaid').prop('checked')) ? true : false;
+
+
+        var url = '@Url.Action("GetStateSales", "ListOfItemsSold", new { Area = "" })';
+
+        var data = {
+            FROMDATE: fromdate,
+            DateTo: todate,
+            ByPickupDate: bypicdate,
+            IsLaywayUnpaid: chkLayawaysUnpaid
+        };
+        var table = $('#dataTableForStateSales').DataTable();
+        table.clear().draw();
+        var jqxhr = $.post(url, data, function () { })
+            .done(function (response) {
+                var json;
+                if (response instanceof Object)
+                    json = response;
+                else
+                    json = $.parseJSON(response);
+
+                let summaryTotalAmount = 0;
+                let summaryTotalSalesTax = 0;
+                let summaryTotalSales = 0;
+
+                for (var i = 0; i < json.length; i++) {
+                    if (json[i].amount != '') {
+                        summaryTotalAmount = summaryTotalAmount + json[i].amount;
+                    }
+                    if (json[i].sales_tax != '') {
+                        summaryTotalSalesTax = summaryTotalSalesTax + json[i].sales_tax;
+                    }
+                    if (json[i].sales != '') {
+                        summaryTotalSales = summaryTotalSales + json[i].sales;
+                    }
+
+                    table.row.add([
+                        json[i].state,
+                        formatCurrency(json[i].amount),
+                        formatCurrency(json[i].sales_tax),
+                        formatCurrency(json[i].sales)
+                    ]);
+
+                    $('#summaryLabel').html('Total');
+                    $('#summaryTotalAmount').html(formatCurrency(summaryTotalAmount));
+                    $('#summaryTotalSalesTax').html(formatCurrency(summaryTotalSalesTax));
+                    $('#summaryTotalSales').html(formatCurrency(summaryTotalSales));
+
+                }
+                table.draw();
+            })
+            .fail(function (jqxhr, textStatus, error) {
+                var err = textStatus + ", " + error;
+                console.log("GETSoldOrInstock Request Failed: " + err);
+            });
+
+    }
+
+    function formatCurrency(total) {
+        var neg = false;
+        if (total < 0) {
+            neg = true;
+            total = Math.abs(total);
+        }
+        return (neg ? "-" : '') + parseFloat(total, 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString();
+    }
+
+</script>
+<style>
+
+    .table tbody tr td {
+        text-align: left !important;
+    }
+
+    table tbody tr td:nth-child(2) {
+        text-align: right !important;
+    }
+
+    table tbody tr td:nth-child(3) {
+        text-align: right !important;
+    }
+
+    table tbody tr td:nth-child(4) {
+        text-align: right !important;
+    }
+
+    #summaryTotalAmount {
+        text-align: right !important;
+    }
+
+    #summaryTotalSalesTax {
+        text-align: right !important;
+    }
+
+    #summaryTotalSales {
+        text-align: right !important;
+        padding: 8px 20px !important;
+    }
+</style>

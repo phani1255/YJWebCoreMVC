@@ -1,0 +1,324 @@
+﻿@*
+    * Created by Phanindra on 09-Jan-2026
+*@
+
+@{
+    Layout = null;
+}
+
+@using System.Reflection
+
+@{
+    var version = Assembly.GetExecutingAssembly()
+    .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
+    .InformationalVersion;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- link css -->
+    <link rel="stylesheet" href="~/css/style.css">
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/css/bootstrap-5.3.8.min.css">
+    <link rel="stylesheet" href="~/css/scanAccordion.css">
+    <link rel="stylesheet" type="text/css" href="~/css/jquery.dataTables.min.css">
+
+    <link rel="stylesheet" href="~/css/responsive.css">
+    <link rel="stylesheet" href="~/css/animate.min.css">
+    <link rel="stylesheet" href="~/css/owl.carousel.css">
+    <link rel="stylesheet" href="~/css/color.css">
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/css/themify-icons.css">
+    <link rel="stylesheet" href="~/css/line-icons.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+
+    <script src="~/js/jquery-3.6.0.min.js"></script>
+
+</head>
+<body>
+    <div id="loader-wrapper" class="d-none">
+        <div id="loader"></div>
+        <div class="loader-section section-left"></div>
+        <div class="loader-section section-right"></div>
+    </div>
+    <div id="loader2" class="loader-overlay2" style="display:none;">
+        <div class="spinner2"></div>
+    </div>
+    <input type="hidden" id="WebImagesUrl" value="@(Context.Session.GetString("WebImagesUrl") != null ? Context.Session.GetString("WebImagesUrl") : "")" />
+    <input type="hidden" id="UserId" value="@(Context.Session.GetString("UserId") != null ? Context.Session.GetString("UserId") : "")" />
+    <input type="hidden" id="StoreCodeInUse" value="@(Context.Session.GetString("StoreCodeInUse") != null ? Context.Session.GetString("StoreCodeInUse") : "")" />
+    <div class="printNormalHtml"></div>
+    <div class="container-fluid main-content">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="leftMenuBar">
+                    @await Component.InvokeAsync("Menu")
+                </div>
+                <div class="rightContentBar">
+                    <div class="row toprow d-none">
+                        <div class="white-box col-sm-12 p-10 mt-10">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="page-title text-center">
+                                        <h1 class="form-h1 mt-5px">@ViewBag.Title</h1>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-8">
+                <p class="text-center">Copyright &copy; 2026 Ishal Inc. All Rights Reserved. </p>
+            </div>
+            <div class="col-sm-2">
+                <p>Version: @version</p>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="selectCustomerAccModal" tabindex="-1" aria-labelledby="selectCustomerAccModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="selectCustomerAccModalLabel">Select Customer </h5>
+                    <button type="button" class="formsGlobalUniqueCloseBtn btn-close closeModal" data-modal-id="selectCustomerAccModal" data-bs-dismiss="modal" aria-label="Close">X</button>
+                </div>
+                <div class="modal-body">
+                    <form id="userSearchForm">
+                        <input type="text" id="fname" name="fname" placeholder="First Name" />
+                        <input type="text" id="lname" name="lname" placeholder="Last Name" />
+                        <input type="text" id="state" name="state" placeholder="State" />
+                        <input type="text" id="city" name="city" placeholder="City" />
+                        <input type="text" id="zip" name="zip" placeholder="Zip" />
+                        <input type="text" id="phone" name="phone" placeholder="Phone" />
+                        <input type="text" id="email" name="email" placeholder="Email" />
+                        <input type="hidden" id="userAccount" name="userAccount" value="acc" />
+                        <button type="button" class="formsGlobalUniqueBtn" onclick="searchUsers()">Search</button>
+                    </form>
+                    <div id="searchResultsForCustomerCodes"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="formsGlobalUniqueCloseBtn closeModal" data-modal-id="selectCustomerAccModal" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="firstCommonBsModal" tabindex="-1" aria-labelledby="firstCommonBsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="firstCommonBsModalLabel"></h5>
+                    <button type="button" class="formsGlobalUniqueCloseBtn btn-close closeModal" data-modal-id="firstCommonBsModal" data-bs-dismiss="modal" aria-label="Close">X</button>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="formsGlobalUniqueCloseBtn closeModal" data-modal-id="firstCommonBsModal" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/js/admin.js"></script>
+    <script src="~/js/refresh-button.js"></script>
+    <script src="~/js/bootstrap-5.3.8.bundle.min.js"></script>
+    <script src="~/js/custom-new.js"></script>
+
+
+    <script src="~/js/jquery-ui.min.js"></script>
+    <script src="~/js/custom.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.2.2/css/buttons.dataTables.min.css" />
+    <script type="text/javascript" src="~/js/bootstrap-typeahead.js"></script>
+    @*<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />*@
+
+
+    <script>
+        $(document).ready(function () {
+
+            $(".dropdown-toggle").click(function () {
+                $(".dropdown-menu").not($(this).siblings(".dropdown-menu")).slideUp();
+                $(this).siblings(".dropdown-menu").slideToggle();
+            })
+            $(".dropdown-item").click(function () {
+                //$(".dropdown-menu.third_ul").hide();
+                $(".dropdown-menu.third_ul").not($(this).siblings(".dropdown-menu")).hide();
+                //$(".dropdown-menu.third_ul").css({ left: $(this).offset().left * -1 });
+                $(".dropdown-menu.third_ul").css({ left: 0 })
+                $(this).siblings(".dropdown-menu").slideToggle();
+            })
+            $('a.dropdown-item').each(function () {
+                var hrefValue = $(this).attr('href');
+
+                // If href is not '/', show the parent elements
+                if (hrefValue !== '/#' && hrefValue !== '/' && typeof $(this).attr('href') !== 'undefined') {
+                    //alert(hrefValue);
+                    $(this).closest('.default_ul').removeClass('hidden');
+                    $(this).closest('.default_li').removeClass('hidden');
+                    $(this).closest('.first_ul').removeClass('hidden');
+                    $(this).closest('.first_li').removeClass('hidden');
+                    $(this).closest('.second_ul').removeClass('hidden');
+                    $(this).closest('.second_li').removeClass('hidden');
+                    $(this).closest('.third_ul').removeClass('hidden');
+                    $(this).closest('.third_li').removeClass('hidden');
+                }
+            });
+
+            $('.dropdown-menu.third_ul').each(function () {
+                const count = $(this).find('.inneritemsdiv').length;
+                if (count == 1) {
+                    $(this).addClass('one_column');
+                }
+                if (count == 2) {
+                    $(this).addClass('two_columns');
+                }
+                if (count == 3) {
+                    $(this).addClass('three_columns');
+                }
+            });
+            $(document).on('click', '.default_li', function () {
+                $(".default_li").removeClass('active');
+                $(".second_anchor").removeClass('active');
+                $(this).addClass('active');
+            })
+            $(document).on('click', '.second_anchor', function () {
+                $(".second_anchor").removeClass('active');
+                $(this).addClass('active');
+                return false;
+            })
+        });
+    </script>
+    <div class="printableContent"></div>
+    <div class="modal fade" id="previewContentModal" tabindex="-1" aria-labelledby="previewContentModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-center" id="previewContentModalLabel"></h5>
+                    <button type="button" class="formsGlobalUniqueCloseBtn btn-close closeModal" data-modal-id="previewContentModal" data-bs-dismiss="modal" aria-label="Close">X</button>
+                </div>
+                <div class="modal-body">
+                    <div class="previewContent"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="formsGlobalUniqueCloseBtn closeModal" data-modal-id="previewContentModal" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="errorMsgModal" tabindex="-1" aria-labelledby="errorMsgModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-center" id="errorMsgModalLabel"></h5>
+                    <button type="button" class="formsGlobalUniqueCloseBtn btn-close closeModal searchCloseButton" data-modal-id="searchContentModal" data-bs-dismiss="modal" aria-label="Close">X</button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-1" style="padding:20px;"><i class="fa fa-exclamation-triangle" style="color:#f00;font-size:25px;"></i> </div>
+                        <div class="col-sm-11"><span class="errorMsg"></span></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="formsGlobalUniqueCloseBtn closeModal errorMsgCloseButton" data-modal-id="errorMsgModal" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="globalMsgModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header msgbox-header">
+                    <h5 class="modal-title" id="globalMsgTitle">Info</h5>
+                    <button type="button" class="close msgbox-close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body" id="globalMsgBody"></div>
+                <div class="modal-footer text-center">
+                    @*<button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>*@
+                    <button id="globalMsgOkBtn" type="button" class="btn" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include this script just before the closing </body> tag -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js"></script>
+    <script>
+        window.onerror = function (message, source, lineno, colno, error) {
+            // When an error happens, take a screenshot of the page
+            html2canvas(document.body).then(function (canvas) {
+                // Convert the canvas to a data URL
+                var imgData = canvas.toDataURL('image/png');
+                // Send the screenshot to the server using AJAX
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/Error/SaveScreenshot', true);
+                xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        console.log('Screenshot sent successfully');
+                    }
+                };
+                xhr.send(JSON.stringify({ screenshot: imgData }));
+            });
+        };
+        function ShowMsg(message, title = "Info") {
+            $("#globalMsgTitle").text(title);
+            $("#globalMsgBody").html(message);
+            $("#globalMsgModal").modal("show");
+        }
+    </script>
+    <script src="~/js/scanAccordion.js"></script>
+    @RenderSection("scripts", required: false)
+    <script>
+        function ShowMsg(message, title) {
+            if (!title) title = "Info"; // default
+            // remove old state
+            $("#globalMsgModal")
+                .removeClass("info success error warning");
+            // apply new state class
+            let cls = title.toLowerCase(); // "success", "error", "info", ...
+            $("#globalMsgModal").addClass(cls);
+            // show message
+            $("#globalMsgTitle").text(title);
+            $("#globalMsgBody").html(message);
+            $("#globalMsgModal").modal("show");
+        }
+        function ShowLoader() {
+            $("#globalLoader").fadeIn(150);
+        }
+        function HideLoader() {
+            $("#globalLoader").fadeOut(150);
+        }
+        // OK button click handler
+        $(document).on("click", "#globalMsgOkBtn", function () {
+            let title = $("#globalMsgTitle").text().trim();
+            // Redirect only for success messages
+            if (title.toLowerCase() === "success") {
+                setTimeout(function () {
+                    window.location.href = '@Url.Action("Index", "Home")';
+                }, 300); // delay for modal close animation
+            }
+        });
+    </script>
+    <div id="globalLoader" class="global-loader-overlay" style="display:none;">
+        <div class="global-loader"></div>
+        <div class="global-loader-text">Processing...</div>
+    </div>
+</body>
+</html>

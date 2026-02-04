@@ -1,0 +1,344 @@
+﻿<!--
+Hemanth 09/26/2024 created new form
+Hemanth 10/10/2024 preview and print changes added
+-->
+@{
+
+    if (Session["UserID"] == null)
+    {
+        Layout = null;
+        Response.Redirect("~/Login/Index");
+    }
+    else
+    {
+        Layout = null;
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    ViewBag.Title = "SALES / SALES TAX PER STATE";
+}
+
+<div id="content-center" class="row">
+
+    <div class="web-form page login-page col-sm-12">
+
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-5">
+                            From Date
+                        </label>
+                        <div class="col-sm-7">
+                            <input type="date" id="txtFromDate" class="form-control activateFormRefreshBtn" name="dateFrom" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-5">
+                            To Date
+                        </label>
+                        <div class="col-sm-7">
+                            <input type="date" id="txtToDate" class="form-control activateFormRefreshBtn" name="dateTo" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-right">
+                    <div class="mt-5px">
+                        <input type="checkbox" id="cbFillFromToDates" checked /> <span>All Dates</span>
+                        <input type="button" value="Last Month" class="formsGlobalUniqueBtn btnGetLastMonthDates" />
+                        <input type="button" value="Last Week" class="formsGlobalUniqueBtn btnGetLastWeekDates" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-5">
+                            Stores
+                        </label>
+                        <div class="col-sm-7">
+                            <select id="ddlstores" name="ddlstores" class="activateFormRefreshBtn form-control">
+                                @{
+                                    if (ViewBag.StoreData != null)
+                                    {
+                                        foreach (var store in ViewBag.StoreData)
+                                        {
+                                            <option value="@store.Value">@store.Text</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-5">
+                            Tax State
+                        </label>
+                        <div class="col-sm-7">
+                            <input type="text" class="form-control" name="txtTaxState" id="txtTaxState" style="text-transform: uppercase !important;" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <input type="checkbox" name="ChkIncludePartialSpecPayment" id="ChkIncludePartialSpecPayment" checked="checked" style="padding-top: 10px !important;" />&nbsp;Include Partial Payment
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <input type="checkbox" name="chkIncludeInactive" id="chkIncludeInactive" class="activateFormRefreshBtn" />&nbsp;Include Inactive Invoice
+                </div>
+                <div class="col-md-4">
+                    <input type="checkbox" name="chkincludenotaxinvoice" id="chkincludenotaxinvoice" class="activateFormRefreshBtn" />&nbsp;Include No Tax Invoices
+                </div>
+                <div class="col-md-4 text-right">
+                    <div class="mt-5px">
+                        <input type="button" value="Reset" class="formsGlobalUniqueBtn btnResetFormValues" id="resetFormValues" />
+                        <input type="button" id="btnFormResultsSearch" value="Refresh" class="refresh_btn refreshBtnDefault" />
+                    </div>
+                </div>
+            </div>
+
+            <div id="divImages" style="text-align:right;" class="col-lg-2">
+                <img id="image" src="" alt="" style="max-width: 133% !important;" />
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="mt-4 white-box pos-rel" id="divDataTableReport">
+
+        <div class="row col-md-6 report_buttons">
+            <div style="margin:3px;">
+                <input type="button" value="PDF" table-id="dataTableForSalesPerState" class="formsGlobalUniqueBtn btnDataTableDownloadPDF" id="btnPDF" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Excel" table-id="dataTableForSalesPerState" class="formsGlobalUniqueBtn btnDataTableDownloadExcel" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Preview" table-id="dataTableForSalesPerState" id="btnDataTablePreview" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Print" table-id="dataTableForSalesPerState" id="btnDataTablePrint" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Email" table-id="dataTableForSalesPerState" class="formsGlobalUniqueBtn" />
+            </div>
+
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Simple Excel" class="formsGlobalUniqueBtn" />
+            </div>
+        </div>
+        <div class="row dataTableReport" id="printContent">
+            <div><br /></div>
+            <table id="dataTableForSalesPerState" class="dataTable display nowrap table" style="width:100%">
+                <thead>
+                    <tr>
+
+                        <th style="text-align:center !important;">State</th>
+                        <th style="text-align:center !important;">Gr Total</th>
+                        <th style="text-align:center !important;">Sales Tax</th>
+                        <th style="text-align:center !important;">Net</th>
+                        <th style="text-align:center !important;">NonTaxableAmt</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th></th>
+                        <th id="summaryGrtotal" class="text-right numericColumns"></th>
+                        <th id="summarySalesTax" class="text-right numericColumns"></th>
+                        <th id="summaryNetAmount" class="text-right numericColumns"></th>
+                        <th id="summaryNonTaxableAmount" class="text-right numericColumns"></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var table = $('#dataTableForSalesPerState').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 25,
+            bInfo: false,
+            aaSorting: []
+        });
+
+        $('#resetFormValues').on("click", function (e) {
+            $("#cbFillFromToDates").prop("checked", true);
+            fillFromToDates();
+            $('#ddlstores').val('');
+            $('#txtTaxState').val('');
+            $("#ChkIncludePartialSpecPayment").prop("checked", true);
+            $("#chkIncludeInactive").prop("checked", false);
+            $("#chkincludenotaxinvoice").prop("checked", false);
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        $('#ddlstores').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        $('#txtTaxState').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        $('#chkIncludeInactive').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        $('#chkincludenotaxinvoice').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+
+        fillFromToDates();
+    });
+    function buttonStyleClassChange(btnId) {
+        $('#' + btnId).removeClass('refreshBtnDefault').addClass('needToRefreshBtn');
+        $('#' + btnId).val("Refresh *");
+    }
+
+    function existAutoFilledData() {
+
+        $('#summaryGrtotal').html('');
+        $('#summarySalesTax').html('');
+        $('#summaryNetAmount').html('');
+        $('#summaryNonTaxableAmount').html('');
+
+        if ($('#txtFromDate').val() != "")
+            fromdate = $('#txtFromDate').val();
+        else
+            fromdate = "1990-01-01";
+
+
+        if ($('#txtToDate').val() != "")
+            todate = $('#txtToDate').val();
+        else
+            todate = "2099-12-31";
+
+        ddlstores = $('#ddlstores').val();
+        txtTaxState = $('#txtTaxState').val();
+        ChkIncludePartialSpecPayment = $('#ChkIncludePartialSpecPayment').prop("checked") ? true :false;
+        chkIncludeInactive = $('#chkIncludeInactive').prop("checked") ? false : true;
+        chkincludenotaxinvoice = $('#chkincludenotaxinvoice').prop("checked") ? true : false;
+
+
+
+        var url = '@Url.Action("GetTotalSalesPerState", "ListOfItemsSold", new { Area = "" })';
+
+        var data = {
+            FROMDATE: fromdate,
+            DateTo: todate,
+            Store: ddlstores,
+            IncludeInactive: chkIncludeInactive,
+            NoSalesTax: false,
+            IncludeNotaxInvoices: chkincludenotaxinvoice,
+            TaxState: txtTaxState,
+            IncParialPay: ChkIncludePartialSpecPayment
+        };
+        var table = $('#dataTableForSalesPerState').DataTable();
+        table.clear().draw();
+        var jqxhr = $.post(url, data, function () { })
+            .done(function (response) {
+                var json;
+                if (response instanceof Object)
+                    json = response;
+                else
+                    json = $.parseJSON(response);
+
+                let summaryGrtotal = 0;
+                let summarySalesTax = 0;
+                let summaryNetAmount = 0;
+                let summaryNonTaxableAmount = 0;
+
+                for (var i = 0; i < json.length; i++) {
+                    if (json[i].amount != '') {
+                        summaryGrtotal = summaryGrtotal + json[i].Gr_Total;
+                    }
+                    if (json[i].sales_tax != '') {
+                        summarySalesTax = summarySalesTax + json[i].Sales_Tax;
+                    }
+                    if (json[i].Net != '') {
+                        summaryNetAmount = summaryNetAmount + json[i].Net;
+                    }
+                    if (json[i].Non_Taxable_Amount != '') {
+                        summaryNonTaxableAmount = summaryNonTaxableAmount + json[i].Non_Taxable_Amount;
+                    }
+
+                    table.row.add([
+                        json[i].STATE,
+                        formatCurrency(json[i].Gr_Total),
+                        formatCurrency(json[i].Sales_Tax),
+                        formatCurrency(json[i].Net),
+                        formatCurrency(json[i].Non_Taxable_Amount)
+                    ]);
+                }
+                table.draw();
+                $('#summaryGrtotal').html(formatCurrency(summaryGrtotal));
+                $('#summarySalesTax').html(formatCurrency(summarySalesTax));
+                $('#summaryNetAmount').html(formatCurrency(summaryNetAmount));
+                $('#summaryNonTaxableAmount').html(formatCurrency(summaryNonTaxableAmount));
+            })
+            .fail(function (jqxhr, textStatus, error) {
+                var err = textStatus + ", " + error;
+                console.log("GETSoldOrInstock Request Failed: " + err);
+            });
+
+    }
+
+    function formatCurrency(total) {
+        var neg = false;
+        if (total < 0) {
+            neg = true;
+            total = Math.abs(total);
+        }
+        return (neg ? "-" : '') + parseFloat(total, 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString();
+    }
+
+</script>
+<style>
+
+    .table tbody tr td {
+        text-align: left !important;
+    }
+
+    table tbody tr td:nth-child(2) {
+        text-align: right !important;
+    }
+
+    table tbody tr td:nth-child(3) {
+        text-align: right !important;
+    }
+
+    table tbody tr td:nth-child(4) {
+        text-align: right !important;
+    }
+
+    table tbody tr td:nth-child(5) {
+        text-align: right !important;
+    }
+
+    #summaryGrtotal {
+        text-align: right !important;
+    }
+
+    #summarySalesTax {
+        text-align: right !important;
+    }
+
+    #summaryNetAmount {
+        text-align: right !important;
+    }
+
+    #summaryNonTaxableAmount {
+        text-align: right !important;
+        padding: 8px 20px !important;
+    }
+</style>

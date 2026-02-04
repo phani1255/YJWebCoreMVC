@@ -1,0 +1,249 @@
+﻿<!--
+ Hemanth 09/23/2024 created new form
+ Hemanth 10/10/2024 preview and print changes added
+-->
+@{
+
+    if (Session["UserID"] == null)
+    {
+        Layout = null;
+        Response.Redirect("~/Login/Index");
+    }
+    else
+    {
+        Layout = null;
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    ViewBag.Title = "INSTATE/OUT OF STATE SALES";
+}
+
+<div id="content-center" class="row">
+
+    <div class="web-form page login-page col-sm-12">
+
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-5">
+                            From Date
+                        </label>
+                        <div class="col-sm-7">
+                            <input type="date" id="txtFromDate" class="form-control activateFormRefreshBtn" name="dateFrom" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-5">
+                            To Date
+                        </label>
+                        <div class="col-sm-7">
+                            <input type="date" id="txtToDate" class="form-control activateFormRefreshBtn" name="dateTo" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-right">
+                    <div class="mt-5px">
+                        <input type="checkbox" id="cbFillFromToDates" checked /> <span>All Dates</span>
+                        <input type="button" value="Last Month" class="formsGlobalUniqueBtn btnGetLastMonthDates" />
+                        <input type="button" value="Last Week" class="formsGlobalUniqueBtn btnGetLastWeekDates" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-5">
+                            Enter State
+                        </label>
+                        <div class="col-sm-7">
+                            <input type="text" id="state" class="form-control" name="state" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8 text-right">
+                    <div class="mt-5px">
+                        <input type="button" value="Reset" class="formsGlobalUniqueBtn btnResetFormValues" id="resetFormValues" />
+                        <input type="button" id="btnFormResultsSearch" value="Refresh" class="refresh_btn refreshBtnDefault" />
+                    </div>
+                </div>
+            </div>
+
+            <div id="divImages" style="text-align:right;" class="col-lg-2">
+                <img id="image" src="" alt="" style="max-width: 133% !important;" />
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="mt-4 white-box pos-rel" id="divDataTableReport">
+
+        <div class="row col-md-6 report_buttons">
+            <div style="margin:3px;">
+                <input type="button" value="PDF" table-id="dataTableForInstateOutStateSales" class="formsGlobalUniqueBtn btnDataTableDownloadPDF" id="btnPDF" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Excel" table-id="dataTableForInstateOutStateSales" class="formsGlobalUniqueBtn btnDataTableDownloadExcel" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Preview" table-id="dataTableForInstateOutStateSales" id="btnDataTablePreview" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Print" table-id="dataTableForInstateOutStateSales" id="btnDataTablePrint" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Email" table-id="dataTableForInstateOutStateSales" class="formsGlobalUniqueBtn" />
+            </div>
+
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Simple Excel" class="formsGlobalUniqueBtn" />
+            </div>
+        </div>
+        <div class="row dataTableReport" id="printContent">
+            <div><br /></div>
+            <table id="dataTableForInstateOutStateSales" class="dataTable display nowrap table" style="width:100%">
+                <thead>
+                    <tr>
+
+                        <th style="text-align:center !important;">Description</th>
+                        <th style="text-align:center !important;">Sales</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th id="summaryLabel" class="text-right numericColumns"></th>
+                        <th id="summaryTotal" class="text-right numericColumns"></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var table = $('#dataTableForInstateOutStateSales').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 25,
+            bInfo: false,
+            aaSorting: []
+        });
+
+        $('#resetFormValues').on("click", function (e) {
+            $("#cbFillFromToDates").prop("checked", true);
+            fillFromToDates();
+            $('#state').val('');
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        $('#state').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+
+
+        fillFromToDates();
+
+
+    });
+    function buttonStyleClassChange(btnId) {
+        $('#' + btnId).removeClass('refreshBtnDefault').addClass('needToRefreshBtn');
+        $('#' + btnId).val("Refresh *");
+    }
+
+    function existAutoFilledData() {
+        $('#summaryLabel').html('');
+        $('#summaryTotal').html('');
+
+        if ($('#txtFromDate').val() != "")
+            fromdate = $('#txtFromDate').val();
+        else
+            fromdate = "1990-01-01";
+
+
+        if ($('#txtToDate').val() != "")
+            todate = $('#txtToDate').val();
+        else
+            todate = "2099-12-31";
+
+        var state = $('#state').val().trim();;
+
+        if (state == "") {
+            alert("Enter State");
+            return false;
+        }
+        var url = '@Url.Action("GetInstateOutStateSales", "ListOfItemsSold", new { Area = "" })';
+
+        var data = {
+            State: state,
+            FROMDATE: fromdate,
+            DateTo: todate
+        };
+        var table = $('#dataTableForInstateOutStateSales').DataTable();
+        table.clear().draw();
+        var jqxhr = $.post(url, data, function () { })
+            .done(function (response) {
+                var json;
+                if (response instanceof Object)
+                    json = response;
+                else
+                    json = $.parseJSON(response);
+
+                let totalSales = 0;
+
+                for (var i = 0; i < json.length; i++) {
+                    if (json[i].Sales != '') {
+                        totalSales = totalSales + json[i].Sales;
+                    }
+
+                    table.row.add([
+                        json[i].Desc,
+                        formatCurrency(json[i].Sales)
+                    ]);
+
+                    $('#summaryLabel').html('Total');
+                    $('#summaryTotal').html(formatCurrency(totalSales));
+                }
+                table.draw();
+            })
+            .fail(function (jqxhr, textStatus, error) {
+                var err = textStatus + ", " + error;
+                console.log("GETSoldOrInstock Request Failed: " + err);
+            });
+
+    }
+
+    function formatCurrency(total) {
+        var neg = false;
+        if (total < 0) {
+            neg = true;
+            total = Math.abs(total);
+        }
+        return (neg ? "-" : '') + parseFloat(total, 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString();
+    }
+
+</script>
+<style>
+
+    .table tbody tr td {
+        text-align: left !important;
+    }
+
+    table tbody tr td:nth-child(2) {
+        text-align: right !important;
+    }
+
+    #summaryTotal {
+        text-align: right !important;
+        padding: 8px 20px !important;
+    }
+
+    #state {
+        text-transform: uppercase;
+    }
+</style>

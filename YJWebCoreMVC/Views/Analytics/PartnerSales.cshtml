@@ -1,0 +1,534 @@
+<!--
+  * Created by Manoj 11-DEC-2025
+-->
+@{
+    ViewBag.Title = "Partner Sales";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+@model YJWeb.Models.AnalasysServiceModel
+
+<h2 class="text-center mt-2 heading">Partner Sales</h2>
+<div id="content-center" class="row">
+    <div class="web-form page login-page col-sm-12" id="FormForBagsGivenToPerson">
+        @Html.AntiForgeryToken()
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            From Date
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtFromDate1" class="form-control fs-13 resetFromDate activateFormRefreshBtn" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            To Date
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtToDate1" class="form-control fs-13 resetToDate activateFormRefreshBtn" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="row">
+                        <div class="col-sm-12 text-right">
+                            <input type="checkbox" id="cbFillFromToDates" checked /> <span>All Dates</span>
+                            <input type="button" value="Last Month" class="formsGlobalUniqueBtn btnGetLastMonthDates" />
+                            <input type="button" value="Last Week" class="formsGlobalUniqueBtn btnGetLastWeekDates" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3 text-right">
+                    <input type="button" id="btnFormResultsSearch" value="Refresh" class="refresh_btn refreshBtnDefault" />
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="mt-4 white-box pos-rel" id="divDataTableReport">
+
+        <div class="row col-md-6 report_buttons">
+            <div style="margin:3px;">
+                <input type="button" value="PDF" table-id="dataTableForPartnerSales" table-count="1" class="formsGlobalUniqueBtn PartnerSalesbtnDataTableDownloadPDF" id="btnPDF" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Excel" table-id="dataTableForPartnerSales" table-count="1" class="formsGlobalUniqueBtn PartnerSalesbtnDataTableDownloadExcel" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" id="PartnerSalesbtnDataTablePreview" table-sub-headings="List" class="formsGlobalUniqueBtn mx-2" table-id="dataTableForPartnerSales" table-count="1" value="Preview" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Print" table-id="dataTableForPartnerSales" id="PartnerSalesBtnDataTablePrint" class="formsGlobalUniqueBtn" table-count="1" report-format="portrait" />
+            </div>
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Email" table-id="dataTableForPartnerSales" class="formsGlobalUniqueBtn" />
+            </div>
+
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Simple Excel" class="formsGlobalUniqueBtn" />
+            </div>
+        </div>
+        <div class="row dataTableReport">
+
+            <table id="dataTableForPartnerSales" class="dataTable display nowrap table" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Partner</th>
+                        <th>Invoice #</th>
+                        <th>Date</th>
+                        <th> Customer</th>
+                        <th>Style</th>
+                        <th>QTY</th>
+                        <th>Price</th>
+                        <th>Partner Share</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>Profit Total</th>
+                        <th class="numericColumns"></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th>Total : </th>
+                        <th class="numericColumns"></th>
+                    </tr>
+                </tfoot>
+            </table>
+            <br>
+
+        </div>
+    </div>
+
+
+    <div class="row dataTableForReport d-none" >
+
+        <table id="dataTableForReportPartnerSales" class="dataTable display nowrap table" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Invoice #</th>
+                    <th>Date</th>
+                    <th> Customer</th>
+                    <th>Style</th>
+                    <th>QTY</th>
+                    <th>Price</th>
+                    <th>Partner Share</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>Profit Total</th>
+                    <th class="numericColumns"></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th>Total</th>
+                    <th class="numericColumns"></th>
+                </tr>
+            </tfoot>
+        </table>
+        <br>
+
+    </div>
+
+</div>
+
+
+
+
+<script type="text/javascript">
+
+    var txtFromDate1 = "1990-01-01", txtToDate1 = "2099-12-31";
+    var filteredData;
+    function ClearControls() {
+        txtFromDate1 = "1990-01-01"; txtToDate1 = "2099-12-31";
+        $('#txtFromDate1').val('');
+        $('#txtToDate1').val('');
+
+        existAutoFilledData();
+    }
+    function existAutoFilledData() {
+        if ($('#txtFromDate1').val() != "")
+            fromdate1 = $('#txtFromDate1').val();
+        else
+            fromdate1 = "1990-01-01";
+
+        if ($('#txtToDate1').val() != "")
+            todate1 = $('#txtToDate1').val();
+        else
+            todate1 = "2099-12-31";
+
+        BindBagsGivenToPerson(fromdate1, todate1);
+    }
+
+    function BindBagsGivenToPerson(fromdate1, todate1, person) {
+        var url = '@Url.Action("GetListOfPartnerSales", "POsReportsnew", new { Area = "" })';
+
+        var data = {
+            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val(),
+            fdate: fromdate1,
+            tdate: todate1
+        };
+
+
+        var jqxhr = $.post(url, data, function () { })
+        .done(function (response) {
+            var json;
+            if (response instanceof Object)
+                json = response;
+
+            else
+                json = $.parseJSON(response);
+
+            var table = $('#dataTableForPartnerSales').DataTable();
+            table.clear().draw();
+
+        /*{"Partner_Group":"OKA MOR ETHE","Partner":"OKA MOR ETHE","Inv_No":"","Date":"2016-04-14T13:37:01.297","Acc":"","Style":"NATTR","Qty":1.00,"Price":0.00,"Partner_Share":0.00,"Partner_Profit":0.00}*/
+            $("#dataTableForPartnerSales tbody").empty();
+            var trans = json;
+            var totalPartner_Share = 0; partnerProfit = 0
+            for (var i = 0; i < json.length; i++) {
+                totalPartner_Share += parseFloat(json[i].Partner_Share);
+                partnerProfit += parseFloat(json[i].Partner_Profit);
+                table.row.add([
+                    json[i].Partner_Group,
+                    json[i].Inv_No,
+                    json[i].Date ? json[i].Date.split('T')[0] : '',
+                    json[i].Acc,
+                    json[i].Style,
+                    '<div style="text-align:right !important;">' + numberWithCommas(json[i].Qty) + '</div>',
+                    '<div style="text-align:right !important;">' + numberWithCommas(json[i].Price) + '</div>',
+                    '<div style="text-align:right !important;">' + numberWithCommas(json[i].Partner_Share) + '</div>'
+                ]);
+            }
+
+            table.draw();
+            $("#dataTableForPartnerSales tfoot").find('th').eq(1).text(numberWithCommas(partnerProfit));
+            $("#dataTableForPartnerSales tfoot").find('th').eq(7).text(numberWithCommas(totalPartner_Share));
+            filteredData = json;
+        })
+        .fail(function (jqxhr, textStatus, error) {
+            var err = textStatus + ", " + error;
+            console.log("GETBagsGivenToPerson Request Failed: " + err);
+        });
+    }
+
+    async function exportTableToCustomPDF(tableid, tablesCount, reportSubTitile = "") {
+
+        if (typeof (tablesCount) != "undefined" && parseInt(tablesCount) > 1) {
+
+            // Create the PDF document
+            var { jsPDF } = window.jspdf;
+            var doc = new jsPDF('l', 'mm', [297, 210]);
+            for (dt = 1; dt <= parseInt(tablesCount); dt++) {
+
+                var dataTableId = tableid + "-" + dt;
+                var currentPageLength = $('#' + dataTableId).DataTable().page.len();
+                // Store the current pagination state
+                var currentPage = $('#' + dataTableId).DataTable().page();
+                var currentPageLength = $('#' + dataTableId).DataTable().page.len();
+
+                // Set the page length to show all entries
+                $('#' + dataTableId).DataTable().page.len(-1).draw();
+
+                // Get the table data
+                var table = document.getElementById(dataTableId);
+                var tableData = [];
+                for (var i = 0, row; row = table.rows[i]; i++) {
+                    var rowData = [];
+                    for (var j = 0, col; col = row.cells[j]; j++) {
+                        if (col.classList.contains("hide-on-print") || col.classList.contains("hideColumns")) {
+                            continue;
+                        }
+                        rowData.push(col.innerText);
+                    }
+                    tableData.push(rowData);
+                }
+
+                doc.autoTable({
+                    head: [tableData[0]],
+                    body: tableData.slice(1),
+                });
+                // Restore the original pagination state
+                $('#' + tableid).DataTable().page.len(currentPageLength).draw();
+                $('#' + tableid).DataTable().page(currentPage).draw(false);
+            }
+
+            // Save the PDF
+            let filname = ($('.form-h1').text() != "undefined" && $('.form-h1').text() != '') ? $('.form-h1').text() : 'data';
+            doc.save(filname + '.pdf');
+
+
+        } else {
+
+            // Store the current pagination state
+            var currentPage = $('#' + tableid).DataTable().page();
+            var currentPageLength = $('#' + tableid).DataTable().page.len();
+
+            // Set the page length to show all entries
+            $('#' + tableid).DataTable().page.len(-1).draw();
+
+            // Get the table data
+            var table = document.getElementById(tableid);
+            var tableData = [];
+            for (var i = 0, row; row = table.rows[i]; i++) {
+                var rowData = [];
+                for (var j = 0, col; col = row.cells[j]; j++) {
+                    if (col.classList.contains("hide-on-print") || col.classList.contains("hideColumns")) {
+                        continue;
+                    }
+                    rowData.push(col.innerText);
+                }
+                tableData.push(rowData);
+            }
+
+
+            // Create the PDF document
+            var { jsPDF } = window.jspdf;
+            var doc = new jsPDF();
+
+            let headingText = ($('.form-h1').text() != "undefined" && $('.form-h1').text() != '') ? $('.form-h1').text() : 'Partner Sales';
+
+            // Add heading to the PDF
+            let currentY = 15;
+            doc.setFontSize(16); // Set font size for heading
+            doc.text(headingText, 105, currentY, { align: "center" });
+            currentY += 7
+
+           
+
+            //Add Sub Heading to PDF
+            if (reportSubTitile.length > 0 && reportSubTitile != "") {
+
+                let subHeading = $('#customSubHeader').text();
+                doc.setFontSize(11); // Set font size for heading
+                doc.text(subHeading, 105, currentY, { align: "center" });
+                currentY += 6
+
+                if ($('#customSubHeader1').text().length > 0 && $('#customSubHeader1').text() != "") {
+
+                    let subHeading1 = $('#customSubHeader1').text();
+                    doc.setFontSize(11); // Set font size for heading
+                    doc.text(subHeading1, 105, currentY, { align: "center" });
+                    currentY += 6
+
+                }
+            }
+
+            // Add the table to the PDF
+            doc.autoTable({
+                startY: currentY, // Position table below heading
+                head: [tableData[0]],
+                body: tableData.slice(1),
+                margin: { top: 5, bottom: 5, left: 5, right: 5 },
+                styles: { fontSize: 6, cellPadding: 0.5 },
+            });
+
+            // Save the PDF
+            let filname = headingText;
+            doc.save(filname + '.pdf');
+
+            // Restore the original pagination state
+            let dataTable = $('#' + tableid).DataTable();
+            $('#' + tableid).DataTable().page.len(currentPageLength).draw();
+            $('#' + tableid).DataTable().page(currentPage).draw(false);
+        }
+    }
+
+    function createFiltredTable(json, reportType) {
+
+        const groups = {};
+        json.forEach(item => {
+            const groupKey = item.Partner_Group || item.Partner;
+            if (!groups[groupKey]) groups[groupKey] = [];
+            groups[groupKey].push(item);
+        });
+
+        var table = $("#dataTableForReportPartnerSales").DataTable();
+        table.clear();   
+
+        var profitTotal = 0;
+        var total = 0;
+
+        Object.keys(groups).forEach(group => {
+
+            table.row.add([
+                `Partner: ${group}`,
+                "", "", "", "", "", ""
+            ]).node().classList.add("group-header");
+
+            var groupTotal = 0;
+            var groupProfitTotal = 0;
+
+            groups[group].forEach(r => {
+
+                groupTotal += parseFloat(String(r.Partner_Share).replace(/,/g, ""));
+                groupProfitTotal += parseFloat(String(r.Partner_Profit).replace(/,/g, ""));
+
+                table.row.add([
+                    r.Inv_No,
+                    r.Date ? r.Date.split("T")[0] : "",
+                    r.Acc,
+                    r.Style, 
+                    '<div style="text-align:right !important;">' + numberWithCommas(r.Qty) + '</div>',
+                    '<div style="text-align:right !important;">' + numberWithCommas(r.Price) + '</div>',
+                    '<div style="text-align:right !important;">' + numberWithCommas(r.Partner_Share) + '</div>'
+                ]);
+            });
+
+            table.row.add([
+                "", "", "",
+                "Profit Subtotal :",
+                '<div style="text-align:right !important;">' + numberWithCommas(groupProfitTotal) + '</div>',
+                "Subtotal :",
+                '<div style="text-align:right !important;">' + numberWithCommas(groupTotal) + '</div>',
+                
+            ]).node().classList.add("subtotal-row");
+
+            profitTotal += groupProfitTotal;
+            total += groupTotal;
+        });
+
+
+        table.draw();
+
+        $("#dataTableForReportPartnerSales tfoot").find('th').eq(1).text(numberWithCommas(profitTotal));
+        $("#dataTableForReportPartnerSales tfoot").find('th').eq(6).text(numberWithCommas(total));
+
+
+        const tableid = "dataTableForReportPartnerSales";
+        const tablesCount ="1";
+        const tablesSubHeadings ="";
+        const reportTitle = "portrait";
+
+        var Title = "Partner Sales";
+
+        var fromDate = $('#txtFromDate1').val();
+        var toDate = $('#txtToDate1').val();
+
+        AllDates = "From Date  " +  fromDate + "  -  To Date  " + toDate;
+        
+
+        var Heading = '<div  class=" header-container">' +
+                    '<h4 class="item " id="customSubHeader">' + Title + '</h4>' +
+                    '<h6 class="item mt-2" id="customSubHeader1"> '+ AllDates +'  </h6>' +
+                    '</div>';
+
+        if (reportType == "print") {
+            printDiv(tableid, tablesCount, tablesSubHeadings, Heading, reportTitle);
+        }
+
+        if (reportType == "preview") {
+            previewDiv(tableid, tablesCount, tablesSubHeadings, Heading);
+        }
+
+        if (reportType == "pdf") {
+            exportTableToCustomPDF(tableid, tablesCount, Heading);
+        }
+
+        if (reportType == "excel") {
+            exportToExcel(tableid, tablesCount);
+        }
+    }
+
+
+
+    $(document).ready(function () {
+
+        var table = $('#dataTableForPartnerSales').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 25,
+            "aaSorting": []
+        });
+        fillFromToDates();
+
+        $("#dataTableForReportPartnerSales").DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 25,
+            "aaSorting": []
+        });
+
+        //PartnerSalesbtnDataTablePreview
+
+        $(document).on('click', '#PartnerSalesbtnDataTablePreview', function () {
+            var json;
+            if (filteredData.length > 0) {
+                json = filteredData;
+            }
+            createFiltredTable(json, "preview");
+        })
+        //PartnerSalesbtnDataTableDownloadPDF,PartnerSalesbtnDataTableDownloadExcel,PartnerSalesBtnDataTablePrint
+        $(document).on('click', '#PartnerSalesBtnDataTablePrint', function () {
+            var json;
+            if (filteredData.length > 0) {
+                json = filteredData;
+            }
+            createFiltredTable(json, "print");
+        })
+
+        $(document).on('click', '.PartnerSalesbtnDataTableDownloadPDF', function () {
+            var json;
+            if (filteredData.length > 0) {
+                json = filteredData;
+            }
+            createFiltredTable(json, "pdf");
+        })
+
+        $(document).on('click', '.PartnerSalesbtnDataTableDownloadExcel', function () {
+            var json;
+            if (filteredData.length > 0) {
+                json = filteredData;
+            }
+            createFiltredTable(json, "excel");
+        })
+
+
+    });
+
+</script>
+<style>
+    body {
+        color: black !important;
+        font-family: Arial;
+    }
+    .heading {
+        background-color: #3b8fe3;
+        color: #fafafa;
+        font-family: 'sans-serif';
+    }
+
+    #dataTableForPartnerSales th,
+    #dataTableForPartnerSales td {
+        color: black !important;
+    }
+
+    .group-header {
+        background: #efefef !important;
+        font-weight: bold;
+    }
+
+    .subtotal-row {
+        background: #f8f8f8 !important;
+        font-weight: bold;
+    }
+</style>
+

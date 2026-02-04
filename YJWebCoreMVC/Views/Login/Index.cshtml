@@ -1,0 +1,178 @@
+﻿@*
+    Phanindra 10/20/2025 Added form fields validation
+*@
+
+@model YJWebCoreMVC.Models.UsersModel
+@{
+    Layout = null;
+}
+
+@using System.Reflection
+
+@{
+    var version = Assembly.GetExecutingAssembly()
+    .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
+    .InformationalVersion;
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- link css  -->
+    <link rel="stylesheet" href="~/css/style.css">
+    <link rel="stylesheet" href="~/css/theme.css">
+    <link rel="stylesheet" href="~/css/all.min.css">
+    <link as="font" rel="preload" href="~/css/Fonts/fontastic.woff" crossorigin="">
+    <link as="font" rel="preload" href="~/css/Fonts/fa-solid-900.woff2" crossorigin="">
+    <link as="font" rel="preload" href="~/css/Fonts/fa-regular-400.woff2" crossorigin="">
+
+    <!-- icons  -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" crossorigin="anonymous">
+
+    <title>Login with us</title>
+</head>
+<body>
+    <div id="content-wrapper">
+        <section id="content" class="container" style="margin:0px auto;float:none;margin-top:50px;">
+            <div id="content-body" class="row">
+                <div id="content-center" class="col-lg-12">
+                    <div class="page login-page">
+                        <div class="page-title">
+                            <h1>Wjewel - Sign In</h1>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-12 col-md-7 col-lg-6 col-xl-5 order-md-last">
+                                <div class="card shadow-sm p-4 mb-5 mb-md-0 login-box">
+                                    <h3 class="h4 mb-0">
+                                        Wjewel Jewelry Store Management Software - V@(version)
+                                    </h3>
+                                    <hr>
+                                    @using (Html.BeginForm("Authorize", "Login", FormMethod.Post, new { onsubmit = "return validateLogin()" }))
+                                    {
+                                        <div class="form-group">
+                                            <div class="input-group input-group-lg has-icon">
+                                                @Html.TextBoxFor(model => model.CODE, new { @class = "username form-control", placeholder = "" })
+                                                <span class="input-group-icon text-muted">
+                                                    <i class="icm icm-user"></i>
+                                                </span>
+                                            </div>
+                                            @Html.ValidationMessageFor(m => m.CODE)
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="input-group input-group-lg has-icon">
+                                                @Html.PasswordFor(model => model.PASSWD, new { @class = "password form-control", placeholder = "" })
+                                                <span class="input-group-icon text-muted">
+                                                    <i class="icm icm-shield"></i>
+                                                </span>
+                                            </div>
+                                            @Html.ValidationMessageFor(m => m.Password)
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="input-group input-group-lg has-icon ">
+                                                @Html.DropDownListFor(model => model.store_code, Model.StoreCodes, new { @class = "form-control storesList", @id = "txtStoreCode" })
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-primary btn-lg btn-block btn-login">
+                                                Log in
+                                            </button>
+                                        </div>
+
+                                    }
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-5 col-lg-6 col-xl-7 order-md-first">
+                                <div class="page-info">
+                                    <div class="topic-html-content-body lead my-3 html-editor-content" id="ph-topic-body-7">
+                                        <img src="~/css/logo.png" class="center">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+
+    <script src="~/js/jquery-3.6.0.min.js"></script>
+    @* <script src="~/js/jquery.validate.min.js"></script>
+    <script src="~/js/jquery.validate.unobtrusive.min.js"></script> *@
+    <script>
+        $(document).ready(function () {
+            //loadStoreCodes();
+            setTimeout(function () {
+                var $username = $(".username");
+                if ($username.val().trim() !== "") {
+                    // Trigger blur manually
+                    $username.trigger("blur");
+                }
+            }, 500);
+        })
+        $(document).on('blur', '.username', function () {
+            loadStoreCodes();
+        })
+
+        function loadStoreCodes() {
+            username = $(".username").val();
+            if (username == "") {
+                return false;
+            }
+            $.ajax({
+                url: '../Login/GetUserStoreDetails',
+                type: 'post',
+                data: {
+                    username: username
+                },
+                success: function (response) {
+                    //alert(response);
+                    var json;
+                    if (response instanceof Object)
+                        json = response;
+                    else
+                        json = $.parseJSON(response);
+
+                    //storesList = "<select class='form-control' name='store'> ";
+                    storesList = "";
+                    for (var i = 0; i < json.length; i++) {
+                        storesList += "<option class='ref_type'>" + json[i].store_code + "</option>";
+                    }
+                    //storesList += "</select>";
+                    $(".storesList").html(storesList);
+                    return false;
+                }
+            })
+        }
+
+        function validateLogin() {
+            code = $("#CODE").val().trim();
+            pwd = $("#PASSWD").val().trim();
+            storecode = $("#txtStoreCode").val().trim();
+            if (code == "") {
+                alert("Plese enter code");
+                $("#CODE").focus();
+                return false;
+            }
+            if (pwd == "") {
+                alert("Plese enter Password");
+                $("#PASSWD").focus();
+                return false;
+            }
+            if (storecode == "") {
+                alert("Plese Select Store");
+                $("#txtStoreCode").focus();
+                return false;
+            }
+        }
+    </script>
+</body>
+</html>

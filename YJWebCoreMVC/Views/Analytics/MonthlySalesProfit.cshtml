@@ -1,0 +1,357 @@
+﻿<!--
+Hemanth 10/10/2024 Monthly Sales Profit
+-->
+@{
+
+    if (Session["UserID"] == null)
+    {
+        Layout = null;
+        Response.Redirect("~/Login/Index");
+    }
+    else
+    {
+        Layout = null;
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    ViewBag.Title = "MONTHLY SALES / PROFIT";
+}
+
+<div id="content-center" class="row">
+
+    <div class="web-form page login-page col-sm-12">
+
+        <div class="form-horizontal">
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            From
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtFromDate" class="form-control activateFormRefreshBtn" style="font-size:13px;" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            To Date
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtToDate" class="form-control activateFormRefreshBtn" style="font-size:13px;" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-right">
+                    <div class="mt-5px">
+                        <input type="checkbox" id="cbFillFromToDates" checked /> <span>All Dates</span>
+                        <input type="button" value="Last Month" class="formsGlobalUniqueBtn btnGetLastMonthDates" />
+                        <input type="button" value="Last Week" class="formsGlobalUniqueBtn btnGetLastWeekDates" />
+                    </div>
+                </div>
+
+            </div>
+            
+            <div class="row">
+
+
+
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Stores
+                        </label>
+                        <div class="col-sm-8">
+                            <select id="store" name="store" class="form-control">
+
+                                @{
+                                    if (ViewBag.StoreData != null)
+                                    {
+                                        foreach (var store in ViewBag.StoreData)
+                                        {
+                                            <option value="@store.Value">@store.Text</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <input type="radio" value="rdoDateonly" class="activateFormRefreshBtn" id="rdoDateonly" name="rdoDateonly" checked="checked" /> Invoice Date
+                    &nbsp;&nbsp;&nbsp;
+                    <input type="radio" value="rdoPickupdate" class="activateFormRefreshBtn" id="rdoPickupdate" name="rdoDateonly" /> Pickup Date
+                </div>
+                <div class="col-md-4"><input type="checkbox" name="chkLayawaysUnpaid" id="chkLayawaysUnpaid">&nbsp;Include Layaways and Special Orders</div>
+            </div>
+            <div class="row" style="padding-top:8px;">
+
+                <div class="col-md-4"></div>
+                <div class="col-md-4"></div>
+                <div class="col-md-4 text-right">
+                    <input type="button" value="Reset" class="formsGlobalUniqueBtn btnResetFormValues" id="resetFormValues" />
+                    <input type="button" id="btnFormResultsSearch" value="Refresh" class="refresh_btn refreshBtnDefault" />
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="mt-4 white-box pos-rel" id="divDataTableReport">
+
+        <div class="row col-md-6 report_buttons">
+            <div style="margin:3px;">
+                <input type="button" value="PDF" table-id="dataTableForMonthlySalesProfit" class="formsGlobalUniqueBtn btnDataTableDownloadPDF" id="btnPDF" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Excel" table-id="dataTableForMonthlySalesProfit" class="formsGlobalUniqueBtn btnDataTableDownloadExcel" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Preview" table-id="dataTableForMonthlySalesProfit" id="btnDataTablePreview" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Print" table-id="dataTableForMonthlySalesProfit" id="btnDataTablePrint" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Email" table-id="dataTableForMonthlySalesProfit" class="formsGlobalUniqueBtn" />
+            </div>
+
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Simple Excel" class="formsGlobalUniqueBtn" />
+            </div>
+        </div>
+        <div class="row dataTableReport" id="printContent">
+            <div><br /></div>
+            <table id="dataTableForMonthlySalesProfit" class="dataTable display nowrap table" style="width:100%">
+                <thead>
+                    <tr>
+                        <th style="text-align:center !important;">Date</th>
+                        <th style="text-align:center !important;">Total Sales</th>
+                        <th style="text-align:center !important;">Total Cog</th>
+                        <th style="text-align:center !important;">Total Profit</th>
+                        <th style="text-align:center !important;">Profit %</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot id="tfooter">
+                    <tr>
+                        <th></th>
+                        <th id="totalamount" class="text-right numericColumns"></th>
+                        <th id="totalcost" class="text-right numericColumns"></th>
+                        <th id="totalprofit" class="text-right numericColumns"></th>
+                        <th id="totalotherCharges" class="text-right numericColumns"></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var table = $('#dataTableForMonthlySalesProfit').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 25,
+            bInfo: false,
+            aaSorting: []
+        })
+
+
+        $('#resetFormValues').on("click", function (e) {
+            $("#cbFillFromToDates").prop("checked", true);
+            fillFromToDates();
+            $('#cmbVendor').prop('selectedIndex', 0);
+            $('#store').prop('selectedIndex', 0);
+            $('#chkLayawaysUnpaid').prop('checked', false);
+            $('#rdoPickupdate').prop('checked', true);
+
+        });
+
+       
+        $('#rdoDateonly').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        $('#rdoPickupdate').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        $('#chkLayawaysUnpaid').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        $('#store').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+
+
+
+        fillFromToDates();
+    });
+
+    function buttonStyleClassChange(btnId) {
+        $('#' + btnId).removeClass('refreshBtnDefault').addClass('needToRefreshBtn');
+        $('#' + btnId).val("Refresh *");
+    }
+
+    function existAutoFilledData() {
+
+        $('#totalamount').html('');
+        $('#totalcost').html('');
+        $('#totalprofit').html('');
+        $('#totalotherCharges').html('');
+
+
+        if ($('#txtFromDate').val() != "")
+            fromdate = $('#txtFromDate').val();
+        else
+            fromdate = "1990-01-01";
+
+        if ($('#txtToDate').val() != "")
+            todate = $('#txtToDate').val();
+        else
+            todate = "2099-12-31";
+
+
+
+        let bypicdate = "DATE";
+        let rdt = $("input[name='rdoDateonly']:checked").val();
+        if (rdt == "rdoPickupdate") {
+            bypicdate = "PICKUPDATE";
+        }
+
+        var store = $('#store').val();
+        var chkLayawaysUnpaid = ($('#chkLayawaysUnpaid').prop('checked')) ? true : false;
+
+
+        var url = '@Url.Action("GetMonthlySalesProfit", "ListOfItemsSold", new { Area = "" })';
+
+        var data = {
+            FROMDATE: fromdate,
+            DateTo: todate,
+            Store: store,
+            ByWhichDate: bypicdate,
+            layaway: chkLayawaysUnpaid
+
+        };
+
+        var table = $('#dataTableForMonthlySalesProfit').DataTable();
+        table.clear().draw();
+
+        var jqxhr = $.post(url, data, function () { })
+            .done(function (response) {
+                var json;
+                if (response instanceof Object)
+                    json = response;
+                else
+                    json = $.parseJSON(response);
+
+
+                var totalsale = 0;
+                var totalcost = 0;
+                var totalprofit = 0;
+                var totalProfitPerc = 0;
+
+                for (var i = 0; i < json.length; i++) {
+                    if (json[i].amount != "") {
+                        totalsale = totalsale + json[i].amount;
+                    }
+                    if (json[i].Cost != "") {
+                        totalcost = totalcost + json[i].Cost;
+                    }
+                    if (json[i].profit != "") {
+                        totalprofit = totalprofit + json[i].profit;
+                    }
+                    if (json[i].ProfitPerc != "") {
+                        totalProfitPerc = totalProfitPerc + json[i].ProfitPerc;
+                    }
+                    var salesDate = '';
+                    if (json[i].DATE != '' && json[i].DATE != null) {
+                        var date = new Date(json[i].DATE);
+                        salesDate = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
+                    }
+                    
+                    
+                    table.row.add([
+                        salesDate,
+                        formatCurrency(json[i].amount),
+                        formatCurrency(json[i].Cost),
+                        formatCurrency(json[i].profit),
+                        formatCurrency(json[i].ProfitPerc)
+                        ]);
+
+
+                }
+                table.draw();
+
+                totprfperc = Math.round(totalprofit, 2) * 100 / Math.round(totalsale, 2);
+
+                $('#totalamount').html(formatCurrency(totalsale));
+                $('#totalcost').html(formatCurrency(totalcost));
+                $('#totalprofit').html(formatCurrency(totalprofit));
+                $('#totalotherCharges').html(formatCurrency(totprfperc));
+
+
+
+            })
+            .fail(function (jqxhr, textStatus, error) {
+                var err = textStatus + ", " + error;
+                console.log("GETSoldOrInstock Request Failed: " + err);
+            });
+
+    }
+
+    function formatCurrency(total) {
+        var neg = false;
+        if (total < 0) {
+            neg = true;
+            total = Math.abs(total);
+        }
+        return (neg ? "-" : '') + parseFloat(total, 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString();
+    }
+
+
+</script>
+<style>
+
+    .table tfoot tr th {
+        text-align: right !important;
+        padding: 0px !important;
+    }
+
+    .table tbody tr td {
+        text-align: left !important;
+    }
+
+    table tbody tr td:nth-child(2) {
+        text-align: right !important;
+        padding: 0px !important;
+    }
+
+    table tbody tr td:nth-child(3) {
+        text-align: right !important;
+        padding: 0px !important;
+    }
+
+    table tbody tr td:nth-child(4) {
+        text-align: right !important;
+        padding: 0px !important;
+    }
+
+    table tbody tr td:nth-child(5) {
+        text-align: right !important;
+        padding: 0px !important;
+    }
+
+    table tbody tr td:nth-child(6) {
+        text-align: right !important;
+        padding: 0px !important;
+    }
+
+    .padding-left-zero {
+        padding-left: 0px !important;
+    }
+</style>

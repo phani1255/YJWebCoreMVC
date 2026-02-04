@@ -1,0 +1,391 @@
+@*
+    * Created by Manoj 01/27/2026
+    * Manoj 01/28/2026 Fixed empty data report issue
+    * Manoj 01/30/2026 Fixed report buttons hiding issues
+*@
+
+@{
+    ViewBag.Title = "Component Sales Analysis";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+@model YJWeb.Models.AnalasysServiceModel
+
+<h3 class="text-center mt-2 heading">COMPONENT SALES ANALYSIS</h3>
+<div id="content-center" class="row justify-content-center">
+
+    <div class="web-form page login-page col-sm-8" style='box-shadow: 0 8px 22px rgba(0,0,0,0.08); font-family: " Inter", "Segoe UI" , Roboto, Arial, sans-serif !important;' id="FormForComponentSalesAnalysis">
+        @Html.AntiForgeryToken()
+        <div class="form-horizontal">
+
+            <div class="row" style='font-family: "Inter", "Segoe UI", Roboto, Arial, sans-serif !important;'>
+                <div class="col-sm-3">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            From Date
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtFromDate1" class="form-control fs-13 resetFromDate activateFormRefreshBtn" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            To Date
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtToDate1" class="form-control fs-13 resetToDate activateFormRefreshBtn" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="row">
+                        <div class="col-sm-12 text-right">
+                            <input type="checkbox" id="cbFillFromToDates" checked /> <span>All Dates</span>
+                            <input type="button" value="Last Month" class="formsGlobalUniqueBtn btnGetLastMonthDates" />
+                            <input type="button" value="Last Week" class="formsGlobalUniqueBtn btnGetLastWeekDates" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-2 text-right">
+                    <input type="button" id="btnFormResultsSearch" value="Refresh" class="refresh_btn refreshBtnDefault" />
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="mt-2 white-box pos-rel col-sm-8" id="divDataTableReport" style="box-shadow: 0 12px 30px rgba(0,0,0,0.1);">
+        <div class="col-sm-12 justify-content-center mb-4  d-none" id="reportBtns">
+            <div class="row white-box " style="width:100%; box-shadow: 0 12px 30px rgba(0,0,0,0.1);">
+
+                <div style="margin:3px;">
+                    @* <input type="button" value="Preview" table-id="dataTableForComponentSalesAnalysis" id="CalculateQueuedJobsbtnDataTablePreview" class="formsGlobalUniqueBtn" />*@
+                    <button type="button" table-id="dataTableForComponentSalesAnalysis" id="ComponentSalesAnalysisbtnDataTablePreview" class="formsGlobalUniqueBtn">
+                        <i class="fa-solid fa-eye mr-2"></i>Preview
+                    </button>
+                </div>
+                <div style="margin:3px;">
+                    @*<input type="button" value="Print" table-id="dataTableForComponentSalesAnalysis" id="CalculateQueuedJobsbtnDataTablePrint" class="formsGlobalUniqueBtn" report-format="portrait" table-count="1" />*@
+                    <button type="button" table-id="dataTableForComponentSalesAnalysis" id="ComponentSalesAnalysisbtnDataTablePrint" class="formsGlobalUniqueBtn" report-format="portrait" table-count="1">
+                        <i class="fa-solid fa-print mr-2"></i> Print
+                    </button>
+                </div>
+
+                <div style="margin:3px;">
+                    @*<input type="button" value="Excel" table-id="dataTableForComponentSalesAnalysis" class="formsGlobalUniqueBtn CalculateQueuedJobsbtnDataTableDownloadExcel" />*@
+                    <button type="button" table-id="dataTableForComponentSalesAnalysis" class="formsGlobalUniqueBtn ComponentSalesAnalysisbtnDataTableDownloadExcel">
+                        <i class="bi bi-file-earmark-excel"></i> Excel
+                    </button>
+                </div>
+
+                <div style="margin:3px;">
+                    <button type="button" table-id="dataTableForComponentSalesAnalysis" class="formsGlobalUniqueBtn ComponentSalesAnalysisbtnDataTableDownloadPDF" id="btnPDF">
+                        <i class="bi bi-file-earmark-pdf"></i> PDF
+                    </button>
+                    @*<input type="button" value="PDF" table-id="dataTableForComponentSalesAnalysis" class="formsGlobalUniqueBtn CalculateQueuedJobsbtnDataTableDownloadPDF" id="btnPDF" />*@
+                </div>
+
+
+                <div style="margin:3px;display:none;">
+                    <input type="button" value="Email" table-id="dataTableForComponentSalesAnalysis" class="formsGlobalUniqueBtn" />
+                </div>
+
+                <div style="margin:3px;display:none;">
+                    <input type="button" value="Simple Excel" class="formsGlobalUniqueBtn" />
+                </div>
+            </div>
+        </div>
+
+        <div class="row m-2">
+
+            <table id="dataTableForComponentSalesAnalysis" class="dataTable display nowrap table table-bordered" style="width:100%">
+                <thead style=" background: linear-gradient(to bottom, #f8fafc, #e5e7eb) !important;">
+                    <tr>
+                        <th style="text-align:center;width:30% ">Style</th>
+                        <th style="text-align: center; width: 15%">QTY</th>
+                        <th style="text-align: center; width: 15%">TWT</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+
+            </table>
+            <br>
+        </div>
+        <div class="white-box mb-5" style="width:100%; box-shadow: 0 12px 30px rgba(0,0,0,0.1);">
+            <div class="row justify-content-end mr-4">
+                <div style="margin: 3px;">
+                    <button type="button" id="cancelBtn" class="btn btn-danger formsGlobalUniqueBtn">
+                        <i class="fa-solid fa-xmark mr-1"></i> Cancel
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="printLoading"
+     style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%);
+            font-size:18px; background:#000000a8; color:white; padding:20px 30px;
+            border-radius:8px; z-index:99999;">
+
+    <i class="fa-sharp-duotone fa-solid fa-spinner fa-spin fa-spin-reverse"></i>
+    Loading…  Please wait
+</div>
+
+<div id="confirmModal2" class="modal" tabindex="-1" style="display: none; position: fixed; z-index: 1050; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4);">
+    <div style="background: white; margin: 10% auto; padding: 20px; width: 400px; border-radius: 6px; text-align: center;">
+        <p id="confirmMessage"></p>
+        <div style="margin-top: 20px;">
+            <button id="btnConfirmYes" class="btn btn-primary">Yes</button>
+            <button id="btnConfirmNo" class="btn btn-secondary">No</button>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    var tempTable;
+    function existAutoFilledData() {
+
+        if ($('#txtFromDate1').val() != "")
+            fromdate1 = $('#txtFromDate1').val();
+        else
+            fromdate1 = "1990-01-01";
+
+        if ($('#txtToDate1').val() != "")
+            todate1 = $('#txtToDate1').val();
+        else
+            todate1 = "2099-12-31";
+        BindBagsGivenToPerson(fromdate1, todate1)
+    }
+
+    function BindBagsGivenToPerson(fromdate1, todate1) {
+
+        $('#printLoading').fadeIn();
+
+        var url = '@Url.Action("GetListOfComponentSalesAnalysis", "Analysis", new { Area = "" })';
+        //date1, string date2
+        var data = {
+            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val(),
+            date1: fromdate1,
+            date2: todate1
+        };
+
+        var jqxhr = $.post(url, data, function () { })
+            .done(function (response) {
+                $('#printLoading').fadeOut();
+                $('#reportBtns').removeClass('d-none');
+                if (response.code == true) {
+
+
+
+                    var json = $.parseJSON(response.message);
+
+                    var table = $('#dataTableForComponentSalesAnalysis').DataTable();
+                    table.clear().draw();
+                    $("#dataTableForComponentSalesAnalysis tbody").empty();
+
+                    if (json.length > 0) {
+                        for (var i = 0; i < json.length; i++) {
+
+                            table.row.add([
+                                json[i].LOT,
+                                '<div style="text-align:right">' + numberWithCommas(json[i].QTY) + '</div>',
+                                '<div style="text-align:right">' + numberWithCommas(json[i].TWT) + '</div>'
+                            ]);
+                        }
+
+                        table.draw();
+
+
+                    } else {
+                        var table = $('#dataTableForComponentSalesAnalysis').DataTable();
+                        table.clear().draw();
+                        $('#printLoading').fadeOut();
+                        // alert("No Data Found");
+                        $('#reportBtns').addClass('d-none');
+                        $('#confirmMessage').html(
+                            '<i class="fa-solid fa-circle-info fa-fade"></i>' + " " +
+                            "No Data Found"
+                        );
+
+                        $('#confirmModal2').fadeIn();
+
+                        $('#btnConfirmNo').addClass("d-none");
+                        $('#btnConfirmYes').text("Ok");
+
+                        $('#btnConfirmYes').off('click').on('click', function () {
+                            $('#confirmModal2').fadeOut();
+                            $('#btnConfirmNo').removeClass("d-none");
+                            $('#btnConfirmYes').text("yes");
+                        });
+
+                    }
+                }
+
+            })
+            .fail(function (jqxhr, textStatus, error) {
+                $('#printLoading').fadeOut();
+                var err = textStatus + ", " + error;
+                console.log("GetListofCompletedJobs Request Failed: " + err);
+            });
+    }
+
+    function getReportHeadersData(reportType) {
+        // Dates
+        const fromdate = $('#txtFromDate1').val() || "1990-01-01";
+        const toDate = $('#txtToDate1').val() || "2099-12-31";
+
+       var  datef = `From : ${fromdate} To : ${toDate}`;
+
+        var data = {
+            type: reportType,
+            fromDate: fromdate,
+            toDate: toDate,
+            daterange: datef
+        }
+
+        return data
+    }
+
+    $(document).ready(function () {
+        var table = $('#dataTableForComponentSalesAnalysis').DataTable({
+
+            dom: 'Blfrtip',
+            searching: true,
+            select: false,
+
+            paging: false,
+            info: false,
+            lengthChange: false,
+            scrollY: '100vh',
+            scrollCollapse: true,
+            scroller: false,
+            buttons: [],
+            aaSorting: []
+
+        });
+
+        fillFromToDates();
+
+        $(document).on('click', '#cancelBtn', function () {
+            $('#confirmMessage').html(
+                "OK to Discard the Changes and Close This Form?"
+            );
+
+            $('#confirmModal2').fadeIn();
+
+            $('#btnConfirmYes').off('click').on('click', function () {
+                $('#confirmModal2').fadeOut();
+                window.location.href = "../Home";
+            });
+
+            $('#btnConfirmNo').off('click').on('click', function () {
+                $('#confirmModal2').fadeOut();
+                console.log("User cancelled import.");
+                return;
+            });
+        })
+
+
+        //preview
+        $('#ComponentSalesAnalysisbtnDataTablePreview').off('click').on('click',  function (e) {
+            //string astSoldDay, string daterange , string cat, string subcat, string brand, string metal,string vendor12,string frmsty, string tostyl,bool isImageCheck = false
+            e.preventDefault();
+
+            var jsonBody = getReportHeadersData("preview");
+           window.open('@Url.Action("GenerateComponentSalesAnalysisReport", "Analysis")' + '?' + $.param(jsonBody), '_blank');
+
+
+        })
+
+        //print
+        $('#ComponentSalesAnalysisbtnDataTablePrint',).off('click').on('click', function (e) {
+
+             e.preventDefault();
+
+             var jsonBody = getReportHeadersData("print");
+            window.open('@Url.Action("ComponentSalesAnalysisPrintViewer", "Analysis")' + '?' + $.param(jsonBody), '_blank');
+
+
+        })
+
+
+        //excel
+        $('.ComponentSalesAnalysisbtnDataTableDownloadExcel').off('click').on('click', function (e) {
+
+            var jsonBody = getReportHeadersData("excel");
+
+            window.open(
+                '@Url.Action("GenerateComponentSalesAnalysisReport", "Analysis")' + '?type=excel&' + $.param(jsonBody), '_blank'
+            );
+
+
+        })
+
+        //pdf
+        $('.ComponentSalesAnalysisbtnDataTableDownloadPDF',).off('click').on('click', function (e) {
+
+            var jsonBody = getReportHeadersData("pdf");
+            window.open('@Url.Action("GenerateComponentSalesAnalysisReport", "Analysis")' + '?type=pdf&' + $.param(jsonBody), '_blank');
+
+
+
+        })
+
+    });
+
+</script>
+
+
+
+<style>
+    body {
+        font-family: "Inter", "Segoe UI", Roboto, Arial, sans-seri !important;
+        background-color: #f4f7fb;
+        color: #1f2937;
+    }
+
+    .heading {
+        background: linear-gradient(90deg, #2563eb, #1e40af);
+        color: #ffffff;
+        padding: 14px 20px;
+        font-size: 18px;
+        font-weight: 600;
+        border-radius: 6px 6px 0 0;
+    }
+
+
+
+    #dataTableForComponentSalesAnalysis thead {
+        background: linear-gradient(to bottom, #f8fafc, #e5e7eb) !important;
+    }
+
+    #dataTableForComponentSalesAnalysis tbody tr:hover {
+        background-color: #fef3c7 !important;
+    }
+
+    #dataTableForComponentSalesAnalysis th,
+    #dataTableForComponentSalesAnalysis td {
+        color: black !important;
+    }
+    /* //cancelBtn, btnOk*/
+
+
+    #cancelBtn {
+        background: linear-gradient(135deg, #dc2626, #ef4444);
+        color: #fff;
+        padding: 10px 26px;
+        font-weight: 600;
+        border-radius: 10px;
+        border: none;
+        box-shadow: 0 6px 14px rgba(220,38,38,0.4);
+    }
+</style>

@@ -1,0 +1,693 @@
+﻿<!--
+Hemant 12/03/2024 Follows Report
+Hemant 12/20/2024 Print mail lables code added
+Hemant 12/23/2024 Phone number format added
+Hemant 12/24/2024 print labels code added
+Hemant 01/09/2025 reprint invoice link added to invoice number
+Hemant 01/12/2025 tel#, multiselect checkbox process button fixes added
+Hemant 03/18/2025 fix for procss to avoid empty page
+-->
+@{
+
+    if (Session["UserID"] == null)
+    {
+        Layout = null;
+        Response.Redirect("~/Login/Index");
+    }
+    else
+    {
+        Layout = null;
+        Layout = "~/Views/Shared/_Layout.cshtml";
+
+    }
+    ViewBag.Title = "SALES FOLLOW UP DETAILS";
+}
+
+<div id="content-center" class="row">
+
+    <div class="web-form page login-page col-sm-12">
+
+        <div class="form-horizontal">
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            From
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtFromDate" class="form-control activateFormRefreshBtn" style="font-size:13px;" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            To Date
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtToDate" class="form-control activateFormRefreshBtn" style="font-size:13px;" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-right">
+                    <div class="mt-5px">
+                        <input type="checkbox" id="cbFillFromToDates" checked /> <span>All Dates</span>
+                        <input type="button" value="Last Month" class="formsGlobalUniqueBtn btnGetLastMonthDates" />
+                        <input type="button" value="Last Week" class="formsGlobalUniqueBtn btnGetLastWeekDates" />
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Store
+                        </label>
+                        <div class="col-sm-8">
+                            <select id="store" name="store" class="form-control">
+                                @{
+                                    if (ViewBag.StoreData != null)
+                                    {
+                                        foreach (var store in ViewBag.StoreData)
+                                        {
+                                            <option value="@store.Value">@store.Text</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Salesrep
+                        </label>
+                        <div class="col-sm-8">
+                            <select id="sales" name="sales" class="form-control">
+                                @{
+                                    if (ViewBag.SalesmanData != null)
+                                    {
+                                        foreach (var sales in ViewBag.SalesmanData)
+                                        {
+                                            <option value="@sales.Value">@sales.Text</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" style="display:none;" id="printReportWithAddress">
+                    <input type="checkbox" name="printReportWithAddres" id="printReportWithAddres" />&nbsp;Print Report With Address
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+
+                </div>
+                <div class="col-md-4"></div>
+                <div class="col-md-4 text-right" style="padding-top: 8px;">
+                    <input type="button" value="Reset" class="formsGlobalUniqueBtn btnResetFormValues" id="resetFormValues" />
+                    <input type="button" id="btnFormResultsSearch" value="Refresh" class="refresh_btn refreshBtnDefault" />
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="mt-4 white-box pos-rel" id="divDataTableReport">
+
+        <div class="row col-md-6 report_buttons">
+            <div style="margin:3px;">
+                <input type="button" value="PDF" table-id="dataTableForFollows" class="formsGlobalUniqueBtn btnDataTableDownloadPDF" id="btnPDF" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Excel" table-id="dataTableForFollows" class="formsGlobalUniqueBtn btnDataTableDownloadExcel" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Preview" table-id="dataTableForFollows-Report" id="btnDataTablePreview" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Print" table-id="dataTableForFollows-Report" id="btnDataTablePrint" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Email" table-id="dataTableForFollows" class="formsGlobalUniqueBtn" />
+            </div>
+
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Simple Excel" class="formsGlobalUniqueBtn" />
+            </div>
+
+            <div style="margin:3px;display:none;" id="process">
+                <input type="button" value="Process" class="formsGlobalUniqueBtn" />
+            </div>
+        </div>
+        <div class="row dataTableReport" id="printContent">
+            <div><br /></div>
+            <table id="dataTableForFollows" class="dataTable display nowrap table" style="width:100%">
+                <thead>
+                    <tr>
+                        <th style="text-align:center !important;">Inv_No</th>
+                        <th style="text-align:center !important;">Date</th>
+                        <th style="text-align:center !important;">Name</th>
+                        <th style="text-align:center !important;">Style</th>
+                        <th style="text-align:center !important;">Desc</th>
+                        <th style="text-align:center !important;">Qty</th>
+                        <th style="text-align:center !important;">Price</th>
+                        <th style="text-align:center !important;">Tel</th>
+                        <th style="text-align:center !important;">Store</th>
+                        <th style="text-align:center !important;"><input type="checkbox" class="allFollows">&nbsp;Print Mail Label</th>
+                        <th style="text-align:center !important;">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot id="tfooter">
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th id="totalLabor" class="text-right numericColumns"></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div class="row dataTableReport" id="showHideReport" style="display:none;">
+            <div><br /></div>
+            <table id="dataTableForFollows-Report" class="dataTable display nowrap table" style="width:100%">
+                <thead>
+                    <tr>
+                        <th style="text-align:center !important;">Inv_No</th>
+                        <th style="text-align:center !important;">Date</th>
+                        <th style="text-align:center !important;">Name</th>
+                        <th style="text-align:center !important;">Style</th>
+                        <th style="text-align:center !important;">Desc</th>
+                        <th style="text-align:center !important;">Qty</th>
+                        <th style="text-align:center !important;">Price</th>
+                        <th style="text-align:center !important;">Address</th>
+                        <th style="text-align:center !important;">Tel</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot id="tfooter">
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th id="totalPrice" class="text-right numericColumns"></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="printableLabels1" style="display:none;"></div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var table = $('#dataTableForFollows').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            stateSave: true,
+            select: true,
+            buttons: [],
+            pageLength: 25,
+            bInfo: false,
+            aaSorting: [],
+            columnDefs: [{
+                class: 'text-right',
+                targets: [5,6]
+            }, {
+                class: 'set-width',
+                targets: [0, 1, 2, 3, 4, 5]
+            }]
+        })
+
+        table.column(10).visible(false);
+
+        var table1 = $('#dataTableForFollows-Report').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 25,
+            bInfo: false,
+            aaSorting: [],
+            columnDefs: [{
+                class: 'text-right',
+                targets: [5, 6]
+            }, {
+                class: 'set-width',
+                targets: [0, 1, 2, 3, 4, 5,6,7,8]
+            }]
+        })
+
+        table1.column(7).visible(false);
+
+        $('#dataTableForFollows tbody').on('click', 'td', function () {
+
+            if (table.cell(this).index().columnVisible != 9) {
+                var idx = table.row(this).index();
+                var data = table
+                    .cell(idx, 0) // note that you could actually pass in 'this' as the row selector!
+                    .data();
+                if (data != "" && data != null) {
+                    window.location.href = "GetInvoiceDetailsBasedOnInvNumber?Invoice=" + data;
+                }
+
+            }
+
+        });
+
+
+
+        $('#resetFormValues').on("click", function (e) {
+            $("#cbFillFromToDates").prop("checked", true);
+            fillFromToDates();
+            $('#sales').prop('selectedIndex', 0);
+            $('#store').prop('selectedIndex', 0);
+            $('#process').css("display", "none");
+            $('#printReportWithAddres').prop("checked", false);
+        });
+
+        $('#sales').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        $('#store').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+
+        $('#printReportWithAddres').on("click", function (e) {
+            if ($('#printReportWithAddres').prop("checked")) {
+                var table1 = $('#dataTableForFollows-Report').DataTable();
+                table1.column(7).visible(true);
+            } else {
+                var table1 = $('#dataTableForFollows-Report').DataTable();
+                table1.column(7).visible(false);
+            }
+        });
+
+        $(".allFollows").on("click", function (e) {
+
+            if ($('.allFollows').prop("checked")) {
+                $('#dataTableForFollows').DataTable().$('.sendEmail').prop('checked', true);
+                $('#process').css("display", "block");
+                $('#printReportWithAddres').prop("checked", false);
+
+            } else {
+                $('#dataTableForFollows').DataTable().$('.sendEmail').prop('checked', false);
+                $('#process').css("display", "none");
+                $('#printReportWithAddres').prop("checked", false);
+            }
+
+        });
+
+        /*$(".sendEmail").on("click", function (e) {
+            var count = 0;
+            $('.sendEmail').each(function () {
+                if (this.checked) {
+                    count = count + 1;
+                }
+            });
+            debugger
+            if (count > 0) {
+                $('#process').css("display", "block");
+            } else {
+                $('#process').css("display", "none");
+            }
+
+        });*/
+
+        $("#process").on("click", function (e) {
+
+            var count = 0;
+            $('.sendEmail').each(function () {
+                if (this.checked) {
+                    count = count + 1;
+                }
+            });
+
+            if (count == 0 || count == "0") {
+                alert("Nothing selected to print labels.");
+                return false;
+            } else {
+                //var table = $("#dataTableForFollows")[0];
+
+                var employeeObjects = [];
+                var table = $('#dataTableForFollows').DataTable();
+                var data = table.rows().data();
+
+                var myObject = new Object();
+
+                for (var i = 0; i < data.length; i++) {
+                    var dr = data[i];
+                    var sel = $("#sel-" + i).prop("checked") == true ?? false;
+
+                    if (sel) {
+
+                        item = {}
+                        item["Inv_No"] = dr[0];
+                        item["DATE"] = dr[1];
+                        item["NAME"] = dr[2];
+                        item["STYLE"] = dr[3];
+                        item["DESC"] = dr[4];
+                        item["QTY"] = dr[5];
+                        item["PRICE"] = dr[6];
+                        item["ADDRESS"] = "";
+                        item["TEL"] = (dr[7].toString()).replace("(", "").replace(")", "").replace("-", "").replace(" ", "");
+                        item["STORE_NO"] = dr[8];
+                        item["MAIL"] = sel;
+                        employeeObjects.push(item);
+                    }
+                }
+                var dt = JSON.stringify(employeeObjects)
+                $('.printAddressContent').html("");
+                setPrintData(dt)
+            }
+        });
+
+        fillFromToDates();
+    });
+
+    function setPrintData(dt) {
+        var url = '@Url.Action("PrintProcess", "ListOfItemsSold", new { Area = "" })';
+
+        var data = {
+            ProcesString: dt
+        };
+
+        var jqxhr = $.post(url, data, function () { })
+            .done(function (response) {
+                let tableContent = "";
+
+                if (response != "" && response != "") {
+                    var json;
+                    if (response instanceof Object)
+                        json = response;
+                    else
+                        json = $.parseJSON(response);
+
+                    for (var i = 0; i < json.length; i++) {
+
+                        let name = json[i].NAME.toString() ?? "";
+                        let add1 = json[i].Addr1.toString() ?? "";
+                        let city = json[i].City1.toString() ?? "";
+                        let state = json[i].State1.toString() ?? "";
+                        let zip = json[i].Zip1.toString() ?? "";
+                        let country = json[i].Country.toString() ?? "";
+
+                        tableContent = tableContent + "<table class='page' style='border:1px solid #000;width:200px;'>"
+                            + "<tr><td style='padding: 5px 5px;'>" + name + "</td></tr>"
+                            + "<tr><td style='padding: 5px 5px;'>" + add1 + "</td></tr>" +
+                            "<tr><td style='padding: 5px 5px;'>" + city + "</td></tr>" +
+                            "<tr><td style='padding: 5px 5px;'>" + state + "</td></tr>" +
+                            "<tr><td style='padding: 5px 5px;'>" + zip + "</td></tr>" +
+                            "<tr><td style='padding: 5px 5px;'>" + country + "</td></tr>" +
+                            "</table>";
+
+                    }
+
+                    $(".printableLabels1").html(tableContent);
+                    printLabels("printableLabels1");
+
+                }
+
+            })
+            .fail(function (jqxhr, textStatus, error) {
+                var err = textStatus + ", " + error;
+                console.log("GETSoldOrInstock Request Failed: " + err);
+            });
+    }
+
+    function setdata(this_) {
+        var tr = $(this_).closest("tr");
+        rowindex = tr.index();
+        if ($(this_).prop('checked')) {
+            //$('#dataTableForFollows tbody tr:eq(' + rowindex + ') td:eq(10)').text('true');
+            var table = $('#dataTableForFollows').DataTable();
+            table.cell({ row: rowindex, column: 10 }).data(true).draw();
+        } else {
+            //$('#dataTableForFollows tbody tr:eq(' + rowindex + ') td:eq(10)').text('false');
+            var table = $('#dataTableForFollows').DataTable();
+            table.cell({ row: rowindex, column: 10 }).data(false).draw();
+        }
+
+        var count = 0;
+        $('.sendEmail').each(function () {
+            if (this.checked) {
+                count = count + 1;
+            }
+        });
+
+        if (count > 0) {
+            $('#process').css("display", "block");
+        } else {
+            $('#process').css("display", "none");
+        }
+
+    }
+
+    function buttonStyleClassChange(btnId) {
+        $('#' + btnId).removeClass('refreshBtnDefault').addClass('needToRefreshBtn');
+        $('#' + btnId).val("Refresh *");
+    }
+
+    function existAutoFilledData() {
+
+
+
+        $("#totalPrice").html("");
+
+        if ($('#txtFromDate').val() != "")
+            fromdate = $('#txtFromDate').val();
+        else
+            fromdate = "1990-01-01";
+
+        if ($('#txtToDate').val() != "")
+            todate = $('#txtToDate').val();
+        else
+            todate = "2099-12-31";
+
+
+        var store = $('#store').val();
+        var sales = $('#sales').val();
+
+        var allDates = $("#cbFillFromToDates").prop('checked') ? true : false;
+
+
+        var url = '@Url.Action("GetFollowsDetails", "ListOfItemsSold", new { Area = "" })';
+
+        var data = {
+            FROMDATE: fromdate,
+            DateTo: todate,
+            Store: store,
+            Sales: sales,
+            AllDates: allDates
+        };
+
+        var table = $('#dataTableForFollows').DataTable();
+        table.clear().draw();
+
+
+
+        var table1 = $('#dataTableForFollows-Report').DataTable();
+        table1.clear().draw();
+
+
+        var jqxhr = $.post(url, data, function () { })
+            .done(function (response) {
+                var json;
+                if (response instanceof Object)
+                    json = response;
+                else
+                    json = $.parseJSON(response);
+
+
+                var totalPrice = 0;
+
+                if (json != null) {
+                    for (var i = 0; i < json.length; i++) {
+
+                        if (json[i].PRICE != "" && json[i].PRICE != null) {
+                            totalPrice = totalPrice + json[i].PRICE;
+                        }
+
+                        let tel = "";
+                        let tel1 = "";
+                       // let number = "";
+
+                        if (json[i].TEL != null && json[i].TEL != "") {
+                            var number1 = String(json[i].TEL);
+                            tel = formatNumber(number1);
+                        } else {
+                            tel = json[i].TEL;
+                        }
+                        let email = "<input type='checkbox' name='email[]' class='sendEmail' onclick='setdata(this)' id='sel-"+i+"' data-id='" + json[i].Inv_No + "'>";
+                        if (json[i].MAIL)
+                            email = "<input type='checkbox' name='email[]' class='sendEmail' onclick='setdata(this)' id='sel-" + i +"' data-id='" + json[i].Inv_No + "' checked='checked'>";
+
+
+                        var inv = json[i].Inv_No;
+                        /*if (json[i].Inv_No != "") {
+                            //inv = "<a href='GetInvoiceDetailsBasedOnInvNumber?Invoice=" + inv + "' target='_blank'>" + json[i].Inv_No + "</a>";
+                        }*/
+
+                        table.row.add([
+                            json[i].Inv_No,
+                            json[i].DATE,
+                            json[i].NAME,
+                            json[i].STYLE,
+                            json[i].DESC,
+                            formatCurrency(json[i].QTY),
+                            formatCurrency(json[i].PRICE),
+                            tel,
+                            json[i].STORE_NO,
+                            email,
+                            json[i].MAIL
+                        ]);
+
+                        table1.row.add([
+                            json[i].Inv_No,
+                            json[i].DATE,
+                            json[i].NAME,
+                            json[i].STYLE,
+                            json[i].DESC,
+                            formatCurrency(json[i].QTY),
+                            formatCurrency(json[i].PRICE),
+                            json[i].ADDRESS,
+                            tel
+                        ]);
+
+                    }
+                    table.draw();
+                    table1.draw();
+                    $("#totalPrice").html(formatCurrency(totalPrice));
+                    $('#printReportWithAddress').css("display", "block");
+                    $('#process').css("display", "block");
+
+                }
+
+            })
+            .fail(function (jqxhr, textStatus, error) {
+                var err = textStatus + ", " + error;
+                console.log("GETSoldOrInstock Request Failed: " + err);
+            });
+
+    }
+
+    function formatCurrency(total) {
+        var neg = false;
+        if (total < 0) {
+            neg = true;
+            total = Math.abs(total);
+        }
+        return (neg ? "-" : '') + parseFloat(total, 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString();
+    }
+
+    function formatNumber(phoneNo) {
+
+        let ph = phoneNo;
+
+        if (phoneNo.length == 10) {
+            ph = phoneNo.toString().replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
+        }
+        if (phoneNo.length == 9) {
+            ph = phoneNo.toString().replace(/(\d{2})(\d{3})(\d{4})/, '($1) $2-$3');
+        }
+        if (phoneNo.length == 8) {
+            ph = phoneNo.toString().replace(/(\d{1})(\d{3})(\d{4})/, '($1) $2-$3');
+        }
+
+        return ph;
+    }
+
+    function printLabels(divclass) {
+        printNormalHtmlTable(divclass);
+        $(".closeModal").click();
+
+
+    }
+
+    function showInvoice(invNo) {
+
+
+        var url1 = 'GetInvoiceDetailsBasedOnInvNumber?Invoice=' + invNo;
+        window.location = url1;
+        return false;
+
+       // window.open.href = "ListOfItemsSold/GetInvoiceDetailsBasedOnInvNumber?Invoice=" + invNo;
+       // return false;
+        /*var jqxhr = $.post(url, data, function () { })
+            .done(function (response) {
+                var json;
+                if (response instanceof Object)
+                    json = response;
+                else
+                    json = $.parseJSON(response);
+
+
+                if (json != null) {
+                    for (var i = 0; i < json.length; i++) {
+
+
+                    }
+                }
+
+            })
+            .fail(function (jqxhr, textStatus, error) {
+                var err = textStatus + ", " + error;
+                console.log("GETSoldOrInstock Request Failed: " + err);
+            });
+        */
+    }
+</script>
+<style>
+
+    .text-right {
+        width: 70px;
+        text-align: right !important;
+    }
+
+    .set-width {
+        width: 70px;
+        white-space: break-spaces !important;
+    }
+</style>
+
+<div class="modal fade" id="printAddressContentModal" tabindex="-1" aria-labelledby="printAddressContentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-center" id="printAddressContentModalLabel">Address Labels</h5>
+                <button type="button" class="formsGlobalUniqueCloseBtn btn-close closeModal" data-modal-id="printAddressContentModal" data-bs-dismiss="modal" aria-label="Close">X</button>
+            </div>
+            <div class="modal-body">
+                <div class="printAddressContent" style="overflow-y: scroll; max-height:400px;"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="formsGlobalUniqueCloseBtn closeModal" data-modal-id="printAddressContentModal" data-bs-dismiss="modal">Close</button>
+
+            </div>
+        </div>
+    </div>
+</div>

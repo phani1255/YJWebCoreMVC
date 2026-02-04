@@ -1,0 +1,438 @@
+<!--
+  * Created by Phanindra
+  * Phanindra 9/9/2024 Done changes for text align and decimals fixes and preview related
+  * Phanindra 9/16/2024 Done changes for showing images under styles
+  * Phanindra 10/04/2024 Removed unnecessary code related to images
+-->
+@{
+
+    if (Session["UserID"] == null)
+    {
+        Layout = null;
+        Response.Redirect("~/Login/Index");
+    }
+    else
+    {
+        Layout = null;
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+}
+
+@model YJWeb.Models.AnalasysServiceModel
+
+<div id="content-center" class="row">
+
+    <div class="web-form page login-page col-sm-12">
+
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            From Date
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtFromDate" class="form-control activateFormRefreshBtn" style="font-size:13px;" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            To Date
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtToDate" class="form-control activateFormRefreshBtn" style="font-size:13px;" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-right">
+                    <div class="mt-5px">
+                        <input type="checkbox" id="cbFillFromToDates" checked /> <span>All Dates</span>
+                        <input type="button" value="Last Month" class="formsGlobalUniqueBtn btnGetLastMonthDates" />
+                        <input type="button" value="Last Week" class="formsGlobalUniqueBtn btnGetLastWeekDates" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Customer
+                        </label>
+                        <div class="col-sm-8">
+                            <div class="autocomplete-dropdown">
+                                <div id="CustomerCodesForAutofill" class="d-none">@Html.Raw(Json.Encode(Model.CustomerCodes)) </div>
+                                <input type="text" id="txtCustomerCode" class="form-control activateFormRefreshBtn" placeholder="Search...">
+                                <div id="autocomplete-list1" class="autocomplete-items"></div>
+                            </div>
+                            <div class="customerCodeSearchDiv">
+                                <button class="formsGlobalUniqueBtn customerCodeSearchBtn1 showbsmodal activateFormRefreshBtn" data-modal-id="selectCustomerAccModal" data-bs-toggle="modal" data-bs-target="#selectCustomerAccModal">...</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Styles
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" id="txtStyleStartsWith" class="form-control activateFormRefreshBtn" placeholder="Start With" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Metal
+                        </label>
+                        <div class="col-sm-8">
+                            @Html.DropDownListFor(x => x.metal, Model.MetalTypes, new { @class = "form-control activateFormRefreshBtn", @id = "ddlMetal" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Category
+                        </label>
+                        <div class="col-sm-8">
+                            @Html.DropDownListFor(x => x.category, Model.CategoryTypes, new { @class = "form-control activateFormRefreshBtn", @id = "ddlCategory" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Styles
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" id="txtStyleContains" class="form-control activateFormRefreshBtn" placeholder="Contains" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Brand
+                        </label>
+                        <div class="col-sm-8">
+                            @Html.DropDownListFor(x => x.brand, Model.BrandTypes, new { @class = "form-control activateFormRefreshBtn", @id = "ddlBrand" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Subcategory
+                        </label>
+                        <div class="col-sm-8">
+                            @Html.DropDownListFor(x => x.subcat, Model.SubCategoryTypes, new { @class = "form-control activateFormRefreshBtn", @id = "ddlSubCategory" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Vendor
+                        </label>
+                        <div class="col-sm-8">
+                            <div class="autocomplete-dropdown">
+                                <div id="VendorTypesForAutofill" class="d-none">@Html.Raw(Json.Encode(Model.VenderTypes)) </div>
+                                <input type="text" id="ddlVendor" class="form-control activateFormRefreshBtn" placeholder="Search...">
+                                <div id="autocomplete-list" class="autocomplete-items"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Group
+                        </label>
+                        <div class="col-sm-8">
+                            @Html.DropDownListFor(x => x.group, Model.AllGroups, new { @class = "form-control activateFormRefreshBtn", @id = "ddlGroup" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class=" text-right">
+                        <input type="button" id="btnFormResultsSearch" value="Refresh" class="refresh_btn refreshBtnDefault" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4" id="divUploadImage" style="display:none;">
+                    <input id="fileupload" type="file" /><br /><br />
+                    <input type="button" id="uploadButton" value="Upload" />
+                </div>
+            </div>
+            <div id="divImages" style="text-align:right;display:none;" class="col-lg-2">
+                <img id="image" src="" alt="" style="max-width: 133% !important;" />
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="mt-4 white-box pos-rel" id="divDataTableReport">
+
+        <div class="row col-md-6 report_buttons">
+            <div style="margin:3px;">
+                <input type="button" value="PDF" table-id="dataTableForBestSeller" class="formsGlobalUniqueBtn btnDataTableDownloadPDF" id="btnPDF" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Excel" table-id="dataTableForBestSeller" class="formsGlobalUniqueBtn btnDataTableDownloadExcel" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Preview" table-id="dataTableForBestSeller" id="btnDataTablePreview" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Print" table-id="dataTableForBestSeller" id="btnDataTablePrint" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Email" table-id="dataTableForBestSeller" class="formsGlobalUniqueBtn" />
+            </div>
+
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Simple Excel" class="formsGlobalUniqueBtn" />
+            </div>
+        </div>
+        <div class="row dataTableReport">
+
+            <table id="dataTableForBestSeller" class="dataTable display nowrap table" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Style</th>
+                        <th>Brand</th>
+                        <th>Group</th>
+                        <th>Category</th>
+                        <th>Subcat</th>
+                        <th>Metal</th>
+                        <th class="numericColumns">Qty</th>
+                        <th class="numericColumns">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot id="tfooter">
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th class="text-right"></th>
+                        <th class="text-right numericColumns"></th>
+                        <th class="text-right numericColumns"></th>
+                    </tr>
+                </tfoot>
+
+            </table>
+            <br>
+
+        </div>
+    </div>
+
+</div>
+
+
+
+
+<script type="text/javascript">
+
+    var custcode = "", fromdate = "1990-01-01", todate = "2098-12-31", metal = "";
+    var brand = "", styleStarts = "", styleContains = "", vendor = "";
+    var filestyle = "";
+    function ClearControls() {
+        custcode = ""; fromdate = "1990-01-01"; todate = "2098-12-31"; metal = "";
+        brand = ""; styleStarts = ""; styleContains = ""; vendor = "";
+        $('#txtCustomerCode').val('');
+        $('#txtFromDate').val('');
+        $('#txtToDate').val('');
+        $('#txtStyleStartsWith').val('');
+        $('#txtStyleContains').val('');
+        $('#ddlCategory').val('All').change();
+        $('#ddlSubCategory').val('All').change();
+        $('#ddlMetal').val('All').change();
+        $('#ddlBrand').val('All').change();
+        $('#ddlVendor').val('All').change();
+        $('#ddlGroup').val('All').change();
+
+        $('#divImages').hide();
+        $('#divPreviousNextImageBtns').hide();
+        $('#divUploadImage').hide();
+        var theImg = document.getElementById('image');
+        theImg.height = 0;
+        theImg.width = 0;
+
+        existAutoFilledData();
+    }
+    function existAutoFilledData() {
+        custcode = $('#txtCustomerCode').val();
+
+        if ($('#txtFromDate').val() != "")
+            fromdate = $('#txtFromDate').val();
+        else
+            fromdate = "1990-01-01";
+
+        if ($('#txtToDate').val() != "")
+            todate = $('#txtToDate').val();
+        else
+            todate = "2098-12-31";
+
+        if ($('#txtStyleStartsWith').val() != "")
+            styleStarts = $('#txtStyleStartsWith').val();
+        else
+            styleStarts = "";
+
+        if ($('#txtStyleContains').val() != "")
+            styleContains = $('#txtStyleContains').val();
+        else
+            styleContains = "";
+
+        if ($('#ddlCategory option:selected').val() != 'All')
+            cat = $('#ddlCategory option:selected').val();
+        else
+            cat = "";
+
+        if ($('#ddlSubCategory option:selected').val() != 'All')
+            subcategory = $('#ddlSubCategory option:selected').val();
+        else
+            subcategory = "";
+
+        if ($('#ddlMetal option:selected').val() != 'All')
+            metal = $('#ddlMetal option:selected').val();
+        else
+            metal = "";
+
+        if ($('#ddlBrand option:selected').val() != 'All')
+            brand = $('#ddlBrand option:selected').val();
+        else
+            brand = "";
+
+        //if ($('#ddlVendor option:selected').val() != 'All')
+        //    vendor = $('#ddlVendor option:selected').val();
+        //else
+        //    vendor = "";
+        if ($('#ddlVendor').val() != 'All')
+            vendor = $('#ddlVendor').val();
+        else
+            vendor = "";
+        if ($('#ddlGroup option:selected').val() != 'All')
+            groupval = $('#ddlGroup option:selected').val();
+        else
+            groupval = "";
+
+        BindBestSellerReport(custcode, fromdate, todate, cat, subcategory, metal, brand, styleStarts, styleContains, vendor, groupval);
+    }
+
+
+
+    function BindCustomerCodeSearchDetails(custcode) {
+        if (custcode != null) {
+            $('#hfCustomerId').val(custcode.Value);
+            $('#hfCustomerCode').val(custcode.Text);
+            console.log('ccode : ' + custcode.Value);
+            console.log('ccode : ' + custcode.Text);
+        }
+    }
+
+    function BindBestSellerReport(custcode, fromdate, todate, cat, subcategory, metal, brand, styleStarts, styleContains, vendor, groupval) {
+        var url = '@Url.Action("GetBestSellerReport", "Analysis", new { Area = "" })';
+        var data = {
+            ccode: custcode,
+            fdate: fromdate,
+            tdate: todate,
+            category: cat,
+            subcat: subcategory,
+            metalval: metal,
+            brandval: brand,
+            fromstyle: styleStarts,
+            tostyle: styleContains,
+            strVendor: vendor,
+            groupval: groupval
+        };
+        var jqxhr = $.post(url, data, function () { })
+        .done(function (response) {
+            var json;
+            if (response instanceof Object)
+                json = response;
+            else
+                json = $.parseJSON(response);
+
+            var table = $('#dataTableForBestSeller').DataTable();
+            table.clear().draw();
+
+            $("#dataTableForBestSeller tbody").empty();
+            var trans = json;
+            var totalAmount1 = 0; var totalQty1 = 0, totalOnMemo1 = 0, totalInStock1 = 0;
+            var tr;
+            for (var i = 0; i < json.length; i++) {
+
+                totalQty1 += parseFloat(json[i].QTY);
+                totalAmount1 += parseFloat(json[i].PRICE);
+                formattedStyle = formatStyleNumber(json[i].STYLE_NO);
+
+                table.row.add([
+                    json[i].STYLE_NO + `<br><img src='' data-style='` + json[i].STYLE_NO + `' id='' class='showImage_` + formattedStyle + ` WebImageforStyle d-none'>`,
+                    json[i].brand,
+                    json[i].group,
+                    json[i].category,
+                    json[i].subcat,
+                    json[i].metal,
+                    numberWithCommas(json[i].QTY),
+                    numberWithCommas(json[i].PRICE),
+                ]);
+            }
+
+            $('#tfooter').find('th').eq(5).html("Grand Total");
+            $('#tfooter').find('th').eq(6).html(numberWithCommas(totalQty1));
+            $('#tfooter').find('th').eq(7).html(numberWithCommas(totalAmount1));
+
+            table.draw();
+            addNumericColumnsClasstoDT("dataTableForBestSeller", [6, 7]);
+            getStylesImages("dataTableForBestSeller", 0);
+
+            // TODO : Bind data to table
+        })
+        .fail(function (jqxhr, textStatus, error) {
+            var err = textStatus + ", " + error;
+            console.log("GETSoldOrInstock Request Failed: " + err);
+        });
+    }
+
+
+    $(document).ready(function () {
+
+
+        var table = $('#dataTableForBestSeller').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 25,
+            order: [[6, 'desc']]
+        });
+
+        $(document).on('click', ".paginate_button", function () {
+            addNumericColumnsClasstoDT("dataTableForBestSeller", [1, 2]);
+            getStylesImages("dataTableForBestSeller", 0);
+        });
+
+    });
+
+</script>
+
+

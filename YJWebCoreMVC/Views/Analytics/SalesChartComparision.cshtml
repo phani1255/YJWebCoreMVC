@@ -1,0 +1,587 @@
+﻿@*
+    venkat 12/30/2025 added
+    venkat 01/07/2026 Fixed issues in saleman sales and graph issues
+    venkat 01/09/2026 Fixed issue with Dates showing on x axis
+    venkat 01/13/2026 Fixed issues with dates selection when reset and refresh button showing status
+    venkat 01/14/2026 Fixed issue with overlapping of dates on x axis when zoom 
+*@
+@model YJWeb.Models.SalesmenModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Sales Chart Comparison";
+    var salesmen = ViewBag.Salesmen as List<SelectListItem>;
+}
+
+<div class="container mt-4" style="max-width: 470px;">
+
+    <div class="card shadow-sm border-0">
+
+        <!-- Header -->
+        <div class="card-header text-white" style="background:#1f3c73;">
+            <div class="d-flex align-items-center justify-content-center">
+                <i class="fa fa-chart-bar me-5"></i>
+                <h6 class="mb-0">Sales Chart Comparison</h6>
+            </div>
+        </div>
+
+
+        <div class="card-body">
+
+            <div data-refresh-scope>
+
+                <!-- Date Range -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="txtFromDate" class="form-label fw-semibold">From</label>
+                        <input type="date" id="txtFromDate" class="form-control" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="txtToDate" class="form-label fw-semibold">To</label>
+                        <input type="date" id="txtToDate" class="form-control" />
+                    </div>
+                </div>
+
+                <!-- Quick Buttons -->
+                <div class="row mb-3 align-items-end">
+                    <div class="col-md-4">
+                        <button class="btn btn-outline-primary w-100 btnGetLastWeekDates">
+                            Last Week
+                        </button>
+                    </div>
+
+                    <div class="col-md-4">
+                        <button class="btn btn-outline-primary w-100 btnGetLastMonthDates">
+                            Last Month
+                        </button>
+                    </div>
+
+                    <div class="col-md-4 d-flex align-items-center pt-2">
+                        <input type="checkbox" id="cbFillFromToDates" class="form-check-input me-2" checked />
+                        <label for="cbFillFromToDates" class="form-check-label fw-semibold">
+                            All Dates
+                        </label>
+                    </div>
+                </div>
+
+                <hr />
+
+                <!-- Salesman Selection -->
+                <fieldset class="group-box mt-3">
+
+                    <legend class="group-box-title">
+                        Please Enter Salesman Codes
+                    </legend>
+
+                    <div class="row g-3 mt-2">
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label mb-1">Salesman 1</label>
+                            <select id="ddlSls1" class="form-select w-100 salesman-dd">
+                                @foreach (var s in salesmen)
+                                {
+                                    <option value="@s.Value">@s.Text</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label mb-1">Salesman 2</label>
+                            <select id="ddlSls2" class="form-select w-100 salesman-dd">
+                                @foreach (var s in salesmen)
+                                {
+                                    <option value="@s.Value">@s.Text</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label mb-1">Salesman 3</label>
+                            <select id="ddlSls3" class="form-select w-100 salesman-dd">
+                                @foreach (var s in salesmen)
+                                {
+                                    <option value="@s.Value">@s.Text</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label mb-1">Salesman 4</label>
+                            <select id="ddlSls4" class="form-select w-100 salesman-dd">
+                                @foreach (var s in salesmen)
+                                {
+                                    <option value="@s.Value">@s.Text</option>
+                                }
+                            </select>
+                        </div>
+
+                    </div>
+
+                </fieldset>
+            </div>
+
+
+            <br />
+
+            <!-- Actions -->
+            <div class="text-end" align="right">               
+                <button id="btnSalesChartRefresh"
+                        type="button"
+                        class="btn btn-primary me-2 refresh_btn refreshBtnDefault refresh-btn"
+                        data-refresh
+                        data-refresh-default="changed">
+                    <i class="fa fa-sync me-1"></i> Refresh
+                </button>
+
+
+                <button id="btnSalesChartReset" class="btn btn-secondary me-2">
+                    <i class="fa fa-undo"></i> Reset
+                </button>
+
+
+                <button id="btnClose" class="btn btn-danger">
+                    <i class="fa fa-times"></i> Close
+                </button>
+
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    .group-box {
+        border: 1px solid #d6d6d6;
+        border-radius: 6px;
+        padding: 20px 15px 6px;
+        position: relative;
+    }
+
+    .group-box-title {
+        position: absolute;
+        top: -12px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #fff;
+        padding: 0 12px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #555;
+        width: auto;
+        text-align: center;
+    }
+
+    /*.form-select {
+        min-height: 25px;*/ /* matches Bootstrap input height */
+    /*border-color: #cfcfcf;
+    }*/
+    .form-select {
+        min-height: 30px; /* matches input height */
+        border-color: #d0d0d0; /* soft neutral border */
+        border-radius: 4px; /* default Bootstrap feel */
+    }
+
+        .form-select:focus {
+            border-color: #0d6efd; /* Bootstrap primary */
+            box-shadow: 0 0 0 0.12rem rgba(13,110,253,.15);
+        }  
+
+</style>
+
+<script>
+
+
+    
+    function parseDotNetDate(dotNetDate) {
+        if (!dotNetDate) return null;
+        const timestamp = parseInt(dotNetDate.replace(/\/Date\((\d+)\)\//, '$1'));
+        return new Date(timestamp);
+    }    
+
+    function updateSalesmanDropdowns() {
+
+        let selectedValues = [];
+
+        $('.salesman-dd').each(function () {
+            let val = $(this).val();
+            if (val) selectedValues.push(val);
+        });
+
+        $('.salesman-dd').each(function () {
+            let currentSelect = $(this);
+            let currentValue = currentSelect.val();
+
+            currentSelect.find('option').each(function () {
+                let optionValue = $(this).val();
+
+                if (!optionValue) return;
+
+                if (selectedValues.includes(optionValue) && optionValue !== currentValue) {
+                    $(this).prop('disabled', true);
+                } else {
+                    $(this).prop('disabled', false);
+                }
+            });
+        });
+    }
+
+    $(document).on('change', '.salesman-dd', function () {
+        updateSalesmanDropdowns();
+    });
+
+    $(document).ready(function () {
+        updateSalesmanDropdowns();
+    });    
+
+    $("#btnClose").click(function () {
+        window.history.back();
+    });
+
+    /* =========================================================
+       CHART HELPERS
+       ========================================================= */
+
+    let netChart = null;
+    let payChart = null;
+
+    const salesmanConfig = [
+        { key: 's1', color: 'red' },
+        { key: 's2', color: 'blue' },
+        { key: 's3', color: 'green' },
+        { key: 's4', color: 'magenta' }
+    ];
+    
+    function buildDataset(label, color, data, field) {
+        /*if (!label || !data || data.length === 0) return null;*/
+        if (!label) return null;
+
+        if (!data || data.length === 0) {
+            data = []; // keep empty dataset
+        }
+
+
+        return {
+            label: label,
+            data: data.map(x => ({
+                x: new Date(parseInt(x.date.replace(/\D/g, ''))),
+                y: x[field]
+            })),
+            borderColor: color,
+            backgroundColor: color,
+            borderWidth: 2,
+            pointRadius: 5,
+            tension: 0            
+        };
+    }
+
+
+    function drawChart(canvasId, title, datasets, yAxisLabel, rightAxisLabel) {
+
+
+        const ctx = document.getElementById(canvasId).getContext('2d');
+
+        if (canvasId === 'netSalesChart' && netChart) netChart.destroy();
+        if (canvasId === 'paymentsChart' && payChart) payChart.destroy();
+
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                /*datasets: datasets.filter(d => d !== null)*/
+                datasets: datasets
+
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: false,  
+
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            usePointStyle: true
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: title,
+                        font: {
+                            weight: 'bold',
+                            size: 14      
+                        },
+                        color: '#333' 
+                    }
+                },
+
+                elements: {
+                    line: {
+                        borderWidth: 2,
+                        tension: 0  
+                    },
+                    point: {
+                        radius: 5,
+                        hoverRadius: 7
+                    }
+                },
+
+                scales: {
+                    x: {
+                        type: 'time',
+
+                        offset: true,
+                        bounds: 'data',                       
+
+                        time: {
+                            unit: 'month',             
+                            displayFormats: {
+                                month: 'yyyy'
+                            }
+                        },
+
+                        ticks: {
+                            //source: 'data',
+                            autoSkip: true,
+                            maxTicksLimit: window.devicePixelRatio>1?4:8,
+                            maxRotation: 0,
+                            minRotation: 0
+                        },
+
+                        grid: {
+                            display: false
+                        },
+
+                        title: {
+                            display: true,
+                            text: 'DATE'
+                        }
+                    },
+
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: canvasId === 'netSalesChart' ? 130000 : 350000, 
+                        grid: { display: false },
+                        title: {
+                            display: true,
+                            text: yAxisLabel,
+                            font: {
+                                weight: 'bold',  
+                                size: 12
+                            },
+                            color: '#333'
+                        },
+                        ticks: {
+                            callback: v => v.toLocaleString()
+                        }
+                    },
+                   
+                }
+            }
+
+
+        });
+
+        if (canvasId === 'netSalesChart') netChart = chart;
+        if (canvasId === 'paymentsChart') payChart = chart;
+    }
+
+   
+    $(document).on('click', '#btnSalesChartRefresh', function () {
+
+    if (
+        !$('#ddlSls1').val() &&
+        !$('#ddlSls2').val() &&
+        !$('#ddlSls3').val() &&
+        !$('#ddlSls4').val()
+    ) {
+        ShowMsg('Please select at least one salesman.', 'Info');
+        return;
+    }
+
+    $.ajax({
+        url: '@Url.Action("RefreshSalesChart", "Analysis")',
+        type: 'POST',
+        data: {
+            Salesman1: $('#ddlSls1').val(),
+            Salesman2: $('#ddlSls2').val(),
+            Salesman3: $('#ddlSls3').val(),
+            Salesman4: $('#ddlSls4').val(),
+            FromDate: $('#txtFromDate').val(),
+            ToDate: $('#txtToDate').val()
+        },
+        success: function (res) {
+
+            if (res && res.message) {
+                ShowMsg(res.message, res.Type || 'Info');
+                if (res.success === false) return;
+            }
+
+            if (res.success === true) {
+
+               
+                var netData = [];
+
+                // Total (always)
+                netData.push(
+                    buildDataset('Total Sales', 'black', res.total, 'net')
+                );
+
+                // Selected salesmen
+                salesmanConfig.forEach(cfg => {
+                    if (res[cfg.key] && res.labels[cfg.key]) {
+                        netData.push(
+                            buildDataset(
+                                res.labels[cfg.key],
+                                cfg.color,
+                                res[cfg.key],
+                                'net'
+                               
+                            )
+                        );
+                    }
+                });
+
+                // Remove nulls just in case
+                netData = netData.filter(Boolean);
+
+                var payData = [];
+
+                // Total (always)
+                payData.push(
+                    buildDataset('Total Payments', 'black', res.total, 'payments')
+                );
+
+                // Selected salesmen
+                salesmanConfig.forEach(cfg => {
+                    if (res[cfg.key] && res.labels[cfg.key]) {
+                        payData.push(
+                            buildDataset(
+                                res.labels[cfg.key],
+                                cfg.color,
+                                res[cfg.key],
+                                'payments'
+                                
+                            )
+                        );
+                    }
+                });
+
+                payData = payData.filter(Boolean);              
+
+                $('#salesChartModal').modal('show'); 
+
+
+
+                Chart.register({
+                    id: 'xYearDots',
+                    afterDraw(chart) {
+                        const xScale = chart.scales.x;
+                        if (!xScale) return;
+
+                        const ctx = chart.ctx;
+                        const y = xScale.bottom + 8;
+
+                        ctx.save();
+                        ctx.fillStyle = '#555';
+
+                        xScale.ticks.forEach((t, i) => {
+                            const x = xScale.getPixelForTick(i);
+                            ctx.beginPath();
+                            ctx.arc(x, y, 3, 0, Math.PI * 2);
+                            ctx.fill();
+                        });
+
+                        ctx.restore();
+                    }
+                });
+
+
+                $('#salesChartModal').one('shown.bs.modal', function () {
+                    drawChart(
+                        'netSalesChart',
+                        'NET SALES CHART',
+                        netData,
+                        'SALES',
+                        /*'SALESMAN SALES'*/
+                        ''
+                    );
+
+                    drawChart(
+                        'paymentsChart',
+                        'PAYMENTS CHART',
+                        payData,
+                        'PAYMENTS',
+                        /*'SALESMAN PAYMENTS'*/
+                        ''
+                    );
+
+                });
+
+                let $refreshBtn = $('#btnSalesChartRefresh');
+
+                $refreshBtn
+                    .removeClass('is-changed')
+                    .removeClass('is-working')
+                    .prop('disabled', false)
+                    .html('<i class="fa fa-sync me-1"></i> Refresh');
+            }
+        },
+        error: function () {
+            ShowMsg('Server error occurred while processing request.', 'Error');
+        }
+    });
+    });
+      
+
+
+    $(document).on('click', '#btnSalesChartReset', function () {
+
+        // Clear salesman selections
+        $('.salesman-dd').val('');
+
+        //  Re-enable all options (important for duplicate-prevention logic)
+        $('.salesman-dd option').prop('disabled', false);
+
+        $('#cbFillFromToDates').prop('checked', true);
+        
+        fillFromToDates();
+        // 3️Mark refresh button as CHANGED (yellow + *)
+
+        $('#cbFillFromToDates')
+            .prop('checked', true)
+            .trigger('change');
+
+        let $refreshBtn = $('#btnSalesChartRefresh');
+
+        $refreshBtn
+            .addClass('is-changed')
+            .removeClass('is-working')
+            .prop('disabled', false)
+            .html('<i class="fa fa-sync me-1"></i> REFRESH *');
+    });
+    
+    $(document).on('click', '.btnGetLastWeekDates, .btnGetLastMonthDates', function () {
+
+        let $refreshBtn = $('#btnSalesChartRefresh');
+
+        if ($refreshBtn.length > 0) {
+            $refreshBtn
+                .addClass('is-changed')
+                .removeClass('is-working')
+                .prop('disabled', false)
+                .html('<i class="fa fa-sync me-1"></i> REFRESH *');
+        }
+    });
+
+
+
+</script>
+
+@section scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+}
+
+

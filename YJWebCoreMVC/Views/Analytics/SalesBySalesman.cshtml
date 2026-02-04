@@ -1,0 +1,1911 @@
+﻿<!--
+  * Created by Manoj 01-DEC-2025
+-->
+
+@{
+
+    if (Session["UserID"] == null)
+    {
+        Layout = null;
+        Response.Redirect("~/Login/Index");
+    }
+    else
+    {
+        ViewBag.Title = "Sales By Salesrep";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+    var StoreLogo = ViewBag.StoreLogo;
+}
+@model YJWeb.Models.AnalasysServiceModel
+
+<h4 class="text-center heading mt-1">Sales By Salesrep</h4>
+<div id="content-center" class="row">
+    <div class="web-form page login-page col-sm-12" id="FormForItemsBoughtByCustomer">
+        <div class="form-horizontal">
+            @Html.AntiForgeryToken()
+            <div class="row">
+                <div class="col-md-4 pl-2" style="border:2px groove; border-radius:5px; box-shadow:inherit">
+                    <div class="mt-2 small-date-container">
+                        <div id="allDatesContainer" class="row">
+                            <div class="row mb-1">
+                                <label id="DateFrm" class="col-sm-6 col-form-label-sm text-end">
+                                    From Date
+                                </label>
+                                <div class="col-sm-5">
+                                    <input type="date" id="txtFromDate1" class="form-control form-control-sm fs-13 resetFromDate activateFormRefreshBtn" />
+                                </div>
+                            </div>
+                            <div class="row mb-1">
+                                <label id="DateTo" class="col-sm-6 col-form-label-sm text-end">
+                                    To Date
+                                </label>
+                                <div class="col-sm-5">
+                                    <input type="date" id="txtToDate1" class="form-control form-control-sm fs-13 resetToDate activateFormRefreshBtn" />
+                                </div>
+                            </div>
+                            <div class="row mt-1 ml-1">
+                                <div class="col-sm-12 text-right">
+                                    <input type="checkbox" id="cbFillFromToDates" checked />
+                                    <span class="fs-13">All Dates</span>
+                                    <input type="button" value="Last Month" class="btn btn-xs formsGlobalUniqueBtn btnGetLastMonthDates" />
+                                    <input type="button" value="Last Week" class="btn btn-xs formsGlobalUniqueBtn btnGetLastWeekDates" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <div class="col-md-12 p-1 mb-2 justify-content-between">
+                            <p>Filter By : </p>
+                            <input type="radio" id="invoiceDate" checked name="date" class="activateFormRefreshBtn" />&nbsp;Invoice Date&nbsp;&nbsp;
+                            <input type="radio" id="lastPayDate" name="date" class="activateFormRefreshBtn" />&nbsp;Last Pay Date&nbsp;&nbsp;
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="col-sm-4">
+                    <div>
+                        <div class="row">
+                            <label class="col-sm-3 mt-1" style="font-size:13px !important; text-align:start;">
+                                SalesRep
+                            </label>
+                            <div class="col-sm-6 pe-0">
+                                @Html.DropDownListFor(x => x.CustomerCodes, Model.CustomerCodes, new { @class = "form-control resetSelectField activateFormRefreshBtn", @id = "ddlSalesrepList" })
+
+                            </div>
+                            <div class="col-sm-2 ps-1">
+                                <div class="form-check mt-1 mb-0">
+                                    <input type="checkbox" id="ddlSalesrepAll" class="form-check-input" checked />
+                                    <label for="ddlSalesrepAll" class="form-check-label" style="font-size:11px !important; font-weight:700; text-align:start;">All</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="row">
+                            <label class="col-sm-3 mt-1" style="font-size:13px !important;  text-align:start;">
+                                Store
+                            </label>
+                            <div class="col-sm-6">
+                                @Html.DropDownListFor(x => x.AllStores, Model.AllStores, new { @class = "form-control resetSelectField activateFormRefreshBtn", @id = "ddlStoreList" })
+
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="form-check mt-1 mb-0">
+                                    <input type="checkbox" id="ddlStoreAll" class="form-check-input" checked />
+                                    <label for="ddlStoreAll" class="form-check-label" style="font-size:11px !important; font-weight:700; text-align:start;">All</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="row">
+                            <label class="col-sm-3 mt-1" style="font-size:13px !important; text-align:start;">
+                                Category
+                            </label>
+                            <div class="col-sm-6">
+                                @Html.DropDownListFor(x => x.CategoryTypes, Model.CategoryTypes, new { @class = "form-control resetSelectField activateFormRefreshBtn", @id = "ddlCategory" })
+
+                            </div>
+
+                            <div class="col-sm-2 ps-1 me-1">
+                                <div class="form-check mt-1 mb-0">
+                                    <input type="checkbox" id="ddlCategoryAll" class="form-check-input" checked />
+                                    <label for="ddlCategoryAll" class="form-check-label" style="font-size:11px !important; font-weight:700; text-align:start;">All</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="row">
+                            <label class="col-sm-3 mt-1" style="font-size:13px !important;  text-align:start;">
+                                Brand
+                            </label>
+                            <div class="col-sm-6">
+                                @Html.DropDownListFor(x => x.BrandTypes, Model.BrandTypes, new { @class = "form-control resetSelectField activateFormRefreshBtn", @id = "ddlBrandList" })
+
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="form-check mt-1 mb-0">
+                                    <input type="checkbox" id="ddlBrandAll" class="form-check-input" checked />
+                                    <label for="ddlBrandAll" class="form-check-label" style="font-size:11px !important; font-weight:700; text-align:start;">All</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+                <div class="col-sm-4">
+                    <div>
+                        <div class="row">
+                            <label class="col-sm-7 mt-1" style="font-size:13px !important;  text-align:start;">
+                                <strong>Brand To Show Seperatly On Summery</strong>
+                            </label>
+                            <div class="col-sm-5">
+                                @Html.DropDownListFor(x => x.BrandsFromStyle, Model.BrandsFromStyle, "", new { @class = "form-control resetSelectField activateFormRefreshBtn", @id = "BrandsFromStyle" })
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-2">
+                        <div class="form-check mr-2">
+                            <input type="checkbox" class="form-check-input activateFormRefreshBtn" id="showCost" />
+                            <label for="showCost" class="form-check-label" style="font-size:13px !important; "> <strong>Show Cost</strong></label>
+                        </div>
+                        <div class="form-check mr-2">
+                            <input type="checkbox" class="form-check-input activateFormRefreshBtn" id="showCommission" />
+                            <label for="showCommission" class="form-check-label" style="font-size:13px !important;"><strong>Show Commission</strong> </label>
+                        </div>
+
+                        <div class="form-check mr-2">
+                            <input type="checkbox" class="form-check-input activateFormRefreshBtn" id="IncludeLaywaysUnpaidSpecialOrd" />
+                            <label for="ExculdeEmail" class="form-check-label" style="font-size:13px !important;"><strong>Include Layaways, Unpaid Special Orders and on Account Invoices</strong></label>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end">
+                        <div class="col-sm-3  text-right mt-1">
+                            <input type="button" id="btnFormResultsSearch" value="Refresh" class="refresh_btn btn-xs refreshBtnDefault" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <div class="mt-4 white-box pos-rel" id="divDataTableReport">
+
+        <div class="row col-md-6 report_buttons">
+            <div style="margin:3px;">
+                <input type="button" value="PDF" table-id="dataTableForSalesBySalesman" class="formsGlobalUniqueBtn SalesBySalesmanbtnDataTableDownloadPDF" id="btnPDF" table-count="2" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Excel" table-id="dataTableForSalesBySalesman" class="formsGlobalUniqueBtn btnDataTableDownloadExcel" table-count="2"/>
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Preview" table-id="dataTableForSalesBySalesman" id="SalesBySalesmanbtnDataTablePreview" class="formsGlobalUniqueBtn" table-count="2" table-sub-headings="'',SUMMARY OF SALESMAN" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Print" table-id="dataTableForSalesBySalesman" id="SalesBySalesmanbtnDataTablePrint" class="formsGlobalUniqueBtn" table-count="2" table-sub-headings="'',SUMMARY OF SALESMAN" />
+            </div>
+        </div>
+        <div class="row dataTableReport" id="printContent">
+
+            <table id="dataTableForSalesBySalesman" class="dataTable display nowrap table" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>INV NO</th>
+                        <th>DATE #</th>
+                        <th>ACC</th>
+                        <th>NAME</th>
+                        <th>STORE NO</th>
+                        <th>STYLE </th>
+                        <th>QTY</th>
+                        <th>PRICE</th>
+                        <th>TOTAL</th>
+                        <th>S.REP1</th>
+                        <th>S.REP1 SHARE</th>
+                        <th>S.REP2</th>
+                        <th>S.REP2 SHARE</th>
+                        <th>S.REP3</th>
+                        <th>S.REP3 SHARE</th>
+                        <th>S.REP4</th>
+                        <th>S.REP4 SHARE</th>
+                        <th>COMMISSION</th>
+                        <th>CATEGORY</th>
+                        <th>BRAND</th>
+                    </tr>
+
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th style="color: red !important; font-weight: 700 !important ">Total</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th class="numericColumns" style="color: red !important; font-weight: 700 !important; "></th>
+                        <th class="numericColumns" style="color: red !important; font-weight: 700 !important; "></th>
+                        <th class="numericColumns" style="color: red !important; font-weight: 700 !important; "></th>
+                        <th></th>
+                        <th class="numericColumns" style="color: red !important; font-weight: 700 !important; "></th>
+                        <th></th>
+                        <th class="numericColumns" style="color: red !important; font-weight: 700 !important; "></th>
+                        <th></th>
+                        <th class="numericColumns" style="color: red !important; font-weight: 700 !important; "></th>
+                        <th></th>
+                        <th class="numericColumns" style="color: red !important; font-weight: 700 !important; "></th>
+                        <th class="numericColumns" style="color: red !important; font-weight: 700 !important; "></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+            </table>
+            <br>
+        </div>
+    </div>
+
+    <div id="pdfReportHeadingText" style="display:none;"></div>
+
+    <div class="row" id="showHideReport" style="display:none;">
+        <table id="dataTableForSalesBySalesman-2" class="dataTable display nowrap table showOnlyOnPrint" style="width: 100%;">
+            <thead>
+                <tr>
+                    <th style="text-align:center !important;">SALESMAN</th>
+                    <th style="text-align:center !important;">TOTAL AMOUNT</th>
+                    <th style="text-align:center !important;">COMMISSISON</th>
+                    <th style="text-align:center !important;">QTY</th>
+                    <th style="text-align:center !important;">Amount</th>
+                    <th style="text-align:center !important;">OTHER AMOUNT</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+
+      <div class="row dataTableReport" id="showHideReport-1" style="display:none;">
+            <table id="dataTableForSalesBySalesman-1" class="dataTable display nowrap table showOnlyOnPrint" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>INV NO</th>
+                        <th>DATE #</th>
+                        <th>ACC</th>
+                        <th>NAME</th>
+                        <th>STORE NO</th>
+                        <th>STYLE </th>
+                        <th>QTY</th>
+                        <th>PRICE</th>
+                        <th>TOTAL</th>
+                        <th>S.REP1</th>
+                        <th>S.REP1 SHARE</th>
+                        <th>S.REP2</th>
+                        <th>S.REP2 SHARE</th>
+                        <th>S.REP3</th>
+                        <th>S.REP3 SHARE</th>
+                        <th>S.REP4</th>
+                        <th>S.REP4 SHARE</th>
+                        <th>COMMISSION</th>
+                        <th>CATEGORY</th>
+                        <th>BRAND</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th >Total</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th class="numericColumns" ></th>
+                        <th class="numericColumns" ></th>
+                        <th class="numericColumns" ></th>
+                        <th></th>
+                        <th class="numericColumns"></th>
+                        <th></th>
+                        <th class="numericColumns"></th>
+                        <th></th>
+                        <th class="numericColumns"></th>
+                        <th></th>
+                        <th class="numericColumns"></th>
+                        <th class="numericColumns"></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+</div>
+
+<div id="confirmModal2" class="modal" tabindex="-1" style="display: none; position: fixed; z-index: 1050; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4);">
+    <div style="background: white; margin: 10% auto; padding: 20px; width: 400px; border-radius: 6px; text-align: center;">
+        <p id="confirmMessage"></p>
+        <div style="margin-top: 20px;">
+            <button id="btnConfirmYes" class="btn btn-primary">Yes</button>
+            <button id="btnConfirmNo" class="btn btn-secondary">No</button>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+
+    function existAutoFilledData() {
+
+        if ($('#ddlSalesrepAll').prop('disabled') == true) {
+            Salesman = ($('#ddlSalesrepList option:selected').val() != "" && $('#ddlSalesrepList option:selected').val() != null)
+                ? $('#ddlSalesrepList option:selected').val() : "";
+        } else {
+            if ($('#ddlSalesrepAll').prop('checked')) {
+                Salesman = "";
+            } else {
+                Salesman = ($('#ddlSalesrepList option:selected').val() != "" && $('#ddlSalesrepList option:selected').val() != null)
+                    ? $('#ddlSalesrepList option:selected').val() : "";
+            }
+        }
+
+        if ($('#ddlStoreAll').prop('checked')) {
+
+            StoreName = "";
+        }else {
+            StoreName = ($('#ddlStoreList option:selected').val() != "All" && $('#ddlStoreList option:selected').val() != null)
+                ? $('#ddlStoreList option:selected').val() : "";
+        }
+
+
+        if ($('#ddlCategoryAll').prop('checked')) {
+
+            Category = "";
+        }else {
+            Category = ($('#ddlCategory option:selected').val() != "All" && $('#ddlCategory option:selected').val() != null)
+                ? $('#ddlCategory option:selected').val() : "";
+        }
+
+
+
+        if ($('#ddlBrandAll').prop('checked')) {
+
+            Brand = "";
+
+        } else {
+            Brand = ($('#ddlBrandList option:selected').val() != "All" && $('#ddlBrandList option:selected').val() != null)
+                ? $('#ddlBrandList option:selected').val() : "";
+
+        }
+
+        if ($('#BrandsFromStyle').val() == "") {
+
+            SelBrand = "";
+        } else {
+            SelBrand = ($('#BrandsFromStyle option:selected').val() != "All" && $('#BrandsFromStyle option:selected').val() != null)
+                ? $('#BrandsFromStyle option:selected').val() : "";
+        }
+
+
+        if ($('#txtFromDate1').val() != "")
+            fromdate = $('#txtFromDate1').val();
+        else
+            fromdate = "1990-01-01";
+
+        if ($('#txtToDate1').val() != "")
+            toDate = $('#txtToDate1').val();
+        else
+            toDate = "2099-12-31";
+
+
+        if ($('#showCost').prop('checked')) {
+            IsCost = true;
+        } else {
+            IsCost = false;
+        }
+
+        if ($('#showCommission').prop('checked')) {
+            IsComision = true;
+        } else {
+            IsComision = false;
+        }
+        if ($('#IncludeLaywaysUnpaidSpecialOrd').prop('checked')) {
+            isLayaway   = true;
+        } else {
+            isLayaway = false;
+        }
+
+        var ByWhichDate = "DATE";
+
+        if ($('#lastPayDate').prop('checked')) {
+            ByWhichDate = "LASTDATE";
+        }
+
+        BindBagsGivenToPerson(StoreName, Salesman, isLayaway, ByWhichDate, fromdate, toDate, Brand, Category, SelBrand, IsComision, IsCost);
+    }
+
+    function getCheckbox(val) {
+        return '<div style="text-align:start;">' +
+                '<input type="checkbox" ' + (val ? 'checked ' : '') + 'onclick="return false;" />' +
+            '</div>';
+    }
+
+    function hideSalesmanColumns(json) {
+
+        var showSalesman1 = json.filter(x => x.salesman1 === "").length !== json.length;
+        var showSalesman2 = json.filter(x => x.salesman2 === "").length !== json.length;
+        var showSalesman3 = json.filter(x => x.salesman3 === "").length !== json.length;
+        var showSalesman4 = json.filter(x => x.salesman4 === "").length !== json.length;
+
+        var table = $('#dataTableForSalesBySalesman').DataTable();
+
+        // salesman1 + Share1
+        table.column(9).visible(showSalesman1);
+        table.column(10).visible(showSalesman1);
+
+        // salesman2 + Share2
+        table.column(11).visible(showSalesman2);
+        table.column(12).visible(showSalesman2);
+
+        // salesman3 + Share3
+        table.column(13).visible(showSalesman3);
+        table.column(14).visible(showSalesman3);
+
+        // salesman4 + Share4
+        table.column(15).visible(showSalesman4);
+        table.column(16).visible(showSalesman4);
+    }
+
+    function BindBagsGivenToPerson(StoreName, Salesman, isLayaway, ByWhichDate, fromdate, toDate, Brand, Category, SelBrand, IsComision, IsCost) {
+
+        if (IsComision == true && Salesman == "") {
+            return alert("Salesman Cannot be Blank");
+        }
+
+        var url = '@Url.Action("GetListOfSalesBySalesmanDetails", "Analysis", new { Area = "" })';
+
+        var data = {
+            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val(),
+            storeName: StoreName,
+            salesMan: Salesman,
+            isLayaway: isLayaway,
+            byWhichDate: ByWhichDate,
+            fdate: fromdate,
+            tdate: toDate,
+            brand: Brand,
+            category: Category,
+            Selbrand: SelBrand,
+            IsComision: IsComision,
+            IsCost: IsCost,
+
+        };
+
+
+        var jqxhr = $.post(url, data, function () { })
+            .done(function (response) {
+
+                //new { code = true, dtInvoiceItems = JsonConvert.SerializeObject(dtInvoiceItems), storeDataTable = store };
+                /*{"inv_no":"900242","date":"2016-04-04T00:00:00","LastPayDate":null,"acc":"C00006","NAME":"Ishal Inc","store_no":"IT SOLUTIO","style":"CODE 1000","qty":1.00,"price":90.00,
+                "GR_TOTAL":90.00,"salesman1":"1000","SalesmanShare1":90.00,"salesman2":"","SalesmanShare2":0.00,"salesman3":"","SalesmanShare3":0.00,"salesman4":"","SalesmanShare4":0.00,
+                "LAYAWAY":false,"SPECIAL":false,"CREDITS":99.00,"TOTAL":90.00,"BRAND":"","CATEGORY":"","brand1":"","COST":null,"PROFIT":74.00,"TotPrice":90.00,"TotCost":16.00,"TotProfit":74.00,
+                "COMM_AMOUNT":0.00,"SALESREP":"","COMISION":0.00,"DESC":null}*/
+            var json;
+            if (response instanceof Object)
+                json = $.parseJSON(response.dtInvoiceItems);
+
+            else
+                json = $.parseJSON(response.dtInvoiceItems);
+
+            if (json.length > 0) {
+
+                var table = $('#dataTableForSalesBySalesman').DataTable();
+                var table2 = $('#dataTableForSalesBySalesman-1').DataTable();
+
+                table.clear().draw();
+                table.column(17).visible(true);
+
+                table2.clear().draw();
+                table2.column(17).visible(true);
+
+
+                $("#dataTableForSalesBySalesman tbody").empty();
+
+                $("#dataTableForSalesBySalesman-1 tbody").empty();
+                $('#dataTableForSalesBySalesman tfoot').show();
+
+                var totalQty = 0, totalPrice = 0, GrTotal = 0, salesmanShare1 = 0, salesmanShare2 = 0, salesmanShare3 = 0, SalesmanShare4 = 0;
+                var commissionTotal = 0;
+
+                for (var i = 0; i < json.length; i++) {
+                    if (!isNaN(parseFloat(json[i].qty))) {
+                        totalQty += parseFloat(json[i].qty);
+                    }
+                    if (!isNaN(parseFloat(json[i].price))) {
+                        totalPrice += parseFloat(json[i].price);
+                    }
+                    if (!isNaN(parseFloat(json[i].TotPrice))) {
+                        GrTotal += parseFloat(json[i].TotPrice);
+                    }
+
+                    salesmanShare1 += parseFloat(json[i].SalesmanShare1);
+                    salesmanShare2 += parseFloat(json[i].SalesmanShare2);
+                    salesmanShare3 += parseFloat(json[i].SalesmanShare3);
+                    SalesmanShare4 += parseFloat(json[i].SalesmanShare4);
+
+                    commissionTotal += parseFloat(json[i].COMISION);
+
+                    let InvoiceNo = (json[i].inv_no && json[i].inv_no.toString().toLowerCase() !== "null") ? json[i].inv_no : "";
+
+                    table.row.add([
+                        '<div class="CusCodeVal InviceNo"  data-code="' + InvoiceNo + ' ">' + InvoiceNo + '</div>',
+                        json[i].date ? json[i].date.split("T")[0] : "",
+                        json[i].acc,
+                        json[i].NAME,
+                        json[i].store_no,
+                        json[i].style,
+                        '<div style="text-align:right !important;">' +
+                        (json[i].qty !== "" ? numberWithCommas(json[i].qty) : "") +
+                        '</div>',
+
+                        '<div style="text-align:right !important;">' +
+                        (json[i].price !== "" ? numberWithCommas(json[i].price) : "") +
+                        '</div>',
+
+                        '<div style="text-align:right !important;">' +
+                         numberWithCommas(json[i].TotPrice) ?? "" +
+                        '</div>',
+
+                        json[i].salesman1,
+                        '<div style="text-align:right !important;">' + numberWithCommas(json[i].SalesmanShare1) + '</div>',
+                        json[i].salesman2,
+                        '<div style="text-align:right !important;">' + numberWithCommas(json[i].SalesmanShare2) + '</div>',
+                        json[i].salesman3,
+                        '<div style="text-align:right !important;">' + numberWithCommas(json[i].SalesmanShare3) + '</div>',
+                        json[i].salesman4,
+                        '<div style="text-align:right !important;">' + numberWithCommas(json[i].SalesmanShare4) + '</div>',
+                        '<div style="text-align:right !important;">' + numberWithCommas(json[i].COMISION) + '</div>',
+                        json[i].CATEGORY,
+                        json[i].brand1
+                    ]);
+                }
+
+               
+
+                $("#dataTableForSalesBySalesman tfoot").find('th').eq(6).text(numberWithCommas(totalQty))
+                $("#dataTableForSalesBySalesman tfoot").find('th').eq(7).text(numberWithCommas(totalPrice))
+                $("#dataTableForSalesBySalesman tfoot").find('th').eq(8).text(numberWithCommas(GrTotal))
+                $("#dataTableForSalesBySalesman tfoot").find('th').eq(10).text(numberWithCommas(salesmanShare1))
+                $("#dataTableForSalesBySalesman tfoot").find('th').eq(12).text(numberWithCommas(salesmanShare2))
+                $("#dataTableForSalesBySalesman tfoot").find('th').eq(14).text(numberWithCommas(salesmanShare3))
+                $("#dataTableForSalesBySalesman tfoot").find('th').eq(16).text(numberWithCommas(SalesmanShare4))
+                $("#dataTableForSalesBySalesman tfoot").find('th').eq(17).text(numberWithCommas(commissionTotal))
+                table.column(17).visible(false);
+                hideSalesmanColumns(json);
+                table.draw();
+
+                //table-1
+
+
+                for (var i = 0; i < json.length; i++) {
+                    let InvoiceNo = (json[i].inv_no && json[i].inv_no.toString().toLowerCase() !== "null") ? json[i].inv_no : "";
+
+                    table2.row.add([
+                        '<div class="InviceNo"  data-code="' + InvoiceNo + ' ">' + InvoiceNo + '</div>',
+                        json[i].date ? json[i].date.split("T")[0] : "",
+                        json[i].acc,
+                        json[i].NAME,
+                        json[i].store_no,
+                        json[i].style,
+                        '<div style="text-align:right !important;">' +
+                        (json[i].qty !== "" ? numberWithCommas(json[i].qty) : "") +
+                        '</div>',
+
+                        '<div style="text-align:right !important;">' +
+                        (json[i].price !== "" ? numberWithCommas(json[i].price) : "") +
+                        '</div>',
+
+                        '<div style="text-align:right !important;">' +
+                        numberWithCommas(json[i].TotPrice) ?? "" +
+                        '</div>',
+
+                        json[i].salesman1,
+                        '<div style="text-align:right !important;">' + numberWithCommas(json[i].SalesmanShare1) + '</div>',
+                        json[i].salesman2,
+                        '<div style="text-align:right !important;">' + numberWithCommas(json[i].SalesmanShare2) + '</div>',
+                        json[i].salesman3,
+                        '<div style="text-align:right !important;">' + numberWithCommas(json[i].SalesmanShare3) + '</div>',
+                        json[i].salesman4,
+                        '<div style="text-align:right !important;">' + numberWithCommas(json[i].SalesmanShare4) + '</div>',
+                        '<div style="text-align:right !important;">' + numberWithCommas(json[i].COMISION) + '</div>',
+                        json[i].CATEGORY,
+                        json[i].brand1
+                    ]);
+                }
+
+                hideSalesmanColumns(json);
+                table2.draw();
+
+                $("#dataTableForSalesBySalesman-1 tfoot").find('th').eq(6).text(numberWithCommas(totalQty))
+                $("#dataTableForSalesBySalesman-1 tfoot").find('th').eq(7).text(numberWithCommas(totalPrice))
+                $("#dataTableForSalesBySalesman-1 tfoot").find('th').eq(8).text(numberWithCommas(GrTotal))
+                $("#dataTableForSalesBySalesman-1 tfoot").find('th').eq(10).text(numberWithCommas(salesmanShare1))
+                $("#dataTableForSalesBySalesman-1 tfoot").find('th').eq(12).text(numberWithCommas(salesmanShare2))
+                $("#dataTableForSalesBySalesman-1 tfoot").find('th').eq(14).text(numberWithCommas(salesmanShare3))
+                $("#dataTableForSalesBySalesman-1 tfoot").find('th').eq(16).text(numberWithCommas(SalesmanShare4))
+                $("#dataTableForSalesBySalesman-1 tfoot").find('th').eq(17).text(numberWithCommas(commissionTotal))
+
+
+                //end
+
+                if (Salesman !== "") {
+                    table.column(13).visible(false);
+                    table.column(14).visible(false);
+                    table.column(15).visible(false);
+                    table.column(16).visible(false);
+                    table.column(17).visible(false);
+
+                    table2.column(13).visible(false);
+                    table2.column(14).visible(false);
+                    table2.column(15).visible(false);
+                    table2.column(16).visible(false);
+                    table2.column(17).visible(false);
+                }
+
+                if (IsComision == true) {
+                    table.column(9).visible(false);
+                    table.column(10).visible(false);
+                    table.column(11).visible(false);
+                    table.column(12).visible(false);
+                    table.column(13).visible(false);
+                    table.column(14).visible(false);
+                    table.column(15).visible(false);
+                    table.column(16).visible(false);
+                    table.column(17).visible(true);
+
+                    table2.column(9).visible(false);
+                    table2.column(10).visible(false);
+                    table2.column(11).visible(false);
+                    table2.column(12).visible(false);
+                    table2.column(13).visible(false);
+                    table2.column(14).visible(false);
+                    table2.column(15).visible(false);
+                    table2.column(16).visible(false);
+                    table2.column(17).visible(true);
+                }
+
+                var table1 = $('#dataTableForSalesBySalesman-2').DataTable();
+
+                table1.clear().draw();
+                var json2;
+                if (response.storeDataTable) {
+                    json2 = $.parseJSON(response.storeDataTable);
+                    for (var j = 0; j < json2.length; j++) {
+                        table1.row.add([
+                            json2[j].SALESMAN,
+                            formatCurrency(json2[j].TOTALAMOUNT),
+                            formatCurrency(json2[j].COMISH),
+                            formatCurrency(json2[j].BRANDQTY),
+                            formatCurrency(json2[j].BRANDAMOUNT),
+                            formatCurrency(json2[j].OTHERAMOUNT),
+                        ]);
+                    }
+                }
+
+                var isShowCommision = ($('#showCommission').prop('checked')) ? true : false;
+                if (!isShowCommision) {
+                    var salesRep = $('#ddlSalesrepList').val();
+                    if (salesRep == '') {
+                        table1.column(0).visible(true);
+                    } else {
+                        table1.column(0).visible(false);
+                    }
+                    table1.draw();
+                } else {
+                    table1.clear().draw();
+                    //$('#dataTableForListOfReceipts-1').css('display','none');
+                }
+
+                filtertable = json;
+
+            } else {
+                var table = $('#dataTableForSalesBySalesman').DataTable();
+                $('#dataTableForSalesBySalesman tfoot').hide();
+                table.clear().draw();
+                alert("No Data Found");
+            }
+
+            printPreviewLableList = json;
+        })
+        .fail(function (jqxhr, textStatus, error) {
+            var err = textStatus + ", " + error;
+            console.log("GETBagsGivenToPerson Request Failed: " + err);
+        });
+    }
+
+
+    function formatCurrency(total) {
+        var neg = false;
+        if (total < 0) {
+            neg = true;
+            total = Math.abs(total);
+        }
+        return (neg ? "-" : '') + parseFloat(total, 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString();
+    }
+
+    function activateddlList(ddlId, CheckBoxId) {
+
+        if ($('#' + CheckBoxId).prop('checked')) {
+            $('#' + ddlId).prop('disabled', true);
+        } else {
+            $('#' + ddlId).prop('disabled', false);
+        }
+
+        $(document).on('change', '#' + CheckBoxId, function () {
+            if ($('#' + CheckBoxId).prop('checked')) {
+                $('#' + ddlId).prop('disabled', true);
+                $('#' + ddlId).val($('#' + ddlId + ' option:first').val());
+            } else {
+                $('#' + ddlId).prop('disabled', false);
+                $('#' + ddlId + ' option').prop('selected', false);
+            }
+        })
+    }
+
+         function printInvoiceReport(inv_no) {
+            $.ajax({
+                url: "../ListOfItemsSold/PrintInvoice",
+                type: "post",
+                data: {
+                    inv_no: inv_no,
+                    DisableLayout: true
+                },
+                success: function (res) {
+                    $("#pdfReportHeadingText").html(res);
+                    setTimeout(function () { getInvoicDetails("1"); }, 10);
+                }
+            })
+        }
+
+    function getReportHeaderHtml() {
+        // Salesman
+        let Salesman = '';
+        if ($('#ddlSalesrepAll').prop('disabled')) {
+            const val = $('#ddlSalesrepList option:selected').val();
+            Salesman = val ? val : '';
+        } else {
+            if ($('#ddlSalesrepAll').prop('checked')) {
+                Salesman = '';
+            } else {
+                const val = $('#ddlSalesrepList option:selected').val();
+                Salesman = val ? val : '';
+            }
+        }
+        let salesrap = Salesman ? `Salesrep: ${Salesman}` : 'Salesrep: All';
+
+        // Store
+        let StoreName = '';
+        if ($('#ddlStoreAll').prop('checked')) {
+            StoreName = '';
+        } else {
+            const val = $('#ddlStoreList option:selected').val();
+            StoreName = val && val !== "All" ? val : '';
+        }
+        let store = StoreName ? `Stores: ${StoreName}` : 'Stores: All';
+
+        // Category
+        let CategoryName = '';
+        if ($('#ddlCategoryAll').prop('checked')) {
+            CategoryName = '';
+        } else {
+            const val = $('#ddlCategory option:selected').val();
+            CategoryName = val && val !== "All" ? val : '';
+        }
+        let cate = CategoryName ? `Category: ${CategoryName}` : 'Category: All';
+
+        // Brand
+        let BrandName = '';
+        if ($('#ddlBrandAll').prop('checked')) {
+            BrandName = '';
+        } else {
+            const val = $('#ddlBrandList option:selected').val();
+            BrandName = val && val !== "All" ? val : '';
+        }
+        let brand = BrandName ? `Brand: ${BrandName}` : 'Brand: All';
+
+        // Brand to show separately
+        let SelBrand = '';
+        if ($('#BrandsFromStyle').val() !== "") {
+            const val = $('#BrandsFromStyle option:selected').val();
+            SelBrand = val && val !== "All" ? `Brand to Show Separately On Summary: ${val}` : '';
+        }
+
+        // Dates
+        const fromdate = $('#txtFromDate1').val() || "1990-01-01";
+        const toDate = $('#txtToDate1').val() || "2099-12-31";
+
+        let radinv = $('#invoiceDate').is(':checked') ? 'Invoice Date' : '';
+        let lastpaydate = $('#lastPayDate').is(':checked') ? 'LastPay Date' : '';
+
+        let datef = '';
+        if ($('#cbFillFromToDates').prop('checked')) {
+            datef = "Date: All";
+        } else {
+            datef = `Date From: ${fromdate} To: ${toDate} (Filter By: ${radinv} ${lastpaydate})`;
+        }
+
+        // Options
+        let showcost = $('#showCost').prop('checked') ? 'Show Cost' : '';
+        let showcommission = $('#showCommission').prop('checked') ? 'Show Commission' : '';
+        let incluss = $('#IncludeLaywaysUnpaidSpecialOrd').prop('checked') ?
+            'Include Layaways, Unpaid Special Orders, and On Account Invoices' : '';
+        //StoreLogo
+
+        var containerHtml = "";
+        if (containerHtml == "") {
+
+            let html = `
+                    <div class="row header-container" style="width:100%;">
+
+                        <!-- IMAGE COLUMN -->
+                        <div class="col-4 d-flex align-items-start mb-3" style="padding-left: 20px;">
+                            <img alt="Logo" id="customImage"
+                                 style="max-width: 50%; height: auto; object-fit: contain;"
+                                 src="data:image/png;base64,${'@StoreLogo'}" />
+                        </div>
+
+                        <!-- TEXT COLUMN (CENTERED) -->
+                        <div class="col-8 d-flex flex-column justify-content-center"
+                             style="text-align:center; font-family:Arial, sans-serif;">
+                             <h3>Sales By Salesrep</h3>
+                            <h4 style='font-size:14px; margin-bottom:5px;'>${datef}</h4>
+
+                            <h4 style='font-size:14px; margin-bottom:5px;'>
+                                ${salesrap} | ${store} | ${brand} | ${cate}
+                            </h4>
+
+                            <h4 style='font-size:14px; margin-bottom:5px;'>
+                                ${SelBrand} ${showcost} ${showcommission} ${incluss}
+                            </h4>
+
+                        </div>
+
+                    </div>
+                `;
+
+            containerHtml = html;
+
+        } else {
+            containerHtml = "";
+        }
+
+        if ($("#pdfReportHeadingText").html() == "") {
+            $("#pdfReportHeadingText").html(containerHtml);
+            $("#pdfReportHeadingText").hide();
+        }
+
+        return containerHtml;
+
+    }
+
+    function CustompreviewDiv(divId, tablesCount, tablesSubHeadings, reportTitle = "") {
+
+        // MULTIPLE TABLES BLOCK
+        if (typeof tablesCount != "undefined" && parseInt(tablesCount) > 1) {
+
+            $('#showHideReport').css('display', 'block');
+            $('#previewContentModal .previewContent').html('');   // clear once
+
+            let headings = tablesSubHeadings.split(",");
+
+            // Add main header only once
+            if (reportTitle != "") {
+                $('#previewContentModal .previewContent').append(
+                    "<div style='text-align:center; margin-bottom:20px;'>" + reportTitle + "</div>"
+                );
+            }
+
+            // LOOP ALL SUB-TABLES
+            for (let i = 1; i <= parseInt(tablesCount); i++) {
+
+                var tableSelector = '#' + divId + '-' + i;
+                var dataTable = $(tableSelector).DataTable();
+
+                var currentPage = dataTable.page();
+                var currentPageLength = dataTable.page.len();
+
+                $("#previewContentModalLabel").html($(".page-title h1").html());
+
+                // Show full table data
+                dataTable.page.len(-1).draw();
+
+                // Add sub-heading
+                $('#previewContentModal .previewContent').append(
+                    '<div style="padding-top:20px;padding-bottom:20px;font-size:14px;"><b>' +
+                    headings[i - 1] +
+                    '</b></div>'
+                );
+
+                // Append cloned table
+                $(tableSelector).clone().appendTo("#previewContentModal .previewContent");
+
+                // Format table
+                $('#previewContentModal .previewContent table')
+                    .removeClass('dataTable')
+                    .removeClass('table')
+                    .addClass('table-bordered');
+
+                let columnlist = window.numericcolumnlist;
+                let hidecolumnlist = window.hidecolumnlist;
+
+                // Column formatting
+                $('#previewContentModal table tr').each(function () {
+
+                    for (let j = 0; j < columnlist.length; j++)
+                        $(this).children('td').eq(columnlist[j]).addClass('numericColumns');
+
+                    if (hidecolumnlist != undefined) {
+                        for (let k = 0; k < hidecolumnlist.length; k++) {
+                            $(this).children('td').eq(hidecolumnlist[k]).hide();
+                            $(this).children('th').eq(hidecolumnlist[k]).hide();
+                        }
+                    }
+                });
+
+                // Restore pagination
+                setTimeout(function () {
+                    dataTable.page.len(currentPageLength).draw();
+                    dataTable.page(currentPage).draw(false);
+                }, 300);
+            }
+
+            // Finally open modal
+            $(".main-content").hide();
+            $("#previewContentModal").show().addClass("show");
+
+            return false;
+        }
+
+
+        // ===========================
+        // SINGLE TABLE LOGIC (unchanged)
+        // ===========================
+
+        if ($('#' + divId).hasClass("dataTable")) {
+
+            var dataTable = $('#' + divId).DataTable();
+            var currentPage = dataTable.page();
+            var currentPageLength = dataTable.page.len();
+
+            dataTable.page.len(-1).draw();
+        }
+
+        if (reportTitle != "") {
+            $('#previewContentModalLabel').html(
+                "<div style='text-align:center;'>" + reportTitle + "</div>"
+            );
+        }
+        else {
+            $("#previewContentModalLabel").html($(".page-title h1").html());
+        }
+
+        $('#previewContentModal .previewContent').html('');
+        $('#' + divId).clone().appendTo('#previewContentModal .previewContent');
+
+        $('#previewContentModal .previewContent table')
+            .removeClass('dataTable')
+            .removeClass('table')
+            .addClass('table-bordered');
+
+        $(".main-content").hide();
+        $("#previewContentModal").show().addClass("show");
+
+        let columnlist = window.numericcolumnlist;
+        let hidecolumnlist = window.hidecolumnlist;
+
+        $('#previewContentModal table tr').each(function () {
+
+            for (var i = 0; i < columnlist.length; i++) {
+                $(this).children('td').eq(columnlist[i]).addClass('numericColumns');
+            }
+
+            if (hidecolumnlist != undefined) {
+                for (var i = 0; i < hidecolumnlist.length; i++) {
+                    $(this).children('td').eq(hidecolumnlist[i]).hide();
+                    $(this).children('th').eq(hidecolumnlist[i]).hide();
+                }
+            }
+        });
+
+        setTimeout(function () {
+            dataTable.page.len(currentPageLength).draw();
+            dataTable.page(currentPage).draw(false);
+        }, 300);
+
+        return false;
+    }
+
+function CustomprintDiv(divId, tablesCount, tablesSubHeadings, reportTitle = "", reportFormat = "") {
+    $('#showHideReport').css('display', 'block');
+
+    if (reportTitle != "") {
+        $('.printableContent').html("<div style='text-align:center;'>" + reportTitle + "</div>");
+    } else {
+        $('.printableContent').append("<div style='text-align:center;'>" + $(".page-title").html() + "</div>");
+    }
+
+    if (typeof tablesCount !== "undefined" && parseInt(tablesCount) > 1) {
+
+        let headings = tablesSubHeadings.split(",");
+
+        for (let j = 1; j <= parseInt(tablesCount); j++) {
+
+            var dataTable = $('#' + divId + '-' + j).DataTable();
+            var currentPage = dataTable.page();
+            var currentPageLength = dataTable.page.len();
+            dataTable.page.len(-1).draw();
+
+            $('.printableContent').append('<div style="padding-top:20px;padding-bottom:20px;"><b>' + headings[j - 1] + '</b></div>');
+
+            // clone table
+            let cloned = $('#' + divId + '-' + j).clone();
+            $('.printableContent').append(cloned);
+
+            // remove DataTable formatting
+            cloned.removeClass('dataTable').addClass("table-bordered");
+
+            // ⭐ FIX: extract footer row and place it inside tbody
+            let footerRows = cloned.find('tfoot tr');
+
+            if (footerRows.length > 0) {
+                footerRows.clone().appendTo(cloned.find('tbody'));
+                cloned.find('tfoot').remove(); // remove footer completely
+            }
+
+            $(".main-content").hide();
+        }
+
+    } else {
+
+        if ($('#' + divId).hasClass("dataTable")) {
+            var dataTable = $('#' + divId).DataTable();
+            var currentPage = dataTable.page();
+            var currentPageLength = dataTable.page.len();
+            dataTable.page.len(-1).draw();
+        }
+
+        let cloned = $('#' + divId).clone();
+        $('.printableContent').append(cloned);
+
+        cloned.removeClass('dataTable').addClass("table-bordered");
+        cloned.find('table').removeClass('d-none');
+
+        // ⭐ FIX: Move tfoot row into tbody (no repetition in print)
+        let footerRows = cloned.find('tfoot tr');
+
+        if (footerRows.length > 0) {
+            footerRows.clone().appendTo(cloned.find('tbody'));
+            cloned.find('tfoot').remove();
+        }
+
+        $(".main-content").hide();
+    }
+
+    // Delay for rendering
+    setTimeout(function () {
+        const columns = $('.printableContent table tbody tr td').length;
+
+        let style = document.createElement('style');
+        style.type = 'text/css';
+
+        if (reportFormat != "") {
+            style.innerHTML = reportFormat == "landscape"
+                ? '@@page { size: landscape; }'
+                : '@@page { size: portrait; }';
+        } else {
+            style.innerHTML = columns > 8
+                ? '@@page { size: landscape; }'
+                : '@@page { size: portrait; }';
+        }
+
+        document.head.appendChild(style);
+        window.print();
+
+        setTimeout(() => {
+            document.head.removeChild(style);
+        }, 1000);
+
+        $(".main-content").show();
+        $('.printableContent').html('');
+
+        // restore datatable state
+        if ($('#' + divId).hasClass("dataTable")) {
+            dataTable.page.len(currentPageLength).draw();
+            dataTable.page(currentPage).draw(false);
+        }
+
+        $('#showHideReport').css('display', 'none');
+    }, 500);
+    }
+
+
+    async function exportTableToCustomPDF(tableid, tablesCount, reportSubTitile = "") {
+
+        var { jsPDF } = window.jspdf;
+
+        // MULTIPLE TABLES
+        if (typeof (tablesCount) != "undefined" && parseInt(tablesCount) > 1) {
+
+            let doc = new jsPDF('l', 'mm', [297, 210]);
+            let startY = 10;
+
+            // *** FIX – ADD REPORT HEADING ON PAGE 1 ***
+            let headingText = ($('.form-h1').text() != "undefined" && $('.form-h1').text() != '')
+                ? $('.form-h1').text()
+                : 'Data Report';
+
+            doc.setFontSize(16);
+            doc.text(headingText, 148, startY, { align: "center" });
+            startY += 8;
+
+            for (let dt = 1; dt <= parseInt(tablesCount); dt++) {
+
+                let dataTableId = tableid + "-" + dt;
+                let dtObj = $('#' + dataTableId).DataTable();
+
+                // store pagination
+                let currentPage = dtObj.page();
+                let currentPageLength = dtObj.page.len();
+
+                // show all data
+                dtObj.page.len(-1).draw();
+
+                // FIX – READ TABLE CORRECTLY
+                let table = document.getElementById(dataTableId);
+                let tableData = [];
+
+                for (let r = 0; r < table.rows.length; r++) {
+                    let row = table.rows[r];
+                    let rowData = [];
+
+                    for (let c = 0; c < row.cells.length; c++) {
+                        let col = row.cells[c];
+
+                        if (col.classList.contains("hide-on-print") || col.classList.contains("hideColumns"))
+                            continue;
+
+                        rowData.push(col.innerText);
+                    }
+
+                    tableData.push(rowData);
+                }
+
+                // FIX – Add Sub-Heading for Each Table
+                doc.setFontSize(12);
+                doc.text("Table " + dt, 14, startY);
+                startY += 5;
+
+                // Render Table
+                doc.autoTable({
+                    startY: startY,
+                    head: [tableData[0]],
+                    body: tableData.slice(1),
+                    margin: { top: 5, bottom: 5, left: 5, right: 5 },
+                    styles: { fontSize: 6, cellPadding: 0.5 },
+                    didDrawPage: function (data) {
+                        startY = data.cursor.y + 10;
+                    }
+                });
+
+                // restore pagination
+                dtObj.page.len(currentPageLength).draw();
+                dtObj.page(currentPage).draw(false);
+
+                // Add new page except last
+                if (dt < tablesCount) doc.addPage();
+            }
+
+            // save pdf
+            let filename = ($('.form-h1').text() != '') ? $('.form-h1').text() : 'data';
+            doc.save(filename + ".pdf");
+            return;
+        }
+
+
+        // ================================================================
+        // SINGLE TABLE (minor fixes only)
+        // ================================================================
+
+        let dtObj = $('#' + tableid).DataTable();
+        let currentPage = dtObj.page();
+        let currentPageLength = dtObj.page.len();
+
+        dtObj.page.len(-1).draw();
+
+        let table = document.getElementById(tableid);
+        let tableData = [];
+
+        for (let r = 0; r < table.rows.length; r++) {
+            let row = table.rows[r];
+            let rowData = [];
+
+            for (let c = 0; c < row.cells.length; c++) {
+                let col = row.cells[c];
+
+                if (col.classList.contains("hide-on-print") || col.classList.contains("hideColumns"))
+                    continue;
+
+                rowData.push(col.innerText);
+            }
+
+            tableData.push(rowData);
+        }
+
+        let doc = new jsPDF('l');
+
+        let headingText = ($('.form-h1').text() != '') ? $('.form-h1').text() : 'Data Report';
+
+        // Heading
+        doc.setFontSize(16);
+        doc.text(headingText, 140, 15, { align: "center" });
+
+        // Store Logo
+        let imageSrc = $('#customImage').attr('src');
+        if (imageSrc) doc.addImage(imageSrc, "PNG", 10, 10, 40, 25);
+
+        // Sub headings (FIXED)
+        let currentY = 20;
+
+        for (let i = 1; i <= 5; i++) {
+            let text = $('#customSubHeader' + i).text();
+            if (text.length > 0) {
+                doc.setFontSize(11);
+                doc.text(text, 140, currentY, { align: "center" });
+                currentY += 6;
+            }
+        }
+
+        // Table
+        doc.autoTable({
+            startY: currentY + 5,
+            head: [tableData[0]],
+            body: tableData.slice(1),
+            styles: { fontSize: 6, cellPadding: 0.5 }
+        });
+
+        let filename = headingText;
+        doc.save(filename + ".pdf");
+
+        // restore pagination
+        dtObj.page.len(currentPageLength).draw();
+        dtObj.page(currentPage).draw(false);
+    }
+
+    function styleSalesTable() {
+        const table = $("#dataTableForSalesBySalesman-1");
+
+        /** Main Table CSS **/
+        table.css({
+            "font-family": "Arial, sans-serif",
+            "font-size": "13px",
+            "border-collapse": "collapse",
+            "width": "100%"
+        });
+
+        /** Header Styling **/
+        table.find("th").css({
+            "background": "#0A74B7",
+            "color": "#fff",
+            "padding": "8px 5px",
+            "white-space": "nowrap",
+            "font-size": "12px",
+            "text-align": "center",
+            "border": "1px solid #ccc"
+        });
+
+        /** Body Cell Styling **/
+        table.find("td").css({
+            "padding": "8px 5px",
+            "font-size": "13px",
+            "text-align": "center",
+            "border": "1px solid #ddd",
+            "white-space": "nowrap"
+        });
+
+        /** Row Colors */
+        table.find("tbody tr:odd").css("background", "#f8f8f8");
+        table.find("tbody tr:even").css("background", "#ffffff");
+
+        /** Column Widths (Fix Misalignment) **/
+        const widths = [
+            "70px",   // 1  Invoice No
+            "90px",   // 2  Date
+            "70px",   // 3  ACC
+            "130px",  // 4  NAME
+            "90px",   // 5  STORE NO
+            "90px",   // 6  STYLE
+            "60px",   // 7  QTY
+            "70px",   // 8  PRICE
+            "90px",   // 9  TOTAL
+            "80px",   // 10 S.R EP1
+            "80px",   // 11 S.R EP1 SHARE
+            "80px",   // 12 S.R EP2
+            "80px",   // 13 S.R EP3
+            "80px",   // 14 S.R EP4
+            "90px",   // 15 COMMISSION
+            "120px",  // 16 CATEGORY
+            "100px"   // 17 BRAND
+        ];
+
+        widths.forEach((w, i) => {
+            let index = i + 1;
+            table.find(`th:nth-child(${index}), td:nth-child(${index})`).css("width", w);
+        });
+
+        /** Make table scrollable on smaller screens */
+        $("#salesTableWrapper").css({
+            "overflow-x": "auto",
+            "width": "100%"
+        });
+    }
+
+
+    $(document).ready(function () {
+
+
+        var table = $('#dataTableForSalesBySalesman').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 10,
+            "aaSorting": []
+        });
+        table.column(17).visible(false);
+
+        $('#dataTableForSalesBySalesman tfoot').hide();
+
+
+        var table1 = $('#dataTableForSalesBySalesman-2').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 25,
+            bInfo: false,
+            aaSorting: [],
+            columnDefs: [
+                { className: "text-right", targets: [2, 3, 4, 5] }
+            ]
+        })
+        table1.column(0).visible(false);
+        table1.column(2).visible(false);
+
+
+        var table3 = $('#dataTableForSalesBySalesman-1').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 25,
+            bInfo: false,
+            aaSorting: []
+        })
+
+
+        //DDL List
+
+        activateddlList('ddlSalesrepList', 'ddlSalesrepAll')
+        activateddlList('ddlStoreList', 'ddlStoreAll')
+        activateddlList('ddlCategory', 'ddlCategoryAll')
+        activateddlList('ddlBrandList', 'ddlBrandAll')
+        //DDL END
+
+        //cbFillFromToDates,lastPayDate,invoiceDate,btnGetLastMonthDates,btnGetLastWeekDates
+        //BrandsFromStyle
+        ////ddlSalesrepList,ddlSalesrepAll
+
+        if ($('#cbFillFromToDates').prop('checked')) {
+            $('#lastPayDate').prop('disabled', true);
+            $('#invoiceDate').prop('disabled', true);
+
+        }
+
+        $(document).on('change', '#cbFillFromToDates', function () {
+            if ($('#cbFillFromToDates').prop('checked')) {
+                $('#lastPayDate').prop('disabled', true);
+                $('#invoiceDate').prop('disabled', true);
+            } else {
+                $('#lastPayDate').prop('disabled', false);
+                $('#invoiceDate').prop('disabled', false);
+            }
+        })
+
+        $(document).on('click', '.btnGetLastMonthDates , .btnGetLastWeekDates', function () {
+            $('#lastPayDate').prop('disabled', false);
+            $('#invoiceDate').prop('disabled', false);
+        })
+
+        $(document).on('change', '#showCommission', function () {
+            if ($('#showCommission').prop('checked')) {
+                $('#ddlSalesrepList').prop('disabled', false);
+                $('#ddlSalesrepAll').prop('disabled', true);
+            } else {
+                $('#ddlSalesrepList').prop('disabled', true);
+                $('#ddlSalesrepList').val("");
+                $('#ddlSalesrepAll').prop('disabled', true);
+
+            }
+        })
+
+
+        $('#dataTableForSalesBySalesman tbody').on('click', 'tr',function () {
+            var rowData = $(this).find('td').eq(0).text().trim();
+            printInvoiceReport(rowData);
+        })
+
+
+        $(document).on('click', '#BtnClose', function () {
+            $('#confirmMessage').html(
+                "OK to Discard the Changes and Close This Form?"
+            );
+
+            $('#confirmModal2').fadeIn();
+
+            $('#btnConfirmYes').off('click').on('click', function () {
+                $('#confirmModal2').fadeOut();
+                window.location.href = "../Home";
+            });
+
+            $('#btnConfirmNo').off('click').on('click', function () {
+                $('#confirmModal2').fadeOut();
+                console.log("User cancelled import.");
+                return;
+            });
+        })
+
+        //preview
+
+        $(document).on('click', '#SalesBySalesmanbtnDataTablePreview', function () {
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+            const tablesSubHeadings = $(this).attr("table-sub-headings");
+
+            var heading = getReportHeaderHtml();
+            CustompreviewDiv(tableid, tablesCount, tablesSubHeadings, heading);
+        })
+
+        //print
+        $(document).on('click', '#SalesBySalesmanbtnDataTablePrint', function () {
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+            const tablesSubHeadings = $(this).attr("table-sub-headings");
+
+            var heading = getReportHeaderHtml();
+            CustomprintDiv(tableid, tablesCount, tablesSubHeadings, heading,'');
+        })
+        //exportTableToCustomPDF
+
+        $('.SalesBySalesmanbtnDataTableDownloadPDF').off('click').on('click', function () {
+
+            // Apply table styling before PDF export
+            styleSalesTable();
+
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+            const tablesSubHeadings = $(this).attr("table-sub-headings");
+
+            var heading = getReportHeaderHtml();
+
+            exportTableToCustomPDF(tableid, tablesCount, heading);
+        });
+
+
+      /*  $('#SalesBySalesmanbtnDataTablePreview').off('click').on('click', function () {
+
+
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+            const tablesSubHeadings = $(this).attr("table-sub-headings");
+
+            var heading = getReportHeaderHtml();
+            previewDiv(tableid, tablesCount, tablesSubHeadings, heading);
+
+        })*/
+
+       /* //print
+        $('#ItemsBoughtTOCusBtnDataTablePrint',).off('click').on('click', function () {
+
+
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+            const tablesSubHeadings = $(this).attr("table-sub-headings");
+            var tableEl = $('#' + tableid);
+            var colCount = tableEl.find('thead tr th').length;
+            var reportFormat = (colCount > 8) ? "landscape" : "portrait";
+
+            setTimeout(function () {
+                table.column(11).visible(false);
+                table.column(12).visible(false);
+                table.column(13).visible(false);
+                table.column(7).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                printDiv(tableid, tablesCount,tablesSubHeadings, "", reportFormat);
+                setTimeout(function () {
+                    table.column(11).visible(true);
+                    table.column(12).visible(true);
+                    table.column(13).visible(true);
+                    table.column(7).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+                }, 300);
+            }, 300)
+        })
+
+
+        //excel
+        $('.ItemsBoughtTOCusbtnDataTableDownloadExcel',).off('click').on('click', function () {
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+            const tablesSubHeadings = $(this).attr("table-sub-headings");
+            var table = $('#' + tableid).DataTable();
+            setTimeout(function () {
+                table.column(11).visible(false);
+                table.column(12).visible(false);
+                table.column(13).visible(false);
+                table.column(7).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                exportToExcel(tableid, tablesCount);
+                setTimeout(function () {
+                    table.column(11).visible(true);
+                    table.column(12).visible(true);
+                    table.column(13).visible(true);
+                    table.column(7).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+                }, 300);
+            }, 300)
+        })
+
+        //pdf
+        $('.ItemsBoughtTOCusbtnDataTableDownloadPDF',).off('click').on('click', function () {
+
+
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+            const tablesSubHeadings = $(this).attr("table-sub-headings");
+            var table = $('#' + tableid).DataTable();
+            setTimeout(function () {
+                table.column(11).visible(false);
+                table.column(12).visible(false);
+                table.column(13).visible(false);
+                table.column(7).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                exportTableToPDF(tableid, tablesCount);
+                setTimeout(function () {
+                    table.column(11).visible(true);
+                    table.column(12).visible(true);
+                    table.column(13).visible(true);
+                    table.column(7).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+                }, 300);
+            }, 300)
+        })*/
+
+     /*   //preview occasion
+        $('#ItemsBoughtByCustomerInfobtnDataTablePreview',).off('click').on('click', function () {
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+            const tablesSubHeadings = $(this).attr("table-sub-headings");
+            var table = $('#' + tableid).DataTable();
+
+            let columnWidths = [];
+            $('#' + tableid + ' thead th').each(function () {
+                columnWidths.push($(this).width());
+            });
+
+            setTimeout(function () {
+                table.column(8).visible(false);
+                table.column(13).visible(false);
+                table.column(14).visible(false);
+                table.column(15).visible(false);
+                table.column(1).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                table.column(2).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                table.column(5).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                table.column(3).nodes().to$().find('.description-col').removeClass('description-col').addClass("description-report");
+
+                $('#' + tableid + ' thead th').each(function (i) {
+                    $(this).css('width', columnWidths[i] + 'px');
+                });
+
+                previewDiv(tableid, tablesCount, tablesSubHeadings, "");
+                setTimeout(function () {
+                    table.column(8).visible(true);
+                    table.column(13).visible(true);
+                    table.column(14).visible(true);
+                    table.column(15).visible(true);
+                    //table.column(3).nodes().to$().addClass('description-col');
+                    table.column(3).nodes().to$().find('.description-report').removeClass('description-report').addClass('description-col');
+                    table.column(1).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+                    table.column(2).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+                    table.column(5).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+
+                    $('#' + tableid + ' thead th').each(function (i) {
+                        $(this).css('width', '');
+                    });
+                }, 300);
+            }, 300)
+        })
+        //print occasion
+        $('#ItemsBoughtByCustomerInfoBtnDataTablePrint',).off('click').on('click', function () {
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+            const tablesSubHeadings = $(this).attr("table-sub-headings");
+            var table = $('#' + tableid).DataTable();
+            var tableEl = $('#' + tableid);
+            var colCount = tableEl.find('thead tr th').length;
+            var reportFormat = (colCount > 8) ? "landscape" : "portrait";
+            let columnWidths = [];
+            $('#' + tableid + ' thead th').each(function () {
+                columnWidths.push($(this).width());
+            });
+            setTimeout(function () {
+                table.column(8).visible(false);
+                table.column(13).visible(false);
+                table.column(14).visible(false);
+                table.column(15).visible(false);
+                table.column(1).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                table.column(2).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                table.column(5).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                table.column(3).nodes().to$().find('.description-col').removeClass('description-col').addClass("description-report");
+
+                $('#' + tableid + ' thead th').each(function (i) {
+                    $(this).css('width', columnWidths[i] + 'px');
+                });
+                printDiv(tableid, tablesCount, tablesSubHeadings, "", reportFormat);
+                setTimeout(function () {
+                    table.column(8).visible(true);
+                    table.column(13).visible(true);
+                    table.column(14).visible(true);
+                    table.column(15).visible(true);
+                    table.column(1).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+                    table.column(2).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+                    table.column(5).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+                    table.column(3).nodes().to$().find('.description-report').removeClass('description-report').addClass('description-col');
+                    $('#' + tableid + ' thead th').each(function (i) {
+                        $(this).css('width', '');
+                    });
+                }, 300);
+            }, 300)
+        })
+        //Excel occasion
+        $('.ItemsBoughtByCustomerInfobtnDataTableDownloadExcel',).off('click').on('click', function () {
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+            const tablesSubHeadings = $(this).attr("table-sub-headings");
+            var table = $('#' + tableid).DataTable();
+            var tableEl = $('#' + tableid);
+            var colCount = tableEl.find('thead tr th').length;
+            var reportFormat = (colCount > 8) ? "landscape" : "portrait";
+
+            setTimeout(function () {
+                table.column(8).visible(false);
+                table.column(13).visible(false);
+                table.column(14).visible(false);
+                table.column(15).visible(false);
+                table.column(1).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                table.column(2).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                table.column(5).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                exportToExcel(tableid, tablesCount);
+                setTimeout(function () {
+                    table.column(8).visible(true);
+                    table.column(13).visible(true);
+                    table.column(14).visible(true);
+                    table.column(15).visible(true);
+                    table.column(1).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+                    table.column(2).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+                    table.column(5).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+                }, 300);
+            }, 300)
+        })
+        //pdf occasion
+        $('.temsBoughtByCustomerInfobtnDataTableDownloadPDF',).off('click').on('click', function () {
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+            const tablesSubHeadings = $(this).attr("table-sub-headings");
+            var table = $('#' + tableid).DataTable();
+            var tableEl = $('#' + tableid);
+            var colCount = tableEl.find('thead tr th').length;
+            var reportFormat = (colCount > 8) ? "landscape" : "portrait";
+
+            setTimeout(function () {
+                table.column(8).visible(false);
+                table.column(13).visible(false);
+                table.column(14).visible(false);
+                table.column(15).visible(false);
+                table.column(1).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                table.column(2).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                table.column(5).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                exportTableToPDF(tableid, tablesCount);
+                setTimeout(function () {
+                    table.column(8).visible(true);
+                    table.column(13).visible(true);
+                    table.column(14).visible(true);
+                    table.column(15).visible(true);
+                    table.column(1).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+                    table.column(2).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+                    table.column(5).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+                }, 300);
+            }, 300)
+        })*/
+
+    });
+
+
+
+
+</script>
+
+
+
+<style>
+    body {
+        color: black !important;
+        font-family: Arial;
+    }
+
+    .heading {
+        background-color: #036e07;
+        color: #fafafa;
+        font-family: 'sans-serif';
+    }
+
+    .msgBoxHeading {
+        background-color: #0f1cd4;
+        color: #fafafa;
+        font-family: 'sans-serif';
+        text-align: center;
+        height: 30px;
+        padding-top: 5px;
+    }
+
+    #dataTableForSalesBySalesman th,
+    #dataTableForSalesBySalesman td {
+        color: black !important;
+    }
+
+    #divDataTableReportForOccuasion th,
+    #divDataTableReportForOccuasion td {
+        color: black !important;
+    }
+
+    /*divDataTableReportForOccuasion*/
+
+    .CusCodeVal {
+        color: deeppink !important;
+    }
+
+    .reportTransNo {
+        color: black !important;
+    }
+
+    .highlight-row {
+        background-color: #ffffcc !important;
+    }
+
+    .bg-purple {
+        background-color: #7030a0 !important;
+        color: white;
+    }
+
+    .bg-orange {
+        background-color: #ed7d31 !important;
+        color: white;
+    }
+
+    #MassSmsExcelModel .modal-dialog {
+        max-width: 600px !important;
+        width: 100%;
+        margin: 1.75rem auto;
+    }
+
+    .bg-primary-custom {
+        background-color: #0aa8ed;
+        color: white;
+    }
+
+    .bg-orange-custom {
+        background-color: #f4a261;
+        color: white;
+    }
+
+    .bg-purple-custom {
+        background-color: #6f42c1;
+        color: white;
+    }
+
+    .text-center-custom {
+        text-align: center;
+    }
+
+    .custom-file-upload {
+        display: inline-flex;
+        align-items: center;
+        padding: 5px 12px;
+        font-size: 13px;
+        font-weight: bold;
+        color: #1f497d;
+        background-color: #dbeef3;
+        border: 1px solid #c6d9f1;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
+
+        .custom-file-upload:hover {
+            background-color: #cce4f7;
+        }
+
+        .custom-file-upload img {
+            height: 18px;
+            margin-right: 6px;
+        }
+
+    input[type="file"] {
+        display: none;
+    }
+
+    .report-title {
+        text-align: start;
+        position: absolute;
+        top: -14px;
+        left: 39%;
+        transform: translateX(-50%);
+        background: #fff;
+        padding: 0 10px;
+        font-weight: 600;
+        font-size: 10px;
+    }
+
+    .description-col {
+        white-space: normal !important;
+        word-wrap: break-word !important;
+        width: 400px !important;
+    }
+
+    .description-report {
+        white-space: normal !important;
+        word-wrap: break-word !important;
+        width: 100px;
+    }
+
+    .small-date-container label {
+        font-size: 13px;
+        padding-top: 3px;
+        padding-bottom: 0;
+    }
+
+    .small-date-container input[type="date"] {
+        width: 120px !important;
+        height: 24px !important;
+        font-size: 13px !important;
+        padding: 2px 4px !important;
+    }
+
+    .small-date-container .btn-xs {
+        padding: 1px 6px;
+        font-size: 12px;
+        height: 22px;
+    }
+
+    .disabled-btn {
+        background-color: #a6a4a4 !important;
+        cursor: not-allowed;
+    }
+
+    tr.selected {
+        background-color: #ffdd99 !important;
+    }
+
+
+</style>

@@ -1,0 +1,1056 @@
+﻿<root>
+	<MainLevelMenu Name="1" Text="Sales" image="sales1" icon="fa-chart-area">
+		<GroupMenuItem Name="10" Text="Sales">
+			<TopLevelMenu Name="100" Text="P.O.S" image="sales1" icon="fa-chart-area">
+				<MenuItem Name="101"   Text="New Sales/Layaway/Special Order"     weblink="Invoice/index"                                   OnClick="P:NewSale"     image="sales1"          ShowExcept="Alex_h"          icon="fa-chart-area" TBD="Chakri" />
+				<MenuItem Name="10110" Text="New Sales/Special Order"             weblink="Invoice/index"                                   OnClick="F:frmInvoice"                   image="sales1"          ShowOnlyFor="Alex_h" />
+				<MenuItem Name="102"   Text="Modify Sale or Special Order"        weblink="Invoice/GetEditInvoice"                          OnClick="P:EditInvoice"                  image="sales1" TBD="Chakri" />
+				<MenuItem Name="103"   Text="View/Reprint Invoice"                weblink="ListOfItemsSold/PrintInvoice"                    OnClick="F:frmReprintInvoice"            image="printer"  TBD="Hemanth"/>
+				<MenuItem Name="10300" Text="Finish A Draft Invoice"              OnClick="F:frmSearchDraftInvoice"        image="sales1" TBD="HMNT" />
+				<MenuItem Name="2193"  Text="Modify Customer Code Of An Invoice"  weblink="ListOfItemsSold/ModifyCustomerCodeOfAnInvoice"   OnClick="F:frmModifyCustomerCodeOfAnInvoice" image="list"         TBD="Hemanth"/>
+				<MenuItem Text="-" />
+				<MenuItem Name="104"   Text="Delete An Invoice"                   weblink="POsReportsnew/VoidSalesReceipt?is_ret_inv_no=false" OnClick="F:frmVoidSalesReceipt"          image="cancel"          glennpassword="yes" TBD="Neetha" />
+				<MenuItem Name="105"   Text="Special Order Pick Up"               weblink="Invoice/GetSearchOpenSpecialOrder"                  OnClick="P:SearchOpenSpecialOrder"       image="printer" TBD="Chakri" />
+				<MenuItem Name="155"   Text="Currency Conversion Rate"            weblink="SalesPOS/CurrencyConvRate"        OnClick="F:frmCurrencyConvRate"          image="money"           ShowOnlyFor="Mex_Dollar" TBD="DHR"/>
+				<MenuItem Name="1559"  Text="Currency Conversion Rate"            weblink="SalesPOS/CurrencyConvRate"        OnClick="F:frmCurrencyConvRate"          image="money"           ShowOnlyFor="Ind_Dollar" TBD="DHR"/>
+				<MenuItem Name="15591" Text="Currency Conversion Rate"            weblink="SalesPOS/Currency"      OnClick="F:frmCurrency"                  image="money"           ShowOnlyFor="Currencies" TBD="DHR"/>
+				<MenuItem Text="-" />
+				<MenuItem Name="1550"  Text="Mark an Invoice As Inactive"         weblink="POsReportsnew/MakeInvoiceActiveInactive"               OnClick="P:MakeInactiveInvoice"          image="sales1"  TBD="Neetha"/>
+				<MenuItem Name="1551"  Text="Mark an Invoice As Active"           weblink="POsReportsnew/MakeInvoiceActiveInactive?isActive=true" OnClick="F:frmMakeInvoiceActiveInactive" image="sales1"  TBD="Neetha"/>
+				<MenuItem Name="1557"  Text="Look For An Invoice By Keyword"      weblink="POsReportsnew/SearchInvoiceByKeyword"                  OnClick="F:frmSearchInvoiceByKeyword"    image="list"    TBD="Neetha"/>
+				<MenuItem Name="1552"  Text="Reminder"                            weblink="POsReportsnew/Reminders"                               OnClick="F:Reminders"                    image="special" TBD="Neetha" />
+				<MenuItem Name="1555"  Text="Extend JmCare Warranty"              weblink="POsReportsnew/ExtendJmcareWarranty"                    OnClick="F:frmExtendJmcareWarranty"      image="sales1"          ShowOnlyFor="isJMcare" TBD="CHKR" />
+				<MenuItem Name="1554"  Text="Refund JmCare Warranty"              weblink="POsReportsnew/RefundJmcareWarranty"                    OnClick="F:frmRefundJmcareWarranty"      image="sales1"          ShowOnlyFor="isJMcare" TBD="CHKR" />
+				<MenuItem Name="4303"  Text="Register A Warranty"                 OnClick="F:frmRegisterAWarranty"         image="customeredit32"  ShowOnlyFor="Warranty" />
+				<MenuItem Name="4304"  Text="Refund A Warranty"                   OnClick="P:RefundWarranty"               image="sales1"          ShowOnlyFor="Warranty" />
+				<MenuItem Name="1558"  Text="Extend A Warranty"                   weblink="POsReportsnew/ByWarranty"                               OnClick="F:frmByWarranty"                image="sales1"          ShowOnlyFor="Warranty" TBD="CHKR" />
+				<MenuItem Name="1556"  Text="Open Cash Register"                  OnClick="F:frmOpenCashDrawer"            image="sales1" />
+				<MenuItem Text="-" />
+				<MenuItem Name="11271" Text="Cancel A Store Credit"               weblink="Customers/CnlStoreCredits"                    OnClick="F:frmCancelStoreCredits_GiftCards" image="sales1"  TBD="Chakri" />
+				<MenuItem Name="11272" Text="Cancel A Gift Card"                  weblink="Customers/CnlStoreCredits?isGiftCard=true"    OnClick="P:CancelGiftCard"                  image="sales1"  TBD="Chakri" />
+				<MenuItem Name="11273" Text="Referral/Loyalty Point Adjustment"   weblink="SalesPOS/ReferralLoyaltyPointsAdjustment"     OnClick="F:frmReferralLoyaltyPointsAdjustment" image="sales1" TBD="DHR" />
+				<MenuItem Name="11274" Text="History Of Referral/Loyalty Point"   weblink="Customers/HistoryOfReferralLoyaltyPoints"     OnClick="F:frmHistoryOfReferralLoyaltyPoints" image="sales1"     TBD="Chakri" />
+			</TopLevelMenu>
+			<TopLevelMenu Name="1000" Text="Special:Orders" image="special1">
+				<MenuItem Name="1001"  Text="Modify/Complete Special Order"       OnClick="P:EditSpecialInvoice"           image="special1" />
+				<MenuItem Name="10102" Text="Add Special Order Payment/Pickup"    OnClick="F:frmSpecialOrderPayments"      image="special" />
+				<MenuItem Name="109"   Text="Process Special Orders"              weblink="Invoice/ProcessSpecialOrders"                 OnClick="F:frmProcessSpecialOrders"      image="special"  TBD="Phanindra" />
+				<MenuItem Name="1010"  Text="Status Of Special Orders"            weblink="Invoice/StatusOfSpecialOrders"                OnClick="F:frmStatusOfSpecialOrders"     image="special"  TBD="Neetha" />
+				<MenuItem Name="10101" Text="Modify style No. Of A Special order" weblink="SalesSpecialOrders/modifystyleofspecialorder" OnClick="F:modifystyleofspecialorder"    image="special"  TBD="Fhar" />
+				<MenuItem Name="1003"  Text="Special Order Pick Up"               weblink="Invoice/GetSearchOpenSpecialOrder"            OnClick="P:SearchOpenSpecialOrder"       image="printer"  TBD="CHKR" />
+				<MenuItem Name="1004"  Text="Mark Special Order As Not Picked Up" weblink="InvoiceNew/UnpickupSpecialOrder"              OnClick="F:frmUnpickupSpecialOrder"      image="printer"  TBD="Neetha" />
+				<MenuItem Name="1005"  Text="Cancel A Special Order"              weblink="Invoice/CancelSpecialOrder"                   OnClick="P:CancelSpecialOrder"           image="cancel"   TBD="Neetha"/>
+				<MenuItem Name="1006"  Text="List Of Past Due Special Order"      weblink="InvoiceNew/ListofPastDueSpecialOrder"         OnClick="F:frmListofPastDueSpecialOrder" image="warranty" TBD="Neetha" />
+			</TopLevelMenu>
+			<TopLevelMenu Name="151" Text="Layaways" image="vault">
+				<MenuItem Name="1002"  Text="Modify Sale or Special Order"        weblink="Invoice/GetEditInvoice"                       OnClick="P:EditInvoice"                  image="sales1" TBD="CHKR" />
+				<MenuItem Name="152"   Text="Process Layaway Payment/Pickup"      weblink="SalesLayaways/LayawayPayments"                OnClick="F:frmLayawayPayments"           image="layaway" />
+				<MenuItem Name="1015"  Text="Cancel A Layaway"                    weblink="SalesLayaways/CancelLayaway"                  OnClick="F:frmCancelLayaway"             image="cancel"          glennpassword="yes" TBD="Neetha" />
+				<MenuItem Name="153"   Text="Cancel A Layaway Payment "           weblink="SalesLayaways/CancelLayawayPayments"          OnClick="F:frmCancelLayawayPayments"     image="cancel"         TBD="Neetha" />
+				<MenuItem Name="154"   Text="List of All Layaways"                weblink="SalesLayaways/ListofLayaways"                 OnClick="F:frmListofLayaways"            image="printer" TBD="Neetha" />
+				<MenuItem Text="-" />
+				<MenuItem Name="156"   Text="Past Due Layaway Payments"           weblink="SalesLayaways/PastDueLayawayPayments"                  OnClick="F:frmPastDueLayawayPayments"    image="warranty" TBD="Manoj" />
+				<MenuItem Name="157"   Text="Layaway Payments That are Due"       weblink="SalesLayaways/PastDueLayawayPayments?isDueReport=true" OnClick="P:DueLayawayPayments"           image="warranty" TBD="Manoj" />
+				<MenuItem Name="158"   Text="Layaway Payments List"               weblink="SalesLayaways/ListofLayawayPayments"                   OnClick="F:frmListofLayawayPayments"     image="warranty" TBD="Manoj" />
+				<MenuItem Name="159"   Text="Layaway Follow Up"                   weblink="SalesLayaways/LayawayFollowup"                         OnClick="F:frmLayawayFollowup"           image="warranty"  TBD="Manoj" />
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="12" Text="Memos">
+			<TopLevelMenu Name="121" Text="Memos:Proforma" image="memo">
+				<MenuItem Name="123"   Text="Make A Memo"                         OnClick="P:MemoNotfromPO"                image="invoice1" />
+				<MenuItem Name="124"   Text="Edit A Memo"                         OnClick="F:frmMemoEdit"                  image="invoice1" />
+				<MenuItem Name="125"   Text="Delete A Memo"                       weblink="Customers/DelMemo"              OnClick="F:frmDeleteMemo"                image="cancel"          TBD="CHKR"/>
+				<MenuItem Name="126"   Text="Reprint Memo"                        weblink="SalesMemos/ReprintMemo"         OnClick="F:frmReprintMemo"               image="printer"         TBD="Manoj" />
+				<MenuItem Name="1219"  Text="Reprint Memo, Open Items Only"       weblink="SalesMemos/ReprintMemo?isopenmemo=true" OnClick="P:ReprintOpenMemoItems" image="printer"         TBD="Manoj" />
+				<MenuItem Text="-" />
+				<MenuItem Name="127"   Text="Status of A Memo"                    weblink="SalesMemos/MemoStatus"          OnClick="P:MemoStatus"                   image="list"            TBD="Neetha"/>
+				<MenuItem Name="128"   Text="Style Tracking"                      weblink="SalesMemos/StyleTracking"	   OnClick="F:frmStyleTracking"             image="styletracking"   TBD="Manoj" />
+				<MenuItem Name="129"   Text="Statement of Memos"                  weblink="SalesMemos/StatementofMemo"     OnClick="F:frmStatementofMemo"           image="statementofmemo" TBD="Manoj" />
+				<MenuItem Name="1210"  Text="Open Memo Items"                     weblink="SalesMemos/ListMemodOut"        OnClick="F:frmListMemodOut"              image="list"            TBD="Manoj" />
+				<MenuItem Name="1215"  Text="Export Memo Dtls To Excel"           weblink="SalesMemos/ExportMemo"          OnClick="F:frmExportMemo"                image="excel"           TBD="DHR"/>
+				<MenuItem Text="-" />
+				<MenuItem Name="1211"  Text="Sold From Memo"                      OnClick="F:frmCreateSfm"                 image="invoice1" />
+				<MenuItem Name="1212"  Text="Edit Sold From Memo"                 OnClick="F:frmSfmEdit"                   image="invoice_edit" />
+				<MenuItem Name="1213"  Text="Delete Sold From Memo"               weblink="SalesMemos/DeleteInvoice"       OnClick="F:frmDeleteInvoice"             image="cancel"          TBD ="Neetha"/>
+				<MenuItem Name="1214"  Text="Return From Memo"                    OnClick="P:MakeRTVMemo"                  image="_return" />
+				<MenuItem Name="1216"  Text="Reprint RTV Memo"                    weblink="SalesMemos/print_rtv"           OnClick="F:print_rtv"                    image="printer"         TBD="DHR" />
+				<MenuItem Name="1217"  Text="Delete RTV Memo"                     weblink="Customers/FrmDeleteRTV"         OnClick="F:frmDeleteRTV"                 image="cancel"          TBD="CHKR" />
+				<MenuItem Name="1218"  Text="List of RTVs"                        weblink="SalesMemos/PrintRtvList"        OnClick="F:frmPrintRtvList"              image="list"            TBD="Manoj" />
+				<MenuItem Text="-" />
+				<MenuItem Name="1120"  Text="Make A Proforma Inv."                weblink="Invoice/ProformaInvoice_Make"             OnClick="F:frmProformaInvoice_Make"             image="sales1"  TBD="Hemanth" />
+				<MenuItem Name="1121"  Text="Edit A Proforma Invoice"             weblink="Invoice/ProformaInvoice_Edit"             OnClick="F:frmProformaInvoice_Edit"             image="sales1"  TBD="Hemanth" />
+				<MenuItem Name="1122"  Text="List of Proforma Invoices"           weblink="SalesMemos/ProformaInvoice_List"          OnClick="F:frmProformaInvoice_List"             image="list"    TBD="Manoj" />
+				<MenuItem Name="1124"  Text="Convert A Proforma Into An Invoice"  weblink="Invoice/ProformaInvoice_ConvertToRegular" OnClick="F:frmProformaInvoice_ConvertToRegular" image="sales1"  TBD="Hemanth"/>
+				<MenuItem Name="1125"  Text="Reprint A Proforma Inv."             weblink="Invoice/ProformaInvoice_Reprint"          OnClick="F:frmProformaInvoice_Reprint"          image="printer" TBD="Hemanth"/>
+				<MenuItem Name="1126"  Text="Delete A Proforma Inv."              weblink="Customers/ProformaInvoice"                OnClick="F:frmProformaInvoice_Delete"           image="cancel"  TBD="CHKR" />
+				<MenuItem Name="1127"  Text="Modify Customer of A Prof."          weblink="SalesMemos/ProformaInvoiceModifyAcc"      OnClick="F:frmProformaInvoice_ModifyAcc"        image="rename"  TBD="Hemanth" />
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="16" Text="Repairs">
+			<TopLevelMenu Name="161" Text="Repairs" image="repairs1">
+				<MenuItem Name="162"   Text="Add A Repair Order"                  weblink="SalesRepairs/CreateRepairOrder"	         OnClick="F:frmCreateRepairOrder"         image="repairs" TBD="Phanindra"/>
+				<MenuItem Name="163"   Text="Edit A Repair Order"                 weblink="SalesRepairs/EnterRepairOrderNumber"	     OnClick="F:frmEnterRepairORdernumber"    image="repairs1" />
+				<MenuItem Name="164"   Text="Delete A Repair Order"               weblink="Customers/DelARepairOrder"                OnClick="F:frmDeleteRepairOrder"  image="cancel" glennpassword="yes" TBD="CHKR" />
+				<MenuItem Name="165"   Text="Reprint A Repair Order"              weblink="Repairs/PrintOneRepairorderDetails"       OnClick="P:frmPrintOneRepairorderDetails" image="printer" TBD="Hemanth" />
+				<MenuItem Name="166"   Text="List Of Repair Orders"               weblink="Repairs/ListOfRepairOrders"               OnClick="F:frmListOfRepairOrders"        image="customernew" TBD="Hemanth"  />
+				<MenuItem Name="1660"  Text="Make A Payment Towards A Repair"     weblink="Salesrepairs/PaymentsTowardsRepair"       OnClick="F:frmPaymentsTowardsRepair"     image="customernew" TBD="Phanindra"/>
+				<MenuItem Name="1661"  Text="Total Repair Orders and Est. Values" weblink="Salesrepairs/Estimatedrepairtotal"        OnClick="F:frmestimatedrepairtotal"      image="customernew" TBD ="Neetha" />
+				<MenuItem Name="1636"  Text="Repairs Status By Style"             weblink="SalesRepairs/StatusOfARepairByStyle"      OnClick="F:frmStatusOfARepairByStyle"    image="repairs" TBD ="Neetha" />
+				<MenuItem Name="1637"  Text="Refund A Repair Order"               weblink="SalesRepairs/RefundRepairOrder"           OnClick="F:frmRefundRepairOrder"         image="repairs" TBD="Hemanth" />
+				<MenuItem Text="-" />
+				<MenuItem Name="167"   Text="Customer Repair Pickup "             weblink="SalesRepairs/RepairOrderInvoice"	         OnClick="F:frmRepairOrderInvoice"        image="pickup" />
+				<MenuItem Name="168"   Text="Mark Repair As NOT Picked Up"        weblink="Customers/DelRprInv"                      OnClick="F:frmDelRprInv"                 image="pickup" TBD="CHKR" />
+				<MenuItem Name="1622"  Text="Edit Repair Pickup"                  weblink="SalesRepairs/EditRepairInvoice"           OnClick="F:frmEditRepairInvoice"         image="invoice1" TBD="Hemanth" />
+				<MenuItem Name="1621"  Text="Refund a Repair Invoice"             weblink="SalesRepairs/ReturnInvoiceRepairSale"     OnClick="P:ReturnInvoiceRepairSale"      image="pickup"          ShowExcept="is_Glenn" TBD="Hemanth" />
+				<MenuItem Name="1623"  Text="Edit Refund Repair Invoice"          weblink="SalesRepairs/ReturnInvoiceRepairSaleEdit" OnClick="P:ReturnInvoiceRepairSaleEdit"  image="invoice1"        ShowExcept="is_Glenn" TBD="Hemanth" />
+				<MenuItem Text="-" />
+				<MenuItem Name="169"   Text="Send Repairs To Shop/Other Stores"   weblink="Repairs/RepairSendToShop"                 OnClick="F:frmRepairSendToShop"            image="repair_shop"     ShowExcept="SingleStore" TBD="Hemanth"/>
+				<MenuItem Name="1612"  Text="Receive Jobs In the Store"           weblink="Repairs/RepairRcvdFrmShop"                OnClick="F:frmRepairRcvdFrmShop"           image="repair_shop"     ShowExcept="SingleStore" TBD="Hemanth"/>
+				<MenuItem Name="1613"  Text="List Of Jobs At Any Location"        weblink="Repairs/ListJobLocation"                  OnClick="F:frmListJobLocation"             image="list" TBD="Hemanth" />
+				<MenuItem Name="1616"  Text="Status Of Repairs"                   weblink="Repairs/StatusOfRepairs"                  OnClick="F:frmStatusOfRepairs"             image="list" TBD="Hemanth"  />
+				<MenuItem Name="1624"  Text="History Of A Repair Job In Shop"     weblink ="SalesShopControl/HistoryOfJob"           OnClick="F:frmHistoryOfJob"                image="history" />
+				<MenuItem Text="-" />
+				<MenuItem Name="1620"  Text="Labor/Parts Used For A Job Bag"      weblink="Repairs/ReservePartsForJobBag_Info"       OnClick="F:frmReservePartsForJobBag_Info"  image="repair_shop" TBD="Hemanth" />
+				<MenuItem Name="1619"  Text="History Of Labor/Parts Used"         weblink="SalesRepairs/HistoryOfParts"              OnClick="F:frmHistoryOfParts"              image="repair_shop" TBD="Neetha" />
+				<MenuItem Name="1628"  Text="Repair Cost VS Charge report"        weblink="SalesRepairs/Jobbagcostcharge"            OnClick="F:frmjobbagcostcharge"            image="repair_shop" TBD="Neetha" />
+				<MenuItem Name="1635"  Text="Mark An Invoice As Warranty Repair"  weblink="SalesRepairs/WarrantyRepair"              OnClick="F:frmWarrantyRepair"              image="repair_shop" TBD="Neetha" />
+				<MenuItem Name="2194"  Text="Modify Customer Code Of A Repair"    weblink ="Repairs/ModifyCustomerCodeOfARepair"     OnClick="F:frmModifyCustomerCodeOfARepair" image="list"  TBD="Hemanth"  />
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="180" Text="Buy Scrap">
+			<TopLevelMenu Name="1801" Text="Buy:Gold" image="gold">
+				<MenuItem Name="1802"  Text="Buy Scrap Gold"                      weblink="SalesBuyGold/AddScrapGold"                OnClick="F:frmScrapGold"               image="scrap" TBD="Phanindra" />
+				<MenuItem Name="1803"  Text="Edit Scrap Gold Log"                 weblink="SalesBuyGold/ScrapEdit"                   OnClick="F:frmScrapEdit"               image="scrap" TBD="Phanindra" />
+				<MenuItem Name="1804"  Text="Reprint A Log"                       weblink="SalesBuyGold/ReprintScrap"                OnClick="F:frmReprintScrap"            image="printer" TBD="Neetha"  />
+				<MenuItem Name="1805"  Text="Delete A Log"                        weblink="Customers/DelLogNo"                       OnClick="F:frmDelScrapGold"            image="cancel"  glennpassword="yes" TBD="CHKR" />
+				<MenuItem Name="1806"  Text="List Of Purchase Logs"               weblink="SalesBuyGold/ListOfScrapGold"             OnClick="F:frmListOfScrapGold"         image="list" TBD ="Neetha"/>
+				<MenuItem Name="1813"  Text="Mark Purchase Log As Rcvd"           weblink="SalesBuyGoldNew/MarkPurchaseLogAsRcvd"    OnClick="F:frmMarkPurchaseLogAsRcvd"   image="list"  TBD="CHKR"/>
+				<MenuItem Name="18041" Text="Process Scrap"                       weblink="SalesBuyGoldNew/ProcessScrap"             OnClick="F:frmProcessScrap"            image="scrap" TBD="CHKR"/>
+				<MenuItem Text="-" />
+				<MenuItem Name="1807"  Text="Gold Sent To Refinery"               weblink="SalesBuyGold/GoldSent"                    OnClick="F:frmGoldSent"                  image="scrap" TBD="Phanindra" />
+				<MenuItem Name="1812"  Text="List Of Gold Sent To Refinery"       weblink="SalesBuyGold/ListOfGoldSent"              OnClick="F:frmListOfGoldSent"            image="scrap" TBD="Phanindra" />
+				<MenuItem Name="1808"  Text="Scrap Inventory"                     weblink="SalesBuyGold/GoldInventory"               OnClick="F:frmGoldInventory"             image="inventory" TBD="Phanindra" />
+				<MenuItem Name="1809"  Text="Defaults and Fine Print"             weblink="SalesBuyGold/GoldpriceofdayNOtherDtls"    OnClick="F:frmGoldpriceofdayNOtherDtls"  image="inventory" TBD="Phanindra" />
+				<MenuItem Name="1810"  Text="Daily Metal Prices"                  weblink="SalesBuyGold/DailyMetalPrices"            OnClick="F:frmDailyMetalPrices"          image="inventory" TBD="Phanindra" />
+				<MenuItem Name="3318"  Text="Process Trade-ins"                   weblink="SalesBuyGoldNew/Processtradein"           OnClick="F:frmProcesstradein"            image="tradein" TBD="CHKR" />
+				<MenuItem Text="-" />
+				<MenuItem Name="1811"  Text="Add Cashout"                         weblink="SalesBuyGold/AddCashout"                  OnClick="F:frmCashout"                   image="scrap" TBD="Phanindra" />
+				<MenuItem Name="1816"  Text="Edit Cashout"                        weblink="SalesBuyGold/CashoutEdit"                 OnClick="F:frmCashoutEdit"               image="scrap" TBD="Phanindra" />
+				<MenuItem Name="1817"  Text="Reprint A Cashout"                   weblink="SalesBuyGold/ReprintScrap?iscashout=true" OnClick="F:frmReprintCashout"            image="printer" TBD="Neetha" />
+				<MenuItem Name="1814"  Text="Delete A Cashout"                    weblink="Customers/DelCashout"                     OnClick="F:frmDelCashout"                image="cancel"     TBD="CHKR"/>
+				<MenuItem Name="1815"  Text="List Of Cashouts"                    weblink="SalesBuyGold/ListOfCashouts"              OnClick="F:frmListOfCashouts"            image="list" TBD ="Neetha"/>
+				<MenuItem Name="18042" Text="Karat Price"                         weblink="SalesBuyGold/MetalKaratPrice"             OnClick="F:frmMetalKaratPrice"           image="scrap" TBD ="Neetha"/>
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="11" Text="Returns" >
+			<TopLevelMenu Name="111" Text="Returns" image="_return">
+				<MenuItem Name="112"   Text="Return A Sale"                       weblink="Invoice/InvoiceReturn"		              OnClick="P:ReturnSale"                   image="_return" />
+				<MenuItem Name="113"   Text="Edit A Sales Return"                 OnClick="P:EditReturnSale"               image="_return" />
+				<MenuItem Name="114"   Text="Print A Sales Return"                OnClick="P:ReprintReturn"                image="printer" />
+				<MenuItem Name="115"   Text="Delete A Sales Return"               weblink="POsReportsnew/VoidSalesReceipt"            OnClick="P:frmVoidSalesReceipt"          image="cancel"          glennpassword="yes" TBD="Neetha"/>
+				<MenuItem Name="1101"  Text="Refund a Repair Invoice"             weblink="SalesRepairs/ReturnInvoiceRepairSale"      OnClick="P:ReturnInvoiceRepairSale"      image="pickup"          ShowExcept="is_Glenn" TBD="Hemanth" />
+				<MenuItem Name="1102"  Text="Edit Refund a Repair Invoice"        weblink="SalesRepairs/ReturnInvoiceRepairSaleEdit"  OnClick="P:ReturnInvoiceRepairSaleEdit"  image="invoice1"        ShowExcept="is_Glenn" TBD="Hemanth" />
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="18" Text="Quotes">
+			<TopLevelMenu Name="181" Text="Quotes:WishList"                    image="wishlist">
+				<MenuItem Name="182"   Text="Add A Quote"                         weblink="SalesQuotesWishlist/AddQuotation"          OnClick="F:frmQuote"                     image="proposal" />
+				<MenuItem Name="185"   Text="Edit A Quote"                        weblink="SalesQuotesWishlist/EditQuotation"         OnClick="P:EditQuote"                    image="proposal" />
+				<MenuItem Name="183"   Text="Delete A Quote"                      weblink="SalesQuotesWishlist/DeleteQuotes"          OnClick="F:frmDeleteQuotes"              image="cancel"          glennpassword="yes" />
+				<MenuItem Name="184"   Text="List Of Quotes"                      weblink="SalesQuotesWishlist/QuoteList"             OnClick="F:frmQuoteList"                 image="list" />
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="1900" Text="Shop Control">
+			<TopLevelMenu Name="1901" Text="Shop:Control"                      image="repairs">
+				<MenuItem Name="1902"  Text="Give Out/Receive Job Bags"           weblink ="SalesShopControl/GiveOutJobBags"          OnClick="F:frmGiveOutJobBags"            image="manufacturing" TBD="Phanindra" />
+				<MenuItem Name="1903"  Text="Give Out Multiple Jobs"              weblink ="SalesShopControl/GiveJobToAPerson"        OnClick="F:frmGiveJobToAPerson"          image="manufacturing" />
+				<MenuItem Name="1904"  Text="Get Multiple Jobs Back"              weblink ="SalesShopControl/GetJobBackFromPerson"    OnClick="F:frmGetJobBackFromPerson"      image="manufacturing" />
+				<MenuItem Name="1905"  Text="History Of A Repair Job"             weblink ="SalesShopControl/HistoryOfJob"            OnClick="F:frmHistoryOfJob"              image="history" TBD="Manoj" />
+				<MenuItem Name="1907"  Text="Reprint A Job"                       OnClick="F:frmReprintJobBag"             image="printer" />
+				<MenuItem Name="19017" Text="Open a Closed Jobbag"                weblink="SalesShopControl/OpenAClosedJobBag"        OnClick="F:frmOpenAClosedJobBag"         image="manufacturing"  TBD="Manoj" />
+				<MenuItem Text="-" />
+				<MenuItem Name="1610"  Text="Receive Jobs in the Shop"            weblink="SalesShopControl/RepairRcvd"               OnClick="F:frmRepairRcvd"                image="repair_shop"     ShowExcept="SingleStore" TBD="Manoj"/>
+				<MenuItem Name="1611"  Text="Transfer Jobs to Stores"             weblink="SalesShopControl/SentBackFromShop"         OnClick="F:frmSentBackFromShop"          image="repair_shop"     ShowExcept="SingleStore" TBD="Manoj"/>
+				<MenuItem Name="19014" Text="Jobs Not Sent To Anyone"             weblink="SalesShopControl/ListOfRepairJobsNotSentToAnyPerson" OnClick="F:frmListOfRepairJobsNotSentToAnyPerson" image="list" TBD="Manoj" />
+				<MenuItem Name="19015" Text="Jobs Ready For Pickup"               weblink ="SalesShopControl/ListOfRepairJobsReadForPickup"     OnClick="F:frmListOfRepairJobsReadForPickup" image="list" TBD="Manoj" />
+				<MenuItem Text="-" />
+				<MenuItem Name="19010" Text="Jobs Given To A Person"              weblink="SalesShopControl/listofjobsgiventoaperson"   OnClick="F:frmlistofjobsgiventoaperson"   image="list"  TBD="Manoj"/>
+				<MenuItem Name="19011" Text="Open Jobs By Each Person"            weblink="SalesShopControl/listofopenjobstoeachperson" OnClick="F:frmlistofopenjobstoeachperson" image="list"  TBD="Manoj"/>
+				<MenuItem Name="19012" Text="Jobs Done By A Person"               weblink="SalesShopControl/ListOfJobsDoneByaPerson"    OnClick="F:frmListOfJobsDoneByaPerson"    image="list"  TBD="Manoj"/>
+				<MenuItem Name="19013" Text="List of Completed Jobs"              weblink="SalesShopControl/ListOfCompletedJobs"        OnClick="F:frmListOfCompletedJobs"        image="list"  TBD="Manoj"/>
+				<MenuItem Name="19029" Text="Promised vs. Completed Dates"        weblink="SalesShopControl/PromisedvsCompletedDates"   OnClick="F:frmPromisedvsCompletedDates"   image="users" TBD="Manoj"/>
+				<MenuItem Text="-" />
+				<MenuItem Name="19021" Text="Add/Edit Time Estimates"             OnClick="F:frmEstimates"                 image="manufacturing" TBD="Manoj" />
+				<MenuItem Name="19022" Text="All Job Time Estimates"              weblink="SalesShopControl/ListEstimates"              OnClick="F:frmListEstimates"             image="list" TBD="Manoj" />
+				<MenuItem Name="19023" Text="Start Working On A Job"              weblink="SalesShopControl/ReadActualHours"            OnClick="F:frmReadActualHours"           image="manufacturing" TBD="Manoj" />
+				<MenuItem Name="19024" Text="Stop Working On A Job"               weblink="SalesShopControl/ReadActualHours?closejb=true" OnClick="P:MarkasCompleted"              image="manufacturing" TBD="Manoj" />
+				<MenuItem Name="19025" Text="Edit Actual Duration"                weblink="SalesShopControl/AdjustActualHours" OnClick="F:frmAdjustActualHours"         image="manufacturing" TBD="Manoj" />
+				<MenuItem Name="19026" Text="Compare Estimates vs Actuals"        weblink="SalesShopControl/ComparisionOfTime"          OnClick="F:frmComparisionOfTime"         image="list" TBD="Manoj" />
+				<MenuItem Name="19027" Text="Time For Queued Jobs"                weblink="SalesShopControl/CalculateQueuedJobs"        OnClick="F:frmCalculateQueuedJobs"       image="list" TBD="Manoj" />
+				<MenuItem Name="19028" Text="Time Spent on Job Bags"              weblink="SalesShopControl/TimeSpentOnJobBags"         OnClick="F:frmTimeSpentOnJobBags"        image="manufacturing" TBD="Manoj" />
+				<MenuItem Text="-" />
+				<MenuItem Name="1908"  Text="Add/Edit Persons"                    weblink="SalesShopControl/Persons"                    OnClick="F:frmPersons"                   image="users" TBD="DHR" />
+				<MenuItem Name="1909"  Text="Add/Edit Departments"                weblink="SalesShopControl/AddEditDept"                OnClick="F:frmAddEditDept"               image="users" TBD="DHR" />
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="14" Text="Payments">
+			<TopLevelMenu Name="141" Text="Payments:Credits" image="bankaccounts">
+				<MenuItem Name="142"   Text="Add a Cash Receipt"                  weblink="SalesPaymentsCredits/AddCashReceipt"         OnClick="F:frmAddCashReceipt"            image="money" />
+				<MenuItem Name="143"   Text="Edit a Cash Receipt/Refund"          weblink="SalesPaymentsCredits/EditCashReceipt"        OnClick="F:frmEditCashReceipt"           image="money" />
+				<MenuItem Name="144"   Text="Reprint Cash Receipt/Refund"         weblink="SalesPaymentsCredits/ReprintReceipt"         OnClick="F:frmReprintReceipt"            image="printer" />
+				<MenuItem Name="145"   Text="Delete Cash Receipt/Refund"          weblink="SalesPaymentsCredits/DeleteReceipt"          OnClick="F:frmDeleteReceipt"             image="cancel" />
+				<MenuItem Name="1450"  Text="Modify Cust.Code of A Receipt"       weblink="SalesPaymentsCredits/ModifyAcc_ofReceipt"    OnClick="F:frmModifyAcc_ofReceipt"       image="money" />
+				<MenuItem Name="1421"  Text="Issue A Customer Refund"             weblink="SalesPaymentsCredits/CustomerRefund"         OnClick="P:CustomerRefund"               image="money" />
+				<MenuItem Text="-" />
+				<MenuItem Name="146"   Text="Add/Edit Credit"                     weblink="SalesPaymentsCredits/AddEditCredit"          OnClick="F:frmAddEditCredit"             image="credit" />
+				<MenuItem Name="147"   Text="Reprint Credit"                      weblink="SalesPaymentsCredits/ReprintCredit"          OnClick="F:frmReprintCredit"             image="percet_sign" />
+				<MenuItem Name="148"   Text="Delete Credit"                       weblink="SalesPaymentsCredits/DeleteCredit"           OnClick="F:frmDeleteCredit"              image="cancel" />
+				<MenuItem Name="1414"  Text="Add/Delete Credit Reason"            weblink="ListOfItemsSold/GetAddDeleteCreditReason"    OnClick="F:frmAddDeleteCreditReason"     image="credit" TBD="CHKR" />
+				<MenuItem Name="149"   Text="List Of Cash Receipts / Credits"     weblink="ListOfItemsSold/RcblCreditByTimeFrame"       OnClick="F:frmRcblCreditByTimeFrame"     image="payment" TBD="Hemanth"/>
+				<MenuItem Name="1410"  Text="Payment Sum. by payment type"        weblink="ListOfItemsSold/SummeryByPaymentType"        OnClick="F:frmSummeryByPaymentType"      image="list" TBD="HEMANTH-Dhar"/>
+				<MenuItem Name="1412"  Text="Add/Edit Payment Types"              weblink="ListOfItemsSold/AddPaymentTypes"             OnClick="F:frmAddPaymentTypes"           image="amex" TBD="Hemanth"/>
+				<MenuItem Text="-" />
+				<MenuItem Name="14120" Text="Clear Open Credits/RTVs"             weblink="SalesPaymentsCredits/AddAdjReceivable"       OnClick="F:frmAddAdjReceivable"          image="clear" />
+				<MenuItem Name="14121" Text="Edit Adj. Receivable"                weblink="SalesPaymentsCredits/EditAdjRcvable"         OnClick="F:frmEditAdjRcvable"            image="clear" />
+				<MenuItem Name="14122" Text="Print Adj. Receivable"               weblink="SalesPaymentsCredits/ReprintAdjRcvable"      OnClick="F:frmReprintAdjRcvable"         image="printer" />
+				<MenuItem Name="14123" Text="Delete Adj. Receivable"              weblink="SalesPaymentsCredits/DeleteAdjRcvable"       OnClick="F:frmDeleteAdjRcvable"          image="cancel" />
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="190" Text="POS Reports">
+			<TopLevelMenu Name="191" Text="POS:Reports" image="report">
+				<MenuItem Name="192"   Text="List Of Items Sold (Detailed)"       weblink="ListOfItemsSold/Index"                 OnClick="F:frmListOfItemsSold"           image="sales" TBD="Hemanth"/>
+				<MenuItem Name="1915"  Text="List Of Open Orders"                 weblink="ListOfItemsSold/ListOfOpenOrders"      OnClick="F:frmListOfOpenOrders"          image="sales" TBD="Hemanth"/>
+				<MenuItem Name="193"   Text="List Of Receipts (Summary)"          weblink="ListOfItemsSold/ListOfReceipts"        OnClick="F:frmListOfReceipts"            image="payment" TBD="Hemanth"/>
+				<MenuItem Name="194"   Text="Total Sales Per Store"               weblink="ListOfItemsSold/StoreTotalSales"       OnClick="F:frmStoreTotalSale"            image="sales" TBD="Hemanth"/>
+				<MenuItem Name="195"   Text="Sales By Salesrep"                   weblink="ListOfItemsSold/SalesBySalesman"       OnClick="F:SalesBySalesman"              image="analytics" TBD="Hemanth"/>
+				<MenuItem Name="196"   Text="Statement of Invoices"               weblink="ListOfItemsSold/StatementofInvoice"    OnClick="F:frmStatementofInvoice"        image="sales" TBD="Hemanth"/>
+				<MenuItem Name="197"   Text="List Of Payments Rcvd (Detailed)"    weblink="ListOfItemsSold/RcblCreditByTimeFrame" OnClick="F:frmRcblCreditByTimeFrame"     image="payment" TBD="Hemanth"/>
+				<MenuItem Name="198"   Text="Summary of Payments by Pay.Type"     weblink="ListOfItemsSold/SummeryByPaymentType"  OnClick="F:frmSummeryByPaymentType"      image="payment" TBD="Hemanth"/>
+				<MenuItem Text="-" />
+				<MenuItem Name="199"   Text="End Of Day Summary"                  weblink="ListOfItemsSold/DaySummary"            OnClick="F:frmDaySummary"                image="list" TBD="Hemanth"/>
+				<MenuItem Name="1916"  Text="End Of Day Worksheet"                weblink="ListOfItemsSold/EODWorksheet"          OnClick="F:frmEODWorksheet"              image="list" TBD="Hemanth"/>
+				<MenuItem Name="1910"  Text="List Of Store Credits"               weblink="ListOfItemsSold/ListOfStoreCredits"    OnClick="F:frmListOfStoreCredits"        image="credits" TBD="Hemanth"/>
+				<MenuItem Name="1911"  Text="List Of Gift Cards"                  weblink="ListOfItemsSold/ListOfGiftCertificate" OnClick="P:ListOfGiftCertificate"        image="printer" TBD="Hemanth"/>
+				<MenuItem Name="1924"  Text="POS Closing Z Report"                weblink="ListOfItemsSold/DayEndProcess"         OnClick="F:frmDayEndProcess"             image="printer" TBD="Hemanth"/>
+				<MenuItem Name="1925"  Text="Old POS Closing Z Report"            weblink="ListOfItemsSold/OldPosReport"          OnClick="F:frmOldPosReport"              image="printer" TBD="Hemanth"/>
+				<MenuItem Text="-" />
+				<MenuItem Name="1912"  Text="Sales Tax Report"                    weblink="POsReportsnew/SalesTaxReport"          OnClick="F:frmSalesTaxReport"            image="symbol_percent" />
+				<MenuItem Name="8012"  Text="GST Tax Credit"                      OnClick="F:frmGSTTaxCredit"              image="symbol_percent"  ShowOnlyFor="VAT_Included" />
+				<MenuItem Name="1913"  Text="List Of Discounts"                   weblink="POsReportsnew/ListOfDiscounts"         OnClick="F:frmListOfDiscount"            image="discount" />
+				<MenuItem Name="1914"  Text="List Of Customer Warranties"         weblink="POsReportsnew/CustomerWarrantyReport"  OnClick="F:frmListOfCustomerWarranty"    image="warranty" />
+				<MenuItem Name="1017"  Text="List of Charity Donations"           weblink="SalesPOSReports/CharityDonations"      OnClick="F:frmCharityDonations"          image="sales1" TBD="Manoj"/>
+				<MenuItem Name="1917"  Text="MTD Report"                          weblink="ListOfItemsSold/MTDReport"             OnClick="F:frmMTDReport"                 image="sales1" TBD="Hemanth"/>
+				<MenuItem Name="1918"  Text="Today's Cash Flow"                   weblink="ListOfItemsSold/TodaysCashFlow"        OnClick="F:frmTodaysCashFlow"            image="sales1" TBD="Hemanth"/>
+				<MenuItem Name="8030"  Text="Cash Flow Excel"                     weblink="POsReportsnew/CashFlowExcel"           OnClick="F:frmCashFlowExcel"             image="excel" TBD="DHR"/>
+				<MenuItem Name="1919"  Text="Sales Follow Up"                     weblink="ListOfItemsSold/Follows"               OnClick="F:frmFollows"                   image="sales" TBD="Hemanth"/>
+				<MenuItem Name="1920"  Text="List of Voided Receipts"             weblink="ListOfItemsSold/VoidedReceipts"        OnClick="F:frmVoidedReceipts"            image="sales1" TBD="Hemanth"/>
+				<MenuItem Name="1922"  Text="List of Customer Returns"            weblink="ListOfItemsSold/ListOfReturnedItems"   OnClick="F:frmListOfReturnedItems"       image="sales1" TBD="Hemanth"/>
+				<MenuItem Name="1923"  Text="List of Warranty Sales"              weblink="ListOfItemsSold/ListofWarrantySales"   OnClick="F:frmListofWarrantySales"       image="warranty"        ShowOnlyFor="Warranty" TBD="DHR" />
+			</TopLevelMenu>
+			<TopLevelMenu Name="19000" Text="Play:Book" image="report">
+				<MenuItem Name="19001" Text="Follow:Up List"                      weblink="Sales/CustomerFollowup"        OnClick="F:frmCustomerFollowup"          image="followup" />
+				<MenuItem Name="19002" Text="List Of Open Orders"                 weblink="ListOfItemsSold/ListOfOpenOrders"      OnClick="F:frmListOfOpenOrders"          image="sales" TBD="Hemanth"/>
+				<MenuItem Name="19003" Text="List Of Repair Orders"               weblink="Repairs/ListOfRepairOrders"            OnClick="F:frmListOfRepairOrders"        image="customernew" TBD="Hemanth" />
+				<MenuItem Name="19030" Text="Invoiced Items Report"               weblink="ListOfItemsSold/InvoicedReport"        OnClick="F:frmInvoicedReport"            image="sales" TBD="DHR"  />
+				<MenuItem Name="19004" Text="List of All Layaways"                weblink="SalesLayaways/ListofLayaways"          OnClick="F:frmListofLayaways"            image="printer" />
+				<MenuItem Name="19005" Text="Occasions"                           weblink="Sales/ListOfOccasion"                  OnClick="F:frmOccasionsList"             image="report" />
+				<MenuItem Name="19006" Text="List Of Quotes"                      weblink="SalesQuotesWishlist/QuoteList"         OnClick="F:frmQuoteList"                 image="list" />
+				<MenuItem Name="19007" Text="List Of Customer Warranties"         weblink="POsReportsnew/CustomerWarrantyReport"  OnClick="F:frmListOfCustomerWarranty"    image="warranty"        ShowOnlyFor="Warranty" />
+				<MenuItem Name="19008" Text="Potentials List"                     weblink="Sales/PotentialCustomerReport"         OnClick="F:frmPotentialCustomerReport"   image="report" />
+				<MenuItem Name="19009" Text="Inactive Customers"                  weblink="Customers/InActiveCustomers"           OnClick="F:frmInactiveCustomers"         image="report" />
+				<MenuItem Name="19111" Text="Thank You Report for Picked Up Items" weblink="ListOfItemsSold/ListOfPickedUpItems"  OnClick="F:frmListOfPickedUpItems"       image="list" TBD="DHR" />
+				<MenuItem Name="19112" Text="Sales/COG/Profit By Salesrep"        weblink="Sales/SalesCOGProfitbySalesrep"        OnClick="F:frmSalesCOGProfitBySalesman"  image="salesprofitbycustomer" />
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="19100" Text="Appraisal">
+			<TopLevelMenu Name="19101" Text="Appraisal" image="sov">
+				<MenuItem Name="19102" Text="Make A New Appraisal"                weblink="ListOfItemsSold/Appraisals"            OnClick="F:frmappraisals"                image="apraisal"        ShowExcept="is_Glenn" TBD="Hemanth"/>
+				<MenuItem Name="19103" Text="See/Edit Old Appraisals"             weblink="ListOfItemsSold/SearchAppraisal"       OnClick="F:frmSearchAppraisal"           image="apraisal"        ShowExcept="is_Glenn" TBD="Hemanth"/>
+				<MenuItem Name="19106" Text="Delete Appraisal"                    weblink="ListOfItemsSold/DeleteAppraisal"       OnClick="F:frmDeleteAppraisal"           image="apraisal" TBD="Hemanth"/>
+				<MenuItem Name="19107" Text="Add/Delete Appraisal Signature"      weblink="ListOfItemsSold/AppraisalSignature"    OnClick="F:frmAppraisalSignature"        image="apraisal" TBD="Hemanth"/>
+				<MenuItem Name="33223" Text="Print Diamond Cert "                 weblink="Appraisal/PrintDiamondCert"            OnClick="F:frmPrintDiamondCert"          image="apraisal" TBD="DHR" />
+				<MenuItem Name="33224" Text="List of Appraisals"                  weblink="Appraisal/ListOfAppraisals"            OnClick="F:frmListofAppraisals"          image="list" TBD="Hemanth"/>
+			</TopLevelMenu>
+		</GroupMenuItem>
+	</MainLevelMenu>
+	<MainLevelMenu Name="2" Text="Customers" image="fa-customer-voice" icon="fa-user">
+		<TopLevelMenu Name="200" Text="Customer Maintenance" image="dollar">
+			<MenuItem Name="201"   Text="New:Customer"                        OnClick="F:frmAccountCode"               image="customeradd32" />
+			<MenuItem Name="202"   Text="Edit:Customer"                       OnClick="F:frmSearchCustomer"            image="customeredit32" />
+		</TopLevelMenu>
+		<GroupMenuItem Name="21" Text="Maintenance">
+			<TopLevelMenu Name="210" Text="Maintenance"  image="customeradd32">
+				<MenuItem Name="211"   Text="Modify Customer Code "               weblink="CustomersMaintenance/ModifyCustomer"        OnClick="F:frmModifyCustomer"            image="rename" TBD="Hemanth" />
+				<MenuItem Name="212"   Text="Merge Two Customers "                weblink="CustomersMaintenance/MergeCustomer"         OnClick="P:ModifyCustomer"               image="rename" TBD="Hemanth" />
+				<MenuItem Name="213"   Text="Delete Customer"                     weblink="Customers/DelCustomer"                      OnClick="F:frmDeleteCustomer"            image="cancel"          glennpassword="yes"  TBD="CHKR" />
+				<MenuItem Name="214"   Text="Events"                              weblink="CustomersMaintenance/ListOfEvents"          OnClick="F:frmListOfEvents"              image="report" TBD="DHR"/>
+				<MenuItem Name="215"   Text="Occasion Types"                      weblink="CustomersMaintenance/AddEditOccasions"      OnClick="F:frmAddEditOccasions"          image="report" TBD ="DHR"  />
+				<MenuItem Name="216"   Text="Follow Up Types"                     weblink="Customers/FollowupTypes"                    OnClick="F:frmFollowUpTypes"             image="report" TBD="CHKR"   />
+				<MenuItem Name="204"   Text="Customer Attributes"                 weblink="CustomersMaintenance/CustEditAttr"          OnClick="F:frmCustEditAttr"              image="customeredit32" TBD="DHR" />
+				<MenuItem Name="2192"  Text="List of Customer Sources"            weblink="CustomersMaintenance/ListOfCustomerSources" OnClick="F:frmListOfCustomerSources"     image="list"   TBD ="DHR" />
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="22" Text="Customer Lists">
+			<TopLevelMenu Name="220" Text="List/:Labels" image="reports">
+				<MenuItem Name="221"   Text="Customer List/Labels"                weblink="Sales/CustomerReport"                 OnClick="F:frmCustomerReport"            image="list" TBD="Manoj"/>
+				<MenuItem Name="222"   Text="Occasions"                           weblink="Sales/ListOfOccasion"                 OnClick="F:frmOccasionsList"             image="report" />
+				<MenuItem Name="203"   Text="Follow Up List"                      weblink="Sales/CustomerFollowup"               OnClick="F:frmCustomerFollowup"          image="followup"  />
+				<MenuItem Name="2190"  Text="Send Mass SMS"                       weblink="Sales/MassSMS" OnClick="F:frmMassSMS"                          image="followup" TBD="Manoj" />
+				<MenuItem Name="218"   Text="List Of Customer Warranties"         weblink="POsReportsnew/CustomerWarrantyReport" OnClick="F:frmListOfCustomerWarranty"    image="warranty"        ShowOnlyFor="Warranty" />
+				<MenuItem Name="2191"  Text="Customers Who Bought Certain items"  weblink="Sales/ItemsBoughtByCustomer"          OnClick="F:frmItemsBoughtByCustomer"       image="followup" TBD="Manoj" />
+				<MenuItem Name="630"   Text="Customer list by purchase total"     weblink="Sales/CustomerListByPurchaseTotal"    OnClick="F:frmCustomerListByPurchaseTotal" image="list" TBD="Manoj"/>
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="23" Text="Excel">
+			<TopLevelMenu Name="232"  Text="Excel" image="reports">
+				<MenuItem Name="230"   Text="Edit Import Template"                weblink="CustomersExcel/AddEditCustomerImportTemplate"                  OnClick="F:frmAddEditCustomerImportTemplate" image="list" TBD="DHR" />
+				<MenuItem Name="231"   Text="Import Customers From Excel"         weblink="CustomersExcel/AddEditCustomerImportTemplate?blnIsImport=true" OnClick="P:AddEditCustomerImportTemplate"    image="import" TBD="DHR" />
+				<MenuItem Name="233"   Text="Import Event Attendees"              weblink="CustomersExcel/ImportCustomerForEvent"                         OnClick="F:frmImportCustomerForEvent"        image="excel" TBD="DHR" />
+				<MenuItem Name="234"   Text="Import Occasions"                    weblink="CustomersExcel/ImportOccasions"                                OnClick="F:frmImportOccasions"               image="import" TBD="DHR" />
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="24" Text="Salesreps">
+			<TopLevelMenu Name="240" Text="Salesreps" image="salesman">
+				<MenuItem Name="241"   Text="Add/Edit A Salesrep"                 weblink="CustomersSalesman/Salesman"                OnClick="F:frmSalesman"                  image="salesman" TBD="DHR"/>
+				<MenuItem Name="242"   Text="Delete A Salesrep"                   weblink="Customers/Salesman"                        OnClick="F:frmDeleteSalesman"            image="cancel" TBD="CHKR" />
+				<MenuItem Name="243"   Text="Salesreps List"                      weblink="Customers/ListSalesman"		              OnClick="F:frmListSalesman"  image="report" TBD="CHKR"/>
+				<MenuItem Text="-" />
+				<MenuItem Name="2463"  Text="Post Salesrep Commission To A/P"     weblink="CustomersSalesReps/PaySalesmanComm"        OnClick="F:frmPaySalesmanComm"           image="dollar" TBD="Manoj"/>
+				<MenuItem Name="10333" Text="Commission Per Item"                 weblink="CustomersSalesReps/CommissionPerItem"      OnClick="F:frmCommissionPerItem"         image="sales1" TBD="Manoj"/>
+				<MenuItem Name="2411"  Text="Salesrep Sales Report"               weblink="CustomersSalesReps/SalesmanActivity"       OnClick="F:frmSalesmanActivity"   image="report" TBD="Manoj" />
+				<MenuItem Name="2413"  Text="Salesrep Invoice Commission Report"  weblink="CustomersSalesReps/invoiceComisionAmount"  OnClick="F:frminvoiceComisionAmount"     image="report" />
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="25" Text="Potentials">
+			<TopLevelMenu Name="250" Text="Prospects"  image="customeradd32" >
+				<MenuItem Name="251"   Text="Add A New Potential"                 weblink="CustomersPotentials/GetPotentialAccCode"       OnClick="F:frmPotentialAccCode"          image="customeradd32"  TBD="CHKR" />
+				<MenuItem Name="252"   Text="Edit A Potential"                    weblink="CustomersPotentials/EditPotential"             OnClick="F:frmSearchPotentialAccCode"    image="customeredit32"  TBD="CHKR" />
+				<MenuItem Name="253"   Text="Delete A Potential"                  weblink="Customers/PotentialCustomer"                   OnClick="F:frmDeletePotentialCustomer"   image="customerdelete32" TBD="CHKR"/>
+				<MenuItem Name="254"   Text="Potentials List / labels"            weblink="Sales/PotentialCustomerReport"                 OnClick="F:frmPotentialCustomerReport"   image="report" />
+				<MenuItem Name="256"   Text="Follow:Up List"                      weblink="CustomersPotentials/PotentialCustomerFollowup" OnClick="F:frmPotentialCustomerFollowup"              image="list"   TBD="CHKR"/>
+				<MenuItem Name="257"   Text="Edit Template"                       weblink="CustomersPotentials/AddEditPotentialCustImportTemplate" OnClick="F:frmAddEditPotentialCustImportTemplate"     image="list"   TBD="CHKR"/>
+				<MenuItem Name="258"   Text="Import Prospects From Excel"         weblink="CustomersPotentials/AddEditPotentialCustImportTemplate?blnIsImport=true" OnClick="P:AddEditPotentialCustImportTemplate"        image="excel" TBD="DHR"/>
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="17" Text="Statements">
+			<TopLevelMenu Name="171" Text="Statements:/ Aging" image="aging">
+				<MenuItem Name="172"   Text="Customer Statement"                  weblink="CustomerStatements/CustomersStatement"      OnClick="F:frmCustomerStatement"         image="statement"  TBD ="DHR"/>
+				<MenuItem Name="173"   Text="Customer Statement For All"          weblink="CustomerStatements/CustomerStatementAll"    OnClick="F:frmCustomerStatementAll"      image="statement"  TBD ="DHR"/>
+				<MenuItem Name="174"   Text="Summary Aging Report"                weblink="CustomerStatements/SummaryAgingReport"      OnClick="F:frmaraging"                   image="aging" />
+				<MenuItem Name="175"   Text="Detailed Aging Report"               weblink="CustomerStatements/DetailedAgingReport"     OnClick="F:frmAging"                     image="aging" />
+				<MenuItem Name="176"   Text="Customer Balances As Of A Date"      weblink="CustomerStatements/ArAsOfDate"              OnClick="F:frmArAsOfDate"                image="aging" TBD ="DHR"/>
+				<MenuItem Name="80312" Text="Detailed Aging As Of A Date"         weblink="CustomerStatements/DetailedAgingAsofADate"  OnClick="F:frmDetailedAgingAsOfADate"    image="aging" />
+				<MenuItem Name="177"   Text="Calculate Finance Charges"           weblink="CustomerStatements/CalculateFinanceCharges" OnClick="P:CalculateFinanceCharges"      image="aging" TBD ="DHR" />
+				<MenuItem Name="8031"  Text="List Of Monthly Payments Due"        weblink="CustomerStatements/ListofMonthlies"         OnClick="F:frmListofMonthlies"           image="salesgraph" TBD="Manoj" />
+				<MenuItem Name="80311" Text="Check A Customer Statement"          weblink="CustomerStatements/MemoInvDiffPrice"        OnClick="F:frmMemoInvDiffPrice"          image="aging" TBD ="DHR"  />
+			</TopLevelMenu>
+		</GroupMenuItem>
+	</MainLevelMenu>
+	<MainLevelMenu Name="3" Text="Styles">
+		<GroupMenuItem Name="30" Text="Styles / Tags" >
+			<TopLevelMenu Name="301"  Text="Styles" image="jewelry">
+				<MenuItem Name="302"   Text="Add/Edit A Style"                    weblink="Styles/AddStyle"                   OnClick="F:frmStyle"                     image="jewelry"   TBD="Phanindra" />
+				<MenuItem Name="3028"  Text="View A Style W.O. Costs"             weblink="Styles/ViewStyle"				  OnClick="P:frmStyle"                     image="jewelry"   TBD="Phanindra" />
+				<MenuItem Name="303"   Text="Delete A Style"                      weblink="Customers/DelStyle"                OnClick="F:frmDeleteStyle"               image="cancel"    TBD="CHKR"/>
+				<MenuItem Name="304"   Text="Modify Style No of A Style"          weblink="StylesTags/GetRenameStyle"         OnClick="F:frmRenameStyle"               image="rename"    TBD="CHKR"/>
+				<MenuItem Name="3045"  Text="Combine 2 Styles"                    weblink="StylesTags/GetCombie2Style"        OnClick="F:frmCombie2Style"              image="rename"    TBD="CHKR"/>
+				<MenuItem Name="305"   Text="Edit A Parent Style"                 weblink="Styles/StyleParent?partNo=false"   OnClick="F:frmStyleParent"               image="jewelry" TBD="PHN"/>
+				<MenuItem Name="3998"  Text="Quick Add Multiple Styles"           weblink="StylesTags/QuickAddMultipleStyles" OnClick="F:frmQuickAddMultipleStyles"    image="jewelry"   TBD="CHKR" />
+				<MenuItem Name="306"   Text="Look For Style By Vendor Style#"     OnClick="F:frmStyleByVendor"             image="jewelry" />
+				<MenuItem Text="-" />
+				<MenuItem Name="307"   Text="Styles/Inventory List"               weblink="Styles/PrintStoreInventory"        OnClick="F:frmPrintStoreInventory"       image="list" />
+				<MenuItem Name="308"   Text="Print Tags"                          weblink="StylesTags/GetPrintTags"           OnClick="F:frmPrintTags"                 image="pricefile"  TBD="CHKR" />
+				<MenuItem Name="309"   Text="Print Tags and Add To Stock"         weblink="StylesTags/GetPrintTagsWithStock"  OnClick="F:frmPrintTagsWithStock"        image="pricefile"  TBD="CHKR" />
+				<MenuItem Name="3010"  Text="Add Style Images"                    OnClick="F:frmImageGallery"              image="jewelry" TBD="LKS"/>
+				<MenuItem Name="3011"  Text="Import Style Images"                 OnClick="F:frmImportImages"              image="jewelry" TBD="LKS"/>
+				<MenuItem Text="-" />
+				<MenuItem Name="3037"  Text="Break a Piece"                       weblink="StylesTags/BreakAPiece"            OnClick="F:frmBreakAPiece"   image="jewelry" TBD="LKS" />
+				<MenuItem Name="3017"  Text="Make a Package"                      weblink="StylesTags/MakeAPackage"           OnClick="F:frmMakeAPackage"  image="jewelry" TBD="LKS" />
+				<MenuItem Name="3018"  Text="Break a Package"                     weblink="StylesTags/BreakAPackage"          OnClick="F:frmBreakAPackage" image="jewelry" TBD="LKS"/>
+				<MenuItem Name="3029"  Text="List of Packages"                    weblink="StyleTagsNew/ListOfPackages"       OnClick="F:frmListOfPackages"            image="jewelry" TBD="Neetha"/>
+				<MenuItem Text="-" />
+				<MenuItem Name="30296" Text="Mass Retrieve Certs"                 weblink="StylesTags/RetrieveCert"           OnClick="F:frmRetrieveCert"              image="jewelry" TBD="Manoj" />
+				<MenuItem Name="30298" Text="Mass Discontinue Styles"             weblink="StylesTags/MassDiscontuineStyles"  OnClick="F:frmMassDiscontuineStyles"     image="jewelry" TBD="Manoj" />
+				<MenuItem Text="-" />
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="33" Text="Store Inventory">
+			<TopLevelMenu Name="330" Text="Store:Inventory" image="salesman_inventory">
+				<MenuItem Name="339"   Text="Search/Print A Store Inventory"      weblink="Styles/PrintStoreInventory"                   OnClick="F:frmPrintStoreInventory"       image="printer" />
+				<MenuItem Name="3027"  Text="Inventory Count By Category"         weblink="StylesStoreInventory/InventoryCountByCat"     OnClick="F:frmInventoryCountByCat"          image="list" TBD ="DHR"  />
+				<MenuItem Name="2431"  Text="Inventory Count By Vendor"           weblink="StylesStoreInventory/InventoryCountByVendor"  OnClick="F:frmInventoryCountByVendor"    image="list" TBD ="DHR" />
+				<MenuItem Name="2433"  Text="Inventory Count By Case#"            weblink="StylesStoreInventory/InventoryCountByCase"    OnClick="F:frmInventoryCountByCase"        image="list" TBD ="DHR" />
+				<MenuItem Name="2432"  Text="Inventory Count By G/L Class"        weblink="StylesStoreInventory/InventoryCountByGLClass" OnClick="F:frmInventoryCountByGLClass"  image="list" TBD ="DHR" />
+				<MenuItem Name="3317"  Text="Diamond Inventory Report"            weblink="StylesStoreInventory/DiamondInventory"	     OnClick="F:frmDiamondInventory"           image="printer"  TBD="Phanindra" />
+				<MenuItem Text="-" />
+				<MenuItem Name="3310"  Text="History of Store Inventory"          weblink="StylesStoreInventory/HistoryOfStoreInvnt"     OnClick="F:frmHistoryOfStoreInvnt"       image="history"  TBD ="DHR" />
+				<MenuItem Name="3320"  Text="History Of A Vendor Style"           weblink="StylesStoreInventory/HistoryOfAVendorStyle"   OnClick="F:frmHistoryOfAVendorStyle"     image="list"     TBD ="DHR"/>
+				<MenuItem Name="6840"  Text="List of Items Below Min.Stock"       weblink="StylesStoreInventory/ItemsBelowMinStk"        OnClick="F:frmItemsBelowMinStk"          image="mfg1"     TBD ="DHR"/>
+				<MenuItem Name="3322"  Text="Inventory as of a date"              weblink="StylesStoreInventory/Inventoryasofdate"       OnClick="F:frmInventoryasofdate"         image="stock"    TBD ="DHR"/>
+				<MenuItem Text="-" />
+				<MenuItem Name="3315"  Text="Add Items To Stock"                  weblink="StylesStoreInventory/AddFinishedGoodsToStock" OnClick="F:frmAddFinishedGoodsToStock"   image="stock"  TBD="Hemanth"  />
+				<MenuItem Name="3316"  Text="Edit The Stock"                      weblink="StylesStoreInventory/EditInventory"           OnClick="P:EditInventory"                image="stock"  TBD="Hemanth"   />
+				<MenuItem Name="3323"  Text="Edit The Stock As Of Date"           weblink="StylesStoreInventory/EditInventoryAsOfDate"   OnClick="F:frmEditInventoryAsOfDate"     image="stock"  TBD="Hemanth"   />
+				<MenuItem Name="3321"  Text="Mass Edit The Stock"                 weblink="StylesStoreInventory/MassEditInventory"       OnClick="F:frmMassEditInventory"         image="stock"  TBD="Hemanth"   />
+				<MenuItem Name="33221" Text="Edit Showcase# of Styles"            weblink="StylesStoreInventory/EditShowCaseofStyles"    OnClick="F:frmEditShowCaseofStyles"      image="stock"  TBD="Hemanth"   />
+				<MenuItem Name="3314"  Text="Import Inventory From Excel(Overwrite)" weblink="StylesStoreInventory/ImportInvFromExcel"   OnClick="F:frmImportInvFromExcel"     image="stock"  TBD="LKS"/>
+				<MenuItem Name="30297" Text="Import Minimum Stock From Excel "    weblink="StylesStoreInventory/ImportMinimumStock"      OnClick="F:frmImportMinimumStock"        image="jewelry" TBD="DHR"/>
+				<MenuItem Name="1634"  Text="Inventory of WIP"                    weblink="StylesStoreInventory/InventoryOfWip"          OnClick="F:frmInventoryOfWip"            image="repair_shop"   TBD="DHR"  />
+				<MenuItem Name="1633"  Text="Adjust Stock Without Affecting GL"   weblink="StylesStoreInventory/AdjustStockNoAffectGL?AdjustStockNoAffectGL=true" OnClick="P:AdjustStockNoAffectGL"        image="stock"         TBD="DHR"  />
+			</TopLevelMenu>
+			<TopLevelMenu Name="3319" Text="Transfers" image="salesman_inventory">
+				<MenuItem Name="331"   Text="Send Items To Store(s)"              weblink="StylesTransfers/SendItemsToStores"   OnClick="F:frmSendItemsToStores"         image="transfer1"       ShowExcept="SingleStore" TBD="LKS" />
+				<MenuItem Name="332"   Text="Edit Store Transfer Log"             weblink="StylesTransfers/EditStoreTransfer"   OnClick="F:frmEditStoreTransfer"         image="edit"            ShowExcept="SingleStore" TBD="LKS" />
+				<MenuItem Name="333"   Text="Receive a Transfer"                  weblink="StylesTransfers/AckInvntLog"               image="transfer1"       ShowOnlyFor="Require_Ack" TBD="LKS" />
+				<MenuItem Text="-" />
+				<MenuItem Name="334"   Text="Open Transfers"                      weblink="StylesTransfers/ListOfUnacked"       OnClick="F:frmListOfUnacked"             image="list"            ShowExcept="SingleStore"  TBD="Neetha" />
+				<MenuItem Name="337"   Text="List of All Transfers"               weblink="StylesTransfers/ListOfTransfer"      OnClick="F:frmListOfTransfer"            image="list"            ShowExcept="SingleStore"  TBD="Neetha" />
+				<MenuItem Name="3370"  Text="Transfers By Style#"                 weblink="StylesTransfers/StyleTransfer"       OnClick="F:frmStyleTransfer"             image="list"            ShowExcept="SingleStore" TBD="LKS" />
+				<MenuItem Text="-" />
+				<MenuItem Name="335"   Text="Cancel Inventory Transfer Log"       weblink="StylesTransfers/CancelInvntTransfer" OnClick="F:frmCancelInvntTransfer"       image="cancel"          ShowExcept="SingleStore"  TBD="Manoj" />
+				<MenuItem Name="336"   Text="Print A Transfer Log"                weblink="StylesTransfers/ReprintStoreInvnt"   OnClick="F:frmReprintStoreInvnt"         image="printer"         ShowExcept="SingleStore" TBD="LKS" />
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="32" Text="Physical Inventory">
+			<TopLevelMenu Name="320" Text="Physical:Inventory" image="inventory">
+				<MenuItem Name="327"   Text="Check The Physical Inventory"           weblink="StylesPhysicalInventory/chkphysicalinventory"                OnClick="F:frmchkphysicalinventory"      image="check"    TBD="Manoj"/>
+				<MenuItem Name="328"   Text="Compare Physical To Inventory"          weblink="StylesPhysicalInventory/inventorychk"                        OnClick="F:frminventorychk"              image="printer"  TBD="Manoj" />
+				<MenuItem Name="329"   Text="Make Inventory Match Physical"          weblink="StylesPhysicalInventory/MakeMatch"                           OnClick="F:frmMakeMatch"                 image="check"    TBD="Manoj"/>
+				<MenuItem Name="3210"  Text="Print The Physical Inventory"           weblink="StylesPhysicalInventory/PrintPhysicalInventory"              OnClick="F:frmPrintPhysicalInventory"    image="printer"  TBD="Manoj"/>
+				<MenuItem Name="3211"  Text="Clear Phys.Inventory - Start New Cycle" weblink="StylesPhysicalInventory/clearPhysicalInventory"              OnClick="F:frmclearPhysicalInventory"    image="clear"    TBD="Manoj" />
+				<MenuItem Name="3212"  Text="Inventory Adjustments Phys.inventory"   weblink="StylesStoreInventory/HistoryOfStoreInvnt?IsPhysicalInv=true" OnClick="P:AdjPhysicalInventory"         image="inventory" TBD="Manoj" />
+				<MenuItem Name="3213"  Text="Compare Phys. To Invent. As Of A Date"  weblink="StylesPhysicalInventory/ComparePhysicaltoInventoryAsofDate"  OnClick="F:frmComparePhysicaltoInventoryAsofDate" image="printer" TBD="Manoj" />
+				<MenuItem Name="3214"  Text="Make Invent. Match Phys. As Of A Date"  weblink="StylesPhysicalInventory/MatchPhysicalInventoryAsOfDate"      OnClick="F:frmMatchPhysicalInventoryAsOfDate" image="printer" TBD="Manoj" />
+				<MenuItem Name="3215"  Text="Check Last Physical Inventory Match"    weblink="StylesPhysicalInventory/checkPhysicalmatched"                OnClick="F:frmcheckPhysicalmatched"      image="check"    TBD="Manoj"/>
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="34" Text="Excel">
+			<TopLevelMenu Name="341" Text="EXCEL"  image="sku">
+				<MenuItem Name="342"   Text="Add/Edit Import Styles Template"     weblink="StylesStoreInventory/GetStylesImportTemplate" OnClick="F:frmGetStylesImportTemplate"   image="list" TBD="LKS"/>
+				<MenuItem Name="343"   Text="Import Styles From Excel Sheet"      weblink ="StylesStoreInventory/GetStylesImportTemplate?isImport=true"  OnClick="P:AddEditStylesImportTemplate"  image="excel"  TBD="LKS"/>
+				<MenuItem Name="347"   Text="Import Inven. From Excel(Overwrite)" weblink="StylesStoreInventory/ImportInvFromExcel" OnClick="F:frmImportInvFromExcel"     image="stock"  TBD="DHR"/>
+				<MenuItem Name="348"   Text="Add To Inventory Using Excel"        OnClick="F:frmAddINVFromExcel"           image="stock" />
+			</TopLevelMenu>
+			<TopLevelMenu Name="3412" Text="Styles:Admin"  image="sku">
+				<MenuItem Name="3012"  Text="Edit Warranties"                     weblink="StylesAdmin/Warranties"        OnClick="F:frmWarranties"                image="printer"         ShowOnlyFor="Warranty" TBD="DHR" />
+				<MenuItem Name="3013"  Text="Default Cost Multiplier"             weblink="StylesAdmin/CostMultiplier"    OnClick="F:frmCostMultiplier"            image="dollar"  TBD="DHR"/>
+				<MenuItem Name="3014"  Text="Categories, Metals,.."               weblink="StylesAdmin/ChangeOption"      OnClick="F:frmChangeOption"              image="jewelry"  TBD="DHR"/>
+				<MenuItem Name="3015"  Text="Subcategories, Sub-Brands"           weblink="StylesAdmin/ChangeSubcategory" OnClick="F:frmChangeSubcategory"         image="jewelry"  TBD="DHR"/>
+				<MenuItem Name="3118"  Text="Diamond Color/Clarity/.. Options"    weblink="StylesAdmin/ChangeLotOption"   OnClick="F:frmChangeLotOption"           image="jewelry"  TBD="DHR"/>
+				<MenuItem Name="3019"  Text="Style Attributes"                    weblink="StylesAdmin/EditStyleAttr"     OnClick="F:frmEditStyleAttr"             image="jewelry"  TBD="DHR"/>
+				<MenuItem Name="30190" Text="Item Types"                          weblink="StylesAdmin/addedititemtype"   OnClick="F:frmaddedititemtype"           image="list"  TBD="DHR"/>
+				<MenuItem Text="-" />
+				<MenuItem Name="3025"  Text="Partners"                            weblink="StylesAdmin/Partners"                   OnClick="F:frmPartners"                  image="download" TBD="DHR" />
+				<MenuItem Name="3026"  Text="Delete Styles Using Excel"           weblink="StylesAdmin/GetDeleteStylesUsingExcel"  OnClick="F:frmDeleteStylesUsingExcel"    image="download" TBD="CHKR"/>
+				<MenuItem Name="18110" Text="Daily Metal Prices"                  weblink="SalesBuyGold/DailyMetalPrices"          OnClick="F:frmDailyMetalPrices"          image="inventory" TBD="Phanindra" />
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="35" Text="Web">
+			<TopLevelMenu Name="351" Text="Web/:Rapnet"  image="sku">
+				<MenuItem Name="3020"  Text="Upload to Web"                       OnClick="F:frmUpldToWeb"                 image="jewelry"         ShowExcept="Shopify" />
+				<MenuItem Name="3030"  Text="Upload Products to Shopify"          OnClick="F:frmUploadShopifyProducts"     image="jewelry"         ShowOnlyFor="Shopify" />
+				<MenuItem Name="3034"  Text="Upload To SellBrite"                 OnClick="F:frmUploadSellBriteProducts"   image="upload"          ShowOnlyFor="Test_Mode" />
+				<MenuItem Name="3024"  Text="Upload To Rapnet"                    OnClick="F:frmUploadToRapnet"            image="upload" />
+				<MenuItem Name="3035"  Text="Download Shopify Orders"             weblink="Shopify/DownloadShopifyOrdertoInvoice" OnClick="F:frmDownloadShopifyOrdertoInvoice" image="download"  TBD="VKT" />
+				<MenuItem Text="-" />
+				<MenuItem Name="3021"  Text="Download Rapnet/Idex Prices"         weblink="Rapnet/DownloadRapnetPrice"    OnClick="F:frmDownloadRapnetPrice"       image="download"    TBD="VKT" />
+				<MenuItem Name="3022"  Text="Update Prices Based On Rapnet/Idex"  weblink="Rapnet/UpdateDiamondListPrice" OnClick="F:frmUpdateDiamondListPrice"    image="update"      TBD="VKT"/>
+				<MenuItem Name="3023"  Text="Print Rapnet/Idex Prices"            weblink="Rapnet/PrintRapnetPrice"       OnClick="F:frmPrintRapnetPrice"          image="update"      TBD="VKT"/>
+				<MenuItem Name="3016"  Text="Rapnet/Idex User Info"               weblink="Rapnet/UpdateRapPrice"         OnClick="F:frmUpdateRapPrice"            image="users"       TBD="VKT"/>
+			</TopLevelMenu>
+		</GroupMenuItem>
+	</MainLevelMenu>
+	<MainLevelMenu Name="500" Text="Wholesale" ShowOnlyFor="Wholesale">
+		<GroupMenuItem Name="5010" Text="Sales Orders">
+			<TopLevelMenu Name="5011" Text="Sales Orders" image="sales">
+				<MenuItem Name="5026"  Text="Make/Modify A PO"                    OnClick="F:frmSelectCustomerPO"          image="sales1" />
+				<MenuItem Name="5015"  Text="Modify Customer Code of A PO"        weblink="WholesaleOrders/ModifyCustomerPo" OnClick="F:frmModifyCustomer_PO"         image="sales" TBD="Hemanth"/>
+				<MenuItem Name="5019"  Text="Approve PO(s)"                       OnClick="F:frmApprovePO"                 image="sales1" />
+				<MenuItem Name="5020"  Text="Delete A PO"                         weblink="Customers/frmDeleteCustPO"      OnClick="F:frmDeleteCustPO"               image="cancel" TBD="CHKR"/>
+				<MenuItem Name="5021"  Text="Close A PO"                          OnClick="F:frmCloseCustPO"               image="cancel" />
+				<MenuItem Text="-" />
+				<MenuItem Name="5016"  Text="Reprint A PO"                        OnClick="F:frmCustomerPOReport"          image="printer"  TBD="Dhar" />
+				<MenuItem Name="5017"  Text="Reprint A PO - Open Items"           OnClick="P:POReportOpenItems"            image="printer"  TBD="Dhar" />
+				<MenuItem Name="5018"  Text="Status Of A PO"                      OnClick="F:frmStatusofOrder"             image="printer" />
+				<MenuItem Name="5022"  Text="List Of POs"                         OnClick="F:frmListofCustPO"              image="list"     TBD="Dhar" />
+				<MenuItem Name="5023"  Text="Add/Edit PO Order Types"             OnClick="F:frmAddOrderTypeOfAPO"         image="manufacturing" TBD="MNJ" />
+				<MenuItem Name="5024"  Text="Order Style Tracking"                OnClick="F:frmOrderStyleTracking"        image="styletracking" TBD="MNJ" />
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="75030" Text="Invoices" image="sales1">
+			<TopLevelMenu Name="5030" Text="Invoices" image="sales1">
+				<MenuItem Name="5031"  Text="Invoice From A PO"                   OnClick="P:InvoicefromPO"                image="invoice1" />
+				<MenuItem Name="5032"  Text="Invoice Multiple POs"                OnClick="P:InvoicefromMultiplePO"        image="invoice1" />
+				<MenuItem Name="5033"  Text="PO Quick Ship"                       OnClick="F:frmPOQuickShip"               image="invoice1" />
+				<MenuItem Name="5034"  Text="Invoice Not From A PO"               OnClick="P:InvoiceNotfromPO"             image="sales1" />
+				<MenuItem Name="5035"  Text="Edit an Invoice"                     weblink="Invoice/GetEditInvoice"         OnClick="P:EditInvoice"                  image="sales1" TBD="CHKR" />
+				<MenuItem Text="-" />
+				<MenuItem Name="5036"  Text="Reprint Invoice"                     weblink="ListOfItemsSold/PrintInvoice"   OnClick="F:frmReprintInvoice"            image="printer" TBD="Hemanth"/>
+				<MenuItem Name="5038"  Text="Invoice Status"                      weblink="SalesMemos/InvoiceStatus"       OnClick="F:frmInvoiceStatus"             image="printer"  TBD="Neetha" />
+				<MenuItem Name="5039"  Text="Style Tracking"                      weblink="SalesMemos/StyleTracking"       OnClick="F:frmStyleTracking"             image="styletracking"  TBD="MNJ" />
+				<MenuItem Name="5040"  Text="Statement of Invoices"               weblink="ListOfItemsSold/StatementofInvoice"  OnClick="F:frmStatementofInvoice"   image="sales" TBD="Hemanth"/>
+				<MenuItem Name="5041"  Text="Statement of Return Invoices"        weblink="ListOfItemsSold/StatementofInvoice?Statereturn=true" OnClick="P:StatementofReturnInvoice"     image="list" TBD="Hemanth" />
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="75050" Text="Memos" image="special1">
+			<TopLevelMenu Name="5050" Text="Memos" image="special1">
+				<MenuItem Name="5051"  Text="Memo From A PO"                      OnClick="P:MemofromPO"                   image="invoice1" />
+				<MenuItem Name="5052"  Text="Memo Multiple POs"                   OnClick="P:MemofromMultiplePO"           image="invoice1" />
+				<MenuItem Name="5053"  Text="Memo Not From A PO"                  OnClick="P:MemoNotfromPO"                image="invoice2" />
+				<MenuItem Name="5054"  Text="Edit A Memo"                         OnClick="P:EditMemo"                     image="invoice1" />
+				<MenuItem Name="5055"  Text="Modify Memo's Cust.Code"             weblink="WholesaleMemos/ModifyInvCusCode?iscustcode=true"                      OnClick="P:ModifyMemos'sCust.Code"       image="invoice_edit" TBD="CHKR"/>
+				<MenuItem Name="5056"  Text="Delete A Memo"                       weblink="Customers/DelMemo"              OnClick="F:frmDeleteMemo"                image="cancel"    TBD="CHKR" />
+				<MenuItem Text="-" />
+				<MenuItem Name="5057"  Text="Reprint Memo"                        weblink="SalesMemos/ReprintMemo"                  OnClick="P:ReprintMemo"                  image="printer" TBD="MNJ"/>
+				<MenuItem Name="5058"  Text="Reprint Memo, Open Items Only"       weblink="SalesMemos/ReprintMemo?isopenmemo=true"  OnClick="P:ReprintOpenMemoItems"         image="printer"       TBD="MNJ" />
+				<MenuItem Name="5059"  Text="Status of A Memo"                    weblink="SalesMemos/MemoStatus"                   OnClick="P:MemoStatus"                   image="list"          TBD="Neetha"/>
+				<MenuItem Name="5061"  Text="Style Tracking"                      weblink="SalesMemos/StyleTracking"                OnClick="F:frmStyleTracking"             image="styletracking" TBD="MNJ" />
+				<MenuItem Name="5062"  Text="Statement of Memos"                  weblink="SalesMemos/StatementofMemo"              OnClick="F:frmStatementofMemo"           image="statementofmemo" TBD="MNJ" />
+				<MenuItem Name="5063"  Text="Open Memo Items"                     weblink="SalesMemos/ListMemodOut"                 OnClick="F:frmListMemodOut"              image="list"          TBD="MNJ" />
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="7014" Text="Payments">
+			<TopLevelMenu Name="7141" Text="Payments:Credits" image="bankaccounts">
+				<MenuItem Name="7142"  Text="Add a Cash Receipt"                  weblink="SalesPaymentsCredits/AddCashReceipt"      OnClick="F:frmAddCashReceipt"            image="money" />
+				<MenuItem Name="7143"  Text="Edit a Cash Receipt/Refund"          weblink="SalesPaymentsCredits/EditCashReceipt"     OnClick="F:frmEditCashReceipt"           image="money" />
+				<MenuItem Name="7144"  Text="Reprint Cash Receipt/Refund"         weblink="SalesPaymentsCredits/ReprintReceipt"      OnClick="F:frmReprintReceipt"            image="printer" />
+				<MenuItem Name="7145"  Text="Delete Cash Receipt/Refund"          weblink="SalesPaymentsCredits/DeleteReceipt"       OnClick="F:frmDeleteReceipt"             image="cancel" />
+				<MenuItem Name="71450" Text="Modify Cust.Code of A Receipt"       weblink="SalesPaymentsCredits/ModifyAcc_ofReceipt" OnClick="F:frmModifyAcc_ofReceipt"       image="money" />
+				<MenuItem Name="71421" Text="Issue A Customer Refund"             weblink="SalesPaymentsCredits/CustomerRefund"      OnClick="P:CustomerRefund"               image="money" />
+				<MenuItem Text="-" />
+				<MenuItem Name="7146"  Text="Add/Edit Credit"                     weblink="SalesPaymentsCredits/AddEditCredit"       OnClick="F:frmAddEditCredit"             image="credit" />
+				<MenuItem Name="7147"  Text="Reprint Credit"                      weblink="SalesPaymentsCredits/ReprintCredit"       OnClick="F:frmReprintCredit"             image="percet_sign" />
+				<MenuItem Name="7148"  Text="Delete Credit"                       weblink="SalesPaymentsCredits/DeleteCredit"        OnClick="F:frmDeleteCredit"              image="cancel" />
+				<MenuItem Name="71415" Text="Delete Adj. Receivable"              weblink="SalesPaymentsCredits/DeleteAdjRcvable"    OnClick="F:frmDeleteAdjRcvable"          image="cancel" />
+				<MenuItem Text="-" />
+				<MenuItem Name="7149"  Text="List Of Cash Receipts / Credits"     weblink="ListOfItemsSold/RcblCreditByTimeFrame"    OnClick="F:frmRcblCreditByTimeFrame"     image="payment" TBD="Hemanth"/>
+				<MenuItem Name="71410" Text="Payment Summary by payment type"     weblink="ListOfItemsSold/SummeryByPaymentType"     OnClick="F:frmSummeryByPaymentType"      image="list" TBD="Hemanth"/>
+				<MenuItem Name="71412" Text="Add/Edit Payment Types"              weblink="ListOfItemsSold/AddPaymentTypes"          OnClick="F:frmAddPaymentTypes"           image="amex" TBD="Hemanth"/>
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="50017" Text="Statements">
+			<TopLevelMenu Name="50171" Text="Statements:/ Aging" image="aging">
+				<MenuItem Name="50172" Text="Customer Statement"                  weblink="CustomerStatements/CustomersStatement"      OnClick="F:frmCustomerStatement"         image="statement"  TBD ="DHR"/>
+				<MenuItem Name="50173" Text="Customer Statement For All"          weblink="CustomerStatements/CustomerStatementAll"    OnClick="F:frmCustomerStatementAll"      image="statement"  TBD ="DHR"/>
+				<MenuItem Name="50174" Text="Summary Aging Report"                weblink="CustomerStatements/SummaryAgingReport"      OnClick="F:frmaraging"                   image="aging" />
+				<MenuItem Name="50175" Text="Detailed Aging Report"               weblink="CustomerStatements/DetailedAgingReport"     OnClick="F:frmAging"                     image="aging" />
+				<MenuItem Name="50176" Text="Customer Balances As Of A Date"      weblink="CustomerStatements/ArAsOfDate"              OnClick="F:frmArAsOfDate"                image="aging" />
+				<MenuItem Name="50312" Text="Detailed Aging As Of A Date"         weblink="CustomerStatements/DetailedAgingAsofADate"  OnClick="F:frmDetailedAgingAsOfADate"    image="aging" />
+				<MenuItem Name="50177" Text="Calculate Finance Charges"           weblink="CustomerStatements/CalculateFinanceCharges" OnClick="P:CalculateFinanceCharges"      image="aging" />
+				<MenuItem Name="50311" Text="Check A Customer Statement"          weblink="CustomerStatements/MemoInvDiffPrice"        OnClick="F:frmMemoInvDiffPrice"          image="aging" />
+			</TopLevelMenu>
+		</GroupMenuItem>
+	</MainLevelMenu>
+	<MainLevelMenu Name="5" Text="Tagging">
+		<GroupMenuItem Name="50" Text="Tagging" >
+			<TopLevelMenu Name="501" Text="Tags" image="shipping" >
+				<MenuItem Name="502"   Text="Print Tags and Add To Stock"         weblink="StylesTags/GetPrintTagsWithStock"     OnClick="F:frmPrintTagsWithStock"        image="pricefile"  TBD="CHKR" />
+				<MenuItem Name="503"   Text="Print Tags Without Adding To Stock"  weblink="StylesTags/GetPrintTags"              OnClick="F:frmPrintTags"                 image="pricefile"  TBD="CHKR" />
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="5012" Text="Generic" >
+			<TopLevelMenu Name="5013" Text="Generic:Tags" image="shipping" >
+				<MenuItem Name="5014"  Text="Generic Tags"                        weblink="Tagging/GetGenericTags"               OnClick="F:frmGenericTags"               image="pricefile"   TBD="CHKR" />
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="51" Text="Tagging" >
+			<TopLevelMenu Name="511" Text="Tags:Setup" image="shipping" >
+				<MenuItem Name="512"   Text="RFID Printer Margins"                weblink="TaggingTagsSetUp/TagPrinterMargins"   OnClick="F:frmTagPrinterMargins"         image="printer" TBD="DHR"/>
+				<MenuItem Name="513"   Text="Tag Price Multiplier"                weblink="TaggingTagsSetUp/TagPriceMultiplier"  OnClick="F:frmTagPriceMultiplier"        image="printer" TBD="DHR" />
+				<MenuItem Name="514"   Text="Set up Printer Port"                 weblink="TaggingTagsSetUp/DefaultPrinterPorts" OnClick="F:frmDefaultPrinterPorts"       image="printer" TBD="DHR" />
+				<MenuItem Name="516"   Text="Set up Label Port"                   weblink="TaggingTagsSetUp/LabelPrinterSetup"   OnClick="F:frmLabelPrinterSetup"         image="printer" TBD="DHR" />
+				<MenuItem Name="515"   Text="Calibrate Tag Printer"               weblink="TaggingTagsSetUp/TagCalibration"      OnClick="F:frmTagCalibration"            image="printer" TBD="DHR" />
+				<MenuItem Name="517"   Text="Tag Printers Set Up"                 weblink="TaggingTagsSetUp/AddEditDeleteTagPrinterSetUp" OnClick="F:frmAddEditDeleteTagPrinterSetUp" image="printer" TBD="DHR" />
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="52" Text="Tagging" >
+			<TopLevelMenu Name="521" Text="Templates" image="shipping" >
+				<MenuItem Name="522"   Text="Default Tag Template"                weblink="TaggingTemplates/SetUpTagTemplate"          OnClick="F:frmSetUpTagTemplate"          image="printer" TBD="DHR" />
+				<MenuItem Name="524"   Text="Alternate Tag Template"              weblink="TaggingTemplates/AlternateSetUpTagTemplate" OnClick="F:frmAlternateSetUpTagTemplate" image="printer" TBD="DHR" />
+				<MenuItem Name="5240"  Text="Set Up Default Diamond Label Template" weblink="TaggingTemplates/SetupDiamondTemplate"    OnClick="F:frmSetupDiamondTemplate"      image="jewelry" TBD="DHR" />
+				<MenuItem Name="5241"  Text="Alternate Diamond Label Templates"   weblink="TaggingTemplates/AlternateSetupDiamondTemp" OnClick="F:frmAlternateSetupDiamondTemp" image="jewelry" TBD="DHR" />
+				<MenuItem Name="523"   Text="Auto Description Template"           weblink="TaggingTemplates/AutoDescription"           OnClick="F:frmAutoDescription"           image="printer" TBD="DHR" />
+			</TopLevelMenu>
+		</GroupMenuItem>
+	</MainLevelMenu>
+
+	<MainLevelMenu Name="6" Text="Payables" >
+		<GroupMenuItem Name="60" Text="Bills" >
+			<TopLevelMenu Name="601" Text="Bills" image="bills">
+				<MenuItem Name="602"   Text="Add A Bill"                          weblink="AccountsPayable/AddBill"      OnClick="F:frmAddBill"                   image="bills" TBD="SVA" />
+				<MenuItem Name="603"   Text="Enter Memo Invoice from Vendor"      OnClick="F:frmnewvsfm"                   image="bills" TBD="SVA" />
+				<MenuItem Name="6031"  Text="Enter Memo Invoice for Ship.Charges" OnClick="P:VSFMForShipping"              image="bills" />
+				<MenuItem Name="610"   Text="Add A Bill for Job Bags"             OnClick="P:AddBillforJobbag"             image="bills" />
+				<MenuItem Name="6010"  Text="Add A Bill Without Styles"           OnClick="F:frmAddBillWoStyles"           image="bills" />
+				<MenuItem Name="619"   Text="Add Additional Charges for A Bill"   OnClick="P:AdditionalChargesForABill"    image="list" />
+				<MenuItem Name="6011"  Text="Add A Return"                        OnClick="P:AddAReturn"                   image="bills" />
+				<MenuItem Name="604"   Text="Edit A Bill/Return"                  OnClick="F:frmEditBill"                  image="bills" />
+				<MenuItem Name="627"   Text="Return A Bill for Job Bags"          OnClick="F:frmReturnBillForJobbag"       image="bills" />
+				<MenuItem Name="628"   Text="Return Items for a Job Bag"          OnClick="P:AddBillReturnItemsForJobbag"  image="bills" />
+				<MenuItem Name="626"   Text="Modify Vendor Code Of A Bill"        OnClick="F:frmModifyVendorOfABill"       image="list" />
+				<MenuItem Text="-" />
+				<MenuItem Name="605"   Text="Reprint A Bill/Return"               weblink="AccountsPayable/RePrintBill"           OnClick="F:frmPrintBill"                 image="printer" />
+				<MenuItem Name="606"   Text="Print A Bill By Account No"          weblink="AccountsPayable/PrintBillAccNo"        OnClick="F:frmPrintBillAccNo"            image="printer" />
+				<MenuItem Name="607"   Text="Delete A Bill"                       weblink="Customers/frmDeleteBill"               OnClick="F:frmDeleteBill"                image="cancel"   TBD="CHKR" />
+				<MenuItem Name="608"   Text="List Of Bills"                       weblink="AccountsPayable/ListofBills"           OnClick="F:frmListofBills"               image="list" />
+				<MenuItem Name="609"   Text="Status Of Styles On A Bill"          weblink="PayablesBills/StatusOfStylesOnABill"   OnClick="F:frmStatusOfStylesOnABill"     image="list"  TBD-="Neetha"/>
+				<MenuItem Name="618"   Text="Export A Bill"                       weblink="AccountsPayable/ExportBillConsignment" OnClick="F:frmExportBillConsignment"     image="list" TBD="Srv"/>
+				<MenuItem Name="620"   Text="List Of Items Purchased"             weblink="PayablesBills/ListofItemsPurchased"    OnClick="F:frmListofItemsPurchased"      image="list" TBD-="Neetha"/>
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="61" Text="Vendors" >
+			<TopLevelMenu Name="611" Text="Vendors" image="vendor">
+				<MenuItem Name="612"   Text="Add A Vendor"                        weblink="AccountsPayable/AddEditVendor"         OnClick="P:AddVendor"                    image="vendor" TBD="SVA"/>
+				<MenuItem Name="613"   Text="Edit A Vendor"                       weblink="AccountsPayable/EditVendor"            OnClick="F:frmSearchVendor"              image="vendor" TBD="SVA"/>
+				<MenuItem Name="6120"  Text="View A Vendor"                       weblink="AccountsPayable/EditVendor?IsVwVndor=true"           OnClick="P:EditVendor"              image="vendor" TBD="SVA"/>
+				<MenuItem Name="614"   Text="Modify A Vendor Code or Combine 2 Vendors" weblink="PayablesVendors/RenameVendor"    OnClick="F:frmRenameVendor"              image="rename" TBD="Neetha"/>
+				<MenuItem Name="615"   Text="Delete A Vendor"                     weblink="PayablesVendors/GetDeleteVendor"       OnClick="P:DeleteVendor"                 image="cancel" TBD="CHKR" />
+				<MenuItem Name="616"   Text="Vendors List"                        weblink="PayablesVendors/ListofVendors"         OnClick="F:frmListofVendors"             image="list" TBD="Neetha" />
+				<MenuItem Name="617"   Text="Import Vendors From Excel"           OnClick="F:frmImportVendorsFromExcel"    image="excel" />
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="62" Text="Statements" >
+			<TopLevelMenu Name="621" Text="Statements" image="statements">
+				<MenuItem Name="622"   Text="Vendor Statement"                    weblink="AccountsPayable/VendorStatement"       OnClick="F:frmVendorStatement"           image="statement" />
+				<MenuItem Name="623"   Text="A/P Aging Report"                    weblink="AccountsPayable/AgingReport"           OnClick="F:frmAgingReport"               image="aging" TBD="SRV"/>
+				<MenuItem Name="624"   Text="Vendor Balances As Of A Date"        weblink="AccountsPayable/ApAsOfDate"            OnClick="F:frmApAsOfDate"                image="apagingreport" />
+				<MenuItem Name="625"   Text="Vendor Statement Issues"             weblink="AccountsPayable/VendStatIssues"        OnClick="F:frmVendStatIssues"            image="statement" TBD="SRV" />
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="63" Text="Payments">
+			<TopLevelMenu Name="631" Text="Payments" image="payments">
+				<MenuItem Name="632"   Text="Issue A Check For One Vendor"        weblink="AccountsPayable/GetVendor"    OnClick="P:IssueCheckOneVendor"          image="check" TBD="SRV"/>
+				<MenuItem Name="633"   Text="Issue Checks For All Vendors"        OnClick="F:frmIssueChecksForAllVendors"  image="check" />
+				<MenuItem Name="634"   Text="Issue A Check Without Bill"		  weblink="AccountsPayable/IssueCheckWOBill"      OnClick="F:frmIssueCheckWOBill"          image="check" TBD="SRV"/>
+				<MenuItem Name="635"   Text="Issue A Check Without Vendor"        weblink="AccountsPayable/IssueCheckWOVendor"    OnClick="F:frmIssueCheckWOVendor"        image="check" TBD="SRV"/>
+				<MenuItem Name="639"   Text="Apply A Check To Clear Bills"        weblink="AccountsPayable/ApplyACheck"           OnClick="F:frmApplyACheck"               image="check" TBD="SRV"/>
+				<MenuItem Name="640"   Text="Apply All unapplied Checks"          weblink="AccountsPayable/ApplyAllUnappliedCheck" OnClick="F:frmApplyAllUnappliedCheck"    image="check" TBD="SRV"/>
+				<MenuItem Text="-" />
+				<MenuItem Name="636"   Text="Cancel A Check"                      weblink="AccountsPayable/GetCancelCheck"        OnClick="F:frmCancelCheck"               image="cancel" TBD="CHKR" />
+				<MenuItem Name="6313"  Text="Edit A Check"                        weblink="AccountsPayable/EditCheck"             OnClick="F:frmEditCheck"                 image="check" />
+				<MenuItem Name="637"   Text="Check Register"                      weblink="AccountsPayable/ListofChecks"          OnClick="F:frmListofChecks"              image="list" />
+				<MenuItem Name="6311"  Text="List of Voided Checks"               weblink="AccountsPayable/ListofVoidedChecks"    OnClick="F:frmListofVoidedChecks"        image="list" />
+				<MenuItem Name="6310"  Text="1099 Report"                         weblink="AccountsPayable/Report1099"            OnClick="F:frmReport1099"                image="list" />
+				<MenuItem Name="638"   Text="Status Of A Check"                   weblink="AccountsPayable/CheckPrintStatus"      OnClick="F:CheckPrintStatus"             image="list" />
+				<MenuItem Name="6312"  Text="Reprint A Check"                     weblink="AccountsPayable/ReprintCheck"          OnClick="F:frmReprintCheck"              image="list" />
+			</TopLevelMenu>
+			<TopLevelMenu Name="671" Text="Credit:Card" image="payments">
+				<MenuItem Name="672"   Text="Pay One Vendor Using Credit Card"    weblink="AccountsPayable/AskVendorCode"    OnClick="F:frmAskVendorCode"                image="check" TBD="SRV" />
+				<MenuItem Name="677"   Text="Pay Multiple Vendors Using Credit Card" OnClick="F:frmPayMultiVendorByCC"        image="check" TBD="SRV" />
+				<MenuItem Name="673"   Text="Delete Credit Card Log"              weblink="AccountsPayable/GetDeleteCcrdLog"      OnClick="F:frmDeleteCcrdLog"             image="cancel" TBD="CHKR" />
+				<MenuItem Name="674"   Text="Reprint Credit Card Log"             OnClick="F:frmReprintCcrdLog"               image="check" />
+				<MenuItem Name="675"   Text="Credit Card Transactions"            weblink="AccountsPayable/CreditCardTransactions" OnClick="F:frmCcrdTransaction"           image="check" />
+				<MenuItem Name="676"   Text="Pay the Credit Card Company"         OnClick="F:frmAskCCVendorCode"           image="check" />
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="64" Text="Credits">
+			<TopLevelMenu Name="641" Text="Credits" image="credits">
+				<MenuItem Name="642"   Text="Add A.P. Credits"                    OnClick="P:APCredits"                    image="credit" />
+				<MenuItem Name="648"   Text="Edit A.P. Credits"                   OnClick="F:frmEditAPCredits"             image="check" />
+				<MenuItem Name="643"   Text="Reprint A.P. Credit"                 weblink="AccountsPayable/RePrintAPCredit"       OnClick="F:frmRePrintAPCredit"           image="credit" />
+				<MenuItem Name="644"   Text="Issue A Vendor Credit Without Bill#" weblink="AccountsPayable/AddEditCreditWOBill"   OnClick="F:frmAddEditCreditWOBill"       image="credit" TBD="SRV"/>
+				<MenuItem Name="645"   Text="Cancel A Vendor Credit"              weblink="PayablesCredits/Getcancelcredit"       OnClick="F:frmCancelCredit"              image="cancel" TBD="CHKR" />
+				<MenuItem Name="646"   Text="List Of Vendor Credits"              weblink="AccountsPayable/ListOfVendorCredits"   OnClick="F:frmListOfVendorCredits"       image="list" TBD="Neetha" />
+				<MenuItem Name="647"   Text="Apply A Credit To Clear Bills"       OnClick="F:frmApplyACredit"              image="check" />
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="65" Text="Consignments" >
+			<TopLevelMenu Name="651" Text="Consignments" image="bills">
+				<MenuItem Name="652"   Text="Add A Consignment"                   OnClick="F:frmAddConsignments"           image="bills" TBD="SVA" />
+				<MenuItem Name="653"   Text="Edit A Consignment"                  OnClick="F:frmEditConsignment"           image="bills" TBD="SVA" />
+				<MenuItem Name="654"   Text="Reprint A Consignment"               OnClick="F:frmPrintConsignment"          image="printer" TBD="SVA" />
+				<MenuItem Name="655"   Text="Print A Consignment By Account No"   OnClick="F:frmPrintConsignmentAccNo"     image="printer" />
+				<MenuItem Name="656"   Text="Delete A Consignment"                weblink="AccountsPayable/GetDeleteConsignment"  OnClick="F:frmDeleteConsignment"         image="cancel"  TBD="CHKR" />
+				<MenuItem Name="657"   Text="List Of Consignments"                weblink="AccountsPayable/ListOfConsignment"     OnClick="F:frmListOfConsignment"         image="list" />
+				<MenuItem Name="658"   Text="Status Of Styles On A Consignment"   weblink="PayablesBills/StatusOfStylesOnABill?Isconsignment=true"               OnClick="P:StatusOfStylesOnAConsignment" image="list" TBD="Neetha"/>
+				<MenuItem Name="659"   Text="Consignments Sold But Not Billed By Vendor" OnClick="F:frmSoldQtytoReporttoVendor"   image="list" />
+				<MenuItem Name="6510"  Text="Enter Memo Invoice from Vendor"      OnClick="F:frmnewvsfm"                    image="bills" />
+				<MenuItem Name="660"   Text="Export A Consignment"                OnClick="P:ExportConsignment"             image="list" />
+				<MenuItem Name="6511"  Text="Guaranteed Consignment Buys"         OnClick="F:frmGuaranteedConsignmentsbuys" image="list" />
+				<MenuItem Name="6512"  Text="Consignment Price Change"            OnClick="F:frmConsignmentPriceChange"     image="list" />
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="66" Text="Cons.Returns" >
+			<TopLevelMenu Name="661" Text="Consignment:Returns"               image="bills">
+				<MenuItem Name="662"   Text="Add A VRTV"                          OnClick="F:frmAddVrtv"                   image="bills" />
+				<MenuItem Name="663"   Text="Edit A VRTV"                         OnClick="F:frmEditVrtv"                  image="bills" />
+				<MenuItem Name="6621"  Text="Add A VRTV For Shipping Charge"      OnClick="P:VRTVForShipping"              image="bills" />
+				<MenuItem Name="664"   Text="Reprint A VRTV"                      OnClick="F:frmReprintVrtv"               image="printer" />
+				<MenuItem Name="665"   Text="Delete A VRTV"                       weblink="PayablesReturns/GetDeleteVrtv"  OnClick="F:frmDeleteVrtv"                image="cancel" TBD="CHKR" />
+				<MenuItem Name="666"   Text="List Of VRTVs"                       weblink="Payablesreturns/ListOfVrtvs"    OnClick="F:frmListOfVrtv"                image="list"   TBD="Neetha"/>
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="68" Text="Vendor POS" >
+			<TopLevelMenu Name="681" Text="Vendor: PO's"                      image="manufacturing">
+				<MenuItem Name="682"   Text="Make A Vendor PO"                    OnClick="F:AddVendorPoWoCustomerPo"      image="mfg1" />
+				<MenuItem Name="683"   Text="Vendor PO Based On Qty Sold"         OnClick="F:frmVendorPoBasedOnQtySold"    image="mfg1" />
+				<MenuItem Name="684"   Text="Vendor PO For Items Below Minimum Stock" OnClick="F:frmVendorPoBasedOnMinStk" image="mfg1" />
+				<MenuItem Name="6841"  Text="Vendor PO Based on Special Orders"   OnClick="F:frmMakevendorPofromSpecialOrders" />
+				<MenuItem Name="689"   Text="Mark Vendor POs As Received"         OnClick="F:frmMarkVendorPoAsRcvd"        image="mfg1" />
+				<MenuItem Text="-" />
+				<MenuItem Name="686"   Text="Reprint A Vendor PO"                 weblink="PayablesVendorPOS/ReprintVendorPo"         OnClick="F:ReprintVendorPo"              image="printer" />
+				<MenuItem Name="687"   Text="List/Status Of Vendor POs"           weblink="PayablesVendorPOS/ListOfVendorPoWoCustomerPo"     OnClick="F:ListOfVendorPoWoCustomerPo"   image="list" TBD="Dhar"/>
+				<MenuItem Name="685"   Text="Edit A Vendor PO"                    OnClick="F:EditVendorPo"                 image="mfg1" TBD="Dhar"/>
+				<MenuItem Name="688"   Text="Delete A Vendor PO"                  weblink="PayablesVendorPOS/VendorPoWoCustomerPo"    OnClick="F:DeleteVendorPoWoCustomerPo"   image="cancel" TBD="CHKR"/>
+			</TopLevelMenu>
+		</GroupMenuItem>
+	</MainLevelMenu>
+	<MainLevelMenu Name="7" Text="Banking" >
+		<GroupMenuItem Name="70" Text="Transactions" >
+			<TopLevelMenu Name="701" Text="Transactions" image="Banking">
+				<MenuItem Name="702"   Text="Add/Edit A Transaction"              weblink="BankingTransactions/BankTransactions"           OnClick="F:frmBankTransactions"          image="addtransaction"    TBD="DHR" />
+				<MenuItem Name="703"   Text="Delete A Transaction"                weblink="BankingTransactions/GetBankTransactions_Delete" OnClick="F:frmBankTransactions_Delete"   image="cancel" TBD="CHKR"/>
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="71" Text="Transactions">
+			<TopLevelMenu Name="711" Text="Balance:Reconcile" image="balancereconcile">
+				<MenuItem Name="712"   Text="List / Bank Balance"                 weblink="BankingTransactions/BankTransactions_List"       OnClick="F:frmBankTransactions_List"     image="report" TBD="DHR"/>
+				<MenuItem Name="7121"  Text="List of Not-Cleared Bank Transactions" weblink="BankingTransactions/UnclearedBankTransactions" OnClick="F:frmUnclearedBankTransactions" image="report" TBD="DHR"/>
+				<MenuItem Name="713"   Text="Transfer Between Bank Accounts"      weblink="BankingTransactions/Transfer"                    OnClick="F:frmTransfer"                  image="report" TBD="DHR"/>
+				<MenuItem Name="714"   Text="Bank Reconciliation"                 OnClick="F:frmBankReconcile"             image="addtransaction" />
+				<MenuItem Name="719"   Text="Edit A Reconciled Log"               weblink="BankingTransactions/BankReconcileEditLog"        OnClick="F:frmBankReconcileEditLog"      image="addtransaction" TBD="DHR"/>
+				<MenuItem Name="716"   Text="List of Reconciled Logs"             weblink="BankingTransactions/ListofReconciledLogs"        OnClick="F:frmListofReconciledLogs"      image="report" TBD="DHR"/>
+				<MenuItem Name="717"   Text="Reprint A Reconciled Log"            weblink="BankingTransactions/ReprintReconciledLog"        OnClick="F:frmReprintReconciledLog"      image="report" TBD="DHR"/>
+				<MenuItem Name="718"   Text="Delete A Reconciled Log"             weblink="BankingTransactions/GetDeleteReconciledLog"      OnClick="F:frmDeleteReconciledLog"       image="cancel" TBD="CHKR" />
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="72" Text="Bank accounts">
+			<TopLevelMenu Name="721" Text="Bank Accounts" image="bankaccounts" >
+				<MenuItem Name="722"   Text="Add A Bank Account"                  weblink="BankingBankAccounts/BankAccount_Request_Add"       OnClick="F:frmBankAccount_Request_Add"   image="bankaccounts" TBD="DHR"/>
+				<MenuItem Name="723"   Text="Edit A Bank Account"                 weblink="BankingBankAccounts/BankAccount_Request_Edit"      OnClick="F:frmBankAccount_Request_Edit"  image="bankaccounts" TBD="DHR"/>
+				<MenuItem Name="724"   Text="Delete A Bank Account"               weblink="BankingBankAccounts/GetBankAccount_Request_Delete" OnClick="F:frmBankAccount_Request_Delete" image="cancel" TBD="CHKR"/>
+				<MenuItem Name="725"   Text="Bank Accounts List"                  weblink="BankingBankAccounts/BankAccount_List"              OnClick="F:frmBankAccount_List"          image="report" TBD="DHR"/>
+				<MenuItem Name="726"   Text="Set Default Bank Account"            weblink="BankingBankAccounts/SetDefaultBank"                OnClick="F:frmSetDefaultBank"            image="report" TBD="DHR"/>
+				<MenuItem Name="727"   Text="Refunds Default Bank Account"        weblink="BankingBankAccounts/DefaultRefundBank"             OnClick="F:frmDefaultRefundBank"         image="report" TBD="DHR"/>
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="73" Text="Deposits" >
+			<TopLevelMenu Name="731" Text="Deposits" image="deposits">
+				<MenuItem Name="732"   Text="Add/Edit A Checks Deposit Ticket"    weblink="BankingDeposits/BankDeposit"                       OnClick="F:frmBankDeposit"               image="deposits" TBD="DHR"/>
+				<MenuItem Name="736"   Text="Deposit Non-Checks"                  weblink="BankingDeposits/BankDepositCreditCards"            OnClick="F:frmBankDepositCreditCards"    image="credits" TBD="DHR"/>
+				<MenuItem Name="733"   Text="Delete A Deposit"                    weblink="BankingDeposits/GetBankDeposit_Delete"             OnClick="F:frmBankDeposit_Delete"        image="cancel" TBD="CHKR"/>
+				<MenuItem Name="734"   Text="Deposits List"                       weblink="BankingDeposits/BankDeposit_List"                  OnClick="F:frmBankDeposit_List"          image="list" TBD="DHR"/>
+				<MenuItem Name="735"   Text="Deposits Detail"                     weblink="BankingDeposits/BankDeposit_Print"                 OnClick="F:frmBankDeposit_Print"         image="list" TBD="DHR"/>
+				<MenuItem Name="7301"  Text="Undeposited items List"              weblink="BankingDeposits/ListofUndeposits"                  OnClick="F:frmListofUndeposits"          image="list" TBD="DHR"/>
+			</TopLevelMenu>
+		</GroupMenuItem>
+	</MainLevelMenu>
+
+	<MainLevelMenu Name="740" Text="Cash Registers" >
+		<GroupMenuItem Name="741" Text="Cash Registers" >
+			<TopLevelMenu Name="742" Text="Transactions" image="register">
+				<MenuItem Name="743"   Text="Add Cash To A Register From Manager"  weblink="CashRegisters/GiveCashFromARegisterToManager?blnAddCashToARegisterFromManager=true" OnClick="P:AddCashToARegisterFromManager" image="register" TBD="DHR" />
+				<MenuItem Name="744"   Text="Give Cash From A Register To Manager" weblink="CashRegisters/GiveCashFromARegisterToManager"     OnClick="F:frmGiveCashFromARegisterToManager" image="addtransaction" TBD="DHR" />
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="7412" Text="Balances" >
+			<TopLevelMenu Name="7410" Text="Balance" image="register">
+				<MenuItem Name="749"   Text="Add/Edit Registers"                  weblink="CashRegistersBalances/AddEditRegisters"              OnClick="F:frmAddEditRegisters"          image="register" TBD="DHR" />
+				<MenuItem Name="745"   Text="Cash Register Balance/History"       weblink="CashRegistersBalances/CashRegisterTransactions"      OnClick="F:frmCashRegisterTransactions"  image="report" TBD="DHR" />
+				<MenuItem Name="7415"  Text="Current Balances Of All Registers"   weblink="CashRegistersBalances/CurrentBalancesOfAllRegisters" OnClick="F:frmCurrentBalancesOfAllRegisters" image="report" TBD="DHR" />
+				<MenuItem Name="7416"  Text="Cash Register Details by Employee"   weblink="CashRegistersBalances/CashRegisterDetailsByEmployee" OnClick="F:frmCashRegisterDetailsByEmployee" image="report" TBD="DHR" />
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="7413" Text="Manager" >
+			<TopLevelMenu Name="7411" Text="Manager" image="register">
+				<MenuItem Name="746"   Text="Manager To Deposit To A Bank"        weblink="CashRegistersManager/ManagerToDepositToABank"        OnClick="F:frmManagerToDepositToABank"   image="addtransaction" TBD="DHR" />
+				<MenuItem Name="747"   Text="Manager Get Cash From A Bank"        weblink="CashRegistersManager/ManagerToDepositToABank?blnIsManagerGetCashFromABank=true" OnClick="P:ManagerGetCashFromABank"      image="addtransaction" TBD="DHR" />
+				<MenuItem Name="748"   Text="Manager Balance/History"             weblink="CashRegistersManager/ManagerBalance"                 OnClick="F:frmManagerBalance"            image="report" TBD="DHR" />
+			</TopLevelMenu>
+		</GroupMenuItem>
+	</MainLevelMenu>
+
+	<MainLevelMenu Name="85" Text="Employee">
+		<GroupMenuItem Name="850" Text="Employee">
+			<TopLevelMenu Name="8501" Text="Employee" image="help">
+				<MenuItem Name="8502"  Text="Add / Edit Employee"                 OnClick="F:frmAddEditEmployee"           image="employee" />
+				<MenuItem Name="8503"  Text="Delete An Employee"                  weblink="Employee/GetDeleteEmployee"    OnClick="F:frmDeleteEmployee"            image="cancel" TBD="CHKR"/>
+			</TopLevelMenu>
+		</GroupMenuItem >
+		<GroupMenuItem Name="851" Text="Punch In/Out" >
+			<TopLevelMenu Name="8511" Text="Punch Clock" image="help">
+				<MenuItem Name="8512"  Text="Punch In"                            OnClick="F:frmEmployeePunchIn"           image="employee" />
+				<MenuItem Name="8513"  Text="Punch Out"                           OnClick="F:frmEmployeePunchOut"          image="employee" />
+			</TopLevelMenu>
+		</GroupMenuItem >
+		<GroupMenuItem Name="852" Text="Attendance" >
+			<TopLevelMenu Name="8521" Text="Attendance / Schedule" image="help">
+				<MenuItem Name="8522"  Text="Attendance Report"                   weblink="Employee/AttendenceReport"      OnClick="F:frmAttendenceReport"          image="list"  TBD="Neetha"/>
+				<MenuItem Name="8523"  Text="Edit Punch Record"                   OnClick="F:frmAdjustInOutRecords"        image="employee" />
+				<MenuItem Name="8555"  Text="Schedule"                            OnClick="F:frmSchedule"                  image="employee" />
+			</TopLevelMenu>
+		</GroupMenuItem >
+		<GroupMenuItem Name="855" Text="Vacation" >
+			<TopLevelMenu Name="8551" Text="Vacation:Personal Days" image="help">
+				<MenuItem Name="8552"  Text="Edit Vacation Days"                  OnClick="F:frmEmpVacation"               image="list" />
+				<MenuItem Name="8553"  Text="Delete"                              weblink="Employee/GetEmpDeleteVacation"  OnClick="F:frmEmpDeleteVacation"         image="employee" TBD="CHKR" />
+				<MenuItem Name="8554"  Text="List"                                weblink="Employee/ListOfVacation"        OnClick="F:frmListOfVacation"            image="employee"  TBD="Neetha"/>
+			</TopLevelMenu>
+		</GroupMenuItem >
+	</MainLevelMenu>
+
+	<MainLevelMenu Name="170" Text="Financial">
+		<GroupMenuItem Name="1700" Text="G/L Codes" image="gl2">
+			<TopLevelMenu Name="17001" Text="G/L Codes" image="gl2" >
+				<MenuItem Name="17002" Text="Chart Of Accounts"                   weblink="Financial/GLAccts"             OnClick="F:frmGLAccts"                   image="gl1" TBD="MNJ"/>
+				<MenuItem Name="17003" Text="Departments"                         weblink="Financial/Departments"         OnClick="F:frmDepartments"               image="glcodes" TBD="MNJ"/>
+			</TopLevelMenu>
+			<TopLevelMenu Name="17005" Text="Types" >
+				<MenuItem Name="17004" Text="G/L Types"                           weblink="Financial/GLTypes"             OnClick="F:frmGLTypes"                   image="gl2" TBD="MNJ"/>
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="1701" Text="G/L Codes">
+			<TopLevelMenu Name="17010" Text="Transactions" >
+				<MenuItem Name="17011" Text="Add/Edit G/L Transactions"           weblink="Financial/GLTransact"          OnClick="F:frmGLTransact"                image="gl2"    TBD="MNJ"/>
+				<MenuItem Name="17012" Text="List Of G/L Transactions"            weblink="Financial/ListOfGLTransact"    OnClick="F:ListOfGLTransact"             image="glcodes" TBD="MNJ" />
+			</TopLevelMenu>
+			<TopLevelMenu Name="17112" Text="Types" >
+				<MenuItem Name="17013" Text="G/L Entries by Ref#"                 weblink="Financial/GLLogbyref"          OnClick="F:frmGLLogbyref"                image="glcodes" TBD="MNJ" />
+				<MenuItem Name="17014" Text="Delete a G/L Transaction"            weblink="Financial/GetfrmDeleteGLTransaction"   OnClick="F:frmDeleteGLTransaction"       image="glcodes" TBD="CHKR" />
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="1702" Text="Balance Sheet">
+			<TopLevelMenu Name="17020" Text="Balance Sheet" >
+				<MenuItem Name="17021"   Text="Trial Balance"                     weblink="Reports/Trailbalance"          OnClick="F:frmTrailbalance"              image="trial" TBD="MNJ"/>
+			</TopLevelMenu>
+			<TopLevelMenu Name="17024" Text="Balance Sheet" >
+				<MenuItem Name="17023" Text="Income Statement"                    weblink="Financial/IncomeStatement"     OnClick="F:frmIncomeStatement"           image="income" TBD="MNJ"/>
+				<MenuItem Name="17022" Text="Balance Sheet"                       weblink="Financial/Balancesheet"        OnClick="F:frmBalancesheet"              image="pnl" TBD="MNJ"/>
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="1703" Text="Set Up G/L Codes By G/L Class">
+			<TopLevelMenu Name="17030" Text="Set Up G/L Codes By G/L Class" >
+				<MenuItem Name="17031" Text="Set Up G/L Codes By G/L Class"       weblink="Financial/GLClasses"            OnClick="F:frmGLClasses"                 image="glcodes" TBD="MNJ"/>
+				<MenuItem Name="17032" Text="Default Accounts"                    weblink="Financial/DefaultAccounts"      OnClick="F:frmDefaultAccounts"           image="glcodes" TBD="MNJ"/>
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="1704" Text="Adjustments">
+			<TopLevelMenu Name="17059" Text="Adjustments" >
+				<MenuItem Name="1638"  Text="Adjust Inventory G/L"                OnClick="F:frmAdjustInventoryGL"         image="list"            ShowOnlyFor="Test_Mode" />
+				<MenuItem Name="1639"  Text="List of Unbalanced G/L"              weblink="Financial/ListofUnbalancedGL"   OnClick="F:frmListofUnbalancedGL"        image="list"            ShowOnlyFor="Test_Mode" TBD="MNJ"/>
+			</TopLevelMenu>
+		</GroupMenuItem>
+	</MainLevelMenu>
+
+	<MainLevelMenu Name="8" Text="Reports" image="fa-reports" icon="fa-book-open">
+		<GroupMenuItem Name="80" Text="Analytics">
+			<TopLevelMenu Name="801" Text="Analytics" image="analytics">
+				<MenuItem Name="802"   Text="Qty Sold / In Stock By Style"        weblink="Analysis/StockorHand"                OnClick="F:frmSoldorHand"                image="stockonhand" />
+				<MenuItem Name="803"   Text="Best Sellers Styles"                 weblink="Analysis/BestSellerReports"          OnClick="F:frmBestSellerReports"         image="bestseller" />
+				<MenuItem Name="804"   Text="Worst Sellers Styles"                weblink="Analysis/WorstSellerReports"         OnClick="F:frmWorstSellers"              image="worst" />
+				<MenuItem Name="8020"  Text="Best Seller Categories"              weblink="Analysis/BestSellerCategoryReports"  OnClick="F:frmBestSellerCategoryReports" image="bestseller" />
+				<MenuItem Name="805"   Text="Inactive Styles (Aged Inventory)"    weblink="Analysis/InactiveStyles"             OnClick="F:frmInactiveStyles"            image="bestseller" TBD="MNJ" />
+				<MenuItem Name="806"   Text="Sales By Salesrep"                   weblink="Analysis/SalesBySalesman"            OnClick="F:frmSalesBySalesman"           image="analytics"  TBD="MNJ"/>
+				<MenuItem Name="807"   Text="Days on Hand inventory"              weblink="ListOfItemsSold/DaysonHandInventory" OnClick="F:frmDaysonHandInventory"       image="salesgraph" TBD="Hemanth"/>
+				<MenuItem Name="8033"  Text="Component Sales Analysis"            OnClick="F:frmComponentSalesAnalysis"    image="analytics" />
+				<MenuItem Name="8039"  Text="Vendor Sales Report"                 weblink="ListOfItemsSold/VendorSalesReport"   OnClick="F:frmVendorSalesReport"         image="analytics" TBD="Hemanth"/>
+				<MenuItem Text="-" />
+				<MenuItem Name="8021"  Text="End Of Month Report"                 weblink="Analysis/EndOfMonth"                 OnClick="F:frmEndOfMonth"                image="profitloss" />
+				<MenuItem Name="8013"  Text="Total Monthly Sales"                 weblink="Analysis/TotalMonthlySales"          OnClick="F:frmTotalMonthlySales"         image="salesgraph" />
+				<MenuItem Name="8014"  Text="Monthly Sales/Payments For A Customer" weblink="Analysis/TotalMonthlySalesForACustomer" OnClick="F:frmTotalMonthlySalesForACustomer" image="salesgraph" />
+				<MenuItem Name="8015"  Text="Sales Comparison Chart"              weblink="Analysis/SalesChartComparision"      OnClick="F:frmSalesChartComparision"     image="salesgraph" TBD="VKT" />
+				<MenuItem Name="8016"  Text="Annual Sales Comparison"             weblink="Analysis/AnnualSalesComparison"      OnClick="F:frmAnnualSalesComparison"     image="salesgraph" />
+				<MenuItem Name="8017"  Text="Annual Payments Received"            weblink="Analysis/AnnualPaymentsReceived"     OnClick="F:frmAnnualPaymentsReceived"    image="salesgraph" />
+				<MenuItem Text="-" />
+				<MenuItem Name="8018"  Text="In State/Out Of State Sales"         weblink="ListOfItemsSold/InstateOutStateSales" OnClick="F:frmInStateOutStateSales"      image="salesgraph" TBD="Hemanth"/>
+				<MenuItem Name="8019"  Text="Total Sales By State"                weblink="ListOfItemsSold/StateSales"           OnClick="F:frmStateSales"                image="salesgraph" TBD="Hemanth"/>
+				<MenuItem Name="81131" Text="Sales / Sales Tax Per State"         weblink="ListOfItemsSold/TotalSalesPerState"   OnClick="F:frmTotalSalesPerState"        image="report" TBD="Hemanth"/>
+				<MenuItem Text="-" />
+				<MenuItem Name="8027"  Text="Sales Dashboard"                     OnClick="P:Salesdashboard"               image="stockonhand" />
+				<MenuItem Name="8023"  Text="GMROI"                               OnClick="F:frmGMROI"                     image="salesgraph" />
+				<MenuItem Name="8025"  Text="Vendor Styles Performance"           weblink="ListOfItemsSold/VendorStylesPerformance" OnClick="F:frmVendorStylesPerformance"   image="performance" TBD="Hemanth"/>
+				<MenuItem Name="8028"  Text="Total Hourly Sales"                  weblink="ListOfItemsSold/TotalHourlySales"    OnClick="F:frmTotalHourlySales"          image="salesgraph" TBD="Hemanth"/>
+				<MenuItem Name="8029"  Text="Day of Week Sales"                   weblink="ListOfItemsSold/TotalWeeklySales"    OnClick="F:frmTotalWeeklySales"          image="salesgraph" TBD="Hemanth"/>
+			</TopLevelMenu>
+			<TopLevelMenu Name="8026" Text="Sales/:profit" image="analytics">
+				<MenuItem Name="808"   Text="Detailed Sales/Profit"               weblink="Sales/SalesProfitReport"             OnClick="F:frmDetailedSales"             image="detailedsalesprofit" />
+				<MenuItem Name="8022"  Text="Daily Sales/Profit"                  weblink="Sales/DailySalesProfit"              OnClick="F:frmDailySalesProfit"          image="detailedsalesprofit" />
+				<MenuItem Name="809"   Text="Sales/Profit Per Invoice"            weblink="Sales/SalesProfitPerInvoice"         OnClick="F:frmSalesProfitPerInvoice"     image="detailedsalesprofit" />
+				<MenuItem Name="8024"  Text="Sales/Profit Per Memo"               OnClick="F:frmSalesProfitPerMemo"             image="detailedsalesprofit"  TBD="VKT" />
+				<MenuItem Name="8010"  Text="Sales/Profit By Customer"            weblink="Sales/SalesProfitPerCustomer"        OnClick="F:frmSalePerCustomer"           image="salesprofitbycustomer" />
+				<MenuItem Name="8034"  Text="Total Sales/Profit By vendor"        weblink="Sales/TotalSalesPerVednorDetails"    OnClick="F:frmTotalSalesPerVendor"       image="salesprofitbycustomer" />
+				<MenuItem Text="-" />
+				<MenuItem Name="8011"  Text="Sales By Category/Metal"             weblink="Sales/SalesProfitByCategoryMetal"    OnClick="F:frmSalesProfitByCatMtl"       image="salesprofitbycustomer" />
+				<MenuItem Name="8032"  Text="Vendor Styles Analysis"              weblink="Sales/VendorStylesAnalysis"          OnClick="F:frmVendorAnalysis"            image="list" />
+				<MenuItem Name="80320" Text="Sales By Category/Price Pt."         weblink="Sales/SalesProfitByCategoryPriceDetails" OnClick="F:frmSalesProfitByCatPrice"     image="salesprofitbycustomer" />
+				<MenuItem Name="80321" Text="Sales/Profit By Store"               weblink="ListOfItemsSold/SaleProfitPerStore"  OnClick="F:frmSaleProfitPerStore"        image="salesprofitbycustomer" TBD="Hemanth"/>
+				<MenuItem Name="80322" Text="Detailed Sales By Salesrep"          weblink="Sales/SalesProfitbySalesrep"         OnClick="F:frmSaleProfitbySalesrep"      image="salesprofitbycustomer" />
+				<MenuItem Name="80324" Text="Sales/Profit By Salesrep"            weblink="Sales/SalesCOGProfitbySalesrep"      OnClick="F:frmSalesCOGProfitBySalesman"  image="salesprofitbycustomer" />
+				<MenuItem Name="80323" Text="Sales/COG/Profit Report"             weblink="ListOfItemsSold/SalesCOGProfit"      OnClick="F:frmSalesCOGProfit"            image="salesprofitbycustomer" TBD="Hemanth"/>
+				<MenuItem Text="-" />
+				<MenuItem Name="80328" Text="Detailed COG Report"                 weblink="ListOfItemsSold/DetailedCOG"         OnClick="F:frmDetailedCOG"               image="salesprofitbycustomer" TBD="Hemanth"/>
+				<MenuItem Name="80325" Text="Sales/Profit Per Source"             weblink="ListOfItemsSold/SalesProfitPerSource" OnClick="F:frmSalesProfitPerSource"      image="detailedsalesprofit" TBD="Hemanth"/>
+				<MenuItem Name="80326" Text="Sales/Profit By City"                weblink="ListOfItemsSold/SalesProfitByCity"   OnClick="F:frmSalesProfitByCity"         image="salesprofitbycustomer" TBD="Hemanth"/>
+				<MenuItem Name="8035"  Text="Monthly Sales / Profit"              weblink="ListOfItemsSold/MonthlySalesProfit"  OnClick="F:frmMonthlySalesProfit"        image="salesgraph" TBD="Hemanth"/>
+				<MenuItem Name="80327" Text="Sales Report For Reorder"            weblink="ListOfItemsSold/SalesReportForReorder" OnClick="F:frmSalesReportForReorder"     image="detailedsalesprofit" TBD="Hemanth"/>
+				<MenuItem Name="80329" Text="Sales Summary Report"                weblink="ListOfItemsSold/SalesSummaryReport"  OnClick="F:frmSalesSummaryReport"        image="detailedsalesprofit" TBD="Hemanth"/>
+				<MenuItem Name="10301" Text="Update Costs Of An Invoice"          weblink="ListOfItemsSold/UpdateInvoiceCost"   OnClick="F:frmUpdateInvoiceCost"         image="sales1" TBD="Hemanth"/>
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="810" Text="POS Reports">
+			<TopLevelMenu Name="811" Text="POS:Reports" image="sales1">
+				<MenuItem Name="812"   Text="Items Sold (Detailed)"               weblink="ListOfItemsSold/Index"               OnClick="F:ListOfItemsSold"              image="sales" TBD="Hemanth"/>
+				<MenuItem Name="8116"  Text="List Of Open Orders"                 weblink="ListOfItemsSold/ListOfOpenOrders"    OnClick="F:ListOfOpenOrders"             image="sales" TBD="Hemanth"/>
+				<MenuItem Name="8117"  Text="Inactive Customers"                  weblink="Customers/InActiveCustomers"         OnClick="F:Customers"                    image="report" TBD="Hemanth"/>
+				<MenuItem Name="813"   Text="List Of Receipts(Sum.)"              weblink="ListOfItemsSold/ListOfReceipts"      OnClick="F:ListOfReceipts"               image="payment" TBD="Hemanth"/>
+				<MenuItem Name="814"   Text="Total Sales Per Store"               weblink="ListOfItemsSold/StoreTotalSales"     OnClick="P:StoreTotalSales"              image="sales" TBD="Hemanth"/>
+				<MenuItem Name="815"   Text="Sales By Salesrep"                   weblink="ListOfItemsSold/SalesBySalesman"     OnClick="F:SalesBySalesman"              image="analytics" TBD="Hemanth"/>
+				<MenuItem Name="816"   Text="Statement of Invoices"               weblink="ListOfItemsSold/StatementofInvoice"  OnClick="F:frmStatementofInvoice"        image="sales" TBD="Hemanth"/>
+				<MenuItem Text="-" />
+				<MenuItem Name="817"   Text="List Of Payments Rcvd"               weblink="ListOfItemsSold/RcblCreditByTimeFrame" OnClick="F:frmRcblCreditByTimeFrame"     image="payment" TBD="Hemanth"/>
+				<MenuItem Name="818"   Text="Payment.Sum. by Pay. Type"           weblink="ListOfItemsSold/SummeryByPaymentType"  OnClick="F:frmSummeryByPaymentType"      image="payment" TBD="Hemanth"/>
+				<MenuItem Name="1413"  Text="Payments Sum. by Register"           weblink="ListOfItemsSold/SummeryByRegister"     OnClick="F:frmSummeryByRegister"         image="list" TBD="DHR"/>
+				<MenuItem Name="819"   Text="End Of Day Summary"                  weblink="ListOfItemsSold/DaySummary"            OnClick="F:frmDaySummary"                image="list" TBD="Hemanth"/>
+				<MenuItem Name="8110"  Text="End Of Day Worksheet"                weblink="ListOfItemsSold/EODWorksheet"          OnClick="F:frmEODWorksheet"              image="list" TBD="Hemanth"/>
+				<MenuItem Text="-" />
+				<MenuItem Name="8111"  Text="List Of Store Credits"               weblink="ListOfItemsSold/ListOfStoreCredits"    OnClick="F:frmListOfStoreCredits"        image="credits" TBD="Hemanth"/>
+				<MenuItem Name="8112"  Text="List Of Gift Cards"                  weblink="ListOfItemsSold/ListOfGiftCertificate" OnClick="P:ListOfGiftCertificate"        image="printer" TBD="Hemanth"/>
+				<MenuItem Name="8113"  Text="Sales Tax Report"                    weblink="POsReportsnew/SalesTaxReport"          OnClick="F:frmSalesTaxReport"            image="symbol_percent" />
+				<MenuItem Name="8118"  Text="TN Sales Tax Report"                 OnClick="F:frmTNSalesTaxReport"          image="symbol_percent" />
+				<MenuItem Name="8114"  Text="List Of Discounts"                   weblink="POsReportsnew/ListOfDiscounts"         OnClick="F:frmListOfDiscount"            image="discount" />
+				<MenuItem Name="8115"  Text="Customer Warranties List"            weblink="POsReportsnew/CustomerWarrantyReport"  OnClick="F:frmListOfCustomerWarranty"    image="warranty"        ShowOnlyFor="Warranty" />
+				<MenuItem Name="1007"  Text="Invoice Pickup dates"                weblink="POsReportsnew/PrintListOfInvoice"      OnClick="F:frmPrintListOfInvoice"        image="printer" />
+				<MenuItem Name="10303" Text="Modify Invoice Pickup Date"          weblink="POsReportsnew/ModifyPickupDateOfAnInvoice"      OnClick="F:frmModifyPickupDateOfAnInvoice" image="sales1" TBD="DHR"/>
+				<MenuItem Text="-" />
+				<MenuItem Name="8119"  Text="Payments Received Summary"           weblink="POsReportsnew/SummaryPayment"          OnClick="F:frmSummaryPayment"            image="printer"  TBD="DHR" />
+				<MenuItem Name="30122" Text="Referral/Loyalty Points Total"       weblink="POsReportsnew/Loyaltytotal"            OnClick="F:frmLoyaltytotal"              image="stores" TBD="Neetha"/>
+				<MenuItem Name="30123" Text="List of Refunds"                     weblink="ListOfItemsSold/StatementofInvoice?Statereturn=true"    OnClick="P:StatementofInvoice"           image="stores" TBD="Neetha"/>
+				<MenuItem Name="4305"  Text="Partner Sales"                       weblink="POsReportsnew/PartnerSales"            OnClick="F:frmPartnerSales"              image="sales1" TBD="Mnj"/>
+				<MenuItem Name="1033"  Text="List of Open Invoices"               weblink="Invoice/ListOfOpenInvoices"            OnClick="F:frmListOfOpenInvoices"        image="printer" TBD="Hemanth"/>
+				<MenuItem Name="1034"  Text="Open Orders By Customer"             weblink="Invoice/OpenOrdersfromCustomer"        OnClick="F:frmOpenOrdersfromCustomer"    image="printer" TBD="Hemanth" />
+				<MenuItem Name="1035"  Text="Clear Open Credits/RTVs"             weblink="SalesPaymentsCredits/AddAdjReceivable" OnClick="F:frmAddAdjReceivable"          image="clear" />
+			</TopLevelMenu>
+		</GroupMenuItem>
+
+		<GroupMenuItem Name="82" Text="Accounts Payable">
+			<TopLevelMenu Name="821" Text="Accounts:Payable" image="payables1" >
+				<MenuItem Name="822"   Text="Vendor Statement"                    weblink="AccountsPayable/VendorStatement"     OnClick="F:frmVendorStatement"           image="vendorstatement" />
+				<MenuItem Name="823"   Text="A/P Aging Report"                    weblink="AccountsPayable/AgingReport"         OnClick="F:frmAgingReport"               image="aging" />
+				<MenuItem Name="824"   Text="Vendor Balances As Of A Date"        weblink="AccountsPayable/ApAsOfDate"          OnClick="F:frmApAsOfDate"                image="apagingreport" />
+				<MenuItem Name="825"   Text="List Of Bills"                       weblink="AccountsPayable/ListofBills"         OnClick="F:frmListofBills"               image="list" />
+				<MenuItem Name="826"   Text="List Of Vendor Credits"              weblink="AccountsPayable/ListOfVendorCredits" OnClick="F:frmListOfVendorCredits"       image="list" TBD="Neetha" />
+				<MenuItem Name="827"   Text="Checks Register "                    weblink="AccountsPayable/ListofChecks"        OnClick="F:frmListofChecks"              image="list" />
+				<MenuItem Name="828"   Text="List Of Consignments"                weblink="AccountsPayable/ListOfConsignment"   OnClick="F:frmListOfConsignment"         image="list" />
+				<MenuItem Name="829"   Text="Buying Report"                       weblink="StylesStoreInventory/buyingreport"   OnClick="F:frmbuyingreport"              image="list"     TBD="MNJ"/>
+			</TopLevelMenu>
+		</GroupMenuItem>
+
+		<GroupMenuItem Name="83" Text="Inventory">
+			<TopLevelMenu Name="831" Text="Inventory" image="inventory" >
+				<MenuItem Name="832"   Text="Styles/Inventory List"               weblink="Styles/PrintStoreInventory"                   OnClick="F:frmPrintStoreInventory"       image="list" />
+				<MenuItem Name="833"   Text="Inventory Count By Category"         weblink="StylesStoreInventory/InventoryCountByCat"     OnClick="F:frmInventoryCountByCat"       image="list" />
+				<MenuItem Name="834"   Text="Inventory Count By Vendor"           weblink="StylesStoreInventory/InventoryCountByVendor"  OnClick="F:frmInventoryCountByVendor"    image="list" />
+				<MenuItem Name="835"   Text="Inventory Count By G/L Class"        weblink="StylesStoreInventory/InventoryCountByGLClass" OnClick="F:frmInventoryCountByGLClass"   image="list" />
+				<MenuItem Name="836"   Text="History of Store Inventory"          weblink="StylesStoreInventory/HistoryOfStoreInvnt"     OnClick="F:frmHistoryOfStoreInvnt"       image="history"  TBD ="DHR" />
+				<MenuItem Name="837"   Text="Diamond Inventory Report"            weblink="StylesStoreInventory/DiamondInventory"	     OnClick="F:frmDiamondInventory"          image="printer" />
+				<MenuItem Name="838"   Text="Buying Report"                       weblink="StylesStoreInventory/buyingreport"            OnClick="F:frmbuyingreport"              image="list"   TBD="MNJ"/>
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="840" Text="Financial">
+			<TopLevelMenu Name="841" Text="Balance Sheet" >
+				<MenuItem Name="842" Text="Trial Balance"                         weblink="Reports/Trailbalance"      OnClick="F:frmTrailbalance"              image="trial" TBD="MNJ"/>
+			</TopLevelMenu>
+			<TopLevelMenu Name="843" Text="Balance Sheet" >
+				<MenuItem Name="844" Text="Income Statement"                      weblink="Financial/IncomeStatement" OnClick="F:frmIncomeStatement"           image="income" TBD="MNJ"/>
+				<MenuItem Name="845" Text="Balance Sheet"                         weblink="Financial/Balancesheet"    OnClick="F:frmBalancesheet"              image="pnl" TBD="MNJ"/>
+			</TopLevelMenu>
+		</GroupMenuItem>
+	</MainLevelMenu>
+
+	<MainLevelMenu Name="9" Text="Admin">
+		<GroupMenuItem Name="90" Text="Users">
+			<TopLevelMenu Name="901" Text="Users" image="users" >
+				<MenuItem Name="902"   Text="Add/Edit A User"                     OnClick="F:frmUsers"                     image="users"           askpassword="yes" TBD="VKT" />
+				<MenuItem Name="903"   Text="Delete A User"                       weblink="Users/DeleteUser"     OnClick="F:frmDeleteUser"        image="cancel"  askpassword="yes" TBD="VKT" />
+				<MenuItem Name="904"   Text="Users List"                          weblink="Users/ListOfUsers"            OnClick="F:frmListOfUsers"               image="list"            askpassword="yes" TBD="VKT" />
+				<MenuItem Text="-" />
+				<MenuItem Name="9041"  Text="Add/Edit A Role"                     OnClick="F:frmAddEditUserRoles"          image="users"           askpassword="yes" TBD="VKT" />
+				<MenuItem Name="9042"  Text="Delete A Role"                       weblink="Users/DeleteUserRoles"        OnClick="F:frmDeleteUserRoles"           image="cancel"          askpassword="yes" TBD="VKT" />
+				<MenuItem Name="9043"  Text="List of Roles"                       OnClick="F:frmListOfUserRoles"           image="list"            askpassword="yes" TBD="VKT" />
+				<MenuItem Name="9044"  Text="Minimum Price Password"              OnClick="F:frmMinPricePassword"          image="list"            askpassword="yes" TBD="VKT" />
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<TopLevelMenu Name="921" Text="Track Changes" >
+			<MenuItem Name="922"   Text="Track:Changes"                           weblink="AdminTrackChanges/TrackChanges"           OnClick="F:frmTrackChanges"              image="trackchanges" TBD="Neetha"/>
+			<MenuItem Name="9223"  Text="Program:Options"                         weblink="AdminTrackChanges/CustomerStatementSetup" OnClick="F:frmCustomerStatementSetup"    image="trackchanges" TBD="Neetha" />
+		</TopLevelMenu>
+		<GroupMenuItem Name="91" Text="Misc.">
+			<TopLevelMenu Name="9221" Text="Misc." image="users">
+				<MenuItem Name="1016"  Text="Add/Edit Charities"                  weblink="AdminMisc/AddCharities"         OnClick="F:frmAddCharities"              image="sales1" TBD="Neetha" />
+				<MenuItem Name="1012"  Text="Discount Types"                      weblink="AdminMisc/DiscountType"         OnClick="F:frmListOfDiscounts"           image="discount" />
+				<MenuItem Name="33191" Text="Sales Tax Exemption Reasons"         weblink="AdminMisc/SalesTaxExemptions"   OnClick="F:frmSalesTaxExemptions"        image="symbol_percent" TBD="Neetha" />
+				<MenuItem Name="2013"  Text="Referrals/Loyalty"                   weblink="AdminMisc/ReferralSetUp"        OnClick="F:frmReferralSetup"             image="help"           TBD="Neetha" />
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="934" Text="CC Readers">
+			<TopLevelMenu Name="931" Text="CC:Readers" image="credit_card">
+				<MenuItem Name="932"   Text="MID Password"                        weblink="AdminCCReaders/CCPrimary"           OnClick="F:frmCCPrimary"            image="printer" TBD="Neetha"/>
+				<MenuItem Name="933"   Text="Setup CC Device"                     weblink="AdminCCReaders/CCSecondary"         OnClick="F:frmCCSecondary"          image="printer" TBD="Neetha"/>
+				<MenuItem Name="9330"  Text="CardConnect Debug"                   weblink="AdminCCReaders/CardConnectDebug"    OnClick="F:frmCardConnectDebug"     image="printer" TBD="Neetha"/>
+				<MenuItem Text="-" />
+				<MenuItem Name="939"   Text="Gen Sq. Code"                        weblink="AdminCCReaders/GenerateDeviceCode"  OnClick="F:frmGenerateDeviceCode"   image="list"            ShowOnlyFor="Is_Square" TBD="Neetha"/>
+				<MenuItem Name="935"   Text="Sq.Term.Setup"                       weblink="AdminCCReaders/DownloadSquareToken" OnClick="F:frmDownloadSquareToken"  image="list"            ShowOnlyFor="Is_Square" TBD="Neetha"/>
+				<MenuItem Name="936"   Text="Setup Square CC Device"              weblink="AdminCCReaders/AddDevice"           OnClick="F:frmAddDevice"            image="list"            ShowOnlyFor="Is_Square" TBD="Neetha"/>
+				<MenuItem Name="937"   Text="Setup Clover CC Device"              weblink="AdminCCReaders/AddCloverDevice"     OnClick="F:frmAddCloverDevice"      image="printer"         ShowOnlyFor="Clover"    TBD="Neetha"/>
+				<MenuItem Name="938"   Text="Setup EPS CC Device"                 weblink="AdminCCReaders/AddEPSDevices"       OnClick="F:frmAddEPSDevices"        image="list"            ShowOnlyFor="EPS_CC"    TBD="Neetha"/>
+			</TopLevelMenu>
+		</GroupMenuItem>
+
+		<GroupMenuItem Name="9211" Text="Email Setup" >
+			<TopLevelMenu Name="923" Text=" Email Setup" >
+				<MenuItem Name="924"   Text="General"                             weblink="AdminEmailSetup/EmailSettings"                OnClick="F:frmEmailSettings"             image="emailsettings" TBD="CHKR" />
+				<MenuItem Name="925"   Text="User Specific"                       weblink="AdminEmailSetup/EmailSettingsUserSpecific"    OnClick="F:frmEmailSettingsUserSpecific" image="emailsettings" TBD="CHKR" />
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<TopLevelMenu Name="9222" Text="QuickBooks" >
+			<MenuItem Name="9212" Text="Transfer To:QuickBooks"                   OnClick="F:frmQBSyncInvoiceData"         image="quickbooks" />
+		</TopLevelMenu>
+		<GroupMenuItem Name="9261" Text="Messages" >
+			<TopLevelMenu Name="9213" Text="Notes" >
+				<MenuItem Name="9214"  Text="Memo/Repair Fine Print"              weblink="AdminMessages/InvoiceMemoNote"    OnClick="F:frmInvoiceMemoNote"           image="invoice1" TBD="Neetha"/>
+				<MenuItem Name="9225"  Text="SMS Messages Bank"                   weblink="AdminMessages/Messagebank"        OnClick="F:frmMessagebank"               image="list"     TBD="Neetha"/>
+				<MenuItem Name="9228"  Text="Add/Edit App Messages"               weblink="AdminMessages/AddEditAppMessages" OnClick="F:frmAddEditAppMessages"        image="list"     TBD="Neetha"       ShowOnlyFor="is_Glenn" />
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="9215" Text="Warranties">
+			<TopLevelMenu Name="9216" Text="Warranties:Repair Codes:Disclaimers" image="warranty">
+				<MenuItem Name="9217"  Text="Edit Warranties"                     weblink="StylesAdmin/Warranties"        OnClick="F:frmWarranties"                image="printer"         ShowOnlyFor="Warranty" TBD="DHR" />
+				<MenuItem Text="-" />
+				<MenuItem Name="1614"  Text="Update Standard Repair Prices/Costs" OnClick="F:frmRepairNotes"               image="warranty" />
+				<MenuItem Name="1626"  Text="Mass Update Std.Repair Prices/Codes" OnClick="F:frmRepairCodePrice"           image="warranty" />
+				<MenuItem Name="16277" Text="Edit Standard Repair Codes"          OnClick="F:frmRepairMultiNote"           image="repair_shop" />
+				<MenuItem Name="1629"  Text="List Of Standard Repair Codes"       OnClick="F:frmListOfRepairCode"          image="repair_shop" />
+				<MenuItem Name="1627"  Text="Custom Repair Codes"                 weblink="AdminWarranties/customrepaircodes"              OnClick="F:frmcustomrepaircodes"         image="repair_shop" TBD="DHR"/>
+				<MenuItem Name="16291" Text="Custom Repair Code List"             weblink="AdminWarranties/CustomRepairCodeList"           OnClick="F:frmCustomRepairCodeList"      image="repair_shop" TBD="DHR"/>
+				<MenuItem Text="-" />
+				<MenuItem Name="9232"  Text="Styles Disclaimers"                  OnClick="F:frmAddEditDisclaimers"        image="msgIcon4" TBD="CHKR" />
+				<MenuItem Name="30120" Text="JMCare Warranties"                   OnClick="F:frmWarranties_JMC"            image="printer"  TBD="CHKR"       ShowOnlyFor="JMCare" />
+				<MenuItem Name="30121" Text="Create JMCare File"                  OnClick="F:frmCreateJMCareFile"          image="printer"         ShowOnlyFor="Test_Mode" />
+			</TopLevelMenu>
+		</GroupMenuItem>
+		<GroupMenuItem Name="9226" Text="Stores">
+			<TopLevelMenu Name="9218" Text="Stores" image="stores">
+				<MenuItem Name="9219"  Text="Stores"                              weblink="AdminStores/Stores"            OnClick="F:frmStores"                    image="stores"  TBD="DHR"/>
+				<MenuItem Name="9220"  Text="Stores to Search"                    weblink="AdminStores/SetDefaultStores"  OnClick="F:frmSetDefaultStores"          image="stores"  TBD="DHR"/>
+			</TopLevelMenu>
+			<TopLevelMenu Name="9224" Text="Stores" image="stores">
+				<MenuItem Name="9227" Text="Sales Tax Table"                      weblink="AdminStores/SalesTaxTable"     OnClick="F:frmSalesTaxTable"            image="symbol_percent"  ShowOnlyFor="Luxury_Tax" TBD="Neetha"/>
+			</TopLevelMenu>
+		</GroupMenuItem>
+	</MainLevelMenu>
+
+	<MainLevelMenu Name="2000" Text="Help">
+		<TopLevelMenu Name="2001" Text="Help" image="help">
+			<MenuItem Name="2003"  Text="Email For:Support"                   OnClick="F:frmEmailForSupport"           image="email" />
+			<MenuItem Name="2006"  Text="Call For:Support"                    OnClick="P:CallforSupport"               image="call" />
+			<MenuItem Name="2004"  Text="Trainig Videos"                      OnClick="F:frmTraining"                  image="call" />
+			<MenuItem Name="2007"  Text="Terms/Conditions"                    OnClick="F:frmTermsConditions"           image="help" />
+		</TopLevelMenu>
+	</MainLevelMenu>
+	<MainLevelMenu Name="2010" Text="Exit">
+		<TopLevelMenu Name="2011" Text="Exit" image="admin">
+			<MenuItem Name="2009"  Text="Log Out"                             OnClick="P:Logout"                       image="exit" />
+			<MenuItem Name="2012"  Text="Exit"                                OnClick="P:CloseApp"                     image="exit" />
+		</TopLevelMenu>
+	</MainLevelMenu>
+</root>

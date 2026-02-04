@@ -1,0 +1,493 @@
+﻿<!--
+ Hemanth 09/25/2024 created new form
+ Hemanth 10/10/2024 preview and print changes added
+-->
+@{
+
+    if (Session["UserID"] == null)
+    {
+        Layout = null;
+        Response.Redirect("~/Login/Index");
+    }
+    else
+    {
+        Layout = null;
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    ViewBag.Title = "Vendor Styles Performance";
+}
+
+<div id="content-center" class="row">
+
+    <div class="web-form page login-page col-sm-12">
+
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-6">
+                            Sales From Date
+                        </label>
+                        <div class="col-sm-6">
+                            <input type="date" id="txtFromDate" class="form-control activateFormRefreshBtn" name="dateFrom" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-6">
+                            Sales To Date
+                        </label>
+                        <div class="col-sm-6">
+                            <input type="date" id="txtToDate" class="form-control activateFormRefreshBtn" name="dateTo" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-right">
+                    <div class="mt-5px">
+                        <input type="checkbox" id="cbFillFromToDates1" checked /> <span>All Dates</span>
+                        <input type="button" value="Last Month" class="formsGlobalUniqueBtn btnGetLastMonthDates hasskip" />
+                        <input type="button" value="Last Week" class="formsGlobalUniqueBtn btnGetLastWeekDates hasskip" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-6">
+                            Purchase From Date
+                        </label>
+                        <div class="col-sm-6">
+                            <input type="date" id="txtFromDate1" class="form-control activateFormRefreshBtn skipDisable" name="dateFrom" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-6">
+                            Purchase To Date
+                        </label>
+                        <div class="col-sm-6">
+                            <input type="date" id="txtToDate1" class="form-control activateFormRefreshBtn skipDisable" name="dateTo" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mt-5px">
+                        <input type="checkbox" id="cbFillFromToPurchaseDates" checked /> <span>All Dates</span>
+                        &nbsp;&nbsp;&nbsp;
+                        <input type="checkbox" id="summaryBymodal" /> <span>Summary by model</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Group
+                        </label>
+                        <div class="col-sm-8">
+                            <select id="group" name="group" class="form-control">
+                                @{
+                                    if (ViewBag.GroupData != null)
+                                    {
+                                        foreach (var group in ViewBag.GroupData)
+                                        {
+                                            <option value="@group.Value">@group.Text</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+
+                        <label class="col-sm-4">
+                            Category
+                        </label>
+                        <div class="col-sm-8">
+
+                            <select id="category" name="category" class="form-control">
+
+                                @{
+                                    if (ViewBag.CategoryData != null)
+                                    {
+                                        foreach (var category in ViewBag.CategoryData)
+                                        {
+                                            <option value="@category.Value">@category.Text</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Sub Category
+                        </label>
+                        <div class="col-sm-8">
+                            <select id="subcategory" name="subcategory" class="form-control">
+
+                                @{
+                                    if (ViewBag.SubCategoryData != null)
+                                    {
+                                        foreach (var subcat in ViewBag.SubCategoryData)
+                                        {
+                                            <option value="@subcat.Value">@subcat.Text</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Metals
+                        </label>
+                        <div class="col-sm-8">
+                            <select id="metal" name="metal" class="form-control">
+                                @{
+                                    if (ViewBag.MetalTypes != null)
+                                    {
+                                        foreach (var metal in ViewBag.MetalTypes)
+                                        {
+                                            <option value="@metal.Value">@metal.Text</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Vendor
+                        </label>
+                        <div class="col-sm-8">
+                            <select id="cmbVendor" name="cmbVendor" class="form-control">
+                                @{
+                                    if (ViewBag.VenderTypes != null)
+                                    {
+                                        foreach (var cast_code in ViewBag.VenderTypes)
+                                        {
+                                            <option value="@cast_code.Value">@cast_code.Text</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-right" style="padding-top: 8px;">
+                    <input type="button" value="Reset" class="formsGlobalUniqueBtn btnResetFormValues" id="resetFormValues" />
+                    <input type="button" id="btnFormResultsSearch" value="Refresh" class="refresh_btn refreshBtnDefault" />
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+
+    <div class="mt-4 white-box pos-rel" id="divDataTableReport">
+
+        <div class="row col-md-6 report_buttons">
+            <div style="margin:3px;">
+                <input type="button" value="PDF" table-id="dataTableForVendorStylePerformence" class="formsGlobalUniqueBtn btnDataTableDownloadPDF" id="btnPDF" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Excel" table-id="dataTableForVendorStylePerformence" class="formsGlobalUniqueBtn btnDataTableDownloadExcel" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Preview" table-id="dataTableForVendorStylePerformence" id="btnDataTablePreview" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Print" table-id="dataTableForVendorStylePerformence" id="btnDataTablePrint" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Email" table-id="dataTableForVendorStylePerformence" class="formsGlobalUniqueBtn" />
+            </div>
+
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Simple Excel" class="formsGlobalUniqueBtn" />
+            </div>
+        </div>
+        <div class="row dataTableReport" id="printContent">
+            <div><br /></div>
+            <table id="dataTableForVendorStylePerformence" class="dataTable display nowrap table" style="width:100%">
+                <thead>
+                    <tr>
+
+                        <th style="text-align:center !important;">STYLE</th>
+                        <th style="text-align:center !important;">CATEGORY</th>
+                        <th style="text-align:center !important;">SUBCAT</th>
+                        <th style="text-align:center !important;">DESC</th>
+                        <th style="text-align:center !important;">QTYRCVD</th>
+                        <th style="text-align:center !important;">QTYSOLD</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th id="summaryQtyRcvd" class="text-right numericColumns"></th>
+                        <th id="summaryQtySold" class="text-right numericColumns"></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var table = $('#dataTableForVendorStylePerformence').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 25,
+            bInfo: false,
+            aaSorting: []
+        });
+
+        $('#resetFormValues').on("click", function (e) {
+
+            $("#cbFillFromToDates1").prop("checked", true);
+            $("#cbFillFromToPurchaseDates").prop("checked", true);
+            $("#summaryBymodal").prop("checked", false);
+
+            $("#group").prop('selectedIndex', 0);
+            $("#category").prop('selectedIndex', 0);
+            $("#subcategory").prop('selectedIndex', 0);
+            $("#metal").prop('selectedIndex', 0);
+            $("#cmbVendor").prop('selectedIndex', 0);
+
+            $('#txtFromDate').val('1900-01-01').prop('disabled', 'true');
+            $('#txtToDate').val('2098-12-31').prop('disabled', 'true');
+            $('#txtFromDate1').val('1900-01-01').prop('disabled', 'true');
+            $('#txtToDate1').val('2098-12-31').prop('disabled', 'true');
+
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        $('#summaryBymodal').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        $('#group').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        $('#category').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        $('#subcategory').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        $('#metal').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        $('#cmbVendor').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        $('#rdoPickupdate').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        $('#rdoDateonly').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+
+        $('#cbFillFromToDates1').on("click", function (e) {
+
+            if ($("#cbFillFromToDates1").prop("checked") == true) {
+                $('#txtFromDate').val('1900-01-01').prop('disabled', 'true');
+                $('#txtToDate').val('2098-12-31').prop('disabled', 'true');
+
+            } else {
+                var now = new Date();
+                var day = ("0" + now.getDate()).slice(-2);
+                var month = ("0" + (now.getMonth() + 1)).slice(-2);
+                var today = now.getFullYear() + "-" + (month) + "-" + (day);
+                $('#txtFromDate').val(today).removeAttr('disabled');
+                $('#txtToDate').val(today).removeAttr('disabled');
+            }
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+
+        $('#cbFillFromToPurchaseDates').on("click", function (e) {
+            if ($("#cbFillFromToPurchaseDates").prop("checked") == true) {
+                $('#txtFromDate1').val('1900-01-01').prop('disabled', 'true');
+                $('#txtToDate1').val('2098-12-31').prop('disabled', 'true');
+
+            } else {
+                var now = new Date();
+                var day = ("0" + now.getDate()).slice(-2);
+                var month = ("0" + (now.getMonth() + 1)).slice(-2);
+                var today = now.getFullYear() + "-" + (month) + "-" + (day);
+                $('#txtFromDate1').val(today).removeAttr('disabled');
+                $('#txtToDate1').val(today).removeAttr('disabled');
+            }
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+
+
+        fillFromToDates();
+        $('#txtFromDate').val('1900-01-01').prop('disabled', 'true');
+        $('#txtToDate').val('2098-12-31').prop('disabled', 'true');
+        $('#txtFromDate1').val('1900-01-01').prop('disabled', 'true');
+        $('#txtToDate1').val('2098-12-31').prop('disabled', 'true');
+
+        $('.hasskip').on("click", function (e) {
+            $('#cbFillFromToDates1').prop("checked", false);
+            $('#cbFillFromToPurchaseDates').prop("checked", false);
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+
+    });
+    function buttonStyleClassChange(btnId) {
+        $('#' + btnId).removeClass('refreshBtnDefault').addClass('needToRefreshBtn');
+        $('#' + btnId).val("Refresh *");
+    }
+
+    function existAutoFilledData() {
+
+        $('#summaryQtyRcvd').html('');
+        $('#summaryQtySold').html('');
+
+        let group = $('#group').val();
+        let category = $('#category').val();
+        let subCategory = $('#subcategory').val();
+        let metal = $('#metal').val();
+        let vendor = $('#cmbVendor').val();
+
+        if ($('#txtFromDate').val() != "")
+            fromdate = $('#txtFromDate').val();
+        else
+            fromdate = "1990-01-01";
+
+
+        if ($('#txtToDate').val() != "")
+            todate = $('#txtToDate').val();
+        else
+            todate = "2099-12-31";
+
+        if ($('#txtFromDate1').val() != "")
+            purcfdate = $('#txtFromDate1').val();
+        else
+            purcfdate = "1990-01-01";
+
+
+        if ($('#txtToDate1').val() != "")
+            purctdate = $('#txtToDate1').val();
+        else
+            purctdate = "2099-12-31";
+
+
+
+        var summaryBymodal = ($('#summaryBymodal').prop('checked')) ? true : false;
+
+
+        var url = '@Url.Action("GetVendorStylePerformanceDetails", "ListOfItemsSold", new { Area = "" })';
+
+        var data = {
+            Group: group,
+            Category: category,
+            SubCategory: subCategory,
+            Metal: metal,
+            Vendor: vendor,
+            FROMDATE: fromdate,
+            DateTo: todate,
+            Purcfdate: purcfdate,
+            Purctdate: purctdate,
+            SummByModel: summaryBymodal,
+            Is_DiamondDealer: false
+        };
+        var table = $('#dataTableForVendorStylePerformence').DataTable();
+        table.clear().draw();
+        var jqxhr = $.post(url, data, function () { })
+            .done(function (response) {
+                var json;
+                if (response instanceof Object)
+                    json = response;
+                else
+                    json = $.parseJSON(response);
+
+                let summaryQtyRcvd = 0;
+                let summaryQtySold = 0;
+
+
+                for (var i = 0; i < json.length; i++) {
+                    if (json[i].QTYRCVD != '') {
+                        summaryQtyRcvd = summaryQtyRcvd + json[i].QTYRCVD;
+                    }
+                    if (json[i].QTYSOLD != '') {
+                        summaryQtySold = summaryQtySold + json[i].QTYSOLD;
+                    }
+
+
+                    table.row.add([
+                        json[i].STYLE,
+                        json[i].CATEGORY,
+                        json[i].SUBCAT,
+                        json[i].DESC,
+                        formatCurrency(json[i].QTYRCVD),
+                        formatCurrency(json[i].QTYSOLD),
+                    ]);
+
+                }
+                table.draw();
+                $('#summaryQtyRcvd').html(formatCurrency(summaryQtyRcvd));
+                $('#summaryQtySold').html(formatCurrency(summaryQtySold));
+            })
+            .fail(function (jqxhr, textStatus, error) {
+                var err = textStatus + ", " + error;
+                console.log("GETSoldOrInstock Request Failed: " + err);
+            });
+
+    }
+
+    function formatCurrency(total) {
+        var neg = false;
+        if (total < 0) {
+            neg = true;
+            total = Math.abs(total);
+        }
+        return (neg ? "-" : '') + parseFloat(total, 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString();
+    }
+
+</script>
+<style>
+
+    .table tbody tr td {
+        text-align: left !important;
+    }
+
+    table tbody tr td:nth-child(5) {
+        text-align: right !important;
+    }
+
+    table tbody tr td:nth-child(6) {
+        text-align: right !important;
+    }
+
+    #summaryQtyRcvd {
+        text-align: right !important;
+    }
+
+    #summaryQtySold {
+        text-align: right !important;
+        padding: 8px 20px !important;
+    }
+</style>

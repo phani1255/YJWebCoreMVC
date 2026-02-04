@@ -1,0 +1,393 @@
+﻿<!--
+Hemant 10/17/2024 Sales / Detailed Cog Report
+Hemant 10/24/2024 Sales / Bugfix for is laway checkbox
+-->
+@{
+
+    if (Session["UserID"] == null)
+    {
+        Layout = null;
+        Response.Redirect("~/Login/Index");
+    }
+    else
+    {
+        Layout = null;
+        Layout = "~/Views/Shared/_Layout.cshtml";
+
+    }
+    ViewBag.Title = "DETAILED COG REPORT";
+}
+
+<div id="content-center" class="row">
+
+    <div class="web-form page login-page col-sm-12">
+
+        <div class="form-horizontal">
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            From
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtFromDate" class="form-control activateFormRefreshBtn" style="font-size:13px;" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            To Date
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtToDate" class="form-control activateFormRefreshBtn" style="font-size:13px;" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-right">
+                    <div class="mt-5px">
+                        <input type="checkbox" id="cbFillFromToDates" checked /> <span>All Dates</span>
+                        <input type="button" value="Last Month" class="formsGlobalUniqueBtn btnGetLastMonthDates" />
+                        <input type="button" value="Last Week" class="formsGlobalUniqueBtn btnGetLastWeekDates" />
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Store
+                        </label>
+                        <div class="col-sm-8">
+                            <select id="store" name="store" class="form-control">
+                                @{
+                                    if (ViewBag.StoreData != null)
+                                    {
+                                        foreach (var store in ViewBag.StoreData)
+                                        {
+                                            <option value="@store.Value">@store.Text</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <input type="radio" value="rdoDateonly" class="activateFormRefreshBtn" id="rdoDateonly" name="rdoDateonly" /> Date
+                    &nbsp;&nbsp;&nbsp;
+                    <input type="radio" value="rdoPickupdate" class="activateFormRefreshBtn" id="rdoPickupdate" name="rdoDateonly" checked="checked" /> Pickup Date
+                </div>
+                <div class="col-md-4"><input type="checkbox" name="radUseInvoiceCost" id="radUseInvoiceCost" />&nbsp;Use Invoice Cost</div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <input type="checkbox" name="chkLayawaysUnpaid" id="chkLayawaysUnpaid" />&nbsp;Include Layaways and Special Orders
+                </div>
+                <div class="col-md-4"></div>
+                <div class="col-md-4 text-right" style="padding-top: 8px;">
+                    <input type="button" value="Reset" class="formsGlobalUniqueBtn btnResetFormValues" id="resetFormValues" />
+                    <input type="button" id="btnFormResultsSearch" value="Refresh" class="refresh_btn refreshBtnDefault" />
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="mt-4 white-box pos-rel" id="divDataTableReport">
+
+        <div class="row col-md-6 report_buttons">
+            <div style="margin:3px;">
+                <input type="button" value="PDF" table-id="dataTableForDetaiiledCog" class="formsGlobalUniqueBtn btnDataTableDownloadPDF" id="btnPDF" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Excel" table-id="dataTableForDetaiiledCog" class="formsGlobalUniqueBtn btnDataTableDownloadExcel" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Preview" table-id="dataTableForDetaiiledCog" id="btnDataTablePreview" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Print" table-id="dataTableForDetaiiledCog" id="btnDataTablePrint" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Email" table-id="dataTableForDetaiiledCog" class="formsGlobalUniqueBtn" />
+            </div>
+
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Simple Excel" class="formsGlobalUniqueBtn" />
+            </div>
+        </div>
+        <div class="row dataTableReport" id="printContent">
+            <div><br /></div>
+            <table id="dataTableForDetaiiledCog" class="dataTable display nowrap table" style="width:100%">
+                <thead>
+                    <tr>
+                        <th style="text-align:center !important;">Inv No.</th>
+                        <th style="text-align:center !important;">Style</th>
+                        <th style="text-align:center !important;">Qty</th>
+                        <th style="text-align:center !important;">Casting</th>
+                        <th style="text-align:center !important;">Setting</th>
+                        <th style="text-align:center !important;">Finding</th>
+                        <th style="text-align:center !important;">Labor</th>
+                        <th style="text-align:center !important;">Stone</th>
+                        <th style="text-align:center !important;">Other</th>
+                        <th style="text-align:center !important;">Vendor Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot id="tfooter">
+                    <tr>
+                        <th id=""></th>
+                        <th id=""></th>
+                        <th id="totalQty" class="text-right numericColumns"></th>
+                        <th id="totalCasting" class="text-right numericColumns"></th>
+                        <th id="totalSetting" class="text-right numericColumns"></th>
+                        <th id="totalFinding" class="text-right numericColumns"></th>
+                        <th id="totalLabor" class="text-right numericColumns"></th>
+                        <th id="totalStone" class="text-right numericColumns"></th>
+                        <th id="totalOther" class="text-right numericColumns"></th>
+                        <th id=""></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var table = $('#dataTableForDetaiiledCog').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 25,
+            bInfo: false,
+            aaSorting: []
+        })
+
+        $('#resetFormValues').on("click", function (e) {
+            $("#cbFillFromToDates").prop("checked", true);
+            fillFromToDates();
+            $('#store').prop('selectedIndex', 0);
+            $('#rdoPickupdate').prop('checked', true);
+            $('#chkLayawaysUnpaid').prop('checked', false);
+            $('#radUseInvoiceCost').prop('checked', false);
+
+        });
+
+        $('#chkLayawaysUnpaid').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        $('#radUseInvoiceCost').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        $('#rdoDateonly').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        $('#rdoPickupdate').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+        $('#store').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+
+        fillFromToDates();
+    });
+
+    function buttonStyleClassChange(btnId) {
+        $('#' + btnId).removeClass('refreshBtnDefault').addClass('needToRefreshBtn');
+        $('#' + btnId).val("Refresh *");
+    }
+
+    function existAutoFilledData() {
+
+        $('#totalQty').html('');
+        $('#totalCasting').html('');
+        $('#totalSetting').html('');
+        $('#totalFinding').html('');
+        $('#totalLabor').html('');
+        $('#totalStone').html('');
+        $('#totalOther').html('');
+
+
+        if ($('#txtFromDate').val() != "")
+            fromdate = $('#txtFromDate').val();
+        else
+            fromdate = "1990-01-01";
+
+        if ($('#txtToDate').val() != "")
+            todate = $('#txtToDate').val();
+        else
+            todate = "2099-12-31";
+
+
+        let bypicdate = false;
+        let rdt = $("input[name='rdoDateonly']:checked").val();
+        if (rdt == "rdoPickupdate") {
+            bypicdate = true;
+        }
+
+        var store = $('#store').val();
+        var IsLayaway = $('#chkLayawaysUnpaid').prop("checked") ? true : false;
+        var UseInvoiceCost = $('#radUseInvoiceCost').prop("checked") ? true : false;
+
+
+        var url = '@Url.Action("GetDetailedCOG", "ListOfItemsSold", new { Area = "" })';
+
+        var data = {
+            FROMDATE: fromdate,
+            DateTo: todate,
+            Store: store,
+            layaway: IsLayaway,
+            IsCost: UseInvoiceCost,
+            ByWhichDate: bypicdate
+        };
+
+        var table = $('#dataTableForDetaiiledCog').DataTable();
+
+
+        table.clear().draw();
+        var jqxhr = $.post(url, data, function () { })
+            .done(function (response) {
+                var json;
+                if (response instanceof Object)
+                    json = response;
+                else
+                    json = $.parseJSON(response);
+
+
+                var totalQty = 0;
+                var totalCasting = 0;
+                var totalSetting = 0;
+                var totalFinding = 0;
+                var totalLabor = 0;
+                var totalStone = 0;
+                var totalOther = 0;
+
+                for (var i = 0; i < json.length; i++) {
+
+
+                        if (json[i].Qty != "") {
+                            totalQty = totalQty + json[i].Qty;
+                        }
+                        if (json[i].Casting != "") {
+                            totalCasting = totalCasting + json[i].Casting;
+                        }
+                        if (json[i].Setting != "") {
+                            totalSetting = totalSetting + json[i].Setting;
+                        }
+                        if (json[i].Finding != "") {
+                            totalFinding = totalFinding + json[i].Finding;
+                        }
+                        if (json[i].Labor != "") {
+                            totalLabor = totalLabor + json[i].Labor;
+                        }
+                        if (json[i].Stone != "") {
+                            totalStone = totalStone + json[i].Stone;
+                        }
+                        if (json[i].Other != "") {
+                            totalOther = totalOther + json[i].Other;
+                        }
+
+                        table.row.add([
+                            json[i].Inv_No,
+                            json[i].Style,
+                            formatCurrency(json[i].Qty),
+                            formatCurrency(json[i].Casting),
+                            formatCurrency(json[i].Setting),
+                            formatCurrency(json[i].Finding),
+                            formatCurrency(json[i].Labor),
+                            formatCurrency(json[i].Stone),
+                            formatCurrency(json[i].Other),
+                            json[i].Vnd_name
+                        ]);
+
+                }
+                table.draw();
+
+                $('#totalQty').html(formatCurrency(totalQty));
+                $('#totalCasting').html(formatCurrency(totalCasting));
+                $('#totalSetting').html(formatCurrency(totalSetting));
+                $('#totalFinding').html(formatCurrency(totalFinding));
+                $('#totalLabor').html(formatCurrency(totalLabor));
+                $('#totalStone').html(formatCurrency(totalStone));
+                $('#totalOther').html(formatCurrency(totalOther));
+
+
+            })
+            .fail(function (jqxhr, textStatus, error) {
+                var err = textStatus + ", " + error;
+                console.log("GETSoldOrInstock Request Failed: " + err);
+            });
+
+    }
+
+    function formatCurrency(total) {
+        var neg = false;
+        if (total < 0) {
+            neg = true;
+            total = Math.abs(total);
+        }
+        return (neg ? "-" : '') + parseFloat(total, 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString();
+    }
+
+
+</script>
+<style>
+
+    .table tfoot tr th {
+        text-align: right !important;
+        padding: 0px !important;
+    }
+
+    .table tbody tr td {
+        text-align: left !important;
+    }
+
+    table tbody tr td:nth-child(3) {
+        text-align: right !important;
+        padding: 0px !important;
+    }
+
+    table tbody tr td:nth-child(4) {
+        text-align: right !important;
+        padding: 0px !important;
+    }
+
+    table tbody tr td:nth-child(5) {
+        text-align: right !important;
+        padding: 0px !important;
+    }
+
+    table tbody tr td:nth-child(6) {
+        text-align: right !important;
+        padding: 0px !important;
+    }
+
+    table tbody tr td:nth-child(7) {
+        text-align: right !important;
+        padding: 0px !important;
+    }
+
+    table tbody tr td:nth-child(8) {
+        text-align: right !important;
+        padding: 0px !important;
+    }
+
+    table tbody tr td:nth-child(9) {
+        text-align: right !important;
+        padding: 0px !important;
+    }
+
+    .padding-left-zero {
+        padding-left: 0px !important;
+    }
+</style>

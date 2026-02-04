@@ -1,0 +1,359 @@
+<!--
+  * Created by Phanindra
+  * Phanindra 9/9/2024 Done changes for text align and decimals fixes and preview related
+  * Phanindra 9/22/2024 Worked on fixing filters default values
+-->
+@{
+
+    if (Session["UserID"] == null)
+    {
+        Layout = null;
+        Response.Redirect("~/Login/Index");
+    }
+    else
+    {
+        Layout = null;
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+}
+
+@model YJWeb.Models.AnalasysServiceModel
+
+<div id="content-center" class="row">
+
+    <div class="web-form page login-page col-sm-12" id="FormForAnnualSalesComparison">
+
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="col-sm-4">
+                    <p>Period 1</p>
+                    <div class="well">
+                        <div class="row">
+                            <label class="col-sm-4">
+                                From Date
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="date" id="txtFromDate1" class="form-control fs-13 activateFormRefreshBtn" />
+                            </div>
+
+                            <label class="col-sm-4">
+                                To Date
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="date" id="txtToDate1" class="form-control fs-13 activateFormRefreshBtn" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <p>Period 2</p>
+                    <div class="well">
+                        <div class="row">
+                            <label class="col-sm-4">
+                                From Date
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="date" id="txtFromDate2" class="form-control fs-13 activateFormRefreshBtn" />
+                            </div>
+
+                            <label class="col-sm-4">
+                                To Date
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="date" id="txtToDate2" class="form-control fs-13 activateFormRefreshBtn" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <p>Period 3</p>
+                    <div class="well">
+                        <div class="row">
+                            <label class="col-sm-4">
+                                From Date
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="date" id="txtFromDate3" class="form-control fs-13 activateFormRefreshBtn" />
+                            </div>
+
+                            <label class="col-sm-4">
+                                To Date
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="date" id="txtToDate3" class="form-control fs-13 activateFormRefreshBtn" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <input type="radio" name="iSByPickupDate" class="iSByDate activateFormRefreshBtn" value="false" /> Date &nbsp;&nbsp;&nbsp;
+                    <input type="radio" name="iSByPickupDate" class="iSByPickupDate resetDefaultCheckField activateFormRefreshBtn" value="true" checked /> Pickup Date
+                </div>
+                <div class="col-sm-4">
+                    <input type="checkbox" class="chkExcludeDealers resetDefaultUncheckField activateFormRefreshBtn" /> Exclude Dealers
+                    <input type="checkbox" class="chkExcludeNonDealers resetDefaultUncheckField activateFormRefreshBtn" /> Exclude Non Dealers
+                </div>
+                <div class="col-sm-4">
+                    <input type="checkbox" class="chkLayawaysUnpaid resetDefaultUncheckField activateFormRefreshBtn" /> Include Invoices That Are Not Picked Up
+                </div>
+            </div>
+            <div class="row" style="margin-top: 10px;">
+                <div class="col-md-12 text-right">
+                    <input type="button" value="Reset" form-id="FormForAnnualSalesComparison" class="formsGlobalUniqueBtn btnResetFormValues" />
+                    <input type="button" id="btnFormResultsSearch" value="Refresh" class="refresh_btn refreshBtnDefault" />
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="mt-4 white-box pos-rel" id="divDataTableReport">
+
+        <div class="row col-md-6 report_buttons">
+            <div style="margin:3px;">
+                <input type="button" value="PDF" table-id="dataTableForAnnualSalesComparison" class="formsGlobalUniqueBtn btnDataTableDownloadPDF" id="btnPDF" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Excel" table-id="dataTableForAnnualSalesComparison" class="formsGlobalUniqueBtn btnDataTableDownloadExcel" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Preview" table-id="dataTableForAnnualSalesComparison" id="btnDataTablePreview" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Print" table-id="dataTableForAnnualSalesComparison" id="btnDataTablePrint" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Email" table-id="dataTableForAnnualSalesComparison" class="formsGlobalUniqueBtn" />
+            </div>
+
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Simple Excel" class="formsGlobalUniqueBtn" />
+            </div>
+        </div>
+        <div class="row dataTableReport">
+
+            <table id="dataTableForAnnualSalesComparison" class="dataTable display nowrap table" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Acc</th>
+                        <th>Name</th>
+                        <th class="numericColumns w-55px">Total P1</th>
+                        <th class="numericColumns w-45px">Change <br />From P2%</th>
+                        <th class="numericColumns w-55px">Total P2</th>
+                        <th class="numericColumns w-45px">Change <br />From P3 %</th>
+                        <th class="numericColumns w-55px">Period3</th>
+                        <th>Email</th>
+                        <th class="w-45px">Tel</th>
+                        <th>Address</th>
+                        <th>City</th>
+                        <th>State</th>
+                        <th>Zip</th>
+                        <th>Date</th>
+                        <th class="w-35px">Salesman</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot id="tfooter">
+                    <tr>
+                        <th class="text-right"></th>
+                        <th class="text-right"></th>
+                        <th class="text-right numericColumns"></th>
+                        <th class="text-right numericColumns"></th>
+                        <th class="text-right numericColumns"></th>
+                        <th class="text-right numericColumns"></th>
+                        <th class="text-right numericColumns"></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+
+            </table>
+            <br>
+
+        </div>
+    </div>
+
+</div>
+
+
+
+
+<script type="text/javascript">
+
+    function ClearControls() {
+        getDefaultFormValuesASCform();
+
+        existAutoFilledData();
+    }
+    function existAutoFilledData() {
+
+        if ($('#txtFromDate1').val() != "")
+            fromdate1 = $('#txtFromDate1').val();
+        else
+            fromdate1 = "1990-01-01";
+
+        if ($('#txtToDate1').val() != "")
+            todate1 = $('#txtToDate1').val();
+        else
+            todate1 = "2099-12-31";
+
+        if ($('#txtFromDate2').val() != "")
+            fromdate2 = $('#txtFromDate2').val();
+        else
+            fromdate2 = "1990-01-01";
+
+        if ($('#txtToDate2').val() != "")
+            todate2 = $('#txtToDate2').val();
+        else
+            todate2 = "2099-12-31";
+
+        if ($('#txtFromDate3').val() != "")
+            fromdate3 = $('#txtFromDate3').val();
+        else
+            fromdate3 = "1990-01-01";
+
+        if ($('#txtToDate3').val() != "")
+            todate3 = $('#txtToDate3').val();
+        else
+            todate3 = "2099-12-31";
+
+        iSByPickupDate = chkLayawaysUnpaid = "false";
+        exclude = '';
+        if ($(".iSByPickupDate:checked").length > 0) {
+            iSByPickupDate = $(".iSByPickupDate:checked").val().toString();
+        }
+        if ($(".chkExcludeDealers:checked").length > 0) {
+            exclude = "Dealers";
+        }else if ($(".chkExcludeNonDealers:checked").length > 0) {
+            exclude = "NonDealer";
+        }
+        if ($(".chkLayawaysUnpaid:checked").length > 0) {
+            chkLayawaysUnpaid = "true";
+        }
+
+
+        BindAnnualSalesComparison(fromdate1, todate1, fromdate2, todate2, fromdate3, todate3, chkLayawaysUnpaid, iSByPickupDate, exclude);
+    }
+
+    function BindAnnualSalesComparison(fromdate1, todate1, fromdate2, todate2, fromdate3, todate3, chkLayawaysUnpaid, iSByPickupDate, exclude) {
+        var url = '@Url.Action("GetAnnualSalesComparison", "Analysis", new { Area = "" })';
+        var data = {
+            strFrom1: fromdate1,
+            strTo1: todate1,
+            strFrom2: fromdate2,
+            strTo2: todate2,
+            strFrom3: fromdate3,
+            strTo3: todate3,
+            strchkLayawaysUnpaid: chkLayawaysUnpaid,
+            striSByPickupDate: iSByPickupDate,
+            strexclude: exclude
+        };
+        var jqxhr = $.post(url, data, function () { })
+        .done(function (response) {
+            var json;
+            if (response instanceof Object)
+                json = response;
+            else
+                json = $.parseJSON(response);
+
+            var table = $('#dataTableForAnnualSalesComparison').DataTable();
+            table.clear().draw();
+
+
+            $("#dataTableForAnnualSalesComparison tbody").empty();
+            var trans = json;
+            var totalPaid1 = 0; var totalPaid2 = 0, totalPaid3 = 0;
+            var tr;
+            //alert(json);
+            for (var i = 0; i < json.length; i++) {
+                totalPaid1 += parseFloat(json[i].paid1);
+                totalPaid2 += parseFloat(json[i].paid2);
+                totalPaid3 += parseFloat(json[i].paid3);
+
+                table.row.add([
+                    json[i].ACC,
+                    json[i].name,
+                    numberWithCommas(json[i].paid1),
+                    numberWithCommas(json[i].increase1),
+                    numberWithCommas(json[i].paid2),
+                    numberWithCommas(json[i].increase2),
+                    numberWithCommas(json[i].paid3),
+                    json[i].email,
+                    json[i].Tel,
+                    json[i].Address1,
+                    json[i].City,
+                    json[i].State,
+                    json[i].Zip,
+                    json[i].strFormattedDate,
+                    json[i].Salesman,
+                ]);
+            }
+
+            $('#tfooter').find('th').eq(0).html("Grand Total");
+            $('#tfooter').find('th').eq(2).html(numberWithCommas(totalPaid1));
+            $('#tfooter').find('th').eq(4).html(numberWithCommas(totalPaid2));
+            $('#tfooter').find('th').eq(6).html(numberWithCommas(totalPaid3));
+
+            table.draw();
+            addNumericColumnsClasstoDT("dataTableForAnnualSalesComparison", [2, 3, 4, 5, 6]);
+
+            // TODO : Bind data to table
+        })
+        .fail(function (jqxhr, textStatus, error) {
+            var err = textStatus + ", " + error;
+            console.log("GETAnnualSalesComparison Request Failed: " + err);
+        });
+    }
+
+
+    $(document).ready(function () {
+
+        var table = $('#dataTableForAnnualSalesComparison').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 25
+        });
+
+        $(document).on('click', ".paginate_button", function () {
+            addNumericColumnsClasstoDT("dataTableForAnnualSalesComparison", [2, 4, 6]);
+        });
+
+        //fillFromToDates();
+        getDefaultFormValuesASCform();
+    });
+
+    function getDefaultFormValuesASCform() {
+        var today = new Date();
+        txtFromDate1 = today.getFullYear() + "-01-01";
+        txtToDate1 = today.getFullYear() + "-" + ("00" + (today.getMonth() + 1)).slice(-2) + "-" + ("00" + today.getDate()).slice(-2);
+        txtFromDate2 = (today.getFullYear() - 1) + "-01-01";
+        txtToDate2 = (today.getFullYear() - 1) + "-" + ("00" + (today.getMonth() + 1)).slice(-2) + "-" + ("00" + today.getDate()).slice(-2);
+        txtFromDate3 = (today.getFullYear() - 2) + "-01-01";
+        txtToDate3 = (today.getFullYear() - 2) + "-" + ("00" + (today.getMonth() + 1)).slice(-2) + "-" + ("00" + today.getDate()).slice(-2);
+        $('#txtFromDate1').val(txtFromDate1);
+        $('#txtToDate1').val(txtToDate1);
+        $('#txtFromDate2').val(txtFromDate2);
+        $('#txtToDate2').val(txtToDate2);
+        $('#txtFromDate3').val(txtFromDate3);
+        $('#txtToDate3').val(txtToDate3);
+        buttonStyleClassChange('btnFormResultsSearch');
+    }
+
+    $(document).on('click', '.btnResetFormValues', function () {
+        getDefaultFormValuesASCform();
+    })
+
+</script>

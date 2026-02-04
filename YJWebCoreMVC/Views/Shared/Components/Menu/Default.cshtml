@@ -1,0 +1,228 @@
+﻿
+@model IEnumerable<YJWebCoreMVC.Models.MenuModel>
+@{
+    Layout = null;
+}
+
+
+<header id="header">
+
+    <nav class="side-menus">
+        <div class="side-header">
+            <div class="logo"><a href="/Home" title=""><img src="~/css/logo.png" alt="" class="site-logo"></a></div>
+            <ul class="parent-menu default_ul hidden">
+                @{
+                    foreach (var item in Model.Where(s => s.ParentMenuId == 0).GroupBy(Obj => new { Obj.MenuId }).Distinct().ToList())
+                    {
+                        <li class="nav-item dropdown1 default_li hidden">
+                            <a class="nav-link dropdown-toggle default_anchor">
+
+                                <span class="navbar-label">
+                                    @{
+                                        if (item.FirstOrDefault().ImageName == "")
+                                        {
+                                            <i class="icm icm-icm navbar-icon fa @item.FirstOrDefault().ImageIcon"></i>
+                                        }
+                                        else
+                                        {
+                                            <img src="~/images/@item.FirstOrDefault().ImageName" alt="" class="menuIcons">
+                                        }
+                                    }
+
+                                    @item.FirstOrDefault().Title
+                                </span>
+                            </a>
+
+
+                            <ul class="dropdown-menu first_ul hidden">
+                                @{
+                                    foreach (var firstItem in (Model.Where(s => s.ParentMenuId == item.FirstOrDefault().MenuId).ToList()))
+                                    {
+
+                                        if (Model.Where(s => s.ParentMenuId == firstItem.MenuId).ToList().Any())
+                                        {
+                                            foreach (var secondItem in (Model.Where(s => s.ParentMenuId == firstItem.MenuId).ToList()))
+                                            {
+
+                                                secondItem.ImageName = item.FirstOrDefault().ImageName;
+                                                <li class="second_li hidden @secondItem.ShowExcept">
+                                                    @{
+                                                        if (!string.IsNullOrEmpty(secondItem.weblink))
+                                                        {
+                                                            <a class="dropdown-item second_anchor" href="/@secondItem.weblink">
+                                                                @{
+                                                                    @*if (secondItem.ImageName == "")
+                                                                        {
+                                                                            <i class="icm icm-icm navbar-icon fa @secondItem.ImageIcon"></i>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <img src="~/images/@secondItem.ImageName" alt="" class="menuIcons">
+                                                                        }*@
+                                                                }
+                                                                @Html.Raw(@secondItem.Title)
+                                                            </a>
+                                                        }
+                                                        else
+                                                        {
+                                                            <a class="dropdown-item second_anchor">
+                                                                <span>
+                                                                    @{
+                                                                        @*if (secondItem.ImageName == "")
+                                                                            {
+                                                                                <i class="icm icm-icm navbar-icon fa @secondItem.ImageIcon"></i>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <img src="~/images/@secondItem.ImageName" alt="" class="menuIcons">
+                                                                            }*@
+                                                                    }
+                                                                    @Html.Raw(@secondItem.Title)
+                                                                </span>
+                                                            </a>
+                                                        }
+                                                    }
+                                                    @{
+                                                        if (Model.Where(s => s.ParentMenuId == secondItem.MenuId).ToList().Any()){
+                                                            <div class="dropdown-menu third_ul megamenu hidden">
+                                                                <div class="inneritemsdiv">
+                                                                    <ul>
+                                                                        @foreach (var thirdItem in (Model.Where(s => s.ParentMenuId == secondItem.MenuId).ToList()))
+                                                                        {
+                                                                            if (thirdItem.Title == "-")
+                                                                            {
+                                                                                @:</ul></div><div class="inneritemsdiv"><ul>
+                                                                                continue;
+                                                                            }
+                                                                            <li class="third_li hidden">
+                                                                                @{
+                                                                                    if (!string.IsNullOrEmpty(thirdItem.weblink))
+                                                                                    {
+                                                                                        if (thirdItem.AskPassword)
+                                                                                        {
+                                                                                            <a class="dropdown-item noarrows third_anchor ask-password"
+                                                                                                href="/@thirdItem.weblink"
+                                                                                                onclick="handleLableClick('@thirdItem.OnClick')">
+                                                                                                @thirdItem.Title
+                                                                                            </a>
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            <a class="dropdown-item noarrows third_anchor"
+                                                                                                href="/@thirdItem.weblink">
+                                                                                                @thirdItem.Title
+                                                                                            </a>
+                                                                                        }
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <a class="dropdown-item noarrows third_anchor">
+                                                                                            @thirdItem.Title
+                                                                                        </a>
+                                                                                    }
+                                                                                }
+                                                                            </li>
+
+                                                                        }
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        }
+
+                                                    }
+                                                </li>
+
+                                            }
+
+                                        }
+
+
+                                    }
+                                }
+                            </ul>
+
+                        </li>
+
+                    }
+                }
+            </ul>
+
+            <div class="ml-auto">
+
+                <div class="d-flex mr-4 align-items-center">
+
+                    <div class="search-container">
+
+                        <i class="fas fa-search search-icon"></i>
+
+                        <input type="text" class="search-input" placeholder="Search...">
+
+                        <ul class="suggestions"></ul>
+
+                    </div>
+
+                    <!-- <form method="post">
+
+                        <input type="text" placeholder="Enter Your Keyword">
+
+                        <button type="submit"><i class="fa fa-search"></i></button>
+
+                    </form>-->
+
+                    <div class="user-head">
+
+                        <div class="admin">
+
+                            <div class="admin-avatar"><img src="~/images/admin.png" alt=""> <i class="online"></i> </div>
+
+                        </div>
+
+                        <div class="drop setting">
+
+                            <span class="drop-bottom"><a href="/Login/Logout" title=""><i class="fa fa-sign-out"></i>log Out</a></span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </nav>
+    <div id="breadcrumb">
+
+    </div>
+</header>
+
+<script>
+    function handleLableClick(clickValue) {
+        if (clickValue.startsWith("P:")) {
+            var caseType = clickValue.substring(2);
+            $.ajax({
+                url: '@Url.Action("OpenForm", "Home")',
+                type: 'POST',
+                data: { caseType: caseType },
+                success: function(response) {
+                },
+                error: function(error) {
+                    console.log('Error:', error);
+                }
+            });
+        }
+    }
+
+    $(document).on("click", ".second_anchor", function (e) {
+
+
+        if (!$(this).attr("href")) {
+            e.preventDefault();
+            e.stopPropagation();
+            return;
+        }
+
+        window.location.href = $(this).attr("href");
+    });
+
+</script>

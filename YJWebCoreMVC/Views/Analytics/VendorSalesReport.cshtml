@@ -1,0 +1,408 @@
+﻿<!--
+ Hemanth 09/25/2024 created new form
+ Hemanth 10/10/2024 preview and print changes added
+ Hemanth 10/17/2024 long description overlaping issue fixed and checked summary total
+-->
+@{
+
+    if (Session["UserID"] == null)
+    {
+        Layout = null;
+        Response.Redirect("~/Login/Index");
+    }
+    else
+    {
+        Layout = null;
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    ViewBag.Title = "Vendor Sales Report";
+}
+
+<div id="content-center" class="row">
+
+    <div class="web-form page login-page col-sm-12">
+
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-5">
+                            From Date
+                        </label>
+                        <div class="col-sm-7">
+                            <input type="date" id="txtFromDate" class="form-control activateFormRefreshBtn" name="dateFrom" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-5">
+                            To Date
+                        </label>
+                        <div class="col-sm-7">
+                            <input type="date" id="txtToDate" class="form-control activateFormRefreshBtn" name="dateTo" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-right">
+                    <div class="mt-5px">
+                        <input type="checkbox" id="cbFillFromToDates" checked /> <span>All Dates</span>
+                        <input type="button" value="Last Month" class="formsGlobalUniqueBtn btnGetLastMonthDates" />
+                        <input type="button" value="Last Week" class="formsGlobalUniqueBtn btnGetLastWeekDates" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-5">
+                            Vendor Code
+                        </label>
+                        <div class="col-sm-7">
+
+
+                            <div class="autocomplete-dropdown">
+                                <input type="text" id="ddlVendor" class="form-control" placeholder="Search...">
+                                <div id="autocomplete-list" class="autocomplete-items"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8 text-right">
+                    <div class="mt-5px">
+                        <input type="button" value="Reset" class="formsGlobalUniqueBtn btnResetFormValues" id="resetFormValues" />
+                        <input type="button" id="btnFormResultsSearch" value="Refresh" class="refresh_btn refreshBtnDefault" />
+                    </div>
+                </div>
+            </div>
+
+            <div id="divImages" style="text-align:right;" class="col-lg-2">
+                <img id="image" src="" alt="" style="max-width: 133% !important;" />
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="mt-4 white-box pos-rel" id="divDataTableReport">
+
+        <div class="row col-md-6 report_buttons">
+            <div style="margin:3px;">
+                <input type="button" value="PDF" table-id="dataTableForVendorSalesReport" class="formsGlobalUniqueBtn btnDataTableDownloadPDF" id="btnPDF" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Excel" table-id="dataTableForVendorSalesReport" class="formsGlobalUniqueBtn btnDataTableDownloadExcel" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Preview" table-id="dataTableForVendorSalesReport" id="btnDataTablePreview" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Print" table-id="dataTableForVendorSalesReport" id="btnDataTablePrint" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Email" table-id="dataTableForVendorSalesReport" class="formsGlobalUniqueBtn" />
+            </div>
+
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Simple Excel" class="formsGlobalUniqueBtn" />
+            </div>
+        </div>
+        <div class="row dataTableReport" id="printContent">
+            <div><br /></div>
+            <table id="dataTableForVendorSalesReport" class="dataTable display nowrap table" style="width:100%">
+                <thead>
+                    <tr>
+
+                        <th style="text-align:center !important;">Vendor</th>
+                        <th style="text-align:center !important;">Sold Date</th>
+                        <th style="text-align:center !important;">Our Style#</th>
+                        <th style="text-align:center !important;">Vendor Style#</th>
+                        <th style="text-align:center !important;">Description</th>
+                        <th style="text-align:center !important;">Invoice#</th>
+                        <th style="text-align:center !important;">Cons#</th>
+                        <th style="text-align:center !important;">Vend Memo</th>
+                        <th style="text-align:center !important;">Qty Sold</th>
+                        <th style="text-align:center !important;">Qty In Stok</th>
+                        <th style="text-align:center !important;">Cost</th>
+                        <th style="text-align:center !important;">Retail</th>
+                        <th style="text-align:center !important;">Purchase</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th id="summaryQtySold" class="text-right numericColumns"></th>
+                        <th id="summaryInstock" class="text-right numericColumns"></th>
+                        <th id="summaryCost" class="text-right numericColumns"></th>
+                        <th id="summaryRetail" class="text-right numericColumns"></th>
+                        <th id="summaryPurchase" class="text-right numericColumns"></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var table = $('#dataTableForVendorSalesReport').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 25,
+            bInfo: false,
+            columnDefs: [{
+                class: 'req-col-1',
+                targets: 2
+            }, {
+                class: 'req-col-1',
+                targets: 3
+            }, {
+                class: 'req-col-1',
+                targets: 4
+            },{
+                class: 'req-col-1',
+                targets: 10
+            }, {
+                class: 'req-col-1',
+                targets: 11
+            }, {
+                class: 'req-col-1',
+                targets: 12
+            }],
+        });
+
+
+        function closeAllLists(elmnt) {
+            var items = $(".autocomplete-items");
+            items.each(function() {
+                if (elmnt !== this && elmnt !== $("#ddlVendor")[0]) {
+                    $(this).empty();
+                }
+            });
+        }
+        $(document).on("click", function (e) {
+            closeAllLists(e.target);
+        });
+
+        var VenderTypes = @Html.Raw(Json.Encode(ViewBag.VenderTypes));
+
+        $("#ddlVendor").on("input", function () {
+            var query = $(this).val().toLowerCase();
+            var list = $("#autocomplete-list");
+            list.empty();
+
+            if (!query) return;
+
+            var results = VenderTypes.filter(function (item) {
+                return item.Text.toLowerCase().indexOf(query) === 0;
+            });
+
+            results.forEach(function (item) {
+                var itemElement = $("<div>")
+                    .addClass("autocomplete-item")
+                    .text(item.Text)
+                    .on("click", function () {
+                        $("#ddlVendor").val(item.Text);
+                        list.empty();
+                    });
+
+                list.append(itemElement);
+            });
+        });
+
+        $('#resetFormValues').on("click", function (e) {
+            $("#cbFillFromToDates").prop("checked", true);
+            fillFromToDates();
+            $('#ddlVendor').val('');
+
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+
+        $('#ddlVendor').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+
+
+        fillFromToDates();
+
+
+    });
+    function buttonStyleClassChange(btnId) {
+        $('#' + btnId).removeClass('refreshBtnDefault').addClass('needToRefreshBtn');
+        $('#' + btnId).val("Refresh *");
+    }
+
+    function existAutoFilledData() {
+
+        $('#summaryQtySold').html('');
+        $('#summaryInstock').html('');
+        $('#summaryCost').html('');
+        $('#summaryRetail').html('');
+        $('#summaryPurchase').html('');
+
+        if ($('#txtFromDate').val() != "")
+            fromdate = $('#txtFromDate').val();
+        else
+            fromdate = "1990-01-01";
+
+
+        if ($('#txtToDate').val() != "")
+            todate = $('#txtToDate').val();
+        else
+            todate = "2099-12-31";
+
+        var Ccode = $('#ddlVendor').val();
+
+        //var checkByAddress = false;
+        var url = '@Url.Action("GetVendorSalesReport", "ListOfItemsSold", new { Area = "" })';
+
+        var data = {
+            Ccode: Ccode,
+            FROMDATE: fromdate,
+            DateTo: todate
+        };
+        var table = $('#dataTableForVendorSalesReport').DataTable();
+        table.clear().draw();
+        var jqxhr = $.post(url, data, function () { })
+            .done(function (response) {
+                var json;
+                if (response instanceof Object)
+                    json = response;
+                else
+                    json = $.parseJSON(response);
+
+                let totalQtyOnSold = 0;
+                let totalQtyInstock = 0;
+                let totalsummaryCost = 0;
+                let totalsummaryRetail = 0;
+                let totalPurchase = 0;
+
+                for (var i = 0; i < json.length; i++) {
+
+                    var soldDate = '';
+                    if (json[i].sold_date != '' && json[i].sold_date != null) {
+                        var date = new Date(json[i].sold_date);
+                        soldDate = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
+                    }
+
+                    if (json[i].qty_sold != '') {
+                        totalQtyOnSold = totalQtyOnSold + json[i].qty_sold;
+                    }
+                    if (json[i].qty_in_stock != '') {
+                        totalQtyInstock = totalQtyInstock + json[i].qty_in_stock;
+                    }
+                    if (json[i].cost != '') {
+                        totalsummaryCost = totalsummaryCost + (json[i].qty_sold * json[i].cost);
+                    }
+                    if (json[i].retail != '') {
+                        totalsummaryRetail = totalsummaryRetail + (json[i].qty_sold * json[i].retail);
+                    }
+                    if (json[i].purchase != '') {
+                        totalPurchase = totalPurchase + (json[i].qty_sold * json[i].purchase);
+                    }
+
+                        table.row.add([
+                            json[i].vendor,
+                            soldDate,
+                            json[i].our_style,
+                            json[i].vendor_style,
+                            '<span style="white-space: break-spaces;">'+json[i].description+'</span>',
+                            json[i].invoice_number,
+                            json[i].consignment_number,
+                            json[i].vendor_memo_number,
+                            formatCurrency(json[i].qty_sold),
+                            formatCurrency(json[i].qty_in_stock),
+                            formatCurrency(json[i].cost),
+                            formatCurrency(json[i].retail),
+                            formatCurrency(json[i].purchase)
+                        ]);
+                }
+                table.draw();
+                $('#summaryQtySold').html(formatCurrency(totalQtyOnSold));
+                $('#summaryInstock').html(formatCurrency(totalQtyInstock));
+                $('#summaryCost').html(formatCurrency(totalsummaryCost));
+                $('#summaryRetail').html(formatCurrency(totalsummaryRetail));
+                $('#summaryPurchase').html(formatCurrency(totalPurchase));
+
+
+
+            })
+            .fail(function (jqxhr, textStatus, error) {
+                var err = textStatus + ", " + error;
+                console.log("GETSoldOrInstock Request Failed: " + err);
+            });
+
+    }
+
+    function formatCurrency(total) {
+        var neg = false;
+        if (total < 0) {
+            neg = true;
+            total = Math.abs(total);
+        }
+        return (neg ? "-" : '') + parseFloat(total, 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString();
+    }
+
+</script>
+<style>
+
+    .table tbody tr td {
+        text-align: left !important;
+    }
+
+    table tbody tr td:nth-child(9) {
+        text-align: right !important;
+    }
+
+    table tbody tr td:nth-child(10) {
+        text-align: right !important;
+    }
+
+    table tbody tr td:nth-child(11) {
+        text-align: right !important;
+    }
+
+    table tbody tr td:nth-child(12) {
+        text-align: right !important;
+    }
+
+    table tbody tr td:nth-child(13) {
+        text-align: right !important;
+    }
+
+    #summaryQtySold {
+        text-align: right !important;
+    }
+
+    #summaryInstock {
+        text-align: right !important;
+    }
+
+    #summaryCost {
+        text-align: right !important;
+    }
+
+    #summaryRetail {
+        text-align: right !important;
+    }
+
+    #summaryPurchase {
+        text-align: right !important;
+        padding-right: 18px !important;
+    }
+
+    .req-col-1 {
+        max-width: 100px;
+    }
+</style>
