@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
-using static YJWebCoreMVC.Services.AccountsPayableService;
 
 namespace YJWebCoreMVC.Models
 {
@@ -11,6 +10,8 @@ namespace YJWebCoreMVC.Models
         public string CheckNo { get; set; }
         public IEnumerable<SelectListItem> AllBankCodes { get; set; }
 
+        public string BillNo { get; set; }
+        public string VendorCode { get; set; }
 
         public string store { get; set; }
         public string ref_no { get; set; }
