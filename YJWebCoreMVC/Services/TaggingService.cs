@@ -804,7 +804,6 @@ namespace YJWebCoreMVC.Services
             _helperCommonService = helperCommonService;
         }
 
-
         public string PrintTags(string tag1, string tag2, string tag3, string tag4,
                                        string tag5, string tag6, int printDollar = 0,
                                        int noOfTags = 1, string tag7 = "", string tag8 = "")
