@@ -54,5 +54,47 @@ namespace YJWebCoreMVC.Models
         public DateTime Approve_Date { get; set; }
         public string Approve_Note { get; set; }
         public string Stores { get; set; }
+
+        public string InvoiceNo { get; set; }
+        [DataType(DataType.Date)]
+        public DateTime? SaleDate { get; set; }
+        public string SaleDate1 { get; set; }
+        public string Salesman { get; set; }
+        public string Register { get; set; }
+        public string Style { get; set; }
+        public decimal Price { get; set; }
+        public decimal Amount { get; set; }
+        public decimal TagAmount { get; set; }
+        public decimal CostQty { get; set; }
+        public string Description { get; set; }
+        public string BillingAddr_Name { get; set; }
+        public string BillingAddr_Addr1 { get; set; }
+        public string BillingAddr_Addr2 { get; set; }
+        public string BillingAddr_City { get; set; }
+        public string BillingAddr_State { get; set; }
+        public string BillingAddr_Country { get; set; }
+        public string BillingAddr_ZipCode { get; set; }
+
+        public string NoteMessage { get; set; }
+        public string salesTaxAmount { get; set; }
+        public string GrandTotal { get; set; }
+        public string SubTotal { get; set; }
+        public string TradeInAmount { get; set; }
+        public string ShippingAmount { get; set; }
+        public string PaidAmount { get; set; }
+        public string BalanceDue { get; set; }
+
+        public string PaymentDate { get; set; }
+
+        public string PaymentType { get; set; }
+
+        public string PaymentMethod { get; set; }
+        public decimal Payment { get; set; }
+        public string PaymentNote { get; set; }
+        public string PaymentCurrType { get; set; }
+        public string PaymentCurrRate { get; set; }
+        public decimal PaymentCurrAmount { get; set; }
+
+        public IEnumerable<CastOrdModel> getSalesTaxList { get; set; }
     }
 }

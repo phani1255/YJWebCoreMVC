@@ -5,14 +5,18 @@ namespace YJWebCoreMVC.Services
 {
     public class VendorService
     {
+
         private readonly ConnectionProvider _connectionProvider;
         private readonly HelperCommonService _helperCommonService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public VendorService(ConnectionProvider connectionProvider, HelperCommonService helperCommonService)
+        public VendorService(ConnectionProvider connectionProvider, HelperCommonService helperCommonService, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment env)
         {
             _connectionProvider = connectionProvider;
             _helperCommonService = helperCommonService;
+            _httpContextAccessor = httpContextAccessor;
         }
+
         public DataRow CheckValidVendorCode(string acc)
         {
             return _helperCommonService.GetSqlRow("select *  From vendors Where acc=@acc or oldvendorcode=@acc order by acc", "@acc", acc.Trim());

@@ -8728,7 +8728,7 @@ namespace YJWebCoreMVC.Services
                                         and a.inv_no =@repairNo) c order by id asc", "@repairNo", repairNo);
         }
 
-        public bool UpdateRepairCustomerDetails(String repairno, CustomerModelNew customerModel)
+        public bool UpdateRepairCustomerDetails(String repairno, CustomerNewModel customerModel)
         {
             using (SqlCommand dbCommand = new SqlCommand())
             {
@@ -11688,39 +11688,6 @@ namespace YJWebCoreMVC.Services
         public bool ispayment { get; set; }
         public bool is_return { get; set; }
         public bool is_update { get; set; }
-    }
-
-    public class CustomerModel
-    {
-        public string ACC { get; set; }
-        public string BILL_ACC { get; set; }
-        public string NAME { get; set; }
-        public string ADDR1 { get; set; }
-        public string ADDR12 { get; set; }
-        public string ADDR13 { get; set; }
-        public string CITY1 { get; set; }
-        public string STATE1 { get; set; }
-        public string ZIP1 { get; set; }
-        public string COUNTRY { get; set; }
-        public decimal TEL { get; set; }
-        public string CELL { get; set; } = string.Empty;
-        public bool ON_ACCOUNT { get; set; }
-        public string old_customer { get; set; }
-        public string EMAIL { get; set; }
-        public DateTime? DOB { get; set; } = null;
-        public string driverlicense_state { get; set; } = string.Empty;
-        public string driverlicense_number { get; set; } = string.Empty;
-        public bool declined { get; set; } = false;
-        public string Store_no { get; set; }
-        public string Non_Taxable { get; set; }
-        public IEnumerable<SelectListItem> AllStatesList { get; set; }
-        public IEnumerable<SelectListItem> AllCountriesList { get; set; }
-        public IEnumerable<SelectListItem> AllSalesManList { get; set; }
-        public IEnumerable<SelectListItem> MainEventList { get; set; }
-        public IEnumerable<SelectListItem> SubEventList { get; set; }
-        public IEnumerable<SelectListItem> AllStores { get; set; }
-
-
     }
 
     public class CustomerAttribute

@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Data.SqlClient;
 using System.Data;
 using YJWebCoreMVC.Models;
 
@@ -10,6 +11,20 @@ namespace YJWebCoreMVC.Services
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly HelperCommonService _helperCommonService;
         private readonly int _decimalPlaces;
+
+        public DateTime? CHKDT { get; set; }
+        public DateTime? BILLDT { get; set; }
+        public string strformattedCHKDT { get; set; }
+        public string strformattedBILLDT { get; set; }
+        public decimal DISCOUNT { get; set; }
+        public decimal PaidAmt { get; set; }
+        public List<VendorDetails> lstVendorDetails { get; set; } = new List<VendorDetails>();
+        public List<GLLogDetails> lstGLLogDetails { get; set; } = new List<GLLogDetails>();
+        public List<CheckDetails> lstCheckDetails { get; set; } = new List<CheckDetails>();
+        public List<CCRDDetails> lstCCRDDetails { get; set; } = new List<CCRDDetails>();
+        public List<CreditDetails> lstCreditDetails { get; set; } = new List<CreditDetails>();
+        public List<CreditBillDetails> lstCreditBillDetails { get; set; } = new List<CreditBillDetails>();
+        public List<CreditBillNoDetails> lstCreditBillNoDetails { get; set; } = new List<CreditBillNoDetails>();
 
         public AccountsPayableService(ConnectionProvider connectionProvider, IHttpContextAccessor httpContextAccessor, HelperCommonService helperCommonService)
         {
@@ -116,6 +131,7 @@ namespace YJWebCoreMVC.Services
         }
 
         // public List<AccountsPayableModel> getPrintBillDetails(string VendorInvoice, string Vendor)
+
         public AccountsPayableModel getPrintBillDetails(string VendorInvoice, string Vendor, bool IsListOfBillsPrint = false)
         {
             AccountsPayableModel accountsPayableModel = new AccountsPayableModel();
@@ -1115,7 +1131,7 @@ namespace YJWebCoreMVC.Services
         {
             return _helperCommonService.GetStoreProc("PRINTBILLBYVENDORINVOICENO", "@VendorInvoice", VendorInvoice, "@Vendor", Vendor);
         }
-        public static DataTable Getsalesmandetails(string acc)
+        public DataTable Getsalesmandetails(string acc)
         {
             return _helperCommonService.GetSqlData("select distinct salesman1 from customer where acc = @acc", "@acc", acc);
         }
@@ -1390,7 +1406,7 @@ namespace YJWebCoreMVC.Services
 
             try
             {
-                using (var connection = new SqlConnection(_helperCommonService.connString))
+                using (var connection = _connectionProvider.GetConnection())
                 using (var dbCommand = new SqlCommand("DeleteConsignment", connection))
                 {
                     dbCommand.CommandType = CommandType.StoredProcedure;
@@ -1430,7 +1446,7 @@ namespace YJWebCoreMVC.Services
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(_helperCommonService.connString))
+                using (SqlConnection connection = _connectionProvider.GetConnection())
                 using (SqlCommand command = new SqlCommand("CancelCreditCheck", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
@@ -1477,7 +1493,7 @@ namespace YJWebCoreMVC.Services
                 using (SqlCommand dbCommand = new SqlCommand())
                 {
                     // Set the command object properties
-                    dbCommand.Connection = new SqlConnection(_helperCommonService.connString);
+                    dbCommand.Connection = _connectionProvider.GetConnection();
                     dbCommand.CommandType = CommandType.StoredProcedure;
                     dbCommand.CommandText = "DELETECCLOG";
 
@@ -1501,7 +1517,7 @@ namespace YJWebCoreMVC.Services
         {
             packNo = error = string.Empty;
 
-            using (var connection = new SqlConnection(_helperCommonService.connString))
+            using (var connection = _connectionProvider.GetConnection())
             using (var command = new SqlCommand("ApplyACheck", connection))
             {
                 command.CommandType = CommandType.StoredProcedure;
@@ -1533,7 +1549,7 @@ namespace YJWebCoreMVC.Services
         }
         public int dbChangecheckNoBank(string oldCheckNo, string newCheckNo, string oldBank, string newBank, string glDetails = "")
         {
-            using (SqlConnection connection = new SqlConnection(_helperCommonService.connString))
+            using (SqlConnection connection = _connectionProvider.GetConnection())
             using (SqlCommand command = new SqlCommand("ChangeCheck_Bank", connection))
             {
                 command.CommandType = CommandType.StoredProcedure;
@@ -1554,7 +1570,7 @@ namespace YJWebCoreMVC.Services
         public int dbUpdatecheckNoInfo(string checkNo, string bank, decimal amount, string note, string acc, DateTime date,
            string glDetails = "")
         {
-            using (var connection = new SqlConnection(_helperCommonService.connString))
+            using (var connection = _connectionProvider.GetConnection())
             using (var dbCommand = new SqlCommand("UpdateCheckInfo", connection))
             {
                 // Set command type and timeout
@@ -1590,7 +1606,7 @@ namespace YJWebCoreMVC.Services
             using (SqlCommand dbCommand = new SqlCommand())
             {
                 // Set the command object properties
-                dbCommand.Connection = new SqlConnection(_helperCommonService.connString);
+                dbCommand.Connection = _connectionProvider.GetConnection();
                 dbCommand.CommandType = CommandType.StoredProcedure;
                 dbCommand.CommandText = "AddVendor";
 
@@ -1688,7 +1704,7 @@ namespace YJWebCoreMVC.Services
         }
         public bool AddVenAttr(string attr)
         {
-            using (var connection = new SqlConnection(_helperCommonService.connString))
+            using (var connection = _connectionProvider.GetConnection())
             using (var command = new SqlCommand("INSERT INTO VEN_ATTR (ATTR_NUM, ATTR_VAL) VALUES (1, @attr)", connection))
             {
                 command.CommandType = CommandType.Text;
@@ -1701,7 +1717,7 @@ namespace YJWebCoreMVC.Services
 
         public bool UpdateVenAttr(string attr, string oldAttr)
         {
-            using (var connection = new SqlConnection(_helperCommonService.connString))
+            using (var connection = _connectionProvider.GetConnection())
             using (var command = new SqlCommand("UPDATE VEN_ATTR SET ATTR_VAL = @newAttr WHERE ATTR_VAL = @oldAttr", connection))
             {
                 command.CommandType = CommandType.Text;
@@ -1745,7 +1761,7 @@ namespace YJWebCoreMVC.Services
             using (SqlCommand dbCommand = new SqlCommand())
             {
                 // Set the command object properties
-                dbCommand.Connection = new SqlConnection(_helperCommonService.connString);
+                dbCommand.Connection = _connectionProvider.GetConnection();
                 dbCommand.CommandType = CommandType.StoredProcedure;
                 dbCommand.CommandText = "UpdateVendor";
 
@@ -1842,7 +1858,7 @@ namespace YJWebCoreMVC.Services
 
             try
             {
-                using (var connection = new SqlConnection(_helperCommonService.connString))
+                using (var connection = _connectionProvider.GetConnection())
                 using (var dbCommand = new SqlCommand("IssueCheckForAVendor", connection))
                 {
                     // Set the command type and timeout
@@ -1890,7 +1906,7 @@ namespace YJWebCoreMVC.Services
 
             const string storedProcedureName = "BILLPAYBYUSINGCREDITCARD";
 
-            using (var connection = new SqlConnection(_helperCommonService.connString))
+            using (var connection = _connectionProvider.GetConnection())
             using (var command = new SqlCommand(storedProcedureName, connection))
             {
                 command.CommandType = CommandType.StoredProcedure;
@@ -1925,7 +1941,7 @@ namespace YJWebCoreMVC.Services
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(_helperCommonService.connString))
+                using (SqlConnection connection = _connectionProvider.GetConnection())
                 using (SqlCommand command = new SqlCommand("BILLPAYALLBYUSINGCCRD", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
