@@ -1,4 +1,11 @@
-﻿using System.Data;
+﻿// Dharani 06/13/2025 created  model
+// Dharani 06/17/2025 Added GetInventoryCountByCategory,GetCategoryDetails methods.
+// Dharani 06/25/2025 Added SearchVendors method.
+// Dharani 06/30/2025 Added GetVendorDetails method.
+// Dharani 07/07/2025 Added Vendors property to populate vendor dropdown.
+// Dharani 07/08/2025 Updated GetInventoryCountByVendor method.
+
+using System.Data;
 
 namespace YJWebCoreMVC.Services
 {

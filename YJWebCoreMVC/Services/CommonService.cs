@@ -1,4 +1,11 @@
-﻿using Microsoft.Data.SqlClient;
+﻿/*
+ *  Created By Phanindra on 16-Oct-2024
+ *  Phanindra 10/21/2024 Added GetStyleHistoryDetails method
+ *  Phanindra 11/04/2024 Added GetCustomerNameByCode
+ *  Phanindra 11/20/2024 Added GetPotCustomerNameByCode
+ */
+
+using Microsoft.Data.SqlClient;
 using System.Data;
 using YJWebCoreMVC.Models;
 

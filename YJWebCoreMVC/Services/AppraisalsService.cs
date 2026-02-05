@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿/* Hemanth 08/19/2025 created new model */
+using System.Data;
 
 namespace YJWebCoreMVC.Services
 {

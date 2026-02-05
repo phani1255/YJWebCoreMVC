@@ -1,4 +1,13 @@
-﻿using Microsoft.Data.SqlClient;
+﻿/*
+ *  Created By Dharani on 18-August-2025
+ *  Dharani 08/25/2025 changes made in ManagerToDepositToABank
+ *  Dharani 09/02/2025 Added GetRegisterACC, GiveAmountToManager methods.
+ *  Dharani 09/03/2025 Added GetRegister, CheckTransactionsInRegister, AddEditDeleteRegister methods.
+ *  Dharani 09/05/2025 Added GetDataByFilter methods.
+ *  Dharani 09/08/2025 Added GetCurrentBalanceOfAllRegister method.
+ */
+
+using Microsoft.Data.SqlClient;
 using System.Data;
 
 namespace YJWebCoreMVC.Services

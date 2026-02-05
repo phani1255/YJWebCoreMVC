@@ -1,4 +1,9 @@
-﻿using Microsoft.Data.SqlClient;
+﻿/*
+ *  Created By Chakri on 09-Jun-2026
+ *  chakri  09/01/2026 Added GetMemoByInvNo, GetInvoiceByInvNo and ModifyInvACC methods.
+ * 
+ */
+using Microsoft.Data.SqlClient;
 using System.Data;
 
 namespace YJWebCoreMVC.Services

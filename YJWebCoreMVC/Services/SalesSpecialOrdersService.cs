@@ -1,4 +1,6 @@
-﻿using Microsoft.Data.SqlClient;
+﻿// Neetha    04/22/2025   Created New Model//
+
+using Microsoft.Data.SqlClient;
 using System.Data;
 
 namespace YJWebCoreMVC.Services

@@ -1,4 +1,18 @@
-﻿using Microsoft.Data.SqlClient;
+﻿/*
+ *  Created By Phanindra
+ *chakri 06/17/2026 created new Model.
+ *chakri  06/17/2026 Added DelALotNO method.
+ *chakri  06/25/2025 Added GetStyles and RenameALot methods.
+ *chakri  07/04/2025 Added some properties for list.
+ *chakri  07/08/2025 Added PrintTagsAddStock method.
+ *Manoj   07/29/2025 Added StyleItems property.
+ *Dharani 08/05/2025 Added GetStyleHistory method.
+ *Dharani 11/17/2025 Added STYLEATTRTEXT property.
+ *Dharani 11/20/2025 Added Edit Style Attributes related properties.
+ *Chakri  12/17/2025 Added QuickAddMultipleStyles,GetDropdownForCategory, GetDropdownForMetal, CheckValidVendorCode, and GetStyleByCode methods.
+ *Phanindra 12/26/2025 Added UpdateRapPrice method.
+ */
+using Microsoft.Data.SqlClient;
 using System.Data;
 using YJWebCoreMVC.Models;
 

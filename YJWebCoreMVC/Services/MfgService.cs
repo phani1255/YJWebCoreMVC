@@ -1,4 +1,23 @@
-﻿using Microsoft.Data.SqlClient;
+﻿/*
+    Created by Manoj 29-Apr-2025
+    * Manoj 30-Apr-2025 Added new listofjobscompleted  Method
+    * Manoj 02-May-2025 Added GetListofOpenJobs Method
+    * Manoj 05-May-2025 Added SummarizedListofOpenJobs Method
+    * Manoj 06-May-2025 Added GetFilterList Method
+    * Manoj 08-May-2025 Added GetListofPromisedvsCompletedDates Mehtod
+    * Manoj 12-May-2025 Added GetListofRepairJobs Method
+    * Manoj 26-May-2025 Added reprintjobbag,checkJobBagIsSplitOrNot,checkJobBagSendRecToShop,GETHISTORYOFJOBBAG Methods
+    * Manoj 27-May-2025 Added GetJobbagNotes Method
+    * Manoj 28-May-2025 Added GetpartshistByJobBag Method
+    * Dharani 10/13/2025 Added CheckValidMfgDepts, resetallsetters, deletersettername, getmfgdepts methods and PersonModel
+    * Dharani 10/14/2025 Added getalldepts, CheckValidDept, UpdateDept methods and DepartmentViewModel
+    * Phanindra 10/16/2025 Added checkJobBagIsAlreadySplittedOrNot, GetInforationBasedOnJobBagFromlbl, ChceckJobbagNumber, SaveJobBafInfoInMfgTable, getGivenJobBagaData, savereturnjobdata methods
+    * Phanindra 10/24/2025 Added updJobNAddToStk, updJobNAddToRsv
+    * Manoj 10/28/2025 Added GetJobsForAck Method
+    * Phanindra 10/30/2025 Added checkJobBagIsAlreadySplittedOrNotForPrint Method
+    * Phanindra 11/19/2025 Added checkrcvobbag method
+ */
+using Microsoft.Data.SqlClient;
 using System.Data;
 
 namespace YJWebCoreMVC.Services
@@ -282,7 +301,7 @@ namespace YJWebCoreMVC.Services
             return dataTable;
         }
 
-        public static DataTable GetJobsForAck(string cShop)
+        public DataTable GetJobsForAck(string cShop)
         {
             return _helperCommonService.GetSqlData(@"SELECT DISTINCT JOBBAG, ACKED, FROM_STORE, QTY FROM SEND_RPR WHERE ACKED=0 AND TO_STORE=@cShop ORDER BY JOBBAG ASC", "@cShop", cShop);
         }

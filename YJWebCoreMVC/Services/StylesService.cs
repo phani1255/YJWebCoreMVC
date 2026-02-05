@@ -1,4 +1,24 @@
-﻿using Microsoft.Data.SqlClient;
+﻿/*
+ *  Created By Phanindra
+ *  Phanindra 03/04/2025 Added ImagesTagInfoModel for images
+ *  Phanindra 03/12/2025 Modified GetStoreInvData return data
+ *  Phanindra 04/06/2025 Added radSummaryByVendorStyle in model
+ *  Phanindra 06/23/2025 Worked on adding the fields for Diamond Inventory page
+ *  Dhar      07/17/2025 Added GetStyleAttributes
+ *  Lokesh    09/29/2025 Added CreatePackage();
+ *  Lokesh    10/08/2025 Added BreakPackage();
+ *  Dharani   11/03/2025 Added ImportInventoryData method.
+ *  Dharani   11/17/2025 Added EditUpdateStyleAttr method
+ *  Dharani   11/21/2025 Added StyleAttributeViewModel, AddNewLefkAttribute, AddNewAttribute, UpdateAttribute, UpdatelefkAttribute, UpdateMultiAttribute, DeleteAttribute and DeletelefkAttribute
+ *  Dharani   11/24/2025 Added UpdateOptionValues and CheckInStyleTable
+ *  Phanindra 11/27/2025 Added AddAStyle, CheckForNull methods. and Added Getters and Setters
+ *  Phanindra 12/15/2025 Added Getters and Setters
+ *  Lokesh    12/31/2025 Added StylesTemplateModel
+ *  Lokesh    01/07/2026 Added ImportStyleData(), CheckStyleExistsOrNot_Import() and importStoneData();
+ *  Phanindra 01/09/2026 Added Getters and Setters
+ *  Phanindra 01/27/2026 Added Salesman Getters and Setters
+ */
+using Microsoft.Data.SqlClient;
 using System.Data;
 using YJWebCoreMVC.Models;
 

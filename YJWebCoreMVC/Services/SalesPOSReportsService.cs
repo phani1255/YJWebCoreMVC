@@ -1,4 +1,9 @@
-﻿using System.Data;
+﻿/*
+   *  Created by Manoj 19-May-2025
+   *  20-May-2025 Manoj Added CharityDonations and getListofCharityDonations methods
+   *  23-May-2025 Manoj Fixed Date and DDL Filter issue while fetch data 
+ */
+using System.Data;
 
 namespace YJWebCoreMVC.Services
 {

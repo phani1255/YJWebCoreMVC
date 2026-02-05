@@ -1,4 +1,17 @@
-﻿using Microsoft.Data.SqlClient;
+﻿/*
+ *  Created By Phanindra on 01-May-2025
+ *  Phanindra 07/15/2025 Added properties, GetRepairItems, GetDepositPayments, GetRepairItem, CheckValidOrderRepair, PaymentForRepair, 
+ *  Phanindra 07/27/2025 Added GetAllRepairTableDataForInvoice method
+ *  Phanindra 08/01/2025 Added ListOfRepairOrdersByAcc, creatdatagridbasedonrepid
+ *  Hemanth   08/05/2025 Added CheckInvoiceNumberBasedOnInvoiceNumber
+ *  Phanidra  08/19/2025 Added UpdateRepairOrderInvoice, DeleteOrderInvoiceDataIntoInSpItTable, AddEditPaymentForRepair
+ *  Hemanth   08/25/2025 Added Send2Shop
+ *  Hemanth   08/26/2025 Added RepRcvInShop
+ *  Phanindra 08/26/2025 Modified AddEditPaymentForRepair method
+ *  Manoj     11/03/2025 Added CheckRprJob Method
+ *  Dharani   01/19/2026 Added RepairOrderEnvolapes and GetOrderRepairData methods.
+ */
+using Microsoft.Data.SqlClient;
 using System.Data;
 using YJWebCoreMVC.Models;
 
@@ -553,7 +566,7 @@ namespace YJWebCoreMVC.Services
             var dataTable = new DataTable();
 
             // Use 'using' statements to ensure the connection and command are disposed correctly
-            using (var connection = new SqlConnection(_helperCommonService.connString))
+            using (var connection = _connectionProvider.GetConnection())
             using (var command = new SqlCommand("REPAIRTOSHOP", connection))
             {
                 // Configure command

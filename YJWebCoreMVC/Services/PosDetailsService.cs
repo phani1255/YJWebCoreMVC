@@ -1,4 +1,15 @@
-﻿using Microsoft.Data.SqlClient;
+﻿//-- Neetha    10/21/2024 Added Sales Tax report Methods.//
+//-- Neetha    10/24/2024 Added ListofDiscounts().//
+//-- Neetha    10/25/2024 Moved methods from castordmodel to PosDetailsModel.//
+//-- Neetha    11/07/2024 Added GetSalesTaxDataDetailsForPreview to show subtotals in preview.//
+//-- Neetha    11/12/2024 Added city column in salestaxreport preview.//
+//-- Neetha    12/13/2024 Added List of Customer Warranties Methods.//
+//-- Neetha    12/17/2024 Tax state filter functionality changes.//
+//-- Neetha    04/15/2025 Added Delete An Invoice methods.
+//-- Chakri    12/29/2025 Added GetJmCareWannatyInvoice, Extendedjmcarewarrantyinvoice, GetWarrantyInvoice and Getsalestax methods.
+//-- Chakri    01/06/2026 Added InvoiceWarrantyStyles, iSWarrantyInvoice and related properties.
+
+using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Net;
 using YJWebCoreMVC.Models;
@@ -504,7 +515,7 @@ namespace YJWebCoreMVC.Services
             salesTax2 = 0;
             salesTax3 = 0;
 
-            bool isLuxuryTax = Helper.CheckModuleEnabled(Helper.Modules.Luxury_Tax);
+            bool isLuxuryTax = _helperCommonService.CheckModuleEnabled(HelperCommonService.Modules.Luxury_Tax);
             bool noTax = false;
             string type = string.Empty;
 
@@ -544,7 +555,7 @@ namespace YJWebCoreMVC.Services
 
             subTotal += qty * price;
 
-            if (isLuxuryTax && Helper.CheckModuleEnabled(Helper.Modules.snh_taxable))
+            if (isLuxuryTax && _helperCommonService.CheckModuleEnabled(HelperCommonService.Modules.snh_taxable))
             {
                 decimal sales_tax_1, sales_tax_2 = 0, sales_tax_3 = 0;
                 outsalestax += _helperCommonService.getSales_taxValues(
@@ -555,7 +566,7 @@ namespace YJWebCoreMVC.Services
                     out sales_tax_1, out sales_tax_2, out sales_tax_3);
             }
 
-            if (isLuxuryTax && Helper.CheckModuleEnabled(Helper.Modules.TaxAfterTradeIn))
+            if (isLuxuryTax && _helperCommonService.CheckModuleEnabled(HelperCommonService.Modules.TaxAfterTradeIn))
             {
                 outsalestax = subTotal != 0
                     ? outsalestax * ((subTotal - tradeinamount) / subTotal)
@@ -565,7 +576,7 @@ namespace YJWebCoreMVC.Services
             {
                 decimal taxableAmount = totalCount - tradeinamount + discount;
 
-                if (Helper.CheckModuleEnabled(Helper.Modules.snh_taxable))
+                if (_helperCommonService.CheckModuleEnabled(HelperCommonService.Modules.snh_taxable))
                     taxableAmount += shipping;
 
                 outsalestax = taxableAmount * salestaxrate / 100;

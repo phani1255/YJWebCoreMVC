@@ -1,16 +1,29 @@
-﻿namespace YJWebCoreMVC.Services
+﻿using Microsoft.Data.SqlClient;
+using System.Data;
+using YJWebCoreMVC.Models;
+
+namespace YJWebCoreMVC.Services
 {
     public class APCreditViewService
     {
 
+        private readonly ConnectionProvider _connectionProvider;
+        private readonly HelperCommonService _helperCommonService;
 
-        public bool AddAPCredit(APCreditViewModel apcredit, out string error)
+        public APCreditViewService(ConnectionProvider connectionProvider, HelperCommonService helperCommonService, IWebHostEnvironment env)
+        {
+            _connectionProvider = connectionProvider;
+            _helperCommonService = helperCommonService;
+        }
+
+
+        public bool AddAPCredit(APCreditViewModel apcredit, string ReturnStatus, out string error)
         {
             error = string.Empty;
 
             try
             {
-                using (var connection = new SqlConnection(Helper.connString))
+                using (var connection = _connectionProvider.GetConnection())
                 using (var dbCommand = new SqlCommand("AddAPCreditWOBill", connection))
                 {
                     // Set command properties
@@ -30,7 +43,7 @@
                     dbCommand.Parameters.AddWithValue("@REPL_IT", ReturnStatus == "DoNotReplace" ? "0" : ReturnStatus == "Replace" ? "1" : "2");
                     dbCommand.Parameters.AddWithValue("@ON_QB", apcredit.ON_QB);
                     dbCommand.Parameters.AddWithValue("@Store_no", string.IsNullOrEmpty(apcredit.Store) ? "" : apcredit.Store);
-                    dbCommand.Parameters.AddWithValue("@loggeduser", Helper.LoggedUser);
+                    dbCommand.Parameters.AddWithValue("@loggeduser", _helperCommonService.LoggedUser);
 
                     // Open connection, execute command, and close connection
                     connection.Open();
@@ -49,7 +62,7 @@
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(Helper.connString))
+                using (SqlConnection connection = _connectionProvider.GetConnection())
                 using (SqlCommand command = new SqlCommand("UpdateAPCreditWOBill", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;

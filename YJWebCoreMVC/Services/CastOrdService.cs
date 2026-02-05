@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿//-- Neetha    10/21/2024 Added Sales Tax report Methods.//
+//-- Neetha    10/24/2024 Added ListofDiscounts().//
+
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
