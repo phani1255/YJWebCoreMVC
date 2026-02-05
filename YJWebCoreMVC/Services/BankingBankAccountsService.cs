@@ -1,4 +1,8 @@
-﻿using System.Data;
+﻿/*chakri 05/30/2025 created new Model.
+ *chakri 05/30/2025 Added GetBankcode, FindBankCodeInTran, GetBankBycode and DeleteBankacc methods.
+ *chakri 06/05/2025 Changes in GetBankcode method.
+ */
+using System.Data;
 
 namespace YJWebCoreMVC.Services
 {

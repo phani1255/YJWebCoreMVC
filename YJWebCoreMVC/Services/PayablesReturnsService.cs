@@ -1,4 +1,8 @@
-﻿using System.Data;
+﻿/*chakri 05/27/2025 created new Model.
+ *chakri 05/27/2025 Added GetMemoHeadDetailsForVrtv and DeleteRtv methods.
+ * 
+ */
+using System.Data;
 
 namespace YJWebCoreMVC.Services
 {

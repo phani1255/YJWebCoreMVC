@@ -1,4 +1,10 @@
-﻿using Microsoft.Data.SqlClient;
+﻿/*chakri 06/11/2025 created new Model.
+ *chakri 06/11/2025 Added GetLoanInfo, CheckValidCustomerCode and DeleteLoanInfo methods.
+ *chakri 06/19/2025 Added GetLoansData,GetLoanBalanceAmount, GetPreviousRecords,DeleteLoanPaymentRecord, GetLastInterestAppliedDate methods.
+ *chakri 06/23/2025 Added GetLoanInterestRecords and DeleteLoanInterestRecord methods.
+ */
+
+using Microsoft.Data.SqlClient;
 using System.Data;
 
 namespace YJWebCoreMVC.Services

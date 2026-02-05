@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\phani\\YJWebCoreMVC\\YJWebCoreMVC\\YJWebCoreMVC.csproj": {}
+    "D:\\dotnet\\YJWebCoreMVC\\YJWebCoreMVC\\YJWebCoreMVC.csproj": {}
   },
   "projects": {
-    "D:\\phani\\YJWebCoreMVC\\YJWebCoreMVC\\YJWebCoreMVC.csproj": {
+    "D:\\dotnet\\YJWebCoreMVC\\YJWebCoreMVC\\YJWebCoreMVC.csproj": {
       "version": "16.2.2",
       "restore": {
-        "projectUniqueName": "D:\\phani\\YJWebCoreMVC\\YJWebCoreMVC\\YJWebCoreMVC.csproj",
+        "projectUniqueName": "D:\\dotnet\\YJWebCoreMVC\\YJWebCoreMVC\\YJWebCoreMVC.csproj",
         "projectName": "YJWebCoreMVC",
-        "projectPath": "D:\\phani\\YJWebCoreMVC\\YJWebCoreMVC\\YJWebCoreMVC.csproj",
-        "packagesPath": "C:\\Users\\Srikanth\\.nuget\\packages\\",
-        "outputPath": "D:\\phani\\YJWebCoreMVC\\YJWebCoreMVC\\obj\\",
+        "projectPath": "D:\\dotnet\\YJWebCoreMVC\\YJWebCoreMVC\\YJWebCoreMVC.csproj",
+        "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
+        "outputPath": "D:\\dotnet\\YJWebCoreMVC\\YJWebCoreMVC\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Srikanth\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,6 +26,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {

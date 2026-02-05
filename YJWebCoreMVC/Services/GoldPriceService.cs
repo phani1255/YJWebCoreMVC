@@ -1,4 +1,8 @@
-﻿using Microsoft.Data.SqlClient;
+﻿/*
+ *  Created By Dharani
+ *  Dharani 11/28/2025 Added GetGoldPriceValues, UpdateMarkupPrice
+ */
+using Microsoft.Data.SqlClient;
 using System.Data;
 
 namespace YJWebCoreMVC.Services

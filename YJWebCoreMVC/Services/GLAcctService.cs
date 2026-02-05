@@ -1,4 +1,23 @@
-﻿using Microsoft.Data.SqlClient;
+﻿/*
+ *  Created By Phanindra on 17-Apr-2025
+ *  Manoj 08/13/2024 Added DeptDetails Property, GetAllGLAccts Method
+ *  Manoj 08/14/2025 Added GetTrailBalnceLogs Method
+ *  Manoj 08/18/2025 Added DeptDetails property and GetAllGLCodes , Detailglpostlog Methods 
+ *  Manoj 08/19/2025 Added GetGLref Method
+ *  Manoj 08/22/2025 Added listofGlTransactforbalancesheet Method
+ *  Manoj 08/26/2025 Added GetLastLog,checkglpostlog Methods 
+ *  Manoj 08/27/2025 Added checkglpostDoc,iSGlLogExists,GetNextGLNo methods
+ *  Manoj 08/28/2025 Added GetGlTypeByCode methods
+ *  Manoj 09/01/2025 Added GetGLAcctTypes Method
+ *  Manoj 09/02/2025 Added  SearchGLDepts,CheckValidGLDept Methods
+ *  Manoj 09/08/2025 Added GetGlCodeAndName,getGLClassData,GetDefaultGrpsFrmUpsIns Methods
+ *  Manoj 09/09/2025 Added  CheckGLClassExist,iSGlAcc Methods
+ *  Manoj 09/10/2025 Added  setupGlcodesbyClasses,DeleteGLclass Methods
+ *  Manoj 09/15/2025 Added GetTypes Methods
+ *  Manoj 09/16/2025 Added AddGLAcct,CheckValidGLAcct,DeleteGLAcct Methods
+ *  Manoj 09/18/2025 AddedLogNoFromInvoiceDoc
+ */
+using Microsoft.Data.SqlClient;
 using System.Data;
 
 namespace YJWebCoreMVC.Services

@@ -1,4 +1,12 @@
-﻿using Microsoft.Data.SqlClient;
+﻿/*
+ * Phanindra 09/13/2024 Added GetUpsIns1 function to get WebImagesUrl to show style images
+ * Phanindra 10/02/2024 Added Companyname to the session to show or hide menu items in getupsins function
+ * Phanindra 11/06/2024 Added GetUserStoreDetails for login page
+ * Phanindra 01/10/2025 Added MICR column for report related condition
+ * Phanindra 09/01/2025 Added getPassfile method.
+ * Phanindra 09/17/2025 replaced WebImagesUrl with Web_Images_Path in getUpsIns1 method
+ */
+using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Text;
 

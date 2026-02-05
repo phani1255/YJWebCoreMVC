@@ -1,4 +1,21 @@
-﻿using Microsoft.Data.SqlClient;
+﻿/*Neetha   01/03/2025 Created new model.*/
+/*Neetha    01 / 03 /2025 Renamed customermodel to CustomerModelNew.*/
+/*
+ * Phanindra 03/26/2025 Added 2 CheckValidCustomerCode with different parameters
+ * Dharani   09/15/2025 Added GetCustomerMultiAttr, UpdateCustomerAttr, AddNewAttribute, UpdateAttribute  Methods.
+ * Dharani   09/16/2025 Added CustomerAttributeViewModel
+ * Dharani   09/25/2025 Added ShowCustomerNotes method.
+ * Dharani   09/26/2025 Added AddNewCustNote method.
+ * Dharani   09/30/2025 Added CheckValidBillingAcct method.
+ * Dharani   10/15/2025 Added GetCustomerImportTemplate, CheckCustomerImportTemplate, AddCustomerImportTemplate methods and CustomerImportTemplateModel
+ * Dharani   10/17/2025 Added CheckTemplateExistOrNot, ImportCustomerData and CheckAccExistsOrNot_Import
+ * Dharani   10/23/2025 Added ImportCustomerForEvent method.
+ * Dharani   10/27/2025 Added ImportOccasions
+ * Dharani   12/16/2025 Added GetCurrencyConvDetails and UpdateCurrencyConvDetails methods.
+ * venkat    12/25/2025 Added _Noreffal,_Action,_LoyaltyProgram
+ */
+
+using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Text;
 

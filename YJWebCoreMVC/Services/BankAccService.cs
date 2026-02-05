@@ -1,4 +1,21 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿/*
+ *  Created By Phanindra on 26-Mar-2025
+ *  Phanindra 24-Apr-2025 Added ShowPaymentData, AddDeposits methods
+ *  Dharani 08/12/2025 Added GetGLCodes, GetGLDepts, AddBankacc, GetBankAccounts, EditBankacc Methods and BankACCModel properties
+ *  Dharani 08/13/2025 Added GetBankAccountsList method.
+ *  Dharani 08/14/2025 Added AddDefaultBank method.
+ *  Dharani 08/15/2025 Added GetBankcode method.
+ *  Dharani 08/18/2025 Added EditDeposits, DeleteDeposit method, AddDepositViewModel, DepositItem properties.
+ *  Dharani 08/19/2025 Added PrintDepositByCode method.
+ *  Dharani 08/21/2025 Added ShowCreditCardPaymentData, ShowDeposits method, DepositItemForCreditCards properties.
+ *  Dharani 08/26/2025 Added GetNextTransNo, GetTransactionBycode, AddBankTransaction methods.
+ *  Dharani 08/27/2025 Added ShowTransactions, ShowBal methods.
+ *  Dharani 09/01/2025 Added AddNewBankTransfer method.
+ *  Dharani 09/04/2025 Added isValidReconLog, GetBankofReconciledLog, GetReconciledTransactions, ShowClearBal methods.
+ *  Dharani 09/05/2025 Added DeleteReconciledLog, UpdateClearPay methods.
+ *  Dharani 09/10/2025 Added GetBankAcc method
+ */
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using YJWebCoreMVC.Models;

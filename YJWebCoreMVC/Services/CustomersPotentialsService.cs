@@ -1,4 +1,13 @@
-﻿using Microsoft.Data.SqlClient;
+﻿/* chakri 11/04/2025 created new Model.
+ * chakri 11/04/2025 Added GetPotentialCustomerById,CheckValidCustomerCode,getHighestCustAccValue,AddPotentialCustomer,GetCustomerEvents,getsubevents,AddnewCustEvent,DelCustomerEvent,AddNewPotentialCustNote,AddNewCustNote,ShowPotentialCustomerNotes,ShowCustomerNotes and GetNoteTypes methods.
+ * Chakri 11/14/2025 Added GetAllCustomers, DelPotentialCustNote and GetPotentialCustomerByAcc methods and added  CustomerModel,  PotentialcustomerModel classes.
+ * Chakri 11/17/2025 Added UpdatePotentialCustomer method and added properties and changes in CustomerModel, PotentialcustomerModel classes.
+ * chakri 11/19/2025 Added ShowPotentialCustomerFollowup method.
+ * chakri 11/21/2025 Added GetPotentialCustomerImportTemplate, CheckTemplateExistOrNot, CheckPotentialCustomerImportTemplate, AddPotentialCustomerImportTemplate methods and added PotentialcustomerImportModel classes.
+ * chakri 11/24/2025 Added AddNewPotentialCustNote method.
+ */
+
+using Microsoft.Data.SqlClient;
 using System.Data;
 using YJWebCoreMVC.Models;
 

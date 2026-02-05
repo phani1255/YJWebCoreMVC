@@ -8728,22 +8728,22 @@ namespace YJWebCoreMVC.Services
                                         and a.inv_no =@repairNo) c order by id asc", "@repairNo", repairNo);
         }
 
-        public bool UpdateRepairCustomerDetails(String repairno, CustomerNewModel customerModel)
-        {
-            using (SqlCommand dbCommand = new SqlCommand())
-            {
-                // Set the command object properties
-                dbCommand.Connection = _connectionProvider.GetConnection();
-                dbCommand.CommandType = CommandType.Text;
-                dbCommand.CommandText = $"update repair set name = '{customerModel.NAME}', addr1 = '{customerModel.ADDR1}', addr2 = '{customerModel.ADDR12}', city = '{customerModel.CITY1}', state = '{customerModel.STATE1}', zip = '{customerModel.ZIP1}', country = '{customerModel.COUNTRY}' where trim(repair_no)= trim('{repairno}')";
+        //public bool UpdateRepairCustomerDetails(String repairno, CustomerModel customerModel)
+        //{
+        //    using (SqlCommand dbCommand = new SqlCommand())
+        //    {
+        //        // Set the command object properties
+        //        dbCommand.Connection = _connectionProvider.GetConnection();
+        //        dbCommand.CommandType = CommandType.Text;
+        //        dbCommand.CommandText = $"update repair set name = '{customerModel.NAME}', addr1 = '{customerModel.ADDR1}', addr2 = '{customerModel.ADDR12}', city = '{customerModel.CITY1}', state = '{customerModel.STATE1}', zip = '{customerModel.ZIP1}', country = '{customerModel.COUNTRY}' where trim(repair_no)= trim('{repairno}')";
 
-                // Open the connection, execute the query and close the connection
-                dbCommand.Connection.Open();
-                var rowsAffected = dbCommand.ExecuteNonQuery();
-                dbCommand.Connection.Close();
-                return rowsAffected > 0;
-            }
-        }
+        //        // Open the connection, execute the query and close the connection
+        //        dbCommand.Connection.Open();
+        //        var rowsAffected = dbCommand.ExecuteNonQuery();
+        //        dbCommand.Connection.Close();
+        //        return rowsAffected > 0;
+        //    }
+        //}
 
         public DataTable GetSelectData(string tblname, string fldname)
         {

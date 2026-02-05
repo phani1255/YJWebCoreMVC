@@ -1,4 +1,10 @@
-﻿using Microsoft.Data.SqlClient;
+﻿/*
+ *  Created By Phanindra on 26-Mar-2025
+ *  Chakri    09/09/2025 Added SearchVendors, CancelCreditCheck and CheckValidAPCredit methods.
+ *  Phanindra 10/07/2025 Added GeAllVendorAcc.
+ *  Siva      12/04/2025 Added Properties to save add vendor
+ */
+using Microsoft.Data.SqlClient;
 using System.Data;
 
 namespace YJWebCoreMVC.Services

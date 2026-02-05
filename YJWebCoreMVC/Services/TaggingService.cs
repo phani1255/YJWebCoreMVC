@@ -1,4 +1,16 @@
-﻿using Microsoft.Data.SqlClient;
+﻿// Created by Dharani 06/26/2025
+// Dharani 06/27/2025 Added UpdateTagMultiplier method.
+// Dharani 07/01/2025 Added LabelprinterSetup method.
+// chakri  07/01/2025 Added  GetPrinterItems and PrintTags methods.
+// Dharani 07/03/2025 Added TagprinterSetup, deletePrinter methods.
+// Dharani 07/11/2025 Added GetUPSTagFields, UpdateorInsertTagtemplateFields, UpdateUPSTagFields methods
+// Dharani 07/22/2025 Added TagPrinterSetupModel, DiamondModel, TagPrinterSetupModel.
+// Dharani 07/23/2025 Added GetUPSDiamondTagFields, UpdateDIAMONDLABEL_TEMPLATE, UpdateUPSDiamondTagFields methods.
+// Dharani 07/25/2025 Added AutoDescriptionTemplateModel, AutoDescModel, GetUPSInsDescFieldsForAutoDescription methods
+// Dharani 07/28/2025 Added UpdateUPSInsForAutoDescription method.
+// Chakri  09/03/2025 Changes in PrintTags method.
+// Lokesh  09/25/2025 Added BreakPieceModel and BreakItem.
+using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Text;
 using YJWebCoreMVC.Models;
@@ -809,7 +821,7 @@ namespace YJWebCoreMVC.Services
                                        int noOfTags = 1, string tag7 = "", string tag8 = "")
         {
             StringBuilder printTag = new StringBuilder();
-            _helperCommonService.GetDefaultValues();
+            //_helperCommonService.GetDefaultValues();
 
             decimal tagPrinterLeft, tagPrinterRight, tagPrinterTop, tagPrinterCinc, tagPrinterLength;
             decimal dummyTopR;

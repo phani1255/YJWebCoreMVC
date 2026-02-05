@@ -1,4 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿/*
+ * Phanindra 09/04/2024 Removed the common functions as we kept them in Helper
+ * Phanindra 09/06/2024 Updated Prices to have 2 decimals
+ * Phanindra 09/09/2024 Updated Prices to have 2 decimals wherever missed
+ * Phanindra 09/10/2024 Added method for TotalMonthlySalesForACustomer form
+ * Phanindra 09/22/2024 Added the missing columns in annualsalescomparison form
+ * Manoj     12/01/2024 BrandsFromStyle property
+ * Manoj     12/08/2025 Added  getInactiveStyles method
+ * Manoj     12/11/2024 Added GetPartnerSales method
+ * Manoj     01/27/2026 Added GetComponentSalesAnalysis Method
+ */
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using YJWebCoreMVC.Models;

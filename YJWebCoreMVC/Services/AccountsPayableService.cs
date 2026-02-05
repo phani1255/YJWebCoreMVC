@@ -1,4 +1,32 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿/*
+ * Created by Vivek
+ *  Vivek 09/20/2024 Created methods for getCheckPrintStatus and getPrintBill
+ *  Vivek 09/27/2024 Created method CheckValidBill, getPrintBillDetailsNew
+ *  Vivek 10/02/2024 Created method GetCreditDetails, GetCcrdDetails, getPrintBillDetailsNewForCredit
+ *  Vivek 10/07/2024 added GetVendorNameByCode, GetBillsByVendorAcc, getPayablesBillDetailsNew methods
+ *  Vivek 10/16/2024 getPrintBillDetails() modified
+ *  Vivek 10/18/2024 Added GetInvoiceNoofBills, CheckValidBillByVendorInvoiceNo, Getsalesmandetails methods 
+ *  Vivek 12/16/2024 Added GetCreditCardNames, GetStoreCodes, GetCcTransactions,CheckValidVendorCode, GetLogNo, SearchVendors, VendorCredit methods 
+ *  Vivek 12/26/2024 Added ListofConsignments methods 
+ *  Phanindra 01/23/2025 Added ListofChecks method
+ *  Phanindra 02/13/2025 Changed ListofChecks to GetListofChecks and added ListofChecksDetailsShows
+ *  Phanindra 02/27/2025 Worked on fixing GetLogNo function to check for Vendor annd store
+ *  chakri    05/23/2025 Added CheckValidBillNo, CosignmentStyleInstockqty and DeleteConsignment methods.
+ *  chakri    05/23/2025 Added CheckValidCheckNo, GetBankAccounts and CancelCreditCheck methods.
+ *  chakri    05/27/2025 Added GetDetByCCLog, GetInvoiceByInvNo and DELCCLOG methods.
+ *  Sravan    10/01/2025 Added new ApplyACheck()
+ *  Sravan    12/02/2025 Added new  dbUpdatecheckNoInfo() and  dbChangecheckNoBank()
+ *  Siva      12/04/2025 Added CheckValidSetter, GetAllSettersForGrid, CheckoldVendorCode,GetStateCityByZip
+UpdateVenAttr, AddVenAttr, CheckAttrExists, AddVendor, GetVendorMax
+ *  Siva      12/05/2025 Added UpdateVendor
+ *  Sravan    12/11/2025 Added Class and method APCreditViewModel
+ *  Sravan    01/05/2026 UpdateAPCredit() null error handle with string not empty
+ *  Siva      01/05/2026 Changed GetCheckDetails GetccrdDetails 
+ *  Sravan    01/08/2026 IssueCheckForAVendor() Added New
+ *  Sravan    01/13/2026 PayBillByCC() and class for parameter use PayBillsByCCViewModel()
+ *  Sravan    01/16/2026 Added new PayBillAllByCCRD() also added class 
+ */
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using YJWebCoreMVC.Models;

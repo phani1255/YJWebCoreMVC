@@ -1,4 +1,8 @@
-﻿using Microsoft.Data.SqlClient;
+﻿/*chakri 05/28/2025 created new Model.
+ *chakri 05/28/2025 added GetTransactionBycode and DeleteTransaction methods.  
+ *chakri 05/28/2025 added isValidReconLog and DeleteReconciledLog methods. 
+ */
+using Microsoft.Data.SqlClient;
 using System.Data;
 
 namespace YJWebCoreMVC.Services

@@ -1,4 +1,17 @@
-﻿using Microsoft.Data.SqlClient;
+﻿/*
+ *  Created by Manoj 03-June-2025
+ *  03-June-2025 Manoj Added GetSalesmen and getstoresdataforsetdefault and SalesmanActivityReport methods
+ *  04-June-2025 Manoj Added GetInvoiceByInvNo And GetInvoiceMasterDetailPO methods
+ *  05-June-2025 Manoj Added GetInvoicePrintofSalesTaxReport methods
+ *  13-June-2025 Manoj Added getAllSales, GetInvoieComisionAmount methods
+ *  09-July-2025 Manoj Fixed SalesmanActivityReport method result issues
+ *  10-July-2025 Manoj Added telephone_no,PON,ship_via,paid,store_no,ShippingAddr_Name,ShippingAddr_Addr1,ShippingAddr_Addr2,ShippingAddr_City,ShippingAddr_State,ShippingAddr_Country,ShippingAddr_ZipCode properties
+ *  10-July-2025 Manoj Fixed GetInvoicePrintofSalesTaxReport for Memo preview type
+ *  31-July-2025 Manoj Fixed GetInvoicePrintofSalesTaxReport Issues
+ *  01-Aug-2025  Manoj Added GetMemoByInvNo,GetInvoiceMemoNote Methods and Added storeInfo,StoreLogoImage,StoreName Properties
+ *  23-DEC-2025  Manoj Added OtherCharges,Deduction,StyleTable Propertied And modified GetInvoicePrintofSalesTaxReport for data table issues and  updated email issue in store Address
+ */
+using Microsoft.Data.SqlClient;
 using System.Data;
 using YJWebCoreMVC.Models;
 

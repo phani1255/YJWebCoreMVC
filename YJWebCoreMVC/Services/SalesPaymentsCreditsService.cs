@@ -1,4 +1,16 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿/*
+ *  Created By Phanindra
+ *  Phanindra 11/12/2024 - Added GetCustomerofReceipt, ModifyCustomerCodeofReceipt, CheckOKReceiptToModifyCustomer, CheckValidCustomerCode
+ *  Phanindra 11/18/2024 Added GetPaymentCommison, DeleteCashReceipt method.
+ *  Phanindra 11/28/2024 Added SaveCredit, GetCreditData,GetCredit, GetPayment, DeleteCredit
+ *  Phanindra 12/09/2024 Worked on fixing issues with ModifyACC, Reprint ,Add and Edit Cash receipt methods.
+ *  Phanindra 12/11/2024 Added CheckCreditAdj1 method
+ *  Phanindra 12/16/2024 Added SaveAdjRcvable, EditAdjRcvable, GetPayItems, DeleteAdjRcvable
+ *  Phanindra 24-Apr-2025 Added custRef prameter in SaveCredit method
+ *  Phanindra 06/09/2025 Worked on fixing save issue for customer refund.
+ *  Phanindra 06/23/2025 Worked on adding the Register value
+ */
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 using System.Data;

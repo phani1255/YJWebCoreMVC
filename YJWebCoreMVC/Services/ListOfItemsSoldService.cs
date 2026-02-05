@@ -1,4 +1,43 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿// Hemanth 08-26-2024 created  
+// Hemanth 08-29-2024 mergd open orders
+// Hemanth 08-30-2024 Receipt form related code added and function naming chaged due to violation issue
+// Hemanth 08/31/2024 removed unnessasary calls 
+// Hemanth 09/07/2024 sales by salesman code
+// Hemanth 09/19/2024 sales by statement of invoice code added
+// Hemanth 09/20/2024 Days on hand inventory code
+// Hemanth 09/20/2024 added ccode param for statement of invoice code
+// Hemanth 09/22/2024 added vendor sales report
+// Hemanth 09/23/2024 instate out state sales code added
+// Hemanth 09/24/2024 state sales code added
+// Hemanth 09/25/2024 Total sales per state code added
+// Hemanth 09/25/2024 added vendor style Performence code added
+// Hemanth 09/26/2024 added total sales per state code
+// Hemanth 09/27/2024 added total hourly sales code
+// Hemanth 09/27/2024 added total weekly sales code
+// Hemanth 10/01/2024 Sales / Profit Per Store Report
+// Hemanth 10/02/2024 Sales / SalesCOG Profit Report
+// Hemanth 10/03/2024 Sales profit per source Report
+// Hemanth 10/04/2024 Sales / Profit By City Report
+// Hemanth 10/11/2024 Sales Report For Reorder
+// Hemanth 10/17/2024 Detailed cog report
+// Hemanth 10/22/2024 Code added for rcblCreditByTimeFrame Report
+// Hemanth 10/28/2024 Code added for EODWorksheet Report
+// Hemanth 10/29/2024 ListOfStoreCredits report
+// Hemanth 11/29/2024 Todays cashflow report
+// Hemanth 11/29/2024 List of checksmethod added
+// Hemanth 12/13/2024 GetListofItemsReturnedDetails and GetApmItemsFromStyle methods added
+// Hemanth 12/24/2024 GetUpsInsTableDetails and GetFileContent methods added
+// Hemanth 01/01/2025 MTD changes added
+// Hemanth 01/17/2025 Add Payment Types
+// Hemanth 01/18/2025 Add Appraisals
+// Hemanth 02/04/2025 CheckFixed added for payment module
+// Dhareendar 05/15/2025 add AllStores 
+// Dharani 05/21/2025 Added getAllSales, GetListofPickedupItems, GetWarranrySales, AddSqlParameter
+// Dharani 06/04/2025 Added Store parameter in SummaryByPayment method.
+// Dharani 06/09/2025 Changes made in GetWarranrySales method.
+// Chakir  06/12/2025 Added checkglcodereason, AddXmlvaluesave and  DeleteCreditReason methods.
+// Dharani 07/14/2025 Updated query GetWarranrySales method.
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 using System.Data;
 

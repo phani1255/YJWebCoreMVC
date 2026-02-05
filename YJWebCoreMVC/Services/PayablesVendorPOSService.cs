@@ -1,4 +1,9 @@
-﻿using Microsoft.Data.SqlClient;
+﻿/*chakri 05/26/2025 created new Model.
+ *chakri 05/26/2025 Added GetvendorPoinfobasedoninv and DeleteRtv methods.
+ *Cahkri 01/30/2026 Added getallVendorPos and updateAllVendorPos methods and added properties.
+ * 
+ */
+using Microsoft.Data.SqlClient;
 using System.Data;
 
 namespace YJWebCoreMVC.Services

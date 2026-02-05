@@ -1,4 +1,24 @@
-﻿using Microsoft.Data.SqlClient;
+﻿
+//  Added by Neetha -  GetProfitByInvoice(), getTotalSaleProfitDetails()- 26 Aug 2024
+//   Neetha -  08/27/2024 GetProfitDetailsByCustomer() 
+//-- Neetha    08/28/2024 Added getTotalSaleProfitByCategoryMetalDetails() --//
+//-- Neetha    08/29/2024 Added GetTotalSalesPerVendorDetails() --//
+//-- Neetha    09/04/2024 Added getTotalSaleProfitByCategoryPricesDetails() --//
+//-- Neetha    09/06/2024 Added () --getTotalSalesProfitBySalesrep//
+//-- Neetha    09/09/2024 Added () --GetSalesCOGProfitBySalesman//
+//-- Neetha    09/16/2024 changes in Date and pickupdate checkmarks in getTotalSaleProfitByCategoryPricesDetails() --//
+//-- Neetha    09/19/2024  invoice# column added in getTotalSalesProfitBySalesrep//
+//-- Neetha    09/19/2024 columns and checkmarks changes GetSalesCOGProfitBySalesman//
+//-- Neetha    09/24/2024 added print images checkbox for GetVendorStylesAnalysisDetails.//
+//-- Neetha    10/03/2024 Made changes related to store filter .//
+//-- Neetha    10/11/2024 Added GetSalesCOGProfitReportDetails.//
+//-- Neetha    10/14/2024 Added Sales COG Print Methods.//
+//-- Neetha    01/20/2025 Added GetListOfOccasions().//
+//-- Neetha    01/23/2025 Added GetAllCustomers Method.//
+//-- Neetha    01/28/2025 Made changes in occasionlist filters and columns .//
+//-- Neetha    02/17/2025 Added Sales / Customer Follow Up methods .//
+
+using Microsoft.Data.SqlClient;
 using System.Data;
 using YJWebCoreMVC.Models;
 

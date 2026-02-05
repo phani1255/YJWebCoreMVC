@@ -1,4 +1,14 @@
-﻿using System.Data;
+﻿/*
+ * Created by Manoj 06-25-2025
+ * 06-25-2025 Manoj Added CustomerCodes Property
+ * 06-26-2025 Manoj Added SearchRtvs Method
+ * 06-26-2025 Manoj Resending File
+ * 07-04-2025 Manoj Resending File
+ * 07-04-2025 Manoj Added StyleItems property , GetStyleTrackingSummaryData , GetStyles and GetStyleTrackingData  methods
+ * 07-10-2025 Manoj Added GetStatementofMemoData Method
+ * Dharani 12/03/2025 Added GetMemoByInvNo method
+ */
+using System.Data;
 
 namespace YJWebCoreMVC.Services
 {

@@ -1,4 +1,7 @@
-﻿using Microsoft.Data.SqlClient;
+﻿/*chakri 05/30/2025 created new Model.
+ *chakri 05/30/2025 Added CheckDeposit, GetDepositBycode and DeleteDeposit methods.
+ */
+using Microsoft.Data.SqlClient;
 using System.Data;
 
 namespace YJWebCoreMVC.Services

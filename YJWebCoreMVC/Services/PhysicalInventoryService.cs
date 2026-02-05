@@ -1,4 +1,12 @@
-﻿using Microsoft.Data.SqlClient;
+﻿/*
+ *  Created By Manoj 11/07/2025
+ *  11/07/2025 Manoj Added AllStores,VenderTypes property and GetPhysicalTrays method
+ *  11/11/2025 Manoj 11/11 Categories,Brands propertys Deletephysicaltray,Makematch methods
+ *  11/19/2025 Manoj ShowPhyInvtbycode,GetStockByStyle Methods
+ *  11/20/2025 Manoj Added DelPhyinvRec,AddNewPhysicalInv Methods
+ *  12/22/2025 Manoj modified ShowPhyInvtbycode for data rendering issue
+ */
+using Microsoft.Data.SqlClient;
 using System.Data;
 
 namespace YJWebCoreMVC.Services
