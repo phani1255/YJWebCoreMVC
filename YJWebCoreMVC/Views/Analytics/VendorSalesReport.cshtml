@@ -4,19 +4,12 @@
  Hemanth 10/17/2024 long description overlaping issue fixed and checked summary total
 -->
 @{
-
-    if (Session["UserID"] == null)
-    {
-        Layout = null;
-        Response.Redirect("~/Login/Index");
-    }
-    else
-    {
-        Layout = null;
-        Layout = "~/Views/Shared/_Layout.cshtml";
-    }
+    Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Vendor Sales Report";
 }
+
+@model YJWebCoreMVC.Models.ListOfItemsSoldModel
+@using System.Text.Json
 
 <div id="content-center" class="row">
 
@@ -195,7 +188,7 @@
             closeAllLists(e.target);
         });
 
-        var VenderTypes = @Html.Raw(Json.Encode(ViewBag.VenderTypes));
+        var VenderTypes =  @Html.Raw(JsonSerializer.Serialize(Model.VenderTypes))
 
         $("#ddlVendor").on("input", function () {
             var query = $(this).val().toLowerCase();

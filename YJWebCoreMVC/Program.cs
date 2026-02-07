@@ -34,6 +34,9 @@ builder.Services.AddScoped<UsersService>();
 builder.Services.AddScoped<ICryptoService, CryptoService>();
 builder.Services.AddScoped<SalesSummaryService>();
 builder.Services.AddScoped<RepairService>();
+builder.Services.AddScoped<ListOfItemsSoldService>();
+builder.Services.AddScoped<SalesmenService>();
+builder.Services.AddScoped<ImageService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSession();
 

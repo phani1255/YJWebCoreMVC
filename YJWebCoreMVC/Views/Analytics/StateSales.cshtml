@@ -4,17 +4,7 @@
  Hemanth 10/23/2024 date range changed from last 1 year
 -->
 @{
-
-    if (Session["UserID"] == null)
-    {
-        Layout = null;
-        Response.Redirect("~/Login/Index");
-    }
-    else
-    {
-        Layout = null;
-        Layout = "~/Views/Shared/_Layout.cshtml";
-    }
+    Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "TOTAL SALES PER STATE";
 }
 

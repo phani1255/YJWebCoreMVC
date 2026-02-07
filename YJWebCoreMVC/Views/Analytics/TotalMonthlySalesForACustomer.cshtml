@@ -3,20 +3,11 @@
   * Phanindra 9/21/2024 Added decimals for numeric columns
 -->
 @{
-
-    if (Session["UserID"] == null)
-    {
-        Layout = null;
-        Response.Redirect("~/Login/Index");
-    }
-    else
-    {
-        Layout = null;
         Layout = "~/Views/Shared/_Layout.cshtml";
-    }
 }
 
-@model YJWeb.Models.AnalasysServiceModel
+@model YJWebCoreMVC.Models.AnalyticsModel
+@using System.Text.Json
 
 <div id="content-center" class="row">
 
@@ -60,7 +51,7 @@
                         </label>
                         <div class="col-sm-8">
                             <div class="autocomplete-dropdown">
-                                <div id="CustomerCodesForAutofill" class="d-none">@Html.Raw(Json.Encode(Model.CustomerCodes)) </div>
+                                <div id="CustomerCodesForAutofill" class="d-none">@Html.Raw(JsonSerializer.Serialize(Model.CustomerCodes)) </div>
                                 <input type="text" id="txtCustomerCode" class="form-control resetTextField activateFormRefreshBtn" placeholder="Search...">
                                 <div id="autocomplete-list1" class="autocomplete-items"></div>
                             </div>
@@ -178,13 +169,13 @@
 
         iSByPickupDate = chkLayawaysUnpaid = "false";
 
-
+         
 
         BindTotalMonthlySalesForACustomer(custcode, fromdate1, todate1, chkLayawaysUnpaid, iSByPickupDate);
     }
 
     function BindTotalMonthlySalesForACustomer(custcode, fromdate1, todate1, chkLayawaysUnpaid, iSByPickupDate) {
-        var url = '@Url.Action("GetTotalMonthlySalesForACustomer", "Analysis", new { Area = "" })';
+        var url = '@Url.Action("GetTotalMonthlySalesForACustomer", "Analytics", new { Area = "" })';
         var data = {
             ccode: custcode,
             strFrom1: fromdate1,

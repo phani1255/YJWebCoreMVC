@@ -4,16 +4,7 @@ Hemanth 10/10/2024 preview and print changes added
 -->
 @{
 
-    if (Session["UserID"] == null)
-    {
-        Layout = null;
-        Response.Redirect("~/Login/Index");
-    }
-    else
-    {
-        Layout = null;
-        Layout = "~/Views/Shared/_Layout.cshtml";
-    }
+    Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "SALES / SALES TAX PER STATE";
 }
 
@@ -60,13 +51,13 @@ Hemanth 10/10/2024 preview and print changes added
                         <div class="col-sm-7">
                             <select id="ddlstores" name="ddlstores" class="activateFormRefreshBtn form-control">
                                 @{
-                                    if (ViewBag.StoreData != null)
-                                    {
-                                        foreach (var store in ViewBag.StoreData)
-                                        {
-                                            <option value="@store.Value">@store.Text</option>
-                                        }
-                                    }
+                                if (ViewBag.StoreData != null)
+                                {
+                                foreach (var store in ViewBag.StoreData)
+                                {
+                                <option value="@store.Value">@store.Text</option>
+                                }
+                                }
                                 }
                             </select>
                         </div>
@@ -225,7 +216,7 @@ Hemanth 10/10/2024 preview and print changes added
 
         ddlstores = $('#ddlstores').val();
         txtTaxState = $('#txtTaxState').val();
-        ChkIncludePartialSpecPayment = $('#ChkIncludePartialSpecPayment').prop("checked") ? true :false;
+        ChkIncludePartialSpecPayment = $('#ChkIncludePartialSpecPayment').prop("checked") ? true : false;
         chkIncludeInactive = $('#chkIncludeInactive').prop("checked") ? false : true;
         chkincludenotaxinvoice = $('#chkincludenotaxinvoice').prop("checked") ? true : false;
 

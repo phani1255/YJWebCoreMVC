@@ -3,23 +3,14 @@
   * 12/18/2025 Manoj Added functionality to download PDF, Excel, Print and Preview report
   * 12/22/2025 Manoj Modified DataTable footer issues and fixed noOfDays text
 -->
-
 @{
-    if (Session["UserID"] == null)
-    {
-        Layout = null;
-        Response.Redirect("~/Login/Index");
-    }
-    else
-    {
+
         ViewBag.Title = "Inactive Styles";
         Layout = "~/Views/Shared/_Layout.cshtml";
-
-    }
-
-    var StoreLogo = ViewBag.StoreLogo;
+        var StoreLogo = ViewBag.StoreLogo;
 }
-@model YJWeb.Models.AnalasysServiceModel
+@model YJWebCoreMVC.Models.AnalyticsModel
+@using System.Text.Json
 
 <h4 class="text-center heading mt-1">INACTIVE STYLES</h4>
 <div id="content-center" class="row">
@@ -313,13 +304,13 @@
     }
     function existAutoFilledData() {
 
-         accCode = "";
+        accCode = "";
 
         if ($('#ddlStoreAll').prop('checked')) {
 
             _strstore = "";
-        }else {
-           // _strstore = $('#ddlStoreList option:selected').val();
+        } else {
+            // _strstore = $('#ddlStoreList option:selected').val();
             _strstore = ($('#ddlStoreList option:selected').val() != "All" && $('#ddlStoreList option:selected').val() != null)
                 ? $('#ddlStoreList option:selected').val() : "";
         }
@@ -328,7 +319,7 @@
         if ($('#ddlCategoryAll').prop('checked')) {
 
             _strCateg = "";
-        }else {
+        } else {
 
             //_strCateg = $('#ddlCategory option:selected').val();
             _strCateg = ($('#ddlCategory option:selected').val() != "All" && $('#ddlCategory option:selected').val() != null)
@@ -361,7 +352,7 @@
 
             vendor = "";
 
-        }else {
+        } else {
             vendor = ($('#ddlVendorList option:selected').val() != "All" && $('#ddlVendorList option:selected').val() != null)
                 ? $('#ddlVendorList option:selected').val() : "";
         }
@@ -370,7 +361,7 @@
         if ($('#ddlMetalAll').prop('checked')) {
 
             metal = "";
-        }else {
+        } else {
             metal = ($('#ddlMetalList option:selected').val() != "All" && $('#ddlMetalList option:selected').val() != null)
                 ? $('#ddlMetalList option:selected').val() : "";
 
@@ -409,31 +400,31 @@
 
 
 
-    function getStyleImage(styleImage,isTable = false) {
-          var baseUrl = '@Url.Action("GetImagesNew", "Images")';
+    function getStyleImage(styleImage, isTable = false) {
+        var baseUrl = '@Url.Action("GetImagesNew", "Images")';
 
-          var body = {
-              styleName: styleImage,
+        var body = {
+            styleName: styleImage,
         }
 
-          $.ajax({
-              url: baseUrl,
-              method: 'GET',
-              data: body,
-              success: function (result) {
+        $.ajax({
+            url: baseUrl,
+            method: 'GET',
+            data: body,
+            success: function (result) {
 
 
-                  if (result[0]) {
-                      $('#styleImage').attr("src", result[0]);
-                  } else {
-                      $('#styleImage').attr("src", "https://wjewel.dnsalias.org/styleimages/img_unavailable.jpg")
-                  }
-              },
-              error: function (xhr, status, error) {
-                  $("#styleImage").attr("src", "https://wjewel.dnsalias.org/styleimages/img_unavailable.jpg");
-              }
+                if (result[0]) {
+                    $('#styleImage').attr("src", result[0]);
+                } else {
+                    $('#styleImage').attr("src", "https://wjewel.dnsalias.org/styleimages/img_unavailable.jpg")
+                }
+            },
+            error: function (xhr, status, error) {
+                $("#styleImage").attr("src", "https://wjewel.dnsalias.org/styleimages/img_unavailable.jpg");
+            }
 
-          })
+        })
     }
 
 
@@ -443,7 +434,7 @@
 
         //string ccode, int noOfDay, string ct, string subct, string metalval, string brandval, string fromstyle, string tostyle, string strVendor, string frmdate, string todate, string storeno = ""
 
-        var url = '@Url.Action("GetListOfInactiveStyles", "Analysis", new { Area = "" })';
+        var url = '@Url.Action("GetListOfInactiveStyles", "Analytics", new { Area = "" })';
 
         //var isCustcheckFlag = Flag ? false : isCustomerInfoCheck;
 
@@ -481,12 +472,12 @@
                     //"Age": 706, "Cost": 0.00, "Price": 0.00, "Case_no": "", "CAST_CODE": "", "VND_STYLE": "", "store_no": "IT SOLUTIO", "Class_GL": "ASSET", "SHOP_STAT": "", "Qty_Avble": 5.0
 
 
-                   var table = $('#dataTableForInactiveStyles').DataTable();
+                    var table = $('#dataTableForInactiveStyles').DataTable();
                     table.clear().draw();
                     //table.column(1).visible(true);
                     $("#dataTableForInactiveStyles tbody").empty();
                     $('#dataTableForInactiveStyles tfoot').show();
-                    var inStockToal = 0,totalCost=0,totalPrice = 0
+                    var inStockToal = 0, totalCost = 0, totalPrice = 0
 
                     for (var i = 0; i < json.length; i++) {
                         inStockToal += parseFloat(json[i].In_Stock);
@@ -506,7 +497,7 @@
                             '<div class="CusCodeVal CusCode" data-code="' + styleCode + '">' + styleCode + '</div>',
                             '<div class="img-cell" data-style="' + styleCode + '">' +
                             '<img class="style-img" ' +
-                            'src="' + (json[i].Image ? "data:image/jpeg;base64," + json[i].Image : "") +'" ' +
+                            'src="' + (json[i].Image ? "data:image/jpeg;base64," + json[i].Image : "") + '" ' +
                             'style="width:60px;height:60px;object-fit:contain;" />' +
                             '</div>',
                             json[i].Category || "",
@@ -536,7 +527,7 @@
                         getStyleImage(styleImage)
                     }
 
-                   // var table = $('#dataTableForInactiveStyles').DataTable();
+                    // var table = $('#dataTableForInactiveStyles').DataTable();
 
 
 
@@ -544,20 +535,20 @@
 
                     filtertable = json;
                     //table.column(1).visible(false);
-               }
-             else {
-                var table = $('#dataTableForInactiveStyles').DataTable();
+                }
+                else {
+                    var table = $('#dataTableForInactiveStyles').DataTable();
                     table.clear().draw();
-               $('#dataTableForInactiveStyles tfoot').hide();
-                alert("No Data Found");
-            }
+                    $('#dataTableForInactiveStyles tfoot').hide();
+                    alert("No Data Found");
+                }
 
 
-        })
-        .fail(function (jqxhr, textStatus, error) {
-            var err = textStatus + ", " + error;
-            console.log("GETBagsGivenToPerson Request Failed: " + err);
-        });
+            })
+            .fail(function (jqxhr, textStatus, error) {
+                var err = textStatus + ", " + error;
+                console.log("GETBagsGivenToPerson Request Failed: " + err);
+            });
     }
 
 
@@ -667,15 +658,15 @@
 
         var data = {
             type: reportType,
-            astSoldDay: Days ,
-            daterange: datef ,
+            astSoldDay: Days,
+            daterange: datef,
             cat: cate,
             subcat: Subcate,
             brand: brand,
             metal: Metal,
             vendor: Vendor,
-            frmsty: Stylefrom ,
-            tostyl: StyleTo ,
+            frmsty: Stylefrom,
+            tostyl: StyleTo,
             isImageCheck: isImagePropChecked,
         }
 
@@ -709,7 +700,7 @@
 
         $('#dataTableForInactiveStyles tbody').on('click', 'tr', function () {
             var styleImage = $(this).find('td').eq(0).text().trim();
-            getStyleImage(styleImage,false)
+            getStyleImage(styleImage, false)
         });
 
 
@@ -738,12 +729,12 @@
 
 
         //preview
-        $('#inactiveStylesbtnDataTablePreview').off('click').on('click',  function (e) {
+        $('#inactiveStylesbtnDataTablePreview').off('click').on('click', function (e) {
             //string astSoldDay, string daterange , string cat, string subcat, string brand, string metal,string vendor12,string frmsty, string tostyl,bool isImageCheck = false
             e.preventDefault();
 
             var jsonBody = getReportHeadersData("preview");
-           window.open('@Url.Action("GenerateReport", "Analysis")' + '?' + $.param(jsonBody), '_blank');
+            window.open('@Url.Action("GenerateReport", "Analysis")' + '?' + $.param(jsonBody), '_blank');
 
 
 
@@ -753,9 +744,9 @@
         //print
         $('#inactiveStylesBtnDataTablePrint',).off('click').on('click', function (e) {
 
-             e.preventDefault();
+            e.preventDefault();
 
-             var jsonBody = getReportHeadersData("print");
+            var jsonBody = getReportHeadersData("print");
             window.open('@Url.Action("PrintViewer", "Analysis")' + '?' + $.param(jsonBody), '_blank');
 
 

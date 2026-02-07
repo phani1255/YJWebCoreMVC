@@ -48,14 +48,16 @@ namespace YJWebCoreMVC.Services
 
         private readonly HelperService _helperService;
         private readonly ConnectionProvider _connectionProvider;
-        private readonly HttpContextAccessor _httpContextAccessor;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly HelperCommonService _helperCommonService;
         private readonly IWebHostEnvironment _env;
 
-        public ListOfItemsSoldService(HelperService helperService, ConnectionProvider connectionProvider, HttpContextAccessor httpContextAccessor, IWebHostEnvironment env)
+        public ListOfItemsSoldService(HelperService helperService, ConnectionProvider connectionProvider, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment env, HelperCommonService helperCommonService)
         {
             _helperService = helperService;
             _connectionProvider = connectionProvider;
             _httpContextAccessor = httpContextAccessor;
+            _helperCommonService = helperCommonService;
             _env = env;
         }
 
@@ -334,7 +336,7 @@ namespace YJWebCoreMVC.Services
                 dataAdapter.SelectCommand.CommandType = CommandType.StoredProcedure;
                 dataAdapter.SelectCommand.CommandText = "GetVendorSalesReport";
 
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@ACC", Ccode);
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@ACC", Ccode ??= "");
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@date1", FROMDATE);
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@date2", DateTo);
 
@@ -352,9 +354,9 @@ namespace YJWebCoreMVC.Services
                 dataAdapter.SelectCommand.CommandType = CommandType.StoredProcedure;
                 dataAdapter.SelectCommand.CommandText = "InStateOutStateSale";
 
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@STATE", State);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@FROMDATE", FROMDATE);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@TODATE", DateTo);
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@STATE", State ??= "");
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@FROMDATE", FROMDATE ??= "");
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@TODATE", DateTo ??= "");
 
                 dataAdapter.Fill(dataTable);
                 return dataTable;
@@ -389,11 +391,11 @@ namespace YJWebCoreMVC.Services
                 dataAdapter.SelectCommand.CommandType = CommandType.StoredProcedure;
                 dataAdapter.SelectCommand.CommandText = "GetVendorStylesPerformance";
 
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@group", Group);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@category", Category);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@subcat", SubCategory);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@metal", Metal);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@vendor", Vendor);
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@group", Group ??= "");
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@category", Category ??= "");
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@subcat", SubCategory ??= "");
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@metal", Metal ??= "");
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@vendor", Vendor ??= "");
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@salesfdate", FROMDATE);
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@salestdate", DateTo);
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@purcfdate", Purcfdate);
@@ -416,9 +418,9 @@ namespace YJWebCoreMVC.Services
                 dataAdapter.SelectCommand.CommandType = CommandType.StoredProcedure;
 
                 dataAdapter.SelectCommand.CommandText = "GetTotalSalesPerState";
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@FromDate", FROMDATE);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@ToDate", DateTo);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@StoreName", Store);
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@FromDate", FROMDATE ??= "");
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@ToDate", DateTo ??= "");
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@StoreName", Store ??= "");
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@IncludeInactive", IncludeInactive);
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@includeNotaxInvoices", IncludeNotaxInvoices);
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@TaxState", TaxState);
@@ -441,8 +443,8 @@ namespace YJWebCoreMVC.Services
                 dataAdapter.SelectCommand.CommandText = "Hourly_Sales";
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@date1", FROMDATE);
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@date2", DateTo);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@day", Day);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@store", Store);
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@day", Day ??= "");
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@store", Store ??= "");
                 dataAdapter.Fill(dataTable);
             }
             return dataTable;
@@ -461,7 +463,7 @@ namespace YJWebCoreMVC.Services
                 dataAdapter.SelectCommand.CommandText = "Weekly_Sales";
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@date1", FROMDATE);
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@date2", DateTo);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@store", Store);
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@store", Store ??= "");
                 dataAdapter.Fill(dataTable);
             }
             return dataTable;
@@ -485,16 +487,16 @@ namespace YJWebCoreMVC.Services
                     dataAdapter.SelectCommand.CommandText = StoreProcedureName;
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@date1", FROMDATE);
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@date2", DateTo);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@brand", Brand);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@category", Category);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@subcat", SubCategory);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@metal", Metal);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@cacc", Ccode);
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@brand", Brand ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@category", Category ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@subcat", SubCategory ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@metal", Metal ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@cacc", Ccode ??= "");
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@do_sum", Monthproft ? "7" : !SeparateSM ? "5" : "6");
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@STYLEFROM", FromStyle);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@STYLETO", ToStyle);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@Vendor", Vendor);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@store", Store);
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@STYLEFROM", FromStyle ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@STYLETO", ToStyle ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@Vendor", Vendor ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@store", Store ??= "");
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@iSLaySpe", ISLaySpe ? "1" : "0");
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@ByWichDate", ByWhichDate);
                     dataAdapter.Fill(dataTable);
@@ -515,16 +517,16 @@ namespace YJWebCoreMVC.Services
                     dataAdapter.SelectCommand.CommandText = StoreProcedureName;
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@date1", FROMDATE);
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@date2", DateTo);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@brand", Brand);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@category", Category);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@subcat", SubCategory);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@metal", Metal);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@cacc", Ccode);
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@brand", Brand ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@category", Category ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@subcat", SubCategory ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@metal", Metal ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@cacc", Ccode ??= "");
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@do_sum", !SeparateSM ? "5" : "6");
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@STYLEFROM", FromStyle);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@STYLETO", ToStyle);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@Vendor", Vendor);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@store", Store);
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@STYLEFROM", FromStyle ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@STYLETO", ToStyle ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@Vendor", Vendor ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@store", Store ??= "");
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@ByWichDate", ByWhichDate);
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@iSLayaway", IsLayaway ? "1" : "0");
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@SALESMAN", Sales);
@@ -548,15 +550,15 @@ namespace YJWebCoreMVC.Services
                 dataAdapter.SelectCommand.CommandText = "det_SalesCGOProfitSimpleExcel";
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@date1", FROMDATE);
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@date2", DateTo);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@brand", Brand);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@category", Category);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@subcat", SubCategory);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@metal", Metal);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@cacc", Ccode);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@STYLEFROM", FromStyle);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@STYLETO", ToStyle);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@Vendor", Vendor);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@store", Store);
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@brand", Brand ??= "");
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@category", Category ??= "");
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@subcat", SubCategory ??= "");
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@metal", Metal ??= "");
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@cacc", Ccode ??= "");
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@STYLEFROM", FromStyle ??= "");
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@STYLETO", ToStyle ??= "");
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@Vendor", Vendor ??= "");
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@store", Store ??= "");
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@ByWichDate", ByWhichDate);
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@iSLayaway", IsLayaway ? "1" : "0");
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@SALESMAN", Sales);
@@ -579,7 +581,7 @@ namespace YJWebCoreMVC.Services
                 dataAdapter.SelectCommand.CommandText = "SalesProfitPerSource";
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@DATE1", FROMDATE);
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@DATE2", DateTo);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@Store", Store);
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@Store", Store ??= "");
                 if (Details == "Details")
                 {
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@show", Details);
@@ -604,22 +606,22 @@ namespace YJWebCoreMVC.Services
 
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@date1", FROMDATE);
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@date2", DateTo);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@brand", Brand);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@category", Category);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@subcat", SubCategory);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@metal", Metal);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@cacc", Ccode);
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@brand", Brand ??= "");
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@category", Category ??= "");
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@subcat", SubCategory ??= "");
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@metal", Metal ??= "");
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@cacc", Ccode ??= "");
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@do_sum", 3);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@STYLEFROM", FromStyle);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@STYLETO", ToStyle);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@Vendor", Vendor);
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@STYLEFROM", FromStyle ??= "");
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@STYLETO", ToStyle ??= "");
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@Vendor", Vendor ??= "");
 
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@CSColor", "");
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@CSClarity", "");
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@CSShape", "");
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@CenterType", "");
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@CenterSize", "");
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@scode", Sales);
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@scode", Sales ??= "");
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@BYWHICHDATE", ByWhichDate);
                 dataAdapter.Fill(dataTable);
             }
@@ -642,16 +644,16 @@ namespace YJWebCoreMVC.Services
 
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@date1", FROMDATE);
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@date2", DateTo);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@brand", Brand);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@category", Category);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@subcat", SubCategory);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@metal", Metal);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@cacc", Ccode);
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@brand", Brand ??= "");
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@category", Category ??= "");
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@subcat", SubCategory ??= "");
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@metal", Metal ??= "");
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@cacc", Ccode ??= "");
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@do_sum", 8);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@STYLEFROM", FromStyle);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@STYLETO", ToStyle);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@Vendor", Vendor);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@vnd_style", VendorStyle);
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@STYLEFROM", FromStyle ??= "");
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@STYLETO", ToStyle ??= "");
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@Vendor", Vendor ??= "");
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@vnd_style", VendorStyle ??= "");
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@iSLaySpe", layaway ? "1" : "0");
                 dataAdapter.Fill(dataTable);
             }
@@ -674,7 +676,7 @@ namespace YJWebCoreMVC.Services
 
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@Date1", FROMDATE);
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@Date2", DateTo);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@Store", Store);
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@Store", Store ??= "");
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@iSInvoiceCost", IsCost ? "1" : "0");
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@bypickdate", Convert.ToBoolean(ByWhichDate) ? "1" : "0");
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@isLayawaySpecial", layaway ? "1" : "0");
@@ -697,13 +699,13 @@ namespace YJWebCoreMVC.Services
                 dataAdapter.SelectCommand.CommandTimeout = 6000;
                 dataAdapter.SelectCommand.CommandText = "GetRcvableCreditByTimeFrame";
 
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@acc1", Ccode);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@acc2", Ccode2);
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@acc1", Ccode ??= "");
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@acc2", Ccode2 ??= "");
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@datetype", ByWhichDate);
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@date1", FROMDATE);
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@date2", DateTo);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@trantype", Trantype);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@registers", Register);
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@trantype", Trantype ??= "");
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@registers", Register ??= "");
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@RepairPayments", IsRepairOnly.ToString());
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@CurrencyType", CurrencyType);
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@ShowByCurrency", IsShowCurrency.ToString());
@@ -729,14 +731,14 @@ namespace YJWebCoreMVC.Services
                 // Assign the SQL to the command object
                 SqlDataAdapter.SelectCommand.CommandText = "GetRcvableCreditByTimeFrameBySummery";
 
-                SqlDataAdapter.SelectCommand.Parameters.AddWithValue("@acc1", Ccode);
-                SqlDataAdapter.SelectCommand.Parameters.AddWithValue("@acc2", Ccode2);
+                SqlDataAdapter.SelectCommand.Parameters.AddWithValue("@acc1", Ccode ??= "");
+                SqlDataAdapter.SelectCommand.Parameters.AddWithValue("@acc2", Ccode2 ??= "");
                 SqlDataAdapter.SelectCommand.Parameters.AddWithValue("@datetype", ByWhichDate);
 
                 SqlDataAdapter.SelectCommand.Parameters.AddWithValue("@date1", FROMDATE);
                 SqlDataAdapter.SelectCommand.Parameters.AddWithValue("@date2", DateTo);
-                SqlDataAdapter.SelectCommand.Parameters.AddWithValue("@trantype", Trantype);
-                SqlDataAdapter.SelectCommand.Parameters.AddWithValue("@registers", Register);
+                SqlDataAdapter.SelectCommand.Parameters.AddWithValue("@trantype", Trantype ??= "");
+                SqlDataAdapter.SelectCommand.Parameters.AddWithValue("@registers", Register ??= "");
                 SqlDataAdapter.SelectCommand.Parameters.AddWithValue("@AllStore", allstore);
                 SqlDataAdapter.SelectCommand.Parameters.AddWithValue("@RepairPayments", IsRepairOnly);
                 SqlDataAdapter.SelectCommand.Parameters.AddWithValue("@ShowByCurrency", ShowbyCurrency);
@@ -900,19 +902,19 @@ namespace YJWebCoreMVC.Services
                 SqlDataAdapter.SelectCommand.CommandText = "ListofChecks";
 
                 SqlDataAdapter.SelectCommand.Parameters.AddWithValue("@vendorcode1", Vendorcode1);
-                SqlDataAdapter.SelectCommand.Parameters.AddWithValue("@check1", Check1);
-                SqlDataAdapter.SelectCommand.Parameters.AddWithValue("@check2", Check2);
-                SqlDataAdapter.SelectCommand.Parameters.AddWithValue("@bank", Bank);
+                SqlDataAdapter.SelectCommand.Parameters.AddWithValue("@check1", Check1 ??= "");
+                SqlDataAdapter.SelectCommand.Parameters.AddWithValue("@check2", Check2 ??= "");
+                SqlDataAdapter.SelectCommand.Parameters.AddWithValue("@bank", Bank ??= "");
                 SqlDataAdapter.SelectCommand.Parameters.AddWithValue("@dateval", Dateval.ToString());
                 SqlDataAdapter.SelectCommand.Parameters.AddWithValue("@date1", Date1.ToString());
                 SqlDataAdapter.SelectCommand.Parameters.AddWithValue("@date2", Date2.ToString());
                 SqlDataAdapter.SelectCommand.Parameters.AddWithValue("@amt1", Amt1.ToString());
                 SqlDataAdapter.SelectCommand.Parameters.AddWithValue("@amt2", Amt2.ToString());
-                SqlDataAdapter.SelectCommand.Parameters.AddWithValue("@glcode", Glcode);
+                SqlDataAdapter.SelectCommand.Parameters.AddWithValue("@glcode", Glcode ??= "");
                 SqlDataAdapter.SelectCommand.Parameters.AddWithValue("@isAllGLcode", IsAllGL.ToString());
                 SqlDataAdapter.SelectCommand.Parameters.AddWithValue("@SearchOption", StrSearchOption.ToString());
                 SqlDataAdapter.SelectCommand.Parameters.AddWithValue("@unapplied", Unapplied.ToString());
-                SqlDataAdapter.SelectCommand.Parameters.AddWithValue("@store", Store);
+                SqlDataAdapter.SelectCommand.Parameters.AddWithValue("@store", Store ??= "");
 
                 SqlDataAdapter.Fill(dataTable);
             }
@@ -1219,6 +1221,125 @@ namespace YJWebCoreMVC.Services
                 dbCommand.Parameters.AddWithValue("@gltype", glType);
                 connection.Open();
                 return dbCommand.ExecuteNonQuery() > 0;
+            }
+        }
+
+        public DataTable GetSalesmanDetails(DataTable sales)
+        {
+            string[] fldNames = { "Date" };
+            DataTable dt1 = this.GetSysFormattedDateOnReport(sales, fldNames);
+            DataTable dtSummarySales = new DataTable();
+            dtSummarySales.Columns.Add("SALESMAN", typeof(string));
+            dtSummarySales.Columns.Add("TOTALAMOUNT", typeof(decimal));
+            dtSummarySales.Columns.Add("COMISH", typeof(decimal));
+            dtSummarySales.Columns.Add("BRANDQTY", typeof(decimal));
+            dtSummarySales.Columns.Add("BRANDAMOUNT", typeof(decimal));
+            dtSummarySales.Columns.Add("OTHERAMOUNT", typeof(decimal));
+            DataTable dt = sales.Clone();
+
+            (new List<String> { "1", "2", "3", "4" }).ForEach(m =>
+            {
+                String salesman = $"Salesman{m}";
+                String salesmanShare = $"SalesmanShare{m}";
+                int Cnt = sales.AsEnumerable().Where(rs => rs.Field<String>(salesman) != String.Empty).ToList().Count;
+                if (Cnt > 0)
+                {
+                    dtSummarySales = sales.AsEnumerable().Where(rs => rs.Field<String>(salesman) != String.Empty)
+                                .GroupBy(r => new { SALESMAN = r[salesman] })
+                                .Select(x =>
+                                {
+                                    var row = dtSummarySales.NewRow();
+                                    row["SALESMAN"] = x.Max(r => r[salesman]);
+                                    row["TotalAmount"] = x.Sum(r => _helperCommonService.DecimalCheckForDBNull(r[salesmanShare]));
+                                    row["COMISH"] = x.Sum(r => _helperCommonService.DecimalCheckForDBNull(r["COMM_AMOUNT"]));
+                                    row["BRANDQTY"] = 0;
+                                    row["BRANDAMOUNT"] = 0;
+                                    row["OTHERAMOUNT"] = 0;
+                                    return row;
+                                }).CopyToDataTable();
+
+
+                    dt.Merge(dtSummarySales);
+                }
+            });
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                dt = dt.AsEnumerable().Where(rs => rs.Field<String>("SALESMAN") != String.Empty)
+                                    .GroupBy(r => new { SALESMAN = r["SALESMAN"] })
+                                    .Select(x =>
+                                    {
+                                        var row = dtSummarySales.NewRow();
+                                        row["SALESMAN"] = x.Max(r => r["SALESMAN"]);
+                                        row["TotalAmount"] = x.Sum(r => _helperCommonService.DecimalCheckForDBNull(r["TotalAmount"]));
+                                        row["COMISH"] = x.Sum(r => _helperCommonService.DecimalCheckForDBNull(r["COMISH"]));
+                                        row["BRANDQTY"] = 0;
+                                        row["BRANDAMOUNT"] = 0;
+                                        row["OTHERAMOUNT"] = 0;
+                                        return row;
+                                    }).CopyToDataTable();
+            }
+
+            int noOfdecimals = 0;
+            foreach (DataRow rw in dt.Rows)
+            {
+                decimal qty = Convert.ToDecimal(string.Format("{0:N" + noOfdecimals + "}", sales.AsEnumerable().OfType<DataRow>().Where(r => (r.Field<string>("salesman1") == Convert.ToString(rw["SALESMAN"]) || r.Field<string>("salesman2") == Convert.ToString(rw["SALESMAN"]) || r.Field<string>("salesman3") == Convert.ToString(rw["SALESMAN"]) || r.Field<string>("salesman4") == Convert.ToString(rw["SALESMAN"]))).ToList().Sum(r => _helperCommonService.DecimalCheckForDBNull(r.Field<decimal?>("QTY")))));
+                rw["BRANDAMOUNT"] = sales.AsEnumerable().OfType<DataRow>().Where(r => Convert.ToString(r.Field<string>("BRAND")) != String.Empty && (r.Field<string>("salesman1") == Convert.ToString(rw["SALESMAN"]) || r.Field<string>("salesman2") == Convert.ToString(rw["SALESMAN"]) || r.Field<string>("salesman3") == Convert.ToString(rw["SALESMAN"]) || r.Field<string>("salesman4") == Convert.ToString(rw["SALESMAN"]))).ToList().Sum(r => (_helperCommonService.DecimalCheckForDBNull(r.Field<decimal?>("QTY")) * _helperCommonService.DecimalCheckForDBNull(r.Field<decimal?>("PRICE"))));
+                rw["OTHERAMOUNT"] = sales.AsEnumerable().OfType<DataRow>().Where(r => Convert.ToString(r.Field<string>("BRAND")) == String.Empty && (r.Field<string>("salesman1") == Convert.ToString(rw["SALESMAN"]) || r.Field<string>("salesman2") == Convert.ToString(rw["SALESMAN"]) || r.Field<string>("salesman3") == Convert.ToString(rw["SALESMAN"]) || r.Field<string>("salesman4") == Convert.ToString(rw["SALESMAN"]))).ToList().Sum(r => (_helperCommonService.DecimalCheckForDBNull(r.Field<decimal?>("QTY")) * _helperCommonService.DecimalCheckForDBNull(r.Field<decimal?>("PRICE"))));
+                rw["BRANDQTY"] = qty;
+            }
+            return dt;
+        }
+
+        public DataTable GetSysFormattedDateOnReport(DataTable dt, string[] fieldName)
+        {
+            try
+            {
+                int cnt = 0;
+                foreach (DataColumn col in dt.Columns)
+                    if (col.DataType == typeof(DateTime))
+                        cnt++;
+
+                if (fieldName == null || cnt == 0)
+                    return dt;
+
+                DataTable dtCloned = dt.Clone();
+                foreach (string fld in fieldName)
+                    dtCloned.Columns[fld].DataType = typeof(string);
+
+                foreach (DataRow row in dt.Rows)
+                    dtCloned.ImportRow(row);
+
+                foreach (string fld in fieldName)
+                {
+                    dtCloned.AsEnumerable().OfType<DataRow>().Where(r => ((r.Field<string>(fld)) != null) && (r.Field<string>(fld)) != string.Empty).ToList().ForEach(r => r[fld] = this.CheckForDBNull(Convert.ToDateTime(this.CheckForDBNull(r[fld])), "System.DateTime").ToString());
+                    dtCloned.AcceptChanges();
+                }
+
+                return dtCloned;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public dynamic CheckForDBNull(object objval, string typename = "System.String")
+        {
+
+            switch (typename)
+            {
+                case "System.String":
+                    return objval != DBNull.Value && objval != null && !string.IsNullOrWhiteSpace(objval.ToString()) ? objval.ToString() : string.Empty;
+                case "System.Int32":
+                    return objval != DBNull.Value && objval != null && !string.IsNullOrWhiteSpace(objval.ToString()) ? Convert.ToInt32(objval) : 0;
+                case "System.Decimal":
+                    return objval != DBNull.Value && objval != null && !string.IsNullOrWhiteSpace(objval.ToString()) ? Convert.ToDecimal(objval) : 0;
+                case "System.Boolean":
+                    return objval != DBNull.Value && objval != null && !string.IsNullOrWhiteSpace(objval.ToString()) ? Convert.ToBoolean(Convert.ToInt16(objval)) : false;
+                case "System.DateTime":
+                    return objval != DBNull.Value && objval != null && !string.IsNullOrWhiteSpace(objval.ToString()) ? Convert.ToDateTime(objval) : DateTime.Now;
+                default:
+                    return objval != DBNull.Value && objval != null && !string.IsNullOrWhiteSpace(objval.ToString()) ? objval.ToString() : string.Empty;
             }
         }
     }
