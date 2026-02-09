@@ -48,10 +48,10 @@ namespace YJWebCoreMVC.Services
 
         private readonly HelperService _helperService;
         private readonly ConnectionProvider _connectionProvider;
-        private readonly HttpContextAccessor _httpContextAccessor;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IWebHostEnvironment _env;
 
-        public ListOfItemsSoldService(HelperService helperService, ConnectionProvider connectionProvider, HttpContextAccessor httpContextAccessor, IWebHostEnvironment env)
+        public ListOfItemsSoldService(HelperService helperService, ConnectionProvider connectionProvider, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment env)
         {
             _helperService = helperService;
             _connectionProvider = connectionProvider;

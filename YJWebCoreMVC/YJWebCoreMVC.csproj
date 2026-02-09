@@ -14,7 +14,6 @@
   <ItemGroup>
     <Content Remove="Views\Analytics\AnnualPaymentsReceived.cshtml" />
     <Content Remove="Views\Analytics\AnnualSalesComparison.cshtml" />
-    <Content Remove="Views\Analytics\BestSellerCategoryReports.cshtml" />
     <Content Remove="Views\Analytics\BestSellerReports.cshtml" />
     <Content Remove="Views\Analytics\ComponentSalesAnalysis.cshtml" />
     <Content Remove="Views\Analytics\DetailedCOG.cshtml" />
@@ -83,14 +82,11 @@
     <PackageReference Include="HtmlAgilityPack" Version="1.12.4" />
     <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.3.9" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="10.0.2" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.4" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
     <PackageReference Include="System.Drawing.Common" Version="10.0.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Views\Analytics\" />
   </ItemGroup>
 
 </Project>

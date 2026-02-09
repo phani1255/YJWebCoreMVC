@@ -836,9 +836,9 @@
 		<GroupMenuItem Name="80" Text="Analytics">
 			<TopLevelMenu Name="801" Text="Analytics" image="analytics">
 				<MenuItem Name="802"   Text="Qty Sold / In Stock By Style"        weblink="Analytics/StockorHand"                OnClick="F:frmSoldorHand"                image="stockonhand" />
-				<MenuItem Name="803"   Text="Best Sellers Styles"                 weblink="Analysis/BestSellerReports"          OnClick="F:frmBestSellerReports"         image="bestseller" />
-				<MenuItem Name="804"   Text="Worst Sellers Styles"                weblink="Analysis/WorstSellerReports"         OnClick="F:frmWorstSellers"              image="worst" />
-				<MenuItem Name="8020"  Text="Best Seller Categories"              weblink="Analysis/BestSellerCategoryReports"  OnClick="F:frmBestSellerCategoryReports" image="bestseller" />
+				<MenuItem Name="803"   Text="Best Sellers Styles"                 weblink="Analytics/BestSellerReports"          OnClick="F:frmBestSellerReports"         image="bestseller" />
+				<MenuItem Name="804"   Text="Worst Sellers Styles"                weblink="Analytics/WorstSellerReports"         OnClick="F:frmWorstSellers"              image="worst" />
+				<MenuItem Name="8020"  Text="Best Seller Categories"              weblink="Analytics/BestSellerCategoryReports"  OnClick="F:frmBestSellerCategoryReports" image="bestseller" />
 				<MenuItem Name="805"   Text="Inactive Styles (Aged Inventory)"    weblink="Analysis/InactiveStyles"             OnClick="F:frmInactiveStyles"            image="bestseller" TBD="MNJ" />
 				<MenuItem Name="806"   Text="Sales By Salesrep"                   weblink="Analysis/SalesBySalesman"            OnClick="F:frmSalesBySalesman"           image="analytics"  TBD="MNJ"/>
 				<MenuItem Name="807"   Text="Days on Hand inventory"              weblink="ListOfItemsSold/DaysonHandInventory" OnClick="F:frmDaysonHandInventory"       image="salesgraph" TBD="Hemanth"/>

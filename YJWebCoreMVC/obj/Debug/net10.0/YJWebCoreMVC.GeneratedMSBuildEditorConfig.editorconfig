@@ -16,14 +16,14 @@ build_property.EnableComHosting =
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 9.0
 build_property.SupportLocalizedComponentNames = 
-build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = true
 build_property.MSBuildProjectDirectory = D:\dotnet\YJWebCoreMVC\YJWebCoreMVC
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 10.0
 build_property.EnableCodeStyleSeverity = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/AnnualPaymentsReceived.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl0aWNzXEFubnVhbFBheW1lbnRzUmVjZWl2ZWQuY3NodG1s
+[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/BestSellerCategoryReports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl0aWNzXEJlc3RTZWxsZXJDYXRlZ29yeVJlcG9ydHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Home/Index.cshtml]
