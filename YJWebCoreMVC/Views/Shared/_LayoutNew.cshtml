@@ -10,8 +10,8 @@
 
 @{
     var version = Assembly.GetExecutingAssembly()
-    .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
-    .InformationalVersion;
+        .GetName()
+        .Version?.ToString();
 }
 
 <!DOCTYPE html>
@@ -257,7 +257,6 @@
         </div>
     </div>
 
-    <!-- Include this script just before the closing </body> tag -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js"></script>
     <script>
         window.onerror = function (message, source, lineno, colno, error) {

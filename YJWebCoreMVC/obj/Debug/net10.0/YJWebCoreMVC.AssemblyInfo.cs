@@ -14,11 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("YJWebCoreMVC")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("16.2.2.0")]
-<<<<<<< HEAD
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("16.02.02.0+da2c0a0d67011f9b415fbfb7b7c9ebe6358e6108")]
-=======
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("16.02.02.0+3f272defe5d53b7a5c21855b407929102cc99286")]
->>>>>>> origin/PhaniCore_new
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("16.02.02.0+7f8f5b2d9ebfde898ae3be4df68ef7dbfeaf7255")]
 [assembly: System.Reflection.AssemblyProductAttribute("YJWebCoreMVC")]
 [assembly: System.Reflection.AssemblyTitleAttribute("YJWebCoreMVC")]
 [assembly: System.Reflection.AssemblyVersionAttribute("16.2.2.0")]

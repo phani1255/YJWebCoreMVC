@@ -55,7 +55,7 @@ Hemanth 10/08/2024 added class for summar columns to show values righ aligned in
                         <label class="col-sm-4">
                             Customer
                         </label>
-                        <div class="col-sm-8">
+                        <div class="col-sm-8" style="position:relative;">
                             <div class="autocomplete-dropdown">
                                 <div id="CustomerCodesForAutofill" class="d-none">@Html.Raw(JsonSerializer.Serialize(Model.CustomerCodes))</div>
                                 <input type="text" id="txtCustomerCode" class="form-control activateFormRefreshBtn" placeholder="Search..." disabled="disabled">
@@ -197,7 +197,7 @@ Hemanth 10/08/2024 added class for summar columns to show values righ aligned in
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 text-right" style="padding-top: 8px;">
+                <div class="col-md-4 pull-right" style="padding-top: 8px;">
                     <input type="checkbox" class="activateFormRefreshBtn" id="chkSummaryByModel" name="chkSummaryByModel" checked="checked" />&nbsp; Summary By Model#
                     <input type="button" value="Reset" class="formsGlobalUniqueBtn btnResetFormValues" id="resetFormValues" />
                     <input type="button" id="btnFormResultsSearch" value="Refresh" class="refresh_btn refreshBtnDefault" />
@@ -399,11 +399,7 @@ Hemanth 10/08/2024 added class for summar columns to show values righ aligned in
         var millisBetween = endDay.getTime() - startDay.getTime();
         var days = millisBetween / millisecondsPerDay;
 
-<<<<<<< HEAD
-        var url = '@Url.Action("GetDaysOnHandInventory", "ListOfItemsSold", new { Area = "" })';
-=======
         var url = '@Url.Action("GetDaysOnHandInventory", "Analytics", new { Area = "" })';
->>>>>>> origin/PhaniCore_new
 
         var data = {
             Ccode: acc1,

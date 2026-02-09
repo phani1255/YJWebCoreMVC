@@ -12627,7 +12627,9 @@ table.dataTable tfoot th, table.dataTable tfoot td {
         background-color: #343a40 !important; /* darker hover */
         border-color: #343a40 !important;
     }
-
+#content-center {
+    padding: 20px 0px 50px;
+}
 /* Keyframes for spin */
 @keyframes spin {
     0% {
