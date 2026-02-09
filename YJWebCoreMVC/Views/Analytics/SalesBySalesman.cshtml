@@ -4,20 +4,12 @@
 
 @{
 
-    if (Session["UserID"] == null)
-    {
-        Layout = null;
-        Response.Redirect("~/Login/Index");
-    }
-    else
-    {
         ViewBag.Title = "Sales By Salesrep";
         Layout = "~/Views/Shared/_Layout.cshtml";
-    }
-
-    var StoreLogo = ViewBag.StoreLogo;
+        var StoreLogo = ViewBag.StoreLogo;
 }
-@model YJWeb.Models.AnalasysServiceModel
+@model YJWebCoreMVC.Models.AnalyticsModel
+@using System.Text.Json
 
 <h4 class="text-center heading mt-1">Sales By Salesrep</h4>
 <div id="content-center" class="row">
@@ -471,7 +463,7 @@
             return alert("Salesman Cannot be Blank");
         }
 
-        var url = '@Url.Action("GetListOfSalesBySalesmanDetails", "Analysis", new { Area = "" })';
+        var url = '@Url.Action("GetListOfSalesBySalesmanDetails", "Analytics", new { Area = "" })';
 
         var data = {
             __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val(),

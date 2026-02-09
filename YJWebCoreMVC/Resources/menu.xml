@@ -838,19 +838,19 @@
 				<MenuItem Name="802"   Text="Qty Sold / In Stock By Style"        weblink="Analytics/StockorHand"                OnClick="F:frmSoldorHand"                image="stockonhand" />
 				<MenuItem Name="803"   Text="Best Sellers Styles"                 weblink="Analytics/BestSellerReports"          OnClick="F:frmBestSellerReports"         image="bestseller" />
 				<MenuItem Name="804"   Text="Worst Sellers Styles"                weblink="Analytics/WorstSellerReports"         OnClick="F:frmWorstSellers"              image="worst" />
-				<MenuItem Name="8020"  Text="Best Seller Categories"              weblink="Analytics/BestSellerCategoryReports"  OnClick="F:frmBestSellerCategoryReports" image="bestseller" />
-				<MenuItem Name="805"   Text="Inactive Styles (Aged Inventory)"    weblink="Analysis/InactiveStyles"             OnClick="F:frmInactiveStyles"            image="bestseller" TBD="MNJ" />
-				<MenuItem Name="806"   Text="Sales By Salesrep"                   weblink="Analysis/SalesBySalesman"            OnClick="F:frmSalesBySalesman"           image="analytics"  TBD="MNJ"/>
+				<MenuItem Name="8020"  Text="Best Seller Categories"              weblink="Analysis/BestSellerCategoryReports"  OnClick="F:frmBestSellerCategoryReports" image="bestseller" />
+				<MenuItem Name="805"   Text="Inactive Styles (Aged Inventory)"    weblink="Analytics/InactiveStyles"             OnClick="F:frmInactiveStyles"            image="bestseller" TBD="MNJ" />
+				<MenuItem Name="806"   Text="Sales By Salesrep"                   weblink="Analytics/SalesBySalesman"            OnClick="F:frmSalesBySalesman"           image="analytics"  TBD="MNJ"/>
 				<MenuItem Name="807"   Text="Days on Hand inventory"              weblink="ListOfItemsSold/DaysonHandInventory" OnClick="F:frmDaysonHandInventory"       image="salesgraph" TBD="Hemanth"/>
 				<MenuItem Name="8033"  Text="Component Sales Analysis"            OnClick="F:frmComponentSalesAnalysis"    image="analytics" />
 				<MenuItem Name="8039"  Text="Vendor Sales Report"                 weblink="ListOfItemsSold/VendorSalesReport"   OnClick="F:frmVendorSalesReport"         image="analytics" TBD="Hemanth"/>
 				<MenuItem Text="-" />
-				<MenuItem Name="8021"  Text="End Of Month Report"                 weblink="Analysis/EndOfMonth"                 OnClick="F:frmEndOfMonth"                image="profitloss" />
-				<MenuItem Name="8013"  Text="Total Monthly Sales"                 weblink="Analysis/TotalMonthlySales"          OnClick="F:frmTotalMonthlySales"         image="salesgraph" />
-				<MenuItem Name="8014"  Text="Monthly Sales/Payments For A Customer" weblink="Analysis/TotalMonthlySalesForACustomer" OnClick="F:frmTotalMonthlySalesForACustomer" image="salesgraph" />
-				<MenuItem Name="8015"  Text="Sales Comparison Chart"              weblink="Analysis/SalesChartComparision"      OnClick="F:frmSalesChartComparision"     image="salesgraph" TBD="VKT" />
-				<MenuItem Name="8016"  Text="Annual Sales Comparison"             weblink="Analysis/AnnualSalesComparison"      OnClick="F:frmAnnualSalesComparison"     image="salesgraph" />
-				<MenuItem Name="8017"  Text="Annual Payments Received"            weblink="Analysis/AnnualPaymentsReceived"     OnClick="F:frmAnnualPaymentsReceived"    image="salesgraph" />
+				<MenuItem Name="8021"  Text="End Of Month Report"                 weblink="Analytics/EndOfMonth"                 OnClick="F:frmEndOfMonth"                image="profitloss" />
+				<MenuItem Name="8013"  Text="Total Monthly Sales"                 weblink="Analytics/TotalMonthlySales"          OnClick="F:frmTotalMonthlySales"         image="salesgraph" />
+				<MenuItem Name="8014"  Text="Monthly Sales/Payments For A Customer" weblink="Analytics/TotalMonthlySalesForACustomer" OnClick="F:frmTotalMonthlySalesForACustomer" image="salesgraph" />
+				<MenuItem Name="8015"  Text="Sales Comparison Chart"              weblink="Analytics/SalesChartComparision"      OnClick="F:frmSalesChartComparision"     image="salesgraph" TBD="VKT" />
+				<MenuItem Name="8016"  Text="Annual Sales Comparison"             weblink="Analytics/AnnualSalesComparison"      OnClick="F:frmAnnualSalesComparison"     image="salesgraph" />
+				<MenuItem Name="8017"  Text="Annual Payments Received"            weblink="Analytics/AnnualPaymentsReceived"     OnClick="F:frmAnnualPaymentsReceived"    image="salesgraph" />
 				<MenuItem Text="-" />
 				<MenuItem Name="8018"  Text="In State/Out Of State Sales"         weblink="ListOfItemsSold/InstateOutStateSales" OnClick="F:frmInStateOutStateSales"      image="salesgraph" TBD="Hemanth"/>
 				<MenuItem Name="8019"  Text="Total Sales By State"                weblink="ListOfItemsSold/StateSales"           OnClick="F:frmStateSales"                image="salesgraph" TBD="Hemanth"/>

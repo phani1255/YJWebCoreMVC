@@ -4,17 +4,7 @@ Hemant 10/24/2024 Sales / Bugfix for is laway checkbox
 -->
 @{
 
-    if (Session["UserID"] == null)
-    {
-        Layout = null;
-        Response.Redirect("~/Login/Index");
-    }
-    else
-    {
-        Layout = null;
-        Layout = "~/Views/Shared/_Layout.cshtml";
-
-    }
+    Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "DETAILED COG REPORT";
 }
 

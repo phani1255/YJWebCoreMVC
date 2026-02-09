@@ -1,5 +1,6 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Diagnostics;
 using YJWebCoreMVC.Models;
 using YJWebCoreMVC.Services;
 
@@ -9,11 +10,13 @@ public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
     private readonly GlobalSettingsService _settings;
+    private readonly HelperCommonService _helperCommon;
 
-    public HomeController(ILogger<HomeController> logger, GlobalSettingsService settings)
+    public HomeController(ILogger<HomeController> logger, GlobalSettingsService settings, HelperCommonService helperCommon)
     {
         _logger = logger;
         _settings = settings;
+        _helperCommon = helperCommon;
     }
 
     public IActionResult Index()
@@ -37,5 +40,11 @@ public class HomeController : Controller
     public IActionResult Error()
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+    }
+
+    public string GetMultiStylesImages(string styles)
+    {
+        var data = _helperCommon.GetMultiStylesImages(styles);
+        return JsonConvert.SerializeObject(data);
     }
 }

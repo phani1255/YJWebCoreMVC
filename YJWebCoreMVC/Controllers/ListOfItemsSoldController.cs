@@ -25,10 +25,10 @@ namespace YJWebCoreMVC.Controllers
             _repairService = repairService;
             _connectionProvider = connectionProvider;
         }
-        public ListOfItemsSoldController()
-        {
+        //public ListOfItemsSoldController()
+        //{
 
-        }
+        //}
 
         ImagesController objImgController = new ImagesController();
         public IActionResult Index()
@@ -362,7 +362,7 @@ namespace YJWebCoreMVC.Controllers
             ListOfItemsSoldModel objModel = new ListOfItemsSoldModel();
             objModel.CustomerCodes = _helperCommonService.GetAllCustomerCodes();
 
-            return View("~/Views/Analysis/VendorSalesReport.cshtml", objModel);
+            return View("~/Views/Analytics/VendorSalesReport.cshtml", objModel);
         }
 
         public string GetVendorSalesReport(string Ccode, string FROMDATE, string DateTo)
@@ -371,7 +371,7 @@ namespace YJWebCoreMVC.Controllers
             DateTime d = Convert.ToDateTime(DateTo).AddDays(1).AddSeconds(-1);
             string todate = d.ToString();
             ListOfItemsSoldModel objModel = new ListOfItemsSoldModel();
-            var data = _listOfItemsSoldService.GetVendorSalesReportData(Ccode, FROMDATE, todate);
+            var data = _listOfItemsSoldService.GetVendorSalesReportData(Ccode, FROMDATE, DateTo);
             return JsonConvert.SerializeObject(data);
         }
         public IActionResult InstateOutStateSales()
@@ -379,7 +379,7 @@ namespace YJWebCoreMVC.Controllers
             ListOfItemsSoldModel objModel = new ListOfItemsSoldModel();
             objModel.CustomerCodes = _helperCommonService.GetAllCustomerCodes();
 
-            return View("~/Views/Analysis/InstateOutStateSales.cshtml", objModel);
+            return View("~/Views/Analytics/InstateOutStateSales.cshtml", objModel);
         }
         public string GetInstateOutStateSales(string State, string FROMDATE, string DateTo)
         {
@@ -390,7 +390,7 @@ namespace YJWebCoreMVC.Controllers
         }
         public IActionResult StateSales()
         {
-            return View("~/Views/Analysis/StateSales.cshtml");
+            return View("~/Views/Analytics/StateSales.cshtml");
         }
 
         public string GetStateSales(string FROMDATE, string DateTo, bool ByPickupDate, bool IsLaywayUnpaid)
@@ -411,7 +411,7 @@ namespace YJWebCoreMVC.Controllers
             ViewBag.VenderTypes = _helperCommonService.GetAllVendors();
             ViewBag.MetalTypes = _helperCommonService.GetAllMetals();
             ViewBag.BrandTypes = _helperCommonService.GetAllBrandsFromStyle();
-            return View("~/Views/Analysis/VendorStylesPerformance.cshtml");
+            return View("~/Views/Analytics/VendorStylesPerformance.cshtml");
         }
 
         public string GetVendorStylePerformanceDetails(string Group, string Category, string SubCategory, string Metal, string Vendor, string FROMDATE, string DateTo, string Purcfdate, string Purctdate, bool SummByModel = false, bool Is_DiamondDealer = false)
@@ -424,7 +424,7 @@ namespace YJWebCoreMVC.Controllers
         public IActionResult TotalSalesPerState()
         {
             ViewBag.StoreData = _helperCommonService.GetAllStoreCodesList();
-            return View("~/Views/Analysis/TotalSalesPerState.cshtml");
+            return View("~/Views/Analytics/TotalSalesPerState.cshtml");
         }
 
         public string GetTotalSalesPerState(string FROMDATE, string DateTo, string Store, bool IncludeInactive = false, bool NoSalesTax = false, bool IncludeNotaxInvoices = false, string TaxState = "", bool IncParialPay = false)
@@ -445,7 +445,7 @@ namespace YJWebCoreMVC.Controllers
         public IActionResult TotalHourlySales()
         {
             ViewBag.StoreData = _helperCommonService.GetAllStoreCodesList();
-            return View("~/Views/Analysis/TotalHourlySales.cshtml");
+            return View("~/Views/Analytics/TotalHourlySales.cshtml");
         }
 
         public string GetTotalHourlySales(string FROMDATE, string DateTo, string Store, string Day)
@@ -457,7 +457,7 @@ namespace YJWebCoreMVC.Controllers
         public IActionResult TotalWeeklySales()
         {
             ViewBag.StoreData = _helperCommonService.GetAllStoreCodesList();
-            return View("~/Views/Analysis/TotalWeeklySales.cshtml");
+            return View("~/Views/Analytics/TotalWeeklySales.cshtml");
         }
         public string GetTotalWeeklySales(string FROMDATE, string DateTo, string Store)
         {
@@ -467,8 +467,8 @@ namespace YJWebCoreMVC.Controllers
         }
         public IActionResult SaleProfitPerStore()
         {
-
             ViewBag.StyleBrandData = _helperCommonService.GetAllBrands();
+            ViewBag.CustomerCodes = _helperCommonService.GetAllCustomerCodes();
             ViewBag.BrandData = _helperCommonService.GetAllBrandsFromStyle();
             ViewBag.CategoryData = _helperCommonService.GetAllCategories();
             ViewBag.SubCategoryData = _helperCommonService.GetAllSubCategories();
@@ -478,7 +478,7 @@ namespace YJWebCoreMVC.Controllers
             ViewBag.StoreData = _helperCommonService.GetAllStoreCodesList();
             ViewBag.SalesmanData = _helperCommonService.GetAllSalesmansCodesList();
 
-            return View("~/Views/Analysis/SaleProfitPerStore.cshtml");
+            return View("~/Views/Analytics/SaleProfitPerStore.cshtml");
         }
 
         public string GetSalesProfitPerStore(string Ccode, string FROMDATE, string DateTo, string Category, string SubCategory, string Metal, string Brand, string FromStyle, string ToStyle, string Vendor, string Store, bool WithGP = false, bool SeparateSM = false, bool IsSalesCOG = false, string ByWhichDate = "", bool IsLayaway = false, String Sales = "", bool Monthproft = false, bool ISLaySpe = false, bool Isinclbankfee = false)
@@ -492,6 +492,7 @@ namespace YJWebCoreMVC.Controllers
         {
             ViewBag.StyleBrandData = _helperCommonService.GetAllBrands();
             ViewBag.BrandData = _helperCommonService.GetAllBrandsFromStyle();
+            ViewBag.CustomerCodes = _helperCommonService.GetAllCustomerCodes();
             ViewBag.CategoryData = _helperCommonService.GetAllCategories();
             ViewBag.SubCategoryData = _helperCommonService.GetAllSubCategories();
             ViewBag.VenderTypes = _helperCommonService.GetAllVendors();
@@ -499,7 +500,7 @@ namespace YJWebCoreMVC.Controllers
             ViewBag.BrandTypes = _helperCommonService.GetAllBrands();
             ViewBag.StoreData = _helperCommonService.GetAllStoreCodesList();
             ViewBag.SalesmanData = _helperCommonService.GetAllSalesmansCodesList();
-            return View("~/Views/Analysis/SalesCOGProfit.cshtml");
+            return View("~/Views/Analytics/SalesCOGProfit.cshtml");
         }
 
         public string GetSalesCOGProfit(string Ccode, string FROMDATE, string DateTo, string Category, string SubCategory, string Metal, string Brand, string FromStyle, string ToStyle, string Vendor, string Store, bool WithGP = false, bool SeparateSM = false, bool IsSalesCOG = false, string ByWhichDate = "", bool IsLayaway = false, String Sales = "", bool Monthproft = false, bool ISLaySpe = false, bool Isinclbankfee = false, bool SimpleExcel = false)
@@ -519,7 +520,7 @@ namespace YJWebCoreMVC.Controllers
         public IActionResult DetailedCOG()
         {
             ViewBag.StoreData = _helperCommonService.GetAllStoreCodesList();
-            return View("~/Views/Analysis/DetailedCOG.cshtml");
+            return View("~/Views/Analytics/DetailedCOG.cshtml");
         }
 
         public string GetDetailedCOG(string FROMDATE, string DateTo, string Store, string ByWhichDate, bool layaway = false, bool IsCost = false)
@@ -532,7 +533,7 @@ namespace YJWebCoreMVC.Controllers
         public IActionResult SalesProfitPerSource()
         {
             ViewBag.StoreData = _helperCommonService.GetAllStoreCodesList();
-            return View("~/Views/Analysis/SalesProfitPerSource.cshtml");
+            return View("~/Views/Analytics/SalesProfitPerSource.cshtml");
 
         }
 
@@ -547,6 +548,7 @@ namespace YJWebCoreMVC.Controllers
         {
             ViewBag.StyleBrandData = _helperCommonService.GetAllBrands();
             ViewBag.BrandData = _helperCommonService.GetAllBrandsFromStyle();
+            ViewBag.CustomerCodes = _helperCommonService.GetAllCustomerCodes();
             ViewBag.CategoryData = _helperCommonService.GetAllCategories();
             ViewBag.SubCategoryData = _helperCommonService.GetAllSubCategories();
             ViewBag.VenderTypes = _helperCommonService.GetAllVendors();
@@ -554,7 +556,7 @@ namespace YJWebCoreMVC.Controllers
             ViewBag.BrandTypes = _helperCommonService.GetAllBrands();
             ViewBag.StoreData = _helperCommonService.GetAllStoreCodesList();
             ViewBag.SalesmanData = _helperCommonService.GetAllSalesmansCodesList();
-            return View("~/Views/Analysis/SalesProfitByCity.cshtml");
+            return View("~/Views/Analytics/SalesProfitByCity.cshtml");
 
         }
         public string GetSalesProfitByCity(string Ccode, string FROMDATE, string DateTo, string Category, string SubCategory, string Metal, string Brand, string FromStyle, string ToStyle, string Vendor, string Sales, string ByWhichDate = "")
@@ -567,7 +569,7 @@ namespace YJWebCoreMVC.Controllers
         public IActionResult MonthlySalesProfit()
         {
             ViewBag.StoreData = _helperCommonService.GetAllStoreCodesList();
-            return View("~/Views/Analysis/MonthlySalesProfit.cshtml");
+            return View("~/Views/Analytics/MonthlySalesProfit.cshtml");
         }
 
         public string GetMonthlySalesProfit(string FROMDATE, string DateTo, string Store, string ByWhichDate, bool layaway = false)
@@ -583,7 +585,7 @@ namespace YJWebCoreMVC.Controllers
             objModel.CustomerCodes = _helperCommonService.GetAllCustomerCodes();
             ViewBag.Vendors = _helperCommonService.GetAllVendorsCodes();
             ViewBag.VendorStyles = _helperCommonService.GetAllVendorStyles();
-            return View("~/Views/Analysis/SalesReportForReorder.cshtml", objModel);
+            return View("~/Views/Analytics/SalesReportForReorder.cshtml", objModel);
         }
         public string GetSalesReportForReorder(string Ccode, string FROMDATE, string DateTo, string FromStyle, string ToStyle, string Vendor, string VendorStyle, bool IsLayaway = false)
         {
@@ -594,7 +596,7 @@ namespace YJWebCoreMVC.Controllers
 
         public IActionResult SalesSummaryReport()
         {
-            return View("~/Views/Analysis/SalesSummaryReport.cshtml");
+            return View("~/Views/Analytics/SalesSummaryReport.cshtml");
         }
 
         public string GetSalesSummaryReport(string FROMDATE, string DateTo, bool ByWhichDate, bool IncParialPay = false)
@@ -1971,7 +1973,7 @@ namespace YJWebCoreMVC.Controllers
         {
             ViewBag.fromDate = DateTime.Now.ToString("yyyy-MM-01");
             ViewBag.toDate = DateTime.Now.ToString("yyyy-MM-dd");
-            return View("~/Views/Analysis/MTDReport.cshtml");
+            return View("~/Views/Analytics/MTDReport.cshtml");
         }
 
         public IActionResult GetMTDReportDetails(DateTime FROMDATE, DateTime DateTo, bool IncParialPay)
@@ -2261,7 +2263,7 @@ namespace YJWebCoreMVC.Controllers
             }
             ViewBag.htmlResults = Content + totalsContnt + Content1 + Content2 + Content3;
             //ViewBag.htmlResults = Content + totalsContnt + Content1 + Content2;
-            return View("~/Views/Analysis/MTDReport.cshtml");
+            return View("~/Views/Analytics/MTDReport.cshtml");
         }
 
         private DataTable MergeDatatables(DataTable dt1, DataTable dt2, string dYearCurr, string dYearPrev)
@@ -2290,7 +2292,7 @@ namespace YJWebCoreMVC.Controllers
 
         public IActionResult TodaysCashFlow()
         {
-            return View("~/Views/Analysis/TodaysCashFlow.cshtml");
+            return View("~/Views/Analytics/TodaysCashFlow.cshtml");
         }
 
         public string GetTodaysCashFlow(string FROMDATE, string DateTo)
@@ -2313,7 +2315,7 @@ namespace YJWebCoreMVC.Controllers
         {
             ViewBag.StoreData = _helperCommonService.GetAllStoreCodesList();
             ViewBag.SalesmanData = _helperCommonService.GetAllSalesmansCodesList();
-            return View("~/Views/Analysis/Follows.cshtml");
+            return View("~/Views/Analytics/Follows.cshtml");
         }
 
         public string GetFollowsDetails(string FROMDATE, string DateTo, string Store, string Sales, bool AllDates)

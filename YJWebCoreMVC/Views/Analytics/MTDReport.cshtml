@@ -8,17 +8,7 @@
  Hemanth 03/20/2024 common methods used for print prview,xl and pdf options
 -->
 @{
-
-    if (Session["UserID"] == null)
-    {
-        Layout = null;
-        Response.Redirect("~/Login/Index");
-    }
-    else
-    {
-        Layout = null;
-        Layout = "~/Views/Shared/_Layout.cshtml";
-    }
+    Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "MTD REPORT ";
 }
 

@@ -4,18 +4,11 @@ Hemanth 10/10/2024 preview and print changes added
 -->
 @{
 
-    if (Session["UserID"] == null)
-    {
-        Layout = null;
-        Response.Redirect("~/Login/Index");
-    }
-    else
-    {
-        Layout = null;
-        Layout = "~/Views/Shared/_Layout.cshtml";
-    }
+    Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Sales / Profit By City";
 }
+
+@using System.Text.Json
 
 <div id="content-center" class="row">
 
@@ -61,7 +54,7 @@ Hemanth 10/10/2024 preview and print changes added
                         </label>
                         <div class="col-sm-8">
                             <div class="autocomplete-dropdown">
-                                <div id="CustomerCodesForAutofill" class="d-none">@Html.Raw(Json.Encode(ViewBag.CustomerCodes)) </div>
+                                <div id="CustomerCodesForAutofill" class="d-none">@Html.Raw(JsonSerializer.Serialize(ViewBag.CustomerCodes)) </div>
                                 <input type="text" id="txtCustomerCode" class="form-control activateFormRefreshBtn" placeholder="Search..." disabled="disabled">
                                 <div id="autocomplete-list1" class="autocomplete-items"></div>
                             </div>

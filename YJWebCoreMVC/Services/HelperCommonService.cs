@@ -2307,8 +2307,8 @@ namespace YJWebCoreMVC.Services
                 dataAdapter.SelectCommand.Connection = _connectionProvider.GetConnection();
                 dataAdapter.SelectCommand.CommandType = CommandType.StoredProcedure;
                 dataAdapter.SelectCommand.CommandText = followList ? "SalesFollowUp" : "SalesFollowsUp";
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@salemancode", saleman1);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@store", store);
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@salemancode", saleman1 ??= "");
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@store", store ??= "");
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@Fdate1", Fdate);
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@Tdate2", Tdate);
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@allstore", Allstore);

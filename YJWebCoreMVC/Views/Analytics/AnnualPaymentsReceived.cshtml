@@ -4,25 +4,11 @@
   * Phanindra 9/22/2024 Worked on fixing filters default values 
 -->
 @{
-
-    if (Session["UserID"] == null)
-    {
-        Layout = null;
-        Response.Redirect("~/Login/Index");
-    }
-    else
-    {
-        Layout = null;
-        Layout = "~/Views/Shared/_Layout.cshtml";
-        //ViewBag.Title = "Sold/In Stock Quantity";
-    }
-    //Layout = null;
-    //Layout = "~/Views/Shared/_Layout.cshtml";
-    //ViewBag.Title = "Stock or Hand";
+   Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@model YJWeb.Models.AnalasysServiceModel
-@*@model IEnumerable<YJWeb.Models.AnalasysServiceModel>*@
+@model YJWebCoreMVC.Models.AnalyticsModel
+@using System.Text.Json
 
 <div id="content-center" class="row">
 
@@ -217,7 +203,7 @@
     }
 
     function BindAnnualPaymentsReceived(fromdate1, todate1, fromdate2, todate2, fromdate3, todate3) {
-        var url = '@Url.Action("GetAnnualPaymentsReceived", "Analysis", new { Area = "" })';
+        var url = '@Url.Action("GetAnnualPaymentsReceived", "Analytics", new { Area = "" })';
         var data = {
             strFrom1: fromdate1,
             strTo1: todate1,

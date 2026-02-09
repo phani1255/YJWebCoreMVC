@@ -55,14 +55,14 @@ namespace YJWebCoreMVC.Services
                     dataAdapter.SelectCommand.CommandText = "QtySold";
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@date1", Convert.ToDateTime(fdate));
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@date2", Convert.ToDateTime(tdate));
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@brand", brandval);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@category", ct);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@subcat", subcat);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@metal", metalval);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@cacc", ccode);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@STYLEFROM", fromstyle);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@STYLETO", tostyle);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@Vendor", strVendor);
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@brand", brandval ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@category", ct ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@subcat", subcat ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@metal", metalval ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@cacc", ccode ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@STYLEFROM", fromstyle ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@STYLETO", tostyle ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@Vendor", strVendor ??= "");
                     // Fill the datatable From adapter
                     dataAdapter.Fill(dataTable);
                 }
@@ -262,16 +262,17 @@ namespace YJWebCoreMVC.Services
                     dataAdapter.SelectCommand.CommandText = "BestSell";
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@date1", Convert.ToDateTime(fdate));
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@date2", Convert.ToDateTime(tdate));
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@brand", brandval);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@category", ct);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@subcat", subcat);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@metal", metalval);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@cacc", ccode);
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@brand", brandval ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@category", ct ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@subcat", subcat ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@metal", metalval ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@cacc", ccode ??= "");
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@do_best", 1);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@STYLEFROM", fromstyle);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@STYLETO", tostyle);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@Vendor", strVendor);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@group", groupval);
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@STYLEFROM", fromstyle ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@STYLETO", tostyle ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@Vendor", strVendor ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@group", groupval ??= "");
+
                     // Fill the datatable From adapter
                     dataAdapter.Fill(dataTable);
 
@@ -335,16 +336,16 @@ namespace YJWebCoreMVC.Services
                     dataAdapter.SelectCommand.CommandText = "BestSell";
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@date1", Convert.ToDateTime(fdate));
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@date2", Convert.ToDateTime(tdate));
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@brand", brandval);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@category", ct);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@subcat", subcat);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@metal", metalval);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@cacc", ccode);
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@brand", brandval??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@category", ct ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@subcat", subcat ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@metal", metalval ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@cacc", ccode ??= "");
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@do_best", 0);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@STYLEFROM", fromstyle);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@STYLETO", tostyle);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@Vendor", strVendor);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@group", groupval);
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@STYLEFROM", fromstyle ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@STYLETO", tostyle ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@Vendor", strVendor ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@group", groupval ??= "");
                     // Fill the datatable From adapter
                     dataAdapter.Fill(dataTable);
 
@@ -405,12 +406,12 @@ namespace YJWebCoreMVC.Services
 
                     dataAdapter.SelectCommand.CommandType = CommandType.StoredProcedure;
                     dataAdapter.SelectCommand.CommandText = "Pay_Annual";
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@from1", strFrom1);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@thru1", strTo1);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@from2", strFrom2);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@thru2", strTo2);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@from3", strFrom3);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@thru3", strTo3);
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@from1", strFrom1 ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@thru1", strTo1 ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@from2", strFrom2 ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@thru2", strTo2 ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@from3", strFrom3 ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@thru3", strTo3 ??= "");
                     // Fill the datatable From adapter
                     dataAdapter.Fill(dataTable);
 
@@ -460,16 +461,16 @@ namespace YJWebCoreMVC.Services
 
                     dataAdapter.SelectCommand.CommandType = CommandType.StoredProcedure;
                     dataAdapter.SelectCommand.CommandText = "invoice_annual";
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@from1", strFrom1);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@thru1", strTo1);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@from2", strFrom2);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@thru2", strTo2);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@from3", strFrom3);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@thru3", strTo3);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@iSLayawayUnpaid", strchkLayawaysUnpaid);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@iSByPickupDate", striSByPickupDate);
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@from1", strFrom1 ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@thru1", strTo1 ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@from2", strFrom2 ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@thru2", strTo2 ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@from3", strFrom3 ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@thru3", strTo3 ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@iSLayawayUnpaid", strchkLayawaysUnpaid ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@iSByPickupDate", striSByPickupDate ??= "");
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@Dealer", 0);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@excludeDealersNonDealers", strexclude);
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@excludeDealersNonDealers", strexclude ??= "");
                     // Fill the datatable From adapter
                     dataAdapter.Fill(dataTable);
 
@@ -537,12 +538,12 @@ namespace YJWebCoreMVC.Services
                     else
                     {
                         dataAdapter.SelectCommand.CommandText = "ENDOFMONTHWithStores";
-                        dataAdapter.SelectCommand.Parameters.AddWithValue("@Store", strstore);
+                        dataAdapter.SelectCommand.Parameters.AddWithValue("@Store", strstore ??= "");
                     }
 
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@FROMDATE", strFrom1);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@TODATE", strTo1);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@byPickup", striSByPickupDate);
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@FROMDATE", strFrom1 ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@TODATE", strTo1 ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@byPickup", striSByPickupDate ??= "");
                     // Fill the datatable From adapter
                     dataAdapter.Fill(dataTable);
 
@@ -600,8 +601,8 @@ namespace YJWebCoreMVC.Services
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@date1", strFrom1);
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@date2", strTo1);
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@cacc", "");
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@iSLayawayUnpaid", strchkLayawaysUnpaid);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@iSByPickupDate", striSByPickupDate);
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@iSLayawayUnpaid", strchkLayawaysUnpaid ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@iSByPickupDate", striSByPickupDate ??= "");
                     // Fill the datatable From adapter
                     dataAdapter.Fill(dataTable);
 
@@ -676,9 +677,9 @@ namespace YJWebCoreMVC.Services
                     dataAdapter.SelectCommand.CommandText = "Month_Sales";
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@date1", strFrom1);
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@date2", strTo1);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@cacc", ccode);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@iSLayawayUnpaid", strchkLayawaysUnpaid);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@iSByPickupDate", striSByPickupDate);
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@cacc", ccode ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@iSLayawayUnpaid", strchkLayawaysUnpaid ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@iSByPickupDate", striSByPickupDate ??= "");
                     // Fill the datatable From adapter
                     dataAdapter.Fill(dataTable);
 
@@ -739,7 +740,7 @@ namespace YJWebCoreMVC.Services
 
         public DataTable getInactiveStyles(string ccode, int noOfDay, string ct, string subct, string metalval, string brandval, string fromstyle, string tostyle, string strVendor, string frmdate, string todate, string storeno = "")
         {
-            return _helperCommonService.GetStoreProc("InactiveStyles", "@noOfDay", noOfDay.ToString(), "@brand", brandval, "@category", ct, "@subcat", subct, "@metal", metalval, "@cacc", ccode, "@STYLEFROM", fromstyle, "@STYLETO", tostyle, "@Vendor", strVendor, "@frmdate", frmdate, "@dateto", todate, "@StrStore", storeno);
+            return _helperCommonService.GetStoreProc("InactiveStyles", "@noOfDay", noOfDay.ToString(), "@brand", brandval ??= "", "@category", ct ??= "", "@subcat", subct ??= "", "@metal", metalval ??= "", "@cacc", ccode ??= "", "@STYLEFROM", fromstyle ??= "", "@STYLETO", tostyle ??= "", "@Vendor", strVendor ??= "", "@frmdate", frmdate ??= "", "@dateto", todate ??= "", "@StrStore", storeno ??= "");
         }
         private string getdate(string date1)
         {

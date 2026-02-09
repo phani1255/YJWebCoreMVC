@@ -5,21 +5,11 @@
   * Phanindra 10/04/2024 Removed unnecessary code related to images
 -->
 @{
-
-    if (Session["UserID"] == null)
-    {
-        Layout = null;
-        Response.Redirect("~/Login/Index");
-    }
-    else
-    {
-        Layout = null;
-        Layout = "~/Views/Shared/_Layout.cshtml";
-    }
-
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@model YJWeb.Models.AnalasysServiceModel
+@model YJWebCoreMVC.Models.AnalyticsModel
+@using System.Text.Json
 
 <div id="content-center" class="row">
 
@@ -63,7 +53,8 @@
                         </label>
                         <div class="col-sm-8">
                             <div class="autocomplete-dropdown">
-                                <div id="CustomerCodesForAutofill" class="d-none">@Html.Raw(Json.Encode(Model.CustomerCodes)) </div>
+                                <div id="CustomerCodesForAutofill" class="d-none">@Html.Raw(JsonSerializer.Serialize(Model.CustomerCodes)) </div>
+                                
                                 <input type="text" id="txtCustomerCode" class="form-control activateFormRefreshBtn" placeholder="Search...">
                                 <div id="autocomplete-list1" class="autocomplete-items"></div>
                             </div>
@@ -146,7 +137,7 @@
                         </label>
                         <div class="col-sm-8">
                             <div class="autocomplete-dropdown">
-                                <div id="VendorTypesForAutofill" class="d-none">@Html.Raw(Json.Encode(Model.VenderTypes)) </div>
+                                <div id="VendorTypesForAutofill" class="d-none">@Html.Raw(JsonSerializer.Serialize(Model.VenderTypes))</div>
                                 <input type="text" id="ddlVendor" class="form-control activateFormRefreshBtn" placeholder="Search...">
                                 <div id="autocomplete-list" class="autocomplete-items"></div>
                             </div>
@@ -333,7 +324,7 @@
     }
 
     function BindWorstSellerReport(custcode, fromdate, todate, cat, subcategory, metal, brand, styleStarts, styleContains, vendor, groupval) {
-        var url = '@Url.Action("GetWorstSellerReport", "Analysis", new { Area = "" })';
+        var url = '@Url.Action("GetWorstSellerReport", "Analytics", new { Area = "" })';
         var data = {
             ccode: custcode,
             fdate: fromdate,

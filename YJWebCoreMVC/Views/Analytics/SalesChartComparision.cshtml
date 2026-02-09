@@ -5,12 +5,11 @@
     venkat 01/13/2026 Fixed issues with dates selection when reset and refresh button showing status
     venkat 01/14/2026 Fixed issue with overlapping of dates on x axis when zoom 
 *@
-@model YJWeb.Models.SalesmenModel
+@model YJWebCoreMVC.Models.SalesmenModel
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Sales Chart Comparison";
-    var salesmen = ViewBag.Salesmen as List<SelectListItem>;
 }
 
 <div class="container mt-4" style="max-width: 470px;">
@@ -79,9 +78,9 @@
                         <div class="col-md-6 mb-3">
                             <label class="form-label mb-1">Salesman 1</label>
                             <select id="ddlSls1" class="form-select w-100 salesman-dd">
-                                @foreach (var s in salesmen)
+                                @foreach (var s in ViewBag.Salesmen)
                                 {
-                                    <option value="@s.Value">@s.Text</option>
+                                <option value="@s.Value">@s.Text</option>
                                 }
                             </select>
                         </div>
@@ -89,7 +88,7 @@
                         <div class="col-md-6 mb-3">
                             <label class="form-label mb-1">Salesman 2</label>
                             <select id="ddlSls2" class="form-select w-100 salesman-dd">
-                                @foreach (var s in salesmen)
+                                @foreach (var s in ViewBag.salesmen)
                                 {
                                     <option value="@s.Value">@s.Text</option>
                                 }
@@ -99,7 +98,7 @@
                         <div class="col-md-6 mb-3">
                             <label class="form-label mb-1">Salesman 3</label>
                             <select id="ddlSls3" class="form-select w-100 salesman-dd">
-                                @foreach (var s in salesmen)
+                                @foreach (var s in ViewBag.salesmen)
                                 {
                                     <option value="@s.Value">@s.Text</option>
                                 }
@@ -109,7 +108,7 @@
                         <div class="col-md-6 mb-3">
                             <label class="form-label mb-1">Salesman 4</label>
                             <select id="ddlSls4" class="form-select w-100 salesman-dd">
-                                @foreach (var s in salesmen)
+                                @foreach (var s in ViewBag.salesmen)
                                 {
                                     <option value="@s.Value">@s.Text</option>
                                 }
@@ -401,7 +400,7 @@
     }
 
     $.ajax({
-        url: '@Url.Action("RefreshSalesChart", "Analysis")',
+        url: '@Url.Action("RefreshSalesChart", "Analytics")',
         type: 'POST',
         data: {
             Salesman1: $('#ddlSls1').val(),

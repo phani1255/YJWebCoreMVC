@@ -4,9 +4,7 @@ using AspNetCore.Reporting;
 var builder = WebApplication.CreateBuilder(args);
 
 // MVC
-builder.Services
-    .AddControllersWithViews()
-    .AddRazorRuntimeCompilation();
+builder.Services.AddControllersWithViews();
 
 // REQUIRED for session
 builder.Services.AddDistributedMemoryCache();   // 🔴 MISSING
@@ -37,6 +35,8 @@ builder.Services.AddScoped<ICryptoService, CryptoService>();
 builder.Services.AddScoped<SalesSummaryService>();
 builder.Services.AddScoped<RepairService>();
 builder.Services.AddScoped<ListOfItemsSoldService>();
+builder.Services.AddScoped<SalesmenService>();
+builder.Services.AddScoped<ImageService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSession();
 
