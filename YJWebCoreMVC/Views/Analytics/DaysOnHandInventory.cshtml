@@ -1,0 +1,515 @@
+﻿<!--
+Hemanth 09/20/2024 Days on hand inventory code added
+Hemanth 09/24/2024 Drop downs design changed and removed all checkboxes
+Hemanth 10/07/2024 Default date range changed
+Hemanth 10/08/2024 added class for summar columns to show values righ aligned in prievw and print
+-->
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "DAYS ON HAND INVENTORY";
+}
+
+@model YJWebCoreMVC.Models.ListOfItemsSoldModel
+@using System.Text.Json
+
+<div id="content-center" class="row">
+
+    <div class="web-form page login-page col-sm-12">
+
+        <div class="form-horizontal">
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Sold From
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtFromDate" class="form-control activateFormRefreshBtn" style="font-size:13px;" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            To Date
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtToDate" class="form-control activateFormRefreshBtn" style="font-size:13px;" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-right">
+                    <div class="mt-5px">
+                        <input type="checkbox" id="cbFillFromToDates" checked /> <span>All Dates</span>
+                        <input type="button" value="Last Month" class="formsGlobalUniqueBtn btnGetLastMonthDates" />
+                        <input type="button" value="Last Week" class="formsGlobalUniqueBtn btnGetLastWeekDates" />
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Customer
+                        </label>
+                        <div class="col-sm-8">
+                            <div class="autocomplete-dropdown">
+                                <div id="CustomerCodesForAutofill" class="d-none">@Html.Raw(JsonSerializer.Serialize(Model.CustomerCodes))</div>
+                                <input type="text" id="txtCustomerCode" class="form-control activateFormRefreshBtn" placeholder="Search..." disabled="disabled">
+                                <div id="autocomplete-list1" class="autocomplete-items"></div>
+                            </div>
+                            <div class="customerCodeSearchDiv">
+                                <button class="formsGlobalUniqueBtn customerCodeSearchBtn1 showbsmodal activateFormRefreshBtn" data-modal-id="selectCustomerAccModal" data-bs-toggle="modal" data-bs-target="#selectCustomerAccModal">...</button>
+                            </div>
+                            <input type="checkbox" id="chkAllCustomers" name="chkAllCustomers" checked="checked" /> All Customers
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-6">
+                            Style Starting With
+                        </label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control activateFormRefreshBtn" id="txtFromStyle" name="txtFromStyle" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-6">
+                            Style That Contains
+                        </label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control activateFormRefreshBtn" id="txtToStyle" name="txtToStyle" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 8px;">
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Vendor
+                        </label>
+                        <div class="col-sm-8">
+                            <select id="cmbVendor" name="cmbVendor" class="form-control">
+                                @{
+                                    if (ViewBag.VenderTypes != null)
+                                    {
+                                        foreach (var cast_code in ViewBag.VenderTypes)
+                                        {
+                                            <option value="@cast_code.Value">@cast_code.Text</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Metals
+                        </label>
+                        <div class="col-sm-8">
+                            <select id="metal" name="metal" class="form-control">
+                                @{
+                                    if (ViewBag.MetalTypes != null)
+                                    {
+                                        foreach (var metal in ViewBag.MetalTypes)
+                                        {
+                                            <option value="@metal.Value">@metal.Text</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Brand
+                        </label>
+                        <div class="col-sm-8">
+                            <select id="brand" name="brand" class="form-control">
+                                <option value="">All</option>
+                                @{
+                                    if (ViewBag.BrandTypes != null)
+                                    {
+                                        foreach (var BRAND in ViewBag.BrandTypes)
+                                        {
+                                            <option value="@BRAND.Value">@BRAND.Text</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Category
+                        </label>
+                        <div class="col-sm-8">
+
+                            <select id="category" name="category" class="form-control">
+
+                                @{
+                                    if (ViewBag.CategoryData != null)
+                                    {
+                                        foreach (var category in ViewBag.CategoryData)
+                                        {
+                                            <option value="@category.Value">@category.Text</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Sub Category
+                        </label>
+                        <div class="col-sm-8">
+                            <select id="subcategory" name="subcategory" class="form-control">
+
+                                @{
+                                    if (ViewBag.SubCategoryData != null)
+                                    {
+                                        foreach (var subcat in ViewBag.SubCategoryData)
+                                        {
+                                            <option value="@subcat.Value">@subcat.Text</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-right" style="padding-top: 8px;">
+                    <input type="checkbox" class="activateFormRefreshBtn" id="chkSummaryByModel" name="chkSummaryByModel" checked="checked" />&nbsp; Summary By Model#
+                    <input type="button" value="Reset" class="formsGlobalUniqueBtn btnResetFormValues" id="resetFormValues" />
+                    <input type="button" id="btnFormResultsSearch" value="Refresh" class="refresh_btn refreshBtnDefault" />
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="mt-4 white-box pos-rel" id="divDataTableReport">
+
+        <div class="row col-md-6 report_buttons">
+            <div style="margin:3px;">
+                <input type="button" value="PDF" table-id="dataTableForListOfReceipts" class="formsGlobalUniqueBtn btnDataTableDownloadPDF" id="btnPDF" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Excel" table-id="dataTableForListOfReceipts" class="formsGlobalUniqueBtn btnDataTableDownloadExcel" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Preview" table-id="dataTableForListOfReceipts" id="btnDataTablePreview" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Print" table-id="dataTableForListOfReceipts" id="btnDataTablePrint" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Email" table-id="dataTableForListOfReceipts" class="formsGlobalUniqueBtn" />
+            </div>
+
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Simple Excel" class="formsGlobalUniqueBtn" />
+            </div>
+        </div>
+        <div class="row dataTableReport" id="printContent">
+            <div><br /></div>
+            <table id="dataTableForListOfReceipts" class="dataTable display nowrap table" style="width:100%">
+                <thead>
+                    <tr>
+                        <th style="text-align:center !important;">Style</th>
+                        <th style="text-align:center !important;">Brand</th>
+                        <th style="text-align:center !important;">Category</th>
+                        <th style="text-align:center !important;">Subcat</th>
+                        <th style="text-align:center !important;">Metal</th>
+                        <th style="text-align:center !important;">In Stock</th>
+                        <th style="text-align:center !important;">Sold Qty</th>
+                        <th style="text-align:center !important;">Days On Hand</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot id="tfooter">
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th id="summary_in_stock" class="numericColumns"></th>
+                        <th id="summary_sold_qty" class="numericColumns"></th>
+                        <th id="summary_days_on_hand" class="numericColumns"></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var table = $('#dataTableForListOfReceipts').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 25,
+            bInfo: false,
+            aaSorting: []
+        })
+
+        $('#cbFillFromToDates').click();
+        function addDays(theDate, days) {
+            return new Date(theDate.getTime() + days * 24 * 60 * 60 * 1000);
+        }
+
+        var newDate = addDays(new Date(), -365);
+        var lastmonth = newDate.getMonth() + 1;
+
+        lastmonth = ('0' + lastmonth).slice(-2);
+        var newDay = ('0' + newDate.getDate()).slice(-2);
+        var fd = newDate.getFullYear() + "-" + lastmonth + "-" + newDay;
+
+
+
+        $('#resetFormValues').on("click", function (e) {
+            $("#cbFillFromToDates").prop("checked", true);
+            fillFromToDates();
+            $('#txtCustomerCode').val('');
+            $('#chkAllCustomers').prop("checked", true);
+            $('#txtFromStyle').val('');
+            $('#txtToStyle').val('');
+            $('#cmbVendor').prop('selectedIndex', 0);
+            $("#cmbVendor").prop('disabled', 'disabled');
+            $('#metal').prop('selectedIndex', 0);
+            $("#metal").prop('disabled', 'disabled');
+            $('#brand').prop('selectedIndex', 0);
+            $("#brand").prop('disabled', 'disabled');
+            $('#category').prop('selectedIndex', 0);
+            $("#category").prop('disabled', 'disabled');
+            $('#subcategory').prop('selectedIndex', 0);
+            $("#subcategory").prop('disabled', 'disabled');
+            $('#chkSummaryByModel').prop("checked", true);
+
+        });
+
+        $('#chkAllCustomers').click(function () {
+
+            if ($("#chkAllCustomers").prop('checked') == true) {
+                $("#txtCustomerCode").val('');
+                $("#txtCustomerCode").prop('disabled', 'disabled');
+            } else {
+                $("#txtCustomerCode").removeAttr("disabled");
+            }
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+
+        $('#chkSummaryByModel').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+
+        $('#cmbVendor').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+
+        $('#metal').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+
+        $('#brand').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+
+        $('#category').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+
+        $('#subcategory').on("click", function (e) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        });
+
+
+
+        fillFromToDates();
+        $('#txtFromDate').val(fd);
+    });
+
+    function buttonStyleClassChange(btnId) {
+        $('#' + btnId).removeClass('refreshBtnDefault').addClass('needToRefreshBtn');
+        $('#' + btnId).val("Refresh *");
+    }
+
+    function existAutoFilledData() {
+
+
+        if ($('#txtFromDate').val() != "")
+            fromdate = $('#txtFromDate').val();
+        else
+            fromdate = "1990-01-01";
+
+        if ($('#txtToDate').val() != "")
+            todate = $('#txtToDate').val();
+        else
+            todate = "2099-12-31";
+
+
+
+        var acc1 = $('#txtCustomerCode').val();
+
+        if ($('#chkAllCustomers').prop('checked') == false) {
+            if (acc1 == "") {
+                alert("Customer Code Required.");
+                return false;
+            }
+
+        }
+
+        var styleFrom = $('#txtFromStyle').val();
+        var styleTo = $('#txtToStyle').val();
+        var vendor = $('#cmbVendor').val();
+        var metal = $('#metal').val();
+        var brand = $('#brand').val();
+        var category = $('#category').val();
+        var subcategory = $('#subcategory').val();
+        var chkSummaryByModel = $('#chkSummaryByModel').prop('checked') ? true : false;
+
+        var startDay = new Date(fromdate);
+        var endDay = new Date(todate);
+        var millisecondsPerDay = 1000 * 60 * 60 * 24;
+
+        var millisBetween = endDay.getTime() - startDay.getTime();
+        var days = millisBetween / millisecondsPerDay;
+
+        var url = '@Url.Action("GetDaysOnHandInventory", "ListOfItemsSold", new { Area = "" })';
+
+        var data = {
+            Ccode: acc1,
+            FROMDATE: fromdate,
+            DateTo: todate,
+            Category: category,
+            SubCategory: subcategory,
+            Metal: metal,
+            Brand: brand,
+            FromStyle: styleFrom,
+            ToStyle: styleTo,
+            Vendor: vendor,
+            NoOfDays: parseInt(days)+1,
+            SummByModel: chkSummaryByModel
+        };
+
+        var table = $('#dataTableForListOfReceipts').DataTable();
+        table.clear().draw();
+
+        var jqxhr = $.post(url, data, function () { })
+            .done(function (response) {
+                var json;
+                if (response instanceof Object)
+                    json = response;
+                else
+                    json = $.parseJSON(response);
+
+
+                var summaryInstock = 0;
+                var summaryQty = 0;
+                var summaryDaysOnHand = 0;
+
+                for (var i = 0; i < json.length; i++) {
+                    if (json[i].In_Stock != "") {
+                        summaryInstock = summaryInstock + json[i].In_Stock;
+                    }
+                    if (json[i].Sold_Qty != "") {
+                        summaryQty = summaryQty + json[i].Sold_Qty;
+                    }
+                    if (json[i].Days_On_Hand != "") {
+                        summaryDaysOnHand = summaryDaysOnHand + json[i].Days_On_Hand;
+                    }
+
+
+                    table.row.add([
+                        json[i].Style,
+                        json[i].Brand,
+                        json[i].Category,
+                        json[i].Subcat,
+                        json[i].Metal,
+                        formatCurrency(json[i].In_Stock),
+                        formatCurrency(json[i].Sold_Qty),
+                        formatCurrency(json[i].Days_On_Hand)
+                        ]);
+
+
+                }
+                table.draw();
+                $('#summary_in_stock').html(formatCurrency(summaryInstock));
+                $('#summary_sold_qty').html(formatCurrency(summaryQty));
+                $('#summary_days_on_hand').html(formatCurrency(summaryDaysOnHand));
+
+
+
+            })
+            .fail(function (jqxhr, textStatus, error) {
+                var err = textStatus + ", " + error;
+                console.log("GETSoldOrInstock Request Failed: " + err);
+            });
+
+    }
+
+    function formatCurrency(total) {
+        var neg = false;
+        if (total < 0) {
+            neg = true;
+            total = Math.abs(total);
+        }
+        return (neg ? "-" : '') + parseFloat(total, 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString();
+    }
+
+
+</script>
+<style>
+
+    .table tfoot tr th {
+        text-align: right !important;
+        padding: 0px !important;
+    }
+
+    .table tbody tr td {
+        text-align: left !important;
+    }
+
+    table tbody tr td:nth-child(6) {
+        text-align: right !important;
+        padding: 0px !important;
+    }
+
+    table tbody tr td:nth-child(7) {
+        text-align: right !important;
+        padding: 0px !important;
+    }
+
+    table tbody tr td:nth-child(8) {
+        text-align: right !important;
+        padding: 0px !important;
+    }
+
+    .padding-left-zero {
+        padding-left: 0px !important;
+    }
+</style>
