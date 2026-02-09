@@ -206,12 +206,12 @@ namespace YJWebCoreMVC.Services
                     dataAdapter.SelectCommand.CommandText = "BestSellCaregory";
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@date1", Convert.ToDateTime(fdate));
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@date2", Convert.ToDateTime(tdate));
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@brand", brandval);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@metal", metalval);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@cacc", ccode);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@STYLEFROM", fromstyle);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@STYLETO", tostyle);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@Vendor", strVendor);
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@brand", brandval ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@metal", metalval ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@cacc", ccode ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@STYLEFROM", fromstyle ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@STYLETO", tostyle ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@Vendor", strVendor ??= "");
                     //dataAdapter.SelectCommand.Parameters.AddWithValue("@salcode", "");
                     // Fill the datatable From adapter
                     dataAdapter.Fill(dataTable);

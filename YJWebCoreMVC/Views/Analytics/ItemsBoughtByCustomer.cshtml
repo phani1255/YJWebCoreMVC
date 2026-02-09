@@ -7,29 +7,15 @@
 -->
 @{
     var getMessages = ViewBag.GetMessages as System.Data.DataTable;
-
-}
-
-@{
-
     var isCustCode = "";
     var DisableLayout = false;
 
-
-    if (Session["UserID"] == null)
-    {
-        Layout = null;
-        Response.Redirect("~/Login/Index");
-    }
-    else
-    {
-        ViewBag.Title = "List Of Items Bought By Customer";
-        Layout = "~/Views/Shared/_Layout.cshtml";
-        isCustCode = ViewBag.isCustomer;
-        DisableLayout = ViewBag.DisableLayout;
-    }
+    ViewBag.Title = "List Of Items Bought By Customer";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    isCustCode = ViewBag.isCustomer;
+    DisableLayout = ViewBag.DisableLayout;
 }
-@model YJWeb.Controllers.CustomerModel
+@model YJWebCoreMVC.Models.CustomerModel
 
 <h4 class="text-center heading mt-1">Items Bought By Customer</h4>
 <div id="content-center" class="row">

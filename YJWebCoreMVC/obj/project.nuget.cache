@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "vWVCNjWeTC0=",
+  "dgSpecHash": "gLwLHb4BxfM=",
   "success": true,
   "projectFilePath": "D:\\phani\\YJWebCoreMVC\\YJWebCoreMVC\\YJWebCoreMVC.csproj",
   "expectedPackageFiles": [
@@ -13,9 +13,17 @@
     "C:\\Users\\Srikanth\\.nuget\\packages\\microsoft.aspnet.razor\\3.3.0\\microsoft.aspnet.razor.3.3.0.nupkg.sha512",
     "C:\\Users\\Srikanth\\.nuget\\packages\\microsoft.aspnet.webpages\\3.3.0\\microsoft.aspnet.webpages.3.3.0.nupkg.sha512",
     "C:\\Users\\Srikanth\\.nuget\\packages\\microsoft.aspnetcore.http.extensions\\2.3.9\\microsoft.aspnetcore.http.extensions.2.3.9.nupkg.sha512",
+    "C:\\Users\\Srikanth\\.nuget\\packages\\microsoft.aspnetcore.mvc.razor.extensions\\6.0.0\\microsoft.aspnetcore.mvc.razor.extensions.6.0.0.nupkg.sha512",
+    "C:\\Users\\Srikanth\\.nuget\\packages\\microsoft.aspnetcore.mvc.razor.runtimecompilation\\10.0.2\\microsoft.aspnetcore.mvc.razor.runtimecompilation.10.0.2.nupkg.sha512",
+    "C:\\Users\\Srikanth\\.nuget\\packages\\microsoft.aspnetcore.razor.language\\6.0.0\\microsoft.aspnetcore.razor.language.6.0.0.nupkg.sha512",
     "C:\\Users\\Srikanth\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\8.0.0\\microsoft.bcl.asyncinterfaces.8.0.0.nupkg.sha512",
+    "C:\\Users\\Srikanth\\.nuget\\packages\\microsoft.codeanalysis.analyzers\\3.3.2\\microsoft.codeanalysis.analyzers.3.3.2.nupkg.sha512",
+    "C:\\Users\\Srikanth\\.nuget\\packages\\microsoft.codeanalysis.common\\4.0.0\\microsoft.codeanalysis.common.4.0.0.nupkg.sha512",
+    "C:\\Users\\Srikanth\\.nuget\\packages\\microsoft.codeanalysis.csharp\\4.0.0\\microsoft.codeanalysis.csharp.4.0.0.nupkg.sha512",
+    "C:\\Users\\Srikanth\\.nuget\\packages\\microsoft.codeanalysis.razor\\6.0.0\\microsoft.codeanalysis.razor.6.0.0.nupkg.sha512",
     "C:\\Users\\Srikanth\\.nuget\\packages\\microsoft.data.sqlclient\\6.1.4\\microsoft.data.sqlclient.6.1.4.nupkg.sha512",
     "C:\\Users\\Srikanth\\.nuget\\packages\\microsoft.data.sqlclient.sni.runtime\\6.0.2\\microsoft.data.sqlclient.sni.runtime.6.0.2.nupkg.sha512",
+    "C:\\Users\\Srikanth\\.nuget\\packages\\microsoft.extensions.dependencymodel\\10.0.2\\microsoft.extensions.dependencymodel.10.0.2.nupkg.sha512",
     "C:\\Users\\Srikanth\\.nuget\\packages\\microsoft.identity.client\\4.80.0\\microsoft.identity.client.4.80.0.nupkg.sha512",
     "C:\\Users\\Srikanth\\.nuget\\packages\\microsoft.identity.client.extensions.msal\\4.78.0\\microsoft.identity.client.extensions.msal.4.78.0.nupkg.sha512",
     "C:\\Users\\Srikanth\\.nuget\\packages\\microsoft.identitymodel.abstractions\\8.14.0\\microsoft.identitymodel.abstractions.8.14.0.nupkg.sha512",
@@ -48,6 +56,15 @@
     "C:\\Users\\Srikanth\\.nuget\\packages\\system.servicemodel.primitives\\4.5.3\\system.servicemodel.primitives.4.5.3.nupkg.sha512"
   ],
   "logs": [
+    {
+      "code": "Undefined",
+      "level": "Warning",
+      "message": "Problem reading the cache file D:\\phani\\YJWebCoreMVC\\YJWebCoreMVC\\obj\\project.nuget.cache : '<' is an invalid start of a property name. Expected a '\"'. Path: $ | LineNumber: 2 | BytePositionInLine: 0.",
+      "projectPath": "D:\\phani\\YJWebCoreMVC\\YJWebCoreMVC\\YJWebCoreMVC.csproj",
+      "warningLevel": 1,
+      "filePath": "D:\\phani\\YJWebCoreMVC\\YJWebCoreMVC\\YJWebCoreMVC.csproj",
+      "targetGraphs": []
+    },
     {
       "code": "NU1510",
       "level": "Warning",

@@ -1,4 +1,5 @@
 /.vs
+/YJWebCoreMVC/bin
 /YJWebCoreMVC/obj
 /YJWebCoreMVC/bin/Debug
 *.dll

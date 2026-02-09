@@ -283,7 +283,7 @@
     }
 
     function BindSoldOrInstockIndex(custcode, fromdate, todate, metal, brand, styleStarts, styleContains, vendor) {
-        var url = '@Url.Action("GetBestSellerCategoryReport", "Analysis", new { Area = "" })';
+        var url = '@Url.Action("GetBestSellerCategoryReport", "Analytics", new { Area = "" })';
         var data = {
             ccode: custcode,
             fdate: fromdate,

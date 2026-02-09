@@ -3,10 +3,10 @@
 -->
 @{
     ViewBag.Title = "Partner Sales";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_LayoutNew.cshtml";
 
 }
-@model YJWeb.Models.AnalasysServiceModel
+@model YJWebCoreMVC.Models.AnalyticsModel
 
 <h2 class="text-center mt-2 heading">Partner Sales</h2>
 <div id="content-center" class="row">
@@ -112,7 +112,7 @@
     </div>
 
 
-    <div class="row dataTableForReport d-none" >
+    <div class="row dataTableForReport d-none">
 
         <table id="dataTableForReportPartnerSales" class="dataTable display nowrap table" style="width:100%">
             <thead>
@@ -185,45 +185,45 @@
 
 
         var jqxhr = $.post(url, data, function () { })
-        .done(function (response) {
-            var json;
-            if (response instanceof Object)
-                json = response;
+            .done(function (response) {
+                var json;
+                if (response instanceof Object)
+                    json = response;
 
-            else
-                json = $.parseJSON(response);
+                else
+                    json = $.parseJSON(response);
 
-            var table = $('#dataTableForPartnerSales').DataTable();
-            table.clear().draw();
+                var table = $('#dataTableForPartnerSales').DataTable();
+                table.clear().draw();
 
-        /*{"Partner_Group":"OKA MOR ETHE","Partner":"OKA MOR ETHE","Inv_No":"","Date":"2016-04-14T13:37:01.297","Acc":"","Style":"NATTR","Qty":1.00,"Price":0.00,"Partner_Share":0.00,"Partner_Profit":0.00}*/
-            $("#dataTableForPartnerSales tbody").empty();
-            var trans = json;
-            var totalPartner_Share = 0; partnerProfit = 0
-            for (var i = 0; i < json.length; i++) {
-                totalPartner_Share += parseFloat(json[i].Partner_Share);
-                partnerProfit += parseFloat(json[i].Partner_Profit);
-                table.row.add([
-                    json[i].Partner_Group,
-                    json[i].Inv_No,
-                    json[i].Date ? json[i].Date.split('T')[0] : '',
-                    json[i].Acc,
-                    json[i].Style,
-                    '<div style="text-align:right !important;">' + numberWithCommas(json[i].Qty) + '</div>',
-                    '<div style="text-align:right !important;">' + numberWithCommas(json[i].Price) + '</div>',
-                    '<div style="text-align:right !important;">' + numberWithCommas(json[i].Partner_Share) + '</div>'
-                ]);
-            }
+                /*{"Partner_Group":"OKA MOR ETHE","Partner":"OKA MOR ETHE","Inv_No":"","Date":"2016-04-14T13:37:01.297","Acc":"","Style":"NATTR","Qty":1.00,"Price":0.00,"Partner_Share":0.00,"Partner_Profit":0.00}*/
+                $("#dataTableForPartnerSales tbody").empty();
+                var trans = json;
+                var totalPartner_Share = 0; partnerProfit = 0
+                for (var i = 0; i < json.length; i++) {
+                    totalPartner_Share += parseFloat(json[i].Partner_Share);
+                    partnerProfit += parseFloat(json[i].Partner_Profit);
+                    table.row.add([
+                        json[i].Partner_Group,
+                        json[i].Inv_No,
+                        json[i].Date ? json[i].Date.split('T')[0] : '',
+                        json[i].Acc,
+                        json[i].Style,
+                        '<div style="text-align:right !important;">' + numberWithCommas(json[i].Qty) + '</div>',
+                        '<div style="text-align:right !important;">' + numberWithCommas(json[i].Price) + '</div>',
+                        '<div style="text-align:right !important;">' + numberWithCommas(json[i].Partner_Share) + '</div>'
+                    ]);
+                }
 
-            table.draw();
-            $("#dataTableForPartnerSales tfoot").find('th').eq(1).text(numberWithCommas(partnerProfit));
-            $("#dataTableForPartnerSales tfoot").find('th').eq(7).text(numberWithCommas(totalPartner_Share));
-            filteredData = json;
-        })
-        .fail(function (jqxhr, textStatus, error) {
-            var err = textStatus + ", " + error;
-            console.log("GETBagsGivenToPerson Request Failed: " + err);
-        });
+                table.draw();
+                $("#dataTableForPartnerSales tfoot").find('th').eq(1).text(numberWithCommas(partnerProfit));
+                $("#dataTableForPartnerSales tfoot").find('th').eq(7).text(numberWithCommas(totalPartner_Share));
+                filteredData = json;
+            })
+            .fail(function (jqxhr, textStatus, error) {
+                var err = textStatus + ", " + error;
+                console.log("GETBagsGivenToPerson Request Failed: " + err);
+            });
     }
 
     async function exportTableToCustomPDF(tableid, tablesCount, reportSubTitile = "") {
@@ -308,7 +308,7 @@
             doc.text(headingText, 105, currentY, { align: "center" });
             currentY += 7
 
-           
+
 
             //Add Sub Heading to PDF
             if (reportSubTitile.length > 0 && reportSubTitile != "") {
@@ -358,7 +358,7 @@
         });
 
         var table = $("#dataTableForReportPartnerSales").DataTable();
-        table.clear();   
+        table.clear();
 
         var profitTotal = 0;
         var total = 0;
@@ -382,7 +382,7 @@
                     r.Inv_No,
                     r.Date ? r.Date.split("T")[0] : "",
                     r.Acc,
-                    r.Style, 
+                    r.Style,
                     '<div style="text-align:right !important;">' + numberWithCommas(r.Qty) + '</div>',
                     '<div style="text-align:right !important;">' + numberWithCommas(r.Price) + '</div>',
                     '<div style="text-align:right !important;">' + numberWithCommas(r.Partner_Share) + '</div>'
@@ -395,7 +395,7 @@
                 '<div style="text-align:right !important;">' + numberWithCommas(groupProfitTotal) + '</div>',
                 "Subtotal :",
                 '<div style="text-align:right !important;">' + numberWithCommas(groupTotal) + '</div>',
-                
+
             ]).node().classList.add("subtotal-row");
 
             profitTotal += groupProfitTotal;
@@ -410,8 +410,8 @@
 
 
         const tableid = "dataTableForReportPartnerSales";
-        const tablesCount ="1";
-        const tablesSubHeadings ="";
+        const tablesCount = "1";
+        const tablesSubHeadings = "";
         const reportTitle = "portrait";
 
         var Title = "Partner Sales";
@@ -419,13 +419,13 @@
         var fromDate = $('#txtFromDate1').val();
         var toDate = $('#txtToDate1').val();
 
-        AllDates = "From Date  " +  fromDate + "  -  To Date  " + toDate;
-        
+        AllDates = "From Date  " + fromDate + "  -  To Date  " + toDate;
+
 
         var Heading = '<div  class=" header-container">' +
-                    '<h4 class="item " id="customSubHeader">' + Title + '</h4>' +
-                    '<h6 class="item mt-2" id="customSubHeader1"> '+ AllDates +'  </h6>' +
-                    '</div>';
+            '<h4 class="item " id="customSubHeader">' + Title + '</h4>' +
+            '<h6 class="item mt-2" id="customSubHeader1"> ' + AllDates + '  </h6>' +
+            '</div>';
 
         if (reportType == "print") {
             printDiv(tableid, tablesCount, tablesSubHeadings, Heading, reportTitle);
@@ -510,6 +510,7 @@
         color: black !important;
         font-family: Arial;
     }
+
     .heading {
         background-color: #3b8fe3;
         color: #fafafa;
