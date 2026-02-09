@@ -399,7 +399,11 @@ Hemanth 10/08/2024 added class for summar columns to show values righ aligned in
         var millisBetween = endDay.getTime() - startDay.getTime();
         var days = millisBetween / millisecondsPerDay;
 
+<<<<<<< HEAD
         var url = '@Url.Action("GetDaysOnHandInventory", "ListOfItemsSold", new { Area = "" })';
+=======
+        var url = '@Url.Action("GetDaysOnHandInventory", "Analytics", new { Area = "" })';
+>>>>>>> origin/PhaniCore_new
 
         var data = {
             Ccode: acc1,

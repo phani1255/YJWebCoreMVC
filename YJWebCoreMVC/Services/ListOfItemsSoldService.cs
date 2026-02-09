@@ -301,15 +301,15 @@ namespace YJWebCoreMVC.Services
 
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@date1", FROMDATE);
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@date2", DateTo);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@brand", Brand);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@category", Category.Replace("'", "''"));
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@subcat", SubCategory.Replace("'", "''"));
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@metal", Metal);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@cacc", Ccode.Replace("'", "''"));
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@brand", Brand ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@category", Category?.Replace("'", "''") ?? "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@subcat", SubCategory?.Replace("'", "''") ?? "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@metal", Metal ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@cacc", Ccode?.Replace("'", "''") ?? "");
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@no_of_days", NoOfDays);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@STYLEFROM", FromStyle);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@STYLETO", ToStyle);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@Vendor", Vendor);
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@STYLEFROM", FromStyle ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@STYLETO", ToStyle ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@Vendor", Vendor ??= "");
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@SummaryByModel", (SummByModel ? 1 : 0));
 
 
