@@ -1,0 +1,68 @@
+
+@{
+    Layout = null;
+}
+
+@* 
+    venkat 12/11/2025 added
+    venkat 01/13/2025 Made changes for fixing printer dialog not opening when print clicked
+ *@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Print Preview</title>
+
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+    <iframe id="pdfFrame" src="@ViewBag.PdfUrl"></iframe>
+    @*@if (ViewBag.Mode == "print")
+        {
+            <script>
+                // Must wait for PDF to fully load
+                document.getElementById("pdfFrame").addEventListener("load", function () {
+                    setTimeout(function () {
+                        try {
+                            document.getElementById("pdfFrame").contentWindow.print();
+                        } catch (e) {
+                            console.error("Print failed:", e);
+                        }
+                    }, 800); // delay REQUIRED for Chrome
+                });
+            </script>
+        }*@
+    @if ((string)ViewBag.Mode == "print")
+    {
+        <script>
+            document.getElementById("pdfFrame").addEventListener("load", function () {
+                setTimeout(function () {
+                    try {
+                        document.getElementById("pdfFrame").contentWindow.focus();
+                        document.getElementById("pdfFrame").contentWindow.print();
+                    } catch (e) {
+                        console.error("Print failed:", e);
+                    }
+                }, 800);
+            });
+        </script>
+    }
+
+</body>
+</html>
+
+
