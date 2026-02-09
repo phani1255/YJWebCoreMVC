@@ -5,7 +5,7 @@
   * Phanindra 10/04/2024 Removed unnecessary code related to images
 -->
 @{
-        Layout = "~/Views/Shared/_Layout.cshtml";
+        Layout = "~/Views/Shared/_LayoutNew.cshtml";
 }
 
 @model YJWebCoreMVC.Models.AnalyticsModel
@@ -51,7 +51,7 @@
                         <label class="col-sm-4">
                             Customer
                         </label>
-                        <div class="col-sm-8">
+                        <div class="col-sm-8" style="position:relative;">
                             <div class="autocomplete-dropdown">
                                 <div id="CustomerCodesForAutofill" class="d-none">@Html.Raw(JsonSerializer.Serialize(Model.CustomerCodes)) </div>
                                 <input type="text" id="txtCustomerCode" class="form-control activateFormRefreshBtn" placeholder="Search...">
@@ -156,7 +156,7 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <div class=" text-right">
+                    <div class="pull-right">
                         <input type="button" id="btnFormResultsSearch" value="Refresh" class="refresh_btn refreshBtnDefault" />
                     </div>
                 </div>

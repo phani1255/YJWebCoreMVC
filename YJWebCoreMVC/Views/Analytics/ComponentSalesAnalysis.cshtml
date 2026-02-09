@@ -10,7 +10,7 @@
 
 }
 
-@model YJWeb.Models.AnalasysServiceModel
+@model YJWebCoreMVC.Models.AnalyticsModel
 
 <h3 class="text-center mt-2 heading">COMPONENT SALES ANALYSIS</h3>
 <div id="content-center" class="row justify-content-center">
@@ -243,7 +243,7 @@
         const fromdate = $('#txtFromDate1').val() || "1990-01-01";
         const toDate = $('#txtToDate1').val() || "2099-12-31";
 
-       var  datef = `From : ${fromdate} To : ${toDate}`;
+        var datef = `From : ${fromdate} To : ${toDate}`;
 
         var data = {
             type: reportType,
@@ -296,12 +296,12 @@
 
 
         //preview
-        $('#ComponentSalesAnalysisbtnDataTablePreview').off('click').on('click',  function (e) {
+        $('#ComponentSalesAnalysisbtnDataTablePreview').off('click').on('click', function (e) {
             //string astSoldDay, string daterange , string cat, string subcat, string brand, string metal,string vendor12,string frmsty, string tostyl,bool isImageCheck = false
             e.preventDefault();
 
             var jsonBody = getReportHeadersData("preview");
-           window.open('@Url.Action("GenerateComponentSalesAnalysisReport", "Analysis")' + '?' + $.param(jsonBody), '_blank');
+            window.open('@Url.Action("GenerateComponentSalesAnalysisReport", "Analysis")' + '?' + $.param(jsonBody), '_blank');
 
 
         })
@@ -309,9 +309,9 @@
         //print
         $('#ComponentSalesAnalysisbtnDataTablePrint',).off('click').on('click', function (e) {
 
-             e.preventDefault();
+            e.preventDefault();
 
-             var jsonBody = getReportHeadersData("print");
+            var jsonBody = getReportHeadersData("print");
             window.open('@Url.Action("ComponentSalesAnalysisPrintViewer", "Analysis")' + '?' + $.param(jsonBody), '_blank');
 
 

@@ -103,7 +103,6 @@ D:\dotnet\YJWebCoreMVC\YJWebCoreMVC\obj\Debug\net10.0\compressed\rbw1aginry-{0}-
 D:\dotnet\YJWebCoreMVC\YJWebCoreMVC\obj\Debug\net10.0\compressed\6aifa3w4jq-{0}-0nyur7kcri-0nyur7kcri.gz
 D:\dotnet\YJWebCoreMVC\YJWebCoreMVC\obj\Debug\net10.0\compressed\drr02kqbus-{0}-256pr8b92p-256pr8b92p.gz
 D:\dotnet\YJWebCoreMVC\YJWebCoreMVC\obj\Debug\net10.0\compressed\fmhwcpfu9r-{0}-c2tiyv64ts-c2tiyv64ts.gz
-D:\dotnet\YJWebCoreMVC\YJWebCoreMVC\obj\Debug\net10.0\compressed\lfzafhmwkz-{0}-uohg724cup-uohg724cup.gz
 D:\dotnet\YJWebCoreMVC\YJWebCoreMVC\obj\Debug\net10.0\compressed\6sml51hp5s-{0}-dahkmgdqr8-dahkmgdqr8.gz
 D:\dotnet\YJWebCoreMVC\YJWebCoreMVC\obj\Debug\net10.0\compressed\ahgjd3g2kl-{0}-alggt6xgpk-alggt6xgpk.gz
 D:\dotnet\YJWebCoreMVC\YJWebCoreMVC\obj\Debug\net10.0\compressed\r3f5hujeul-{0}-61n19gt1b8-61n19gt1b8.gz
@@ -199,6 +198,7 @@ D:\dotnet\YJWebCoreMVC\YJWebCoreMVC\obj\Debug\net10.0\refint\YJWebCoreMVC.dll
 D:\dotnet\YJWebCoreMVC\YJWebCoreMVC\obj\Debug\net10.0\YJWebCoreMVC.pdb
 D:\dotnet\YJWebCoreMVC\YJWebCoreMVC\obj\Debug\net10.0\YJWebCoreMVC.genruntimeconfig.cache
 D:\dotnet\YJWebCoreMVC\YJWebCoreMVC\obj\Debug\net10.0\ref\YJWebCoreMVC.dll
+D:\dotnet\YJWebCoreMVC\YJWebCoreMVC\obj\Debug\net10.0\compressed\lfzafhmwkz-{0}-omkpwxze0t-omkpwxze0t.gz
 D:\dotnet\YJWebCoreMVC\YJWebCoreMVC\bin\Debug\net10.0\refs\Microsoft.AspNetCore.Antiforgery.dll
 D:\dotnet\YJWebCoreMVC\YJWebCoreMVC\bin\Debug\net10.0\refs\Microsoft.AspNetCore.Authentication.Abstractions.dll
 D:\dotnet\YJWebCoreMVC\YJWebCoreMVC\bin\Debug\net10.0\refs\Microsoft.AspNetCore.Authentication.BearerToken.dll

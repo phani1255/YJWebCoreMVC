@@ -12018,6 +12018,10 @@ table.dataTable thead td {
     left: 300px;
     z-index: 999;
 }
+    .report_buttons > div {
+        width: auto;
+        padding: 2px;
+    }
 
     .report_buttons .btn {
         padding: 8px 20px !important;
@@ -12199,9 +12203,10 @@ table.dataTable thead td {
 }
 
 .formsGlobalUniqueCloseBtn {
-    color: #fff; /* whitel letters */
-    background-color: #dc3545;
-    border-color: #860b17;
+     color: #fff !important; 
+    background-color: #ff0019 !important;
+    border-color: #860b17 !important;
+    opacity: 1 !important;
 }
 
 input[type="checkbox"] {
@@ -12248,7 +12253,7 @@ table.dataTable tfoot th, table.dataTable tfoot td {
 }
 
 #selectCustomerAccModal.modal, #previewContentModal.modal {
-    position: absolute;
+    /*position: absolute;*/
     bottom: unset;
     min-height: 100%;
 }

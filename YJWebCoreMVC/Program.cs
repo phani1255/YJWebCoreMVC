@@ -4,7 +4,9 @@ using AspNetCore.Reporting;
 var builder = WebApplication.CreateBuilder(args);
 
 // MVC
-builder.Services.AddControllersWithViews();
+builder.Services
+    .AddControllersWithViews()
+    .AddRazorRuntimeCompilation();
 
 // REQUIRED for session
 builder.Services.AddDistributedMemoryCache();   // 🔴 MISSING
