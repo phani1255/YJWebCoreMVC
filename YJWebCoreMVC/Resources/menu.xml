@@ -843,7 +843,7 @@
 				<MenuItem Name="806"   Text="Sales By Salesrep"                   weblink="Analytics/SalesBySalesman"            OnClick="F:frmSalesBySalesman"           image="analytics"  TBD="MNJ"/>
 				<MenuItem Name="807"   Text="Days on Hand inventory"              weblink="ListOfItemsSold/DaysonHandInventory" OnClick="F:frmDaysonHandInventory"       image="salesgraph" TBD="Hemanth"/>
 				<MenuItem Name="8033"  Text="Component Sales Analysis"            OnClick="F:frmComponentSalesAnalysis"    image="analytics" />
-				<MenuItem Name="8039"  Text="Vendor Sales Report"                 weblink="ListOfItemsSold/VendorSalesReport"   OnClick="F:frmVendorSalesReport"         image="analytics" TBD="Hemanth"/>
+				<MenuItem Name="8039"  Text="Vendor Sales Report"                 weblink="Analytics/VendorSalesReport"   OnClick="F:frmVendorSalesReport"         image="analytics" TBD="Hemanth"/>
 				<MenuItem Text="-" />
 				<MenuItem Name="8021"  Text="End Of Month Report"                 weblink="Analytics/EndOfMonth"                 OnClick="F:frmEndOfMonth"                image="profitloss" />
 				<MenuItem Name="8013"  Text="Total Monthly Sales"                 weblink="Analytics/TotalMonthlySales"          OnClick="F:frmTotalMonthlySales"         image="salesgraph" />
@@ -852,15 +852,15 @@
 				<MenuItem Name="8016"  Text="Annual Sales Comparison"             weblink="Analytics/AnnualSalesComparison"      OnClick="F:frmAnnualSalesComparison"     image="salesgraph" />
 				<MenuItem Name="8017"  Text="Annual Payments Received"            weblink="Analytics/AnnualPaymentsReceived"     OnClick="F:frmAnnualPaymentsReceived"    image="salesgraph" />
 				<MenuItem Text="-" />
-				<MenuItem Name="8018"  Text="In State/Out Of State Sales"         weblink="ListOfItemsSold/InstateOutStateSales" OnClick="F:frmInStateOutStateSales"      image="salesgraph" TBD="Hemanth"/>
-				<MenuItem Name="8019"  Text="Total Sales By State"                weblink="ListOfItemsSold/StateSales"           OnClick="F:frmStateSales"                image="salesgraph" TBD="Hemanth"/>
-				<MenuItem Name="81131" Text="Sales / Sales Tax Per State"         weblink="ListOfItemsSold/TotalSalesPerState"   OnClick="F:frmTotalSalesPerState"        image="report" TBD="Hemanth"/>
+				<MenuItem Name="8018"  Text="In State/Out Of State Sales"         weblink="Analytics/InstateOutStateSales" OnClick="F:frmInStateOutStateSales"      image="salesgraph" TBD="Hemanth"/>
+				<MenuItem Name="8019"  Text="Total Sales By State"                weblink="Analytics/StateSales"           OnClick="F:frmStateSales"                image="salesgraph" TBD="Hemanth"/>
+				<MenuItem Name="81131" Text="Sales / Sales Tax Per State"         weblink="Analytics/TotalSalesPerState"   OnClick="F:frmTotalSalesPerState"        image="report" TBD="Hemanth"/>
 				<MenuItem Text="-" />
 				<MenuItem Name="8027"  Text="Sales Dashboard"                     OnClick="P:Salesdashboard"               image="stockonhand" />
 				<MenuItem Name="8023"  Text="GMROI"                               OnClick="F:frmGMROI"                     image="salesgraph" />
-				<MenuItem Name="8025"  Text="Vendor Styles Performance"           weblink="ListOfItemsSold/VendorStylesPerformance" OnClick="F:frmVendorStylesPerformance"   image="performance" TBD="Hemanth"/>
-				<MenuItem Name="8028"  Text="Total Hourly Sales"                  weblink="ListOfItemsSold/TotalHourlySales"    OnClick="F:frmTotalHourlySales"          image="salesgraph" TBD="Hemanth"/>
-				<MenuItem Name="8029"  Text="Day of Week Sales"                   weblink="ListOfItemsSold/TotalWeeklySales"    OnClick="F:frmTotalWeeklySales"          image="salesgraph" TBD="Hemanth"/>
+				<MenuItem Name="8025"  Text="Vendor Styles Performance"           weblink="Analytics/VendorStylesPerformance" OnClick="F:frmVendorStylesPerformance"   image="performance" TBD="Hemanth"/>
+				<MenuItem Name="8028"  Text="Total Hourly Sales"                  weblink="Analytics/TotalHourlySales"    OnClick="F:frmTotalHourlySales"          image="salesgraph" TBD="Hemanth"/>
+				<MenuItem Name="8029"  Text="Day of Week Sales"                   weblink="Analytics/TotalWeeklySales"    OnClick="F:frmTotalWeeklySales"          image="salesgraph" TBD="Hemanth"/>
 			</TopLevelMenu>
 			<TopLevelMenu Name="8026" Text="Sales/:profit" image="analytics">
 				<MenuItem Name="808"   Text="Detailed Sales/Profit"               weblink="Sales/SalesProfitReport"             OnClick="F:frmDetailedSales"             image="detailedsalesprofit" />

@@ -42,6 +42,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl0aWNzXENvbXBvbmVudFNhbGVzQW5hbHlzaXMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/DaysOnHandInventory.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl0aWNzXERheXNPbkhhbmRJbnZlbnRvcnkuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/DetailedCOG.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl0aWNzXERldGFpbGVkQ09HLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 

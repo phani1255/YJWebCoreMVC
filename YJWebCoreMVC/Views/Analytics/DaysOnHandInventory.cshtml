@@ -1,13 +1,15 @@
 ﻿<!--
-Hemant 10/04/2024 Sales Profit By City Report
-Hemanth 10/10/2024 preview and print changes added
+Hemanth 09/20/2024 Days on hand inventory code added
+Hemanth 09/24/2024 Drop downs design changed and removed all checkboxes
+Hemanth 10/07/2024 Default date range changed
+Hemanth 10/08/2024 added class for summar columns to show values righ aligned in prievw and print
 -->
 @{
-
     Layout = "~/Views/Shared/_LayoutNew.cshtml";
-    ViewBag.Title = "Sales / Profit By City";
+    ViewBag.Title = "DAYS ON HAND INVENTORY";
 }
 
+@model YJWebCoreMVC.Models.ListOfItemsSoldModel
 @using System.Text.Json
 
 <div id="content-center" class="row">
@@ -20,7 +22,7 @@ Hemanth 10/10/2024 preview and print changes added
                 <div class="col-md-4">
                     <div class="row">
                         <label class="col-sm-4">
-                            From
+                            Sold From
                         </label>
                         <div class="col-sm-8">
                             <input type="date" id="txtFromDate" class="form-control activateFormRefreshBtn" style="font-size:13px;" />
@@ -47,6 +49,7 @@ Hemanth 10/10/2024 preview and print changes added
 
             </div>
             <div class="row">
+
                 <div class="col-md-4">
                     <div class="row">
                         <label class="col-sm-4">
@@ -54,7 +57,7 @@ Hemanth 10/10/2024 preview and print changes added
                         </label>
                         <div class="col-sm-8">
                             <div class="autocomplete-dropdown">
-                                <div id="CustomerCodesForAutofill" class="d-none">@Html.Raw(JsonSerializer.Serialize(ViewBag.CustomerCodes)) </div>
+                                <div id="CustomerCodesForAutofill" class="d-none">@Html.Raw(JsonSerializer.Serialize(Model.CustomerCodes))</div>
                                 <input type="text" id="txtCustomerCode" class="form-control activateFormRefreshBtn" placeholder="Search..." disabled="disabled">
                                 <div id="autocomplete-list1" class="autocomplete-items"></div>
                             </div>
@@ -87,7 +90,7 @@ Hemanth 10/10/2024 preview and print changes added
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" style="margin-top: 8px;">
                 <div class="col-md-4">
                     <div class="row">
                         <label class="col-sm-4">
@@ -111,27 +114,6 @@ Hemanth 10/10/2024 preview and print changes added
                 <div class="col-md-4">
                     <div class="row">
                         <label class="col-sm-4">
-                            Salesrep
-                        </label>
-                        <div class="col-sm-8">
-                            <select id="salesman" name="salesman" class="form-control">
-                                @{
-                                    if (ViewBag.SalesmanData != null)
-                                    {
-                                        foreach (var salesman in ViewBag.SalesmanData)
-                                        {
-                                            <option value="@salesman.Value">@salesman.Text</option>
-                                        }
-                                    }
-                                }
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="row">
-                        <label class="col-sm-4">
                             Metals
                         </label>
                         <div class="col-sm-8">
@@ -149,10 +131,6 @@ Hemanth 10/10/2024 preview and print changes added
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="row">
-
                 <div class="col-md-4">
                     <div class="row">
                         <label class="col-sm-4">
@@ -160,7 +138,7 @@ Hemanth 10/10/2024 preview and print changes added
                         </label>
                         <div class="col-sm-8">
                             <select id="brand" name="brand" class="form-control">
-
+                                <option value="">All</option>
                                 @{
                                     if (ViewBag.BrandTypes != null)
                                     {
@@ -174,6 +152,8 @@ Hemanth 10/10/2024 preview and print changes added
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="row">
                 <div class="col-md-4">
                     <div class="row">
                         <label class="col-sm-4">
@@ -217,15 +197,8 @@ Hemanth 10/10/2024 preview and print changes added
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="row" style="padding-top:8px;">
-                <div class="col-md-4">
-                    <input type="radio" value="rdoDateonly" class="activateFormRefreshBtn" id="rdoDateonly" name="rdoDateonly" checked="checked" /> Invoice Date
-                    &nbsp;&nbsp;&nbsp;
-                    <input type="radio" value="rdoPickupdate" class="activateFormRefreshBtn" id="rdoPickupdate" name="rdoDateonly" /> Pickup Date
-                </div>
-                <div class="col-md-4"></div>
-                <div class="col-md-4 text-right">
+                <div class="col-md-4 text-right" style="padding-top: 8px;">
+                    <input type="checkbox" class="activateFormRefreshBtn" id="chkSummaryByModel" name="chkSummaryByModel" checked="checked" />&nbsp; Summary By Model#
                     <input type="button" value="Reset" class="formsGlobalUniqueBtn btnResetFormValues" id="resetFormValues" />
                     <input type="button" id="btnFormResultsSearch" value="Refresh" class="refresh_btn refreshBtnDefault" />
                 </div>
@@ -239,19 +212,19 @@ Hemanth 10/10/2024 preview and print changes added
 
         <div class="row col-md-6 report_buttons">
             <div style="margin:3px;">
-                <input type="button" value="PDF" table-id="dataTableForSalesProfitByCity" class="formsGlobalUniqueBtn btnDataTableDownloadPDF" id="btnPDF" />
+                <input type="button" value="PDF" table-id="dataTableForListOfReceipts" class="formsGlobalUniqueBtn btnDataTableDownloadPDF" id="btnPDF" />
             </div>
             <div style="margin:3px;">
-                <input type="button" value="Excel" table-id="dataTableForSalesProfitByCity" class="formsGlobalUniqueBtn btnDataTableDownloadExcel" />
+                <input type="button" value="Excel" table-id="dataTableForListOfReceipts" class="formsGlobalUniqueBtn btnDataTableDownloadExcel" />
             </div>
             <div style="margin:3px;">
-                <input type="button" value="Preview" table-id="dataTableForSalesProfitByCity" id="btnDataTablePreview" class="formsGlobalUniqueBtn" />
+                <input type="button" value="Preview" table-id="dataTableForListOfReceipts" id="btnDataTablePreview" class="formsGlobalUniqueBtn" />
             </div>
             <div style="margin:3px;">
-                <input type="button" value="Print" table-id="dataTableForSalesProfitByCity" id="btnDataTablePrint" class="formsGlobalUniqueBtn" />
+                <input type="button" value="Print" table-id="dataTableForListOfReceipts" id="btnDataTablePrint" class="formsGlobalUniqueBtn" />
             </div>
             <div style="margin:3px;display:none;">
-                <input type="button" value="Email" table-id="dataTableForSalesProfitByCity" class="formsGlobalUniqueBtn" />
+                <input type="button" value="Email" table-id="dataTableForListOfReceipts" class="formsGlobalUniqueBtn" />
             </div>
 
             <div style="margin:3px;display:none;">
@@ -260,15 +233,17 @@ Hemanth 10/10/2024 preview and print changes added
         </div>
         <div class="row dataTableReport" id="printContent">
             <div><br /></div>
-            <table id="dataTableForSalesProfitByCity" class="dataTable display nowrap table" style="width:100%">
+            <table id="dataTableForListOfReceipts" class="dataTable display nowrap table" style="width:100%">
                 <thead>
                     <tr>
-                        <th style="text-align:center !important;">CITY</th>
-                        <th style="text-align:center !important;">AMOUNT</th>
-                        <th style="text-align:center !important;">COST</th>
-                        <th style="text-align:center !important;">PROFIT</th>
-                        <th style="text-align:center !important;">OTHER CHARGES</th>
-                        <th style="text-align:center !important;">SALES%</th>
+                        <th style="text-align:center !important;">Style</th>
+                        <th style="text-align:center !important;">Brand</th>
+                        <th style="text-align:center !important;">Category</th>
+                        <th style="text-align:center !important;">Subcat</th>
+                        <th style="text-align:center !important;">Metal</th>
+                        <th style="text-align:center !important;">In Stock</th>
+                        <th style="text-align:center !important;">Sold Qty</th>
+                        <th style="text-align:center !important;">Days On Hand</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -276,11 +251,13 @@ Hemanth 10/10/2024 preview and print changes added
                 <tfoot id="tfooter">
                     <tr>
                         <th></th>
-                        <th id="totalamount" class="text-right numericColumns"></th>
-                        <th id="totalcost" class="text-right numericColumns"></th>
-                        <th id="totalprofit" class="text-right numericColumns"></th>
-                        <th id="totalotherCharges" class="text-right numericColumns"></th>
                         <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th id="summary_in_stock" class="numericColumns"></th>
+                        <th id="summary_sold_qty" class="numericColumns"></th>
+                        <th id="summary_days_on_hand" class="numericColumns"></th>
                     </tr>
                 </tfoot>
             </table>
@@ -290,7 +267,7 @@ Hemanth 10/10/2024 preview and print changes added
 <script type="text/javascript">
     $(document).ready(function () {
 
-        var table = $('#dataTableForSalesProfitByCity').DataTable({
+        var table = $('#dataTableForListOfReceipts').DataTable({
             dom: 'Blfrtip',
             searching: true,
             select: true,
@@ -299,6 +276,19 @@ Hemanth 10/10/2024 preview and print changes added
             bInfo: false,
             aaSorting: []
         })
+
+        $('#cbFillFromToDates').click();
+        function addDays(theDate, days) {
+            return new Date(theDate.getTime() + days * 24 * 60 * 60 * 1000);
+        }
+
+        var newDate = addDays(new Date(), -365);
+        var lastmonth = newDate.getMonth() + 1;
+
+        lastmonth = ('0' + lastmonth).slice(-2);
+        var newDay = ('0' + newDate.getDate()).slice(-2);
+        var fd = newDate.getFullYear() + "-" + lastmonth + "-" + newDay;
+
 
 
         $('#resetFormValues').on("click", function (e) {
@@ -309,14 +299,16 @@ Hemanth 10/10/2024 preview and print changes added
             $('#txtFromStyle').val('');
             $('#txtToStyle').val('');
             $('#cmbVendor').prop('selectedIndex', 0);
+            $("#cmbVendor").prop('disabled', 'disabled');
             $('#metal').prop('selectedIndex', 0);
+            $("#metal").prop('disabled', 'disabled');
             $('#brand').prop('selectedIndex', 0);
+            $("#brand").prop('disabled', 'disabled');
             $('#category').prop('selectedIndex', 0);
+            $("#category").prop('disabled', 'disabled');
             $('#subcategory').prop('selectedIndex', 0);
-            $('#salesman').prop('selectedIndex', 0);
-            $('#chkLayawaysUnpaid').prop('checked', false);
-            $('#chkSeparateSM').prop('checked', false);
-            $('#rdoPickupdate').prop('checked', true);
+            $("#subcategory").prop('disabled', 'disabled');
+            $('#chkSummaryByModel').prop("checked", true);
 
         });
 
@@ -330,21 +322,7 @@ Hemanth 10/10/2024 preview and print changes added
             }
             buttonStyleClassChange('btnFormResultsSearch');
         });
-        $('#rdoDateonly').on("click", function (e) {
-            buttonStyleClassChange('btnFormResultsSearch');
-        });
-        $('#rdoPickupdate').on("click", function (e) {
-            buttonStyleClassChange('btnFormResultsSearch');
-        });
-        $('#chkSeparateSM').on("click", function (e) {
-            buttonStyleClassChange('btnFormResultsSearch');
-        });
-        $('#chkLayawaysUnpaid').on("click", function (e) {
-            buttonStyleClassChange('btnFormResultsSearch');
-        });
-        $('#salesman').on("click", function (e) {
-            buttonStyleClassChange('btnFormResultsSearch');
-        });
+
         $('#chkSummaryByModel').on("click", function (e) {
             buttonStyleClassChange('btnFormResultsSearch');
         });
@@ -372,6 +350,7 @@ Hemanth 10/10/2024 preview and print changes added
 
 
         fillFromToDates();
+        $('#txtFromDate').val(fd);
     });
 
     function buttonStyleClassChange(btnId) {
@@ -380,11 +359,6 @@ Hemanth 10/10/2024 preview and print changes added
     }
 
     function existAutoFilledData() {
-
-        $('#totalamount').html('');
-        $('#totalcost').html('');
-        $('#totalprofit').html('');
-        $('#totalotherCharges').html('');
 
 
         if ($('#txtFromDate').val() != "")
@@ -408,11 +382,6 @@ Hemanth 10/10/2024 preview and print changes added
             }
 
         }
-        let bypicdate = "DATE";
-        let rdt = $("input[name='rdoDateonly']:checked").val();
-        if (rdt == "rdoPickupdate") {
-            bypicdate = "PICKUPDATE";
-        }
 
         var styleFrom = $('#txtFromStyle').val();
         var styleTo = $('#txtToStyle').val();
@@ -421,10 +390,16 @@ Hemanth 10/10/2024 preview and print changes added
         var brand = $('#brand').val();
         var category = $('#category').val();
         var subcategory = $('#subcategory').val();
-        var salesman = $('#salesman').val();
+        var chkSummaryByModel = $('#chkSummaryByModel').prop('checked') ? true : false;
 
+        var startDay = new Date(fromdate);
+        var endDay = new Date(todate);
+        var millisecondsPerDay = 1000 * 60 * 60 * 24;
 
-        var url = '@Url.Action("GetSalesProfitByCity", "ListOfItemsSold", new { Area = "" })';
+        var millisBetween = endDay.getTime() - startDay.getTime();
+        var days = millisBetween / millisecondsPerDay;
+
+        var url = '@Url.Action("GetDaysOnHandInventory", "ListOfItemsSold", new { Area = "" })';
 
         var data = {
             Ccode: acc1,
@@ -437,12 +412,11 @@ Hemanth 10/10/2024 preview and print changes added
             FromStyle: styleFrom,
             ToStyle: styleTo,
             Vendor: vendor,
-            Sales: salesman,
-            ByWhichDate: bypicdate
-
+            NoOfDays: parseInt(days)+1,
+            SummByModel: chkSummaryByModel
         };
 
-        var table = $('#dataTableForSalesProfitByCity').DataTable();
+        var table = $('#dataTableForListOfReceipts').DataTable();
         table.clear().draw();
 
         var jqxhr = $.post(url, data, function () { })
@@ -454,45 +428,39 @@ Hemanth 10/10/2024 preview and print changes added
                     json = $.parseJSON(response);
 
 
-                var totalsale = 0;
-                var totalcost = 0;
-                var totalprofit = 0;
-                var totalOtherCharges = 0;
+                var summaryInstock = 0;
+                var summaryQty = 0;
+                var summaryDaysOnHand = 0;
 
                 for (var i = 0; i < json.length; i++) {
-                    if (json[i].amount != "") {
-                        totalsale = totalsale + json[i].amount;
+                    if (json[i].In_Stock != "") {
+                        summaryInstock = summaryInstock + json[i].In_Stock;
                     }
-                    if (json[i].cost != "") {
-                        totalcost = totalcost + json[i].cost;
+                    if (json[i].Sold_Qty != "") {
+                        summaryQty = summaryQty + json[i].Sold_Qty;
                     }
-                    if (json[i].profit != "") {
-                        totalprofit = totalprofit + json[i].profit;
-                    }
-                    if (json[i].OtherCharges != "") {
-                        totalOtherCharges = totalOtherCharges + json[i].OtherCharges;
+                    if (json[i].Days_On_Hand != "") {
+                        summaryDaysOnHand = summaryDaysOnHand + json[i].Days_On_Hand;
                     }
 
+
                     table.row.add([
-                        json[i].city,
-                        formatCurrency(json[i].amount),
-                        formatCurrency(json[i].cost),
-                        formatCurrency(json[i].profit),
-                        formatCurrency(json[i].OtherCharges),
-                        formatCurrency(json[i].PercentageSales)
+                        json[i].Style,
+                        json[i].Brand,
+                        json[i].Category,
+                        json[i].Subcat,
+                        json[i].Metal,
+                        formatCurrency(json[i].In_Stock),
+                        formatCurrency(json[i].Sold_Qty),
+                        formatCurrency(json[i].Days_On_Hand)
                         ]);
 
 
                 }
                 table.draw();
-
-
-
-                $('#totalamount').html(formatCurrency(totalsale));
-                $('#totalcost').html(formatCurrency(totalcost));
-                $('#totalprofit').html(formatCurrency(totalprofit));
-                $('#totalotherCharges').html(formatCurrency(totalOtherCharges));
-
+                $('#summary_in_stock').html(formatCurrency(summaryInstock));
+                $('#summary_sold_qty').html(formatCurrency(summaryQty));
+                $('#summary_days_on_hand').html(formatCurrency(summaryDaysOnHand));
 
 
 
@@ -526,27 +494,17 @@ Hemanth 10/10/2024 preview and print changes added
         text-align: left !important;
     }
 
-    table tbody tr td:nth-child(2) {
-        text-align: right !important;
-        padding: 0px !important;
-    }
-
-    table tbody tr td:nth-child(3) {
-        text-align: right !important;
-        padding: 0px !important;
-    }
-
-    table tbody tr td:nth-child(4) {
-        text-align: right !important;
-        padding: 0px !important;
-    }
-
-    table tbody tr td:nth-child(5) {
-        text-align: right !important;
-        padding: 0px !important;
-    }
-
     table tbody tr td:nth-child(6) {
+        text-align: right !important;
+        padding: 0px !important;
+    }
+
+    table tbody tr td:nth-child(7) {
+        text-align: right !important;
+        padding: 0px !important;
+    }
+
+    table tbody tr td:nth-child(8) {
         text-align: right !important;
         padding: 0px !important;
     }
