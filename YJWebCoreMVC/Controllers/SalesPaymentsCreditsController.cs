@@ -15,14 +15,14 @@
  *  Phanindra 03/26/2025 Modified AddCashReceipt to pass ups_ins values
  *  Phanindra 04/06/2025 Added GetNextCheckNoByBank method.
  *  Phanindra 04/24/2025 Fixed issues in Save customer refund functionality in saveReceipt function
+ *  Phanindra 02/10/2026 migrated controller to YJCore
  */
-using Newtonsoft.Json;
-//using System.Web.UI.WebControls;
-using YJWebCoreMVC.Filters;
-using YJWebCoreMVC.Services;
-using YJWebCoreMVC.Models;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Data;
+using YJWebCoreMVC.Filters;
+using YJWebCoreMVC.Models;
+using YJWebCoreMVC.Services;
 
 namespace YJWebCoreMVC.Controllers
 {
@@ -32,15 +32,16 @@ namespace YJWebCoreMVC.Controllers
         private readonly HelperCommonService _helperCommonService;
         private readonly SalesPaymentsCreditsService _salesPaymentsCreditsService;
         private readonly GlobalSettingsService _globalSettingsService;
-        public SalesPaymentsCreditsController(HelperCommonService helperCommonService, SalesPaymentsCreditsService salesPaymentsCreditsService, GlobalSettingsService globalSettingsService)
+        private readonly BankAccService _bankAccService;
+        public SalesPaymentsCreditsController(HelperCommonService helperCommonService, SalesPaymentsCreditsService salesPaymentsCreditsService, GlobalSettingsService globalSettingsService, BankAccService bankAccService)
         {
             _helperCommonService = helperCommonService;
             _salesPaymentsCreditsService = salesPaymentsCreditsService;
             _globalSettingsService = globalSettingsService;
+            _bankAccService = bankAccService;
         }
 
-        
-        public ActionResult AddCashReceipt()
+        public IActionResult AddCashReceipt()
         {
             SalesPaymentsCreditsModel objModel = new SalesPaymentsCreditsModel();
 
@@ -63,31 +64,33 @@ namespace YJWebCoreMVC.Controllers
             }
             else
             {
-                HttpContext.Session.SetString("ReceiptNo") = ViewBag.ReceiptNo = _helperCommonService.GetNextSeqNo("PAYMENTS", "Inv_no", "500000", "RTV_PAY", "300000", "P");
+                string ReceiptNo = _helperCommonService.GetNextSeqNo("PAYMENTS", "Inv_no", "500000", "RTV_PAY", "300000", "P");
+                ViewBag.ReceiptNo = ReceiptNo;
+                HttpContext.Session.SetString("ReceiptNo", ReceiptNo);
             }
 
             return View(objModel);
         }
 
-        
+
         public string GetReceiptData(string acc, string receipt_no, bool lRefund = false, bool isccswipe = false)
         {
             var data = _helperCommonService.GetStoreProc("GetReceiptData", "@acc", acc, "@receipt_no", receipt_no, "@lRefund", lRefund.ToString(), "@isccswipe", isccswipe.ToString());
             return JsonConvert.SerializeObject(data);
         }
 
-        
-        public string SaveReceipt(String dtPayment, string acc, string receipt_no, DateTime? pay_date, DateTime? chk_date, string bank, string checkno, decimal chk_amt, decimal discount, bool showmemo, string pcname, string PaymentsTypes, string PaymentNote, string Cash_Register, string StoreCode, string loggeduser = "", string storecodeinuse = "", bool isRefund = false)
+
+        public string SaveReceipt(string dtPayment, string acc, string receipt_no, DateTime? pay_date, DateTime? chk_date, string bank, string checkno, decimal chk_amt, decimal discount, bool showmemo, string pcname, string PaymentsTypes, string PaymentNote, string Cash_Register, string StoreCode, string loggeduser = "", string storecodeinuse = "", bool isRefund = false)
         {
-            SalesPaymentsCreditsModel objModel = new SalesPaymentsCreditsModel();
-            var data = objModel.SaveCashReceipt(dtPayment, acc, receipt_no, pay_date, chk_date, bank, checkno, chk_amt, discount, showmemo, pcname, PaymentsTypes, PaymentNote, Cash_Register, StoreCode, loggeduser, storecodeinuse, isRefund);
+            //SalesPaymentsCreditsModel objModel = new SalesPaymentsCreditsModel();
+            var data = _salesPaymentsCreditsService.SaveCashReceipt(dtPayment, acc, receipt_no, pay_date, chk_date, bank, checkno, chk_amt, discount, showmemo, pcname, PaymentsTypes, PaymentNote, Cash_Register, StoreCode, loggeduser, storecodeinuse, isRefund);
             //return JsonConvert.SerializeObject(data);
             if (data == "Success")
             {
                 if (PaymentsTypes == "CHECK")
                 {
-                    BankAccModel bankAccModel = new BankAccModel();
-                    DataRow dRow = bankAccModel.GetBankBycode(bank);
+                    //BankAccModel bankAccModel = new BankAccModel();
+                    DataRow dRow = _bankAccService.GetBankBycode(bank);
 
                     if (_helperCommonService.DataTableOK(dRow))
                     {
@@ -95,7 +98,7 @@ namespace YJWebCoreMVC.Controllers
                         DateTime tdate = Convert.ToDateTime(pay_date.Value.AddDays(1).Date);
                         DateTime depositdate = Convert.ToDateTime(chk_date);
                         string bcode = bank;
-                        DataTable dtInvoiceItems = bankAccModel.ShowPaymentData(bcode, fdate, tdate);
+                        DataTable dtInvoiceItems = _bankAccService.ShowPaymentData(bcode, fdate, tdate);
                         if (_helperCommonService.DataTableOK(dtInvoiceItems) && dtInvoiceItems.Columns.Contains("Deposited"))
                         {
                             var rowsToUpdate = dtInvoiceItems.AsEnumerable();
@@ -104,7 +107,7 @@ namespace YJWebCoreMVC.Controllers
                         }
                         if (_helperCommonService.DataTableOK(dtInvoiceItems))
                         {
-                            DataTable invItm1 = bankAccModel.AddDeposits(bcode, fdate, tdate, depositdate, _helperCommonService.GetDataTableXML("DEPOSIT_DATA", dtInvoiceItems), false, _helperCommonService.StoreCode, _helperCommonService.LoggedUser);
+                            DataTable invItm1 = _bankAccService.AddDeposits(bcode, fdate, tdate, depositdate, _helperCommonService.GetDataTableXML("DEPOSIT_DATA", dtInvoiceItems), false, _helperCommonService.StoreCode, _helperCommonService.LoggedUser);
                         }
 
                     }
@@ -115,8 +118,8 @@ namespace YJWebCoreMVC.Controllers
             return data;
         }
 
-        
-        public ActionResult EditCashReceipt()
+
+        public IActionResult EditCashReceipt()
         {
             SalesPaymentsCreditsModel objModel = new SalesPaymentsCreditsModel();
 
@@ -129,40 +132,39 @@ namespace YJWebCoreMVC.Controllers
             return View(objModel);
         }
 
-        
+
         public string GetPayment(string inv_no, string rtv_pay = "")
         {
-            SalesPaymentsCreditsModel objModel = new SalesPaymentsCreditsModel();
             if (rtv_pay == "")
             {
-                var data = objModel.GetPayment(inv_no);
+                var data = _salesPaymentsCreditsService.GetPayment(inv_no);
                 return JsonConvert.SerializeObject(data);
             }
             else
             {
-                var data = objModel.GetPayment(inv_no, rtv_pay);
+                var data = _salesPaymentsCreditsService.GetPayment(inv_no, rtv_pay);
                 return JsonConvert.SerializeObject(data);
             }
 
         }
 
-        
+
         public string GetReceiptEditData(string acc, string receipt_no, bool lRefund = false, bool isccswipe = false)
         {
             var data = _helperCommonService.GetStoreProc(lRefund ? "GetReceiptDataEdit_Refund" : "GetReceiptDataEdit", "@acc", acc, "@receipt_no", receipt_no, "@isccswipe", isccswipe.ToString());
             return JsonConvert.SerializeObject(data);
         }
 
-        public ActionResult ReprintReceipt(string inv_no)
+        public IActionResult ReprintReceipt(string inv_no)
         {
             return View();
         }
 
-        
-        public ActionResult PrintCashReceipt(string inv_no)
+
+        public IActionResult PrintCashReceipt(string inv_no)
         {
             SalesPaymentsCreditsModel objModel = new SalesPaymentsCreditsModel();
-            objModel.ReceiptInfo = objModel.GetPayment(inv_no);
+            objModel.ReceiptInfo = _salesPaymentsCreditsService.GetPayment(inv_no);
             var CustData = _helperCommonService.GetCustNamebyCode(objModel.ReceiptInfo["ACC"].ToString());
             ViewBag.CustomerName = "";
             if (CustData != null)
@@ -171,12 +173,12 @@ namespace YJWebCoreMVC.Controllers
             }
             objModel.Note = "";
             objModel.Credit_No = inv_no;
-            DataTable data = objModel.GetPayItems(inv_no);
+            DataTable data = _salesPaymentsCreditsService.GetPayItems(inv_no);
             ViewBag.DvPayItems = new DataView(data);
             return View(objModel);
         }
 
-        public ActionResult ModifyAcc_ofReceipt()
+        public IActionResult ModifyAcc_ofReceipt()
         {
             SalesPaymentsCreditsModel objModel = new SalesPaymentsCreditsModel();
 
@@ -185,10 +187,9 @@ namespace YJWebCoreMVC.Controllers
         }
         public string ModifyAccofReceipt(string recno, string OldAcc, string NewAcc)
         {
-            SalesPaymentsCreditsModel objModel = new SalesPaymentsCreditsModel();
             string error = "";
             string result = "";
-            var custRow = objModel.CheckValidCustomerCode(NewAcc);
+            var custRow = _salesPaymentsCreditsService.CheckValidCustomerCode(NewAcc);
             if (custRow == null)
             {
                 error = "Invalid Customer Code";
@@ -202,7 +203,7 @@ namespace YJWebCoreMVC.Controllers
                 }
                 else
                 {
-                    result = objModel.ModifyCustomerCodeofReceipt(recno, OldAcc, NewAcc);
+                    result = _salesPaymentsCreditsService.ModifyCustomerCodeofReceipt(recno, OldAcc, NewAcc);
                 }
             }
             var response = new { result = result, error = error };
@@ -211,9 +212,8 @@ namespace YJWebCoreMVC.Controllers
 
         public string GetCustomerofReceipt(string recno)
         {
-            SalesPaymentsCreditsModel objModel = new SalesPaymentsCreditsModel();
             string acc = "";
-            DataTable data = objModel.GetCustomerofReceipt(recno);
+            DataTable data = _salesPaymentsCreditsService.GetCustomerofReceipt(recno);
             if (data.Rows.Count > 0)
             {
                 acc = data.Rows[0]["ACC"].ToString();
@@ -226,8 +226,7 @@ namespace YJWebCoreMVC.Controllers
         public string CheckOKReceiptToModifyCustomer(string recno)
         {
             string error = "";
-            SalesPaymentsCreditsModel objModel = new SalesPaymentsCreditsModel();
-            DataTable data = objModel.CheckOKReceiptToModifyCustomer(recno);
+            DataTable data = _salesPaymentsCreditsService.CheckOKReceiptToModifyCustomer(recno);
             if (!(data.Rows.Count > 0))
             {
                 error = "Customer code can not modify for this receipt#";
@@ -235,17 +234,17 @@ namespace YJWebCoreMVC.Controllers
             return error;
         }
 
-        
-        public ActionResult DeleteReceipt()
+
+        public IActionResult DeleteReceipt()
         {
             return View();
         }
 
-        
+
         public string CheckDeleteCashReceipt(string inv_no)
         {
             SalesPaymentsCreditsModel objModel = new SalesPaymentsCreditsModel();
-            DataRow drPayment = objModel.GetPayment(inv_no);
+            DataRow drPayment = _salesPaymentsCreditsService.GetPayment(inv_no);
             string message = "";
             if (drPayment == null)
             {
@@ -257,7 +256,7 @@ namespace YJWebCoreMVC.Controllers
             {
                 bool lRefund = Convert.ToBoolean(drPayment["IS_REFUND"]);
                 string lname = lRefund ? "Refund" : "Receipt";
-                DataRow drPaidComm = objModel.GetPaymentCommison(inv_no);
+                DataRow drPaidComm = _salesPaymentsCreditsService.GetPaymentCommison(inv_no);
                 if (drPaidComm != null)
                 {
                     message = "Can not delete this " + lname + " because commission was paid on it already.";
@@ -275,23 +274,22 @@ namespace YJWebCoreMVC.Controllers
 
         }
 
-        
+
         public string DeleteCashReceipt(string acc, string receipt_no, decimal paid, string transact)
         {
-            SalesPaymentsCreditsModel objModel = new SalesPaymentsCreditsModel();
-            string response = objModel.DeleteCashReceipt(acc, receipt_no, paid, transact);
+            string response = _salesPaymentsCreditsService.DeleteCashReceipt(acc, receipt_no, paid, transact);
             return response;
         }
 
-        public ActionResult CustomerRefund()
+        public IActionResult CustomerRefund()
         {
             SalesPaymentsCreditsModel objModel = new SalesPaymentsCreditsModel();
 
             objModel.CustomerCodes = _helperCommonService.GetAllCustomerCodes();
             objModel.PaymentTypes = _helperCommonService.GetDistPaymentType();
             objModel.AllBankCodes = _helperCommonService.GetAllBankCodes();
-            objModel.DefaultBanks = objModel.GetDefaultBank();
-            DataTable dtBankAcc = _helperCommonService.GetBankAcc(Session["STORE_CODE"].ToString());
+            objModel.DefaultBanks = _salesPaymentsCreditsService.GetDefaultBank();
+            DataTable dtBankAcc = _helperCommonService.GetBankAcc(HttpContext.Session.GetString("STORE_CODE"));
             DataRow[] foundStyle = dtBankAcc.Select("is_default = '" + true + "'");
 
             objModel.DefaultBank = string.Empty;
@@ -300,41 +298,43 @@ namespace YJWebCoreMVC.Controllers
                 objModel.DefaultBank = drBank["CODE"].ToString();
 
             ViewBag.Title = "Customer Refund";
-            if (!string.IsNullOrEmpty(Session["ReceiptNo"]?.ToString()))
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("ReceiptNo")))
             {
-                ViewBag.ReceiptNo = Session["ReceiptNo"].ToString();
+                ViewBag.ReceiptNo = HttpContext.Session.GetString("ReceiptNo");
             }
             else
             {
-                Session["ReceiptNo"] = ViewBag.ReceiptNo = _helperCommonService.GetNextSeqNo("PAYMENTS", "Inv_no", "500000", "RTV_PAY", "300000", "P");
+                string ReceiptNo = _helperCommonService.GetNextSeqNo("PAYMENTS", "Inv_no", "500000", "RTV_PAY", "300000", "P");
+                ViewBag.ReceiptNo = ReceiptNo;
+                HttpContext.Session.SetString("ReceiptNo", ReceiptNo);
             }
             ViewBag.PageType = "Refund";
             return View("AddCashReceipt", objModel);
         }
 
-        
-        public ActionResult AddEditCredit()
+
+        public IActionResult AddEditCredit()
         {
             SalesPaymentsCreditsModel objModel = new SalesPaymentsCreditsModel();
 
             objModel.CustomerCodes = _helperCommonService.GetAllCustomerCodes();
             objModel.AllReasons = _helperCommonService.GetReasons();
-            if (!string.IsNullOrEmpty(Session["CreditNo"]?.ToString()))
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("CreditNo")))
             {
-                ViewBag.CreditNo = Session["CreditNo"].ToString();
+                ViewBag.CreditNo = HttpContext.Session.GetString("CreditNo");
             }
             else
             {
-                Session["CreditNo"] = ViewBag.CreditNo = _helperCommonService.GetNextSeqNo("payments", "Inv_no", "600000", "RTV_PAY", "400000", "C");
+                string CreditNo = _helperCommonService.GetNextSeqNo("payments", "Inv_no", "600000", "RTV_PAY", "400000", "C");
+                ViewBag.CreditNo = CreditNo;
+                HttpContext.Session.SetString("CreditNo", CreditNo);
             }
             return View(objModel);
         }
         [HttpGet]
         public string GetCreditData(string txtBillAcc = "", string txtCreditNo = "", bool chkShowMemo = false)
         {
-            SalesPaymentsCreditsModel objModel = new SalesPaymentsCreditsModel();
-
-            DataTable dtCreditData = objModel.GetCreditData(txtBillAcc, txtCreditNo);
+            DataTable dtCreditData = _salesPaymentsCreditsService.GetCreditData(txtBillAcc, txtCreditNo);
             foreach (DataRow row in dtCreditData.Rows)
             {
                 if (!row["APPAMT"].Equals(row["APP_AMOUNT"]))
@@ -380,7 +380,6 @@ namespace YJWebCoreMVC.Controllers
         }
 
         [HttpPost]
-        [ValidateInput(false)]
         public JsonResult AddEditCreditDetails(string dtCreditJson, string txtBillAcc, string txtCreditNo, DateTime? txtDate, DateTime? txtRefDate, string txtNote, string txtAmount, bool chkShowMemo, string ddlReason, string LoggedUser = "", string custRef = "")
         {
             JsonResult result = null;
@@ -400,10 +399,9 @@ namespace YJWebCoreMVC.Controllers
                 var dtCredit = JsonConvert.DeserializeObject<DataTable>(dtCreditJson);
 
                 // Save Logic
-                string StoreCodeInUse = Session["STORE_CODE"].ToString();
+                string StoreCodeInUse = HttpContext.Session.GetString("STORE_CODE");
                 string error = string.Empty;
-                SalesPaymentsCreditsModel objModel = new SalesPaymentsCreditsModel();
-                var isSaved = objModel.SaveCredit(dtCredit, txtBillAcc, txtCreditNo, txtDate, txtRefDate, txtNote, txtAmount, "A", chkShowMemo, ddlReason, StoreCodeInUse, LoggedUser, custRef);
+                var isSaved = _salesPaymentsCreditsService.SaveCredit(dtCredit, txtBillAcc, txtCreditNo, txtDate, txtRefDate, txtNote, txtAmount, "A", chkShowMemo, ddlReason, StoreCodeInUse, LoggedUser, custRef);
                 if (isSaved == "Success")
                 {
                     //string nextCreditNo = _helperCommonService.GetNextSeqNo("credits", "Inv_no", "", "", "", "");
@@ -415,7 +413,8 @@ namespace YJWebCoreMVC.Controllers
                         //todo discuss on frmPrintCredit details;
                         printDialogUrl = Url.Action("frmPrintCredit", "Credit", new { txtCreditNo })
                     });
-                    Session["CreditNo"] = null;//ViewBag.CreditNo = _helperCommonService.GetNextSeqNo("credits", "Inv_no", "", "", "", "");
+
+                    HttpContext.Session.SetString("CreditNo", null);
                     return result;
                 }
                 else
@@ -431,14 +430,14 @@ namespace YJWebCoreMVC.Controllers
             }
         }
 
-        
-        public ActionResult DeleteCredit()
+
+        public IActionResult DeleteCredit()
         {
             return View();
         }
 
         [HttpPost]
-        public ActionResult DeleteCredit(string creditNo)
+        public IActionResult DeleteCredit(string creditNo)
         {
 
             if (string.IsNullOrWhiteSpace(creditNo))
@@ -446,21 +445,20 @@ namespace YJWebCoreMVC.Controllers
                 return Json(new { success = false, message = "Please enter Credit No." });
             }
 
-            SalesPaymentsCreditsModel objModel = new SalesPaymentsCreditsModel();
-            var creditData = objModel.GetCredit(creditNo);
+            var creditData = _salesPaymentsCreditsService.GetCredit(creditNo);
             if (creditData == null)
             {
                 return Json(new { success = false, message = "Invalid Credit No." });
             }
 
-            var paymentData = objModel.GetPayment(creditNo, "C");
+            var paymentData = _salesPaymentsCreditsService.GetPayment(creditNo, "C");
             if (paymentData != null && Convert.ToDecimal(paymentData["applied"]) > 0)
             {
                 return Json(new { success = false, message = "This Credit Has Already Been Applied To Clear Invoices, Credit Can Not Be Deleted" });
             }
 
             string error;
-            if (objModel.DeleteCredit(paymentData["acc"].ToString(), creditNo, Convert.ToDecimal(paymentData["paid"]), out error))
+            if (_salesPaymentsCreditsService.DeleteCredit(paymentData["acc"].ToString(), creditNo, Convert.ToDecimal(paymentData["paid"]), out error))
             {
 
                 return Json(new { success = true, message = "Credit Deleted successfully" });
@@ -472,19 +470,19 @@ namespace YJWebCoreMVC.Controllers
         }
 
 
-        public ActionResult ReprintCredit(string inv_no)
+        public IActionResult ReprintCredit(string inv_no)
         {
             return View();
         }
 
-        
-        public ActionResult PrintCredit(string inv_no)
+
+        public IActionResult PrintCredit(string inv_no)
         {
             SalesPaymentsCreditsModel objModel = new SalesPaymentsCreditsModel();
             bool isApCredit = false;
-            objModel.ReceiptInfo = objModel.GetPayment(inv_no, "C");
+            objModel.ReceiptInfo = _salesPaymentsCreditsService.GetPayment(inv_no, "C");
             string rcots = string.Empty;
-            DataTable data = objModel.GetCreditPayment(inv_no, "C", isApCredit);
+            DataTable data = _salesPaymentsCreditsService.GetCreditPayment(inv_no, "C", isApCredit);
             if (data == null)
                 data = new DataTable();
 
@@ -498,11 +496,11 @@ namespace YJWebCoreMVC.Controllers
             }
 
             objModel.Rcots = rcots.TrimEnd(',');
-            objModel.DtCreditDetails = objModel.GetCreditDetails(inv_no, isApCredit);
+            objModel.DtCreditDetails = _salesPaymentsCreditsService.GetCreditDetails(inv_no, isApCredit);
 
             objModel.DvPayItems = new DataView(data);
             objModel.Note = "";
-            DataRow drCredit = objModel.GetCredit(inv_no);
+            DataRow drCredit = _salesPaymentsCreditsService.GetCredit(inv_no);
             if (drCredit != null)
                 objModel.Note = drCredit["Note"].ToString();
             objModel.Credit_No = inv_no;
@@ -532,8 +530,7 @@ namespace YJWebCoreMVC.Controllers
 
         public string CheckCreditAdj(string creditno, string iscreditordebit)
         {
-            SalesPaymentsCreditsModel objModel = new SalesPaymentsCreditsModel();
-            DataTable dtpayment = objModel.CheckCreditAdj1(creditno, iscreditordebit);
+            DataTable dtpayment = _salesPaymentsCreditsService.CheckCreditAdj1(creditno, iscreditordebit);
             if (dtpayment != null && dtpayment.Rows.Count > 0)
             {
                 return "Applied Credit Cannot be Edited";
@@ -544,24 +541,26 @@ namespace YJWebCoreMVC.Controllers
         public string GetCredit(string inv_no)
         {
             SalesPaymentsCreditsModel objModel = new SalesPaymentsCreditsModel();
-            DataRow drCredit = objModel.GetCredit(inv_no);
+            DataRow drCredit = _salesPaymentsCreditsService.GetCredit(inv_no);
             var rowData = drCredit.Table.Columns.Cast<DataColumn>().ToDictionary(col => col.ColumnName, col => drCredit[col]);
             var data = JsonConvert.SerializeObject(rowData);
             return data;
         }
 
-        public ActionResult AddAdjReceivable()
+        public IActionResult AddAdjReceivable()
         {
             SalesPaymentsCreditsModel objModel = new SalesPaymentsCreditsModel();
             objModel.CustomerCodes = _helperCommonService.GetAllCustomerCodes();
             ViewBag.Title = "Record Adj. Receivable";
-            if (!string.IsNullOrEmpty(Session["AdjRcvableNo"]?.ToString()))
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("AdjRcvableNo")))
             {
-                ViewBag.AdjRcvableNo = Session["AdjRcvableNo"].ToString();
+                ViewBag.AdjRcvableNo = HttpContext.Session.GetString("AdjRcvableNo");
             }
             else
             {
-                Session["AdjRcvableNo"] = ViewBag.AdjRcvableNo = _helperCommonService.GetNextSeqNo("PAYMENTS", "Inv_no", "", "RTV_PAY", null, "F");
+                string AdjRcvableNo = _helperCommonService.GetNextSeqNo("PAYMENTS", "Inv_no", "", "RTV_PAY", null, "F");
+                ViewBag.CreditNo = AdjRcvableNo;
+                HttpContext.Session.SetString("AdjRcvableNo", AdjRcvableNo);
             }
 
             return View(objModel);
@@ -582,12 +581,11 @@ namespace YJWebCoreMVC.Controllers
 
         public string SaveAdjRcvable(string dtPaymentJson, string acc, string adj_no, DateTime? entry_date, bool showmemo)
         {
-            SalesPaymentsCreditsModel objModel = new SalesPaymentsCreditsModel();
             var dtPayment = JsonConvert.DeserializeObject<DataTable>(dtPaymentJson);
-            var data = objModel.SaveAdjRcvable(dtPayment, acc, adj_no, entry_date, showmemo);
+            var data = _salesPaymentsCreditsService.SaveAdjRcvable(dtPayment, acc, adj_no, entry_date, showmemo);
             if (data == true)
             {
-                Session["AdjRcvableNo"] = null;
+                HttpContext.Session.SetString("AdjRcvableNo", null);
                 return "Success";
             }
             else
@@ -596,7 +594,7 @@ namespace YJWebCoreMVC.Controllers
             }
         }
 
-        public ActionResult EditAdjRcvable()
+        public IActionResult EditAdjRcvable()
         {
             SalesPaymentsCreditsModel objModel = new SalesPaymentsCreditsModel();
             objModel.CustomerCodes = _helperCommonService.GetAllCustomerCodes();
@@ -604,43 +602,40 @@ namespace YJWebCoreMVC.Controllers
             return View(objModel);
         }
 
-        public ActionResult ReprintAdjRcvable()
+        public IActionResult ReprintAdjRcvable()
         {
             return View();
         }
 
         [HttpGet]
-        public ActionResult DeleteAdjRcvable()
+        public IActionResult DeleteAdjRcvable()
         {
             return View();
         }
 
-        
-        public ActionResult PrintAdjRcvable(string inv_no)
+
+        public IActionResult PrintAdjRcvable(string inv_no)
         {
             SalesPaymentsCreditsModel objModel = new SalesPaymentsCreditsModel();
-            objModel.ReceiptInfo = objModel.GetPayment(inv_no, "F");
+            objModel.ReceiptInfo = _salesPaymentsCreditsService.GetPayment(inv_no, "F");
             objModel.Note = "";
             objModel.Credit_No = inv_no;
-            DataTable data = objModel.GetPayItems(inv_no);
+            DataTable data = _salesPaymentsCreditsService.GetPayItems(inv_no);
             ViewBag.DvPayItems = new DataView(data);
 
             return View(objModel);
         }
 
-        [ValidateInput(false)]
         public string SaveEditAdjRcvable(string dtPayment, string acc, string adj_no, DateTime? entry_date)
         {
-            SalesPaymentsCreditsModel objModel = new SalesPaymentsCreditsModel();
-            var data = objModel.EditAdjRcvable(dtPayment, acc, adj_no, entry_date);
+            var data = _salesPaymentsCreditsService.EditAdjRcvable(dtPayment, acc, adj_no, entry_date);
             return data.ToString();
         }
 
         [HttpPost]
         public string DeleteAdjRcvable(string acc, string receipt_no, decimal paid, string transact)
         {
-            SalesPaymentsCreditsModel objModel = new SalesPaymentsCreditsModel();
-            var data = objModel.DeleteAdjRcvable(acc, receipt_no, paid, transact);
+            var data = _salesPaymentsCreditsService.DeleteAdjRcvable(acc, receipt_no, paid, transact);
             if (data == true)
             {
                 return "Receivable deleted successfully.";
@@ -777,7 +772,7 @@ namespace YJWebCoreMVC.Controllers
             if (iSWrist)
             {
                 DataRow rw = _helperCommonService.GetSqlRow("select [NAME2] NAME From Customer Where trim(acc)=trim(@acc) or old_customer=trim(@acc)", "@acc", acc);
-                if (rw == null || String.IsNullOrWhiteSpace(Convert.ToString(rw["NAME"])))
+                if (rw == null || string.IsNullOrWhiteSpace(Convert.ToString(rw["NAME"])))
                     return _helperCommonService.GetSqlRow("select *  From Customer Where trim(acc)=trim(@acc) or old_customer=trim(@acc)", "@acc", acc);
                 return _helperCommonService.GetSqlRow("select [NAME2] NAME, [ADDR2] ADDR1,[ADDR22] ADDR12,[CITY2] CITY1,[STATE2] STATE1,[ZIP2] ZIP1,ADDR13,[COUNTRY2] COUNTRY,[TEL2] TEL,*  From Customer Where trim(acc)=trim(@acc) or old_customer=trim(@acc)", "@acc", acc);
             }

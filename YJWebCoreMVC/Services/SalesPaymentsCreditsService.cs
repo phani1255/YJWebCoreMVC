@@ -46,12 +46,12 @@ namespace YJWebCoreMVC.Services
                     dataAdapter.SelectCommand.CommandType = CommandType.StoredProcedure;
                     dataAdapter.SelectCommand.CommandText = "SaveReceipt";
 
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@acc", acc);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@receipt_no", receipt_no);
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@acc", acc ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@receipt_no", receipt_no ??= "");
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@pay_date", pay_date);
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@chk_date", chk_date);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@bank", bank);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@checkno", checkno);
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@bank", bank ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@checkno", checkno ??= "");
                     dataAdapter.SelectCommand.Parameters.Add(new SqlParameter("@chk_amt", SqlDbType.Decimal)
                     {
                         Precision = 18,
@@ -65,14 +65,14 @@ namespace YJWebCoreMVC.Services
                         Value = discount
                     });
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@showmemo", showmemo ? 1 : 0);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@PCNAME", pcname);
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@PCNAME", pcname ??= "");
 
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@PaymentType", PaymentsTypes);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@PaymentNote", PaymentNote);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@Cash_Register", Cash_Register);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@StoreCode", StoreCode);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@loggeduser", loggeduser);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@storecodeinuse", storecodeinuse);
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@PaymentType", PaymentsTypes ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@PaymentNote", PaymentNote ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@Cash_Register", Cash_Register ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@StoreCode", StoreCode ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@loggeduser", loggeduser ?? "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@storecodeinuse", storecodeinuse ??= "");
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@isRefund", isRefund ? 1 : 0);
 
                     SqlParameter parameter = new SqlParameter();

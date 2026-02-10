@@ -1,219 +1,271 @@
 is_global = true
 build_property.TargetFramework = net10.0
-build_property.TargetFramework = net10.0
-build_property.TargetPlatformMinVersion = 
-build_property.TargetPlatformMinVersion = 
-build_property.UsingMicrosoftNETSdkWeb = true
-build_property.UsingMicrosoftNETSdkWeb = true
-build_property.ProjectTypeGuids = 
-build_property.ProjectTypeGuids = 
-build_property.InvariantGlobalization = 
-build_property.InvariantGlobalization = 
-build_property.PlatformNeutralAssembly = 
-build_property.PlatformNeutralAssembly = 
-build_property.EnforceExtendedAnalyzerRules = 
-build_property.EnforceExtendedAnalyzerRules = 
-build_property._SupportedPlatformList = Linux,macOS,Windows
-build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.TargetFrameworkIdentifier = .NETCoreApp
 build_property.TargetFrameworkVersion = v10.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = YJWebCoreMVC
 build_property.RootNamespace = YJWebCoreMVC
-build_property.ProjectDir = D:\dotnet\YJWebCoreMVC\YJWebCoreMVC\
+build_property.ProjectDir = D:\phani\YJWebCoreMVC\YJWebCoreMVC\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 9.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = D:\dotnet\YJWebCoreMVC\YJWebCoreMVC
+build_property.MSBuildProjectDirectory = D:\phani\YJWebCoreMVC\YJWebCoreMVC
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 10.0
 build_property.EnableCodeStyleSeverity = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/AnnualPaymentsReceived.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/AnnualPaymentsReceived.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl0aWNzXEFubnVhbFBheW1lbnRzUmVjZWl2ZWQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/AnnualSalesComparison.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/AnnualSalesComparison.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl0aWNzXEFubnVhbFNhbGVzQ29tcGFyaXNvbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/BestSellerCategoryReports.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/BestSellerCategoryReports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl0aWNzXEJlc3RTZWxsZXJDYXRlZ29yeVJlcG9ydHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/BestSellerReports.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/BestSellerReports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl0aWNzXEJlc3RTZWxsZXJSZXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/ComponentSalesAnalysis.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/ComponentSalesAnalysis.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl0aWNzXENvbXBvbmVudFNhbGVzQW5hbHlzaXMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/DaysOnHandInventory.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/DaysOnHandInventory.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl0aWNzXERheXNPbkhhbmRJbnZlbnRvcnkuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/DetailedCOG.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/DetailedCOG.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl0aWNzXERldGFpbGVkQ09HLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/EndofMonth.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/EndofMonth.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl0aWNzXEVuZG9mTW9udGguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/Follows.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/Follows.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl0aWNzXEZvbGxvd3MuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/InactiveStyles.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/InactiveStyles.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl0aWNzXEluYWN0aXZlU3R5bGVzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/InStateOutStateSales.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/InStateOutStateSales.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl0aWNzXEluU3RhdGVPdXRTdGF0ZVNhbGVzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/MonthlySalesProfit.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/MonthlySalesProfit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl0aWNzXE1vbnRobHlTYWxlc1Byb2ZpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/MTDReport.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/MTDReport.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl0aWNzXE1URFJlcG9ydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/PartnerSales.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/PartnerSales.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl0aWNzXFBhcnRuZXJTYWxlcy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/PrintJobBag.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/PrintJobBag.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl0aWNzXFByaW50Sm9iQmFnLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/ReprintInvoice.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/ReprintInvoice.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl0aWNzXFJlcHJpbnRJbnZvaWNlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/SaleProfitPerStore.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/SaleProfitPerStore.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl0aWNzXFNhbGVQcm9maXRQZXJTdG9yZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/SalesBySalesman.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/SalesBySalesman.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl0aWNzXFNhbGVzQnlTYWxlc21hbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/SalesChartComparision.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/SalesChartComparision.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl0aWNzXFNhbGVzQ2hhcnRDb21wYXJpc2lvbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/SalesCOGProfit.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/SalesCOGProfit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl0aWNzXFNhbGVzQ09HUHJvZml0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/SalesProfitByCity.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/SalesProfitByCity.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl0aWNzXFNhbGVzUHJvZml0QnlDaXR5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/SalesProfitPerSource.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/SalesProfitPerSource.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl0aWNzXFNhbGVzUHJvZml0UGVyU291cmNlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/SalesReportForReorder.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/SalesReportForReorder.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl0aWNzXFNhbGVzUmVwb3J0Rm9yUmVvcmRlci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/SalesSummaryReport.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/SalesSummaryReport.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl0aWNzXFNhbGVzU3VtbWFyeVJlcG9ydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/StateSales.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/StateSales.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl0aWNzXFN0YXRlU2FsZXMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/StockOrHand.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/StockOrHand.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl0aWNzXFN0b2NrT3JIYW5kLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/TodaysCashFlow.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/TodaysCashFlow.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl0aWNzXFRvZGF5c0Nhc2hGbG93LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/TotalHourlySales.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/TotalHourlySales.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl0aWNzXFRvdGFsSG91cmx5U2FsZXMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/TotalMonthlySales.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/TotalMonthlySales.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl0aWNzXFRvdGFsTW9udGhseVNhbGVzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/TotalMonthlySalesForACustomer.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/TotalMonthlySalesForACustomer.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl0aWNzXFRvdGFsTW9udGhseVNhbGVzRm9yQUN1c3RvbWVyLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/TotalSalesPerState.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/TotalSalesPerState.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl0aWNzXFRvdGFsU2FsZXNQZXJTdGF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/TotalWeeklySales.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/TotalWeeklySales.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl0aWNzXFRvdGFsV2Vla2x5U2FsZXMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/VendorSalesReport.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/VendorSalesReport.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl0aWNzXFZlbmRvclNhbGVzUmVwb3J0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/VendorStylesPerformance.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/VendorStylesPerformance.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl0aWNzXFZlbmRvclN0eWxlc1BlcmZvcm1hbmNlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/WorstSellerReports.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Analytics/WorstSellerReports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl0aWNzXFdvcnN0U2VsbGVyUmVwb3J0cy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Home/Index.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Home/Privacy.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Login/Index.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Login/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9naW5cSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/SalesSummary/SalesSummary.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesPaymentsCredits/AddAdjReceivable.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FsZXNQYXltZW50c0NyZWRpdHNcQWRkQWRqUmVjZWl2YWJsZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesPaymentsCredits/AddCashReceipt.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FsZXNQYXltZW50c0NyZWRpdHNcQWRkQ2FzaFJlY2VpcHQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesPaymentsCredits/AddEditCredit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FsZXNQYXltZW50c0NyZWRpdHNcQWRkRWRpdENyZWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesPaymentsCredits/DeleteAdjRcvable.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FsZXNQYXltZW50c0NyZWRpdHNcRGVsZXRlQWRqUmN2YWJsZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesPaymentsCredits/DeleteCredit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FsZXNQYXltZW50c0NyZWRpdHNcRGVsZXRlQ3JlZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesPaymentsCredits/DeleteReceipt.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FsZXNQYXltZW50c0NyZWRpdHNcRGVsZXRlUmVjZWlwdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesPaymentsCredits/EditAdjRcvable.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FsZXNQYXltZW50c0NyZWRpdHNcRWRpdEFkalJjdmFibGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesPaymentsCredits/EditCashReceipt.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FsZXNQYXltZW50c0NyZWRpdHNcRWRpdENhc2hSZWNlaXB0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesPaymentsCredits/ModifyAcc_ofReceipt.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FsZXNQYXltZW50c0NyZWRpdHNcTW9kaWZ5QWNjX29mUmVjZWlwdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesPaymentsCredits/PrintAdjRcvable.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FsZXNQYXltZW50c0NyZWRpdHNcUHJpbnRBZGpSY3ZhYmxlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesPaymentsCredits/PrintCashReceipt.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FsZXNQYXltZW50c0NyZWRpdHNcUHJpbnRDYXNoUmVjZWlwdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesPaymentsCredits/PrintCredit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FsZXNQYXltZW50c0NyZWRpdHNcUHJpbnRDcmVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesPaymentsCredits/ReprintAdjRcvable.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FsZXNQYXltZW50c0NyZWRpdHNcUmVwcmludEFkalJjdmFibGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesPaymentsCredits/ReprintCredit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FsZXNQYXltZW50c0NyZWRpdHNcUmVwcmludENyZWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesPaymentsCredits/ReprintReceipt.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FsZXNQYXltZW50c0NyZWRpdHNcUmVwcmludFJlY2VpcHQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesSummary/SalesSummary.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FsZXNTdW1tYXJ5XFNhbGVzU3VtbWFyeS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Shared/Components/Menu/Default.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Shared/Components/Menu/Default.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcTWVudVxEZWZhdWx0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Shared/Error.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Shared/RdlcPrintViewer.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Shared/RdlcPrintViewer.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXFJkbGNQcmludFZpZXdlci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Shared/_LayoutNew.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Shared/_LayoutNew.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXROZXcuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Shared/_ValidationScriptsPartial.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/_ViewImports.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/_ViewStart.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/dotnet/YJWebCoreMVC/YJWebCoreMVC/Views/Shared/_Layout.cshtml]
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-t1g8c2ib6z

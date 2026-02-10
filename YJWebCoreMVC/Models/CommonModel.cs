@@ -87,5 +87,5 @@ namespace YJWebCoreMVC.Models
         public DateTime? tdate { get; set; }
     }
 
-
+    
 }

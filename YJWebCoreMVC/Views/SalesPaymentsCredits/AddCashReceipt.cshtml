@@ -11,10 +11,11 @@
     Phanindra 06/09/2025 Worked on fixing save issue for customer refund.
 -->
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_LayoutNew.cshtml";
 }
 
-@model YJWeb.Models.SalesPaymentsCreditsModel
+@model YJWebCoreMVC.Models.SalesPaymentsCreditsModel
+@using System.Text.Json
 
 <div id="content-center" class="row">
 
@@ -36,9 +37,9 @@
                         <label class="col-sm-4 customerType">
                             Customer
                         </label>
-                        <div class="col-sm-8">
+                        <div class="col-sm-8" style="position:relative;">
                             <div class="autocomplete-dropdown">
-                                <div id="CustomerCodesForAutofill1" class="d-none">@Html.Raw(Json.Encode(Model.CustomerCodes)) </div>
+                                <div id="CustomerCodesForAutofill1" class="d-none">@Html.Raw(JsonSerializer.Serialize(Model.CustomerCodes)) </div>
                                 <input type="text" id="txtCustomerCode2" class="form-control activateFormRefreshBtn defaultdisabled" maxlength="15" placeholder="Search...">
                                 <div id="autocomplete-list1" class="autocomplete-items"></div>
                             </div>
