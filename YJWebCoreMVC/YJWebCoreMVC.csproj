@@ -8,10 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Services\ShopifyService.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Remove="Views\Analytics\ItemsBoughtByCustomer.cshtml" />
   </ItemGroup>
 
@@ -49,12 +45,16 @@
     <PackageReference Include="HtmlAgilityPack" Version="1.12.4" />
     <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.3.9" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="10.0.2" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.4" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="ReportViewerCore.NETCore" Version="15.1.33" />
+    <PackageReference Include="ShopifySharp" Version="6.25.4" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
     <PackageReference Include="System.Drawing.Common" Version="10.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Services\Interfaces\" />
   </ItemGroup>
 
 </Project>

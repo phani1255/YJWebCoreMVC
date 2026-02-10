@@ -18,11 +18,11 @@ namespace YJWebCoreMVC.Services
             _helperCommonService = helperCommonService;
         }
 
-
         public DataRow GetTransactionBycode(string tcode)
         {
             return _helperCommonService.GetSqlRow("SELECT * FROM BANK Where Trimmed_inv_no = trim(@INV_NO)", "@INV_NO", tcode);
         }
+
         public void DeleteTransaction(int id, string logNo = "")
         {
             using (var connection = _connectionProvider.GetConnection())

@@ -9,13 +9,14 @@
  *  Manoj 08/27/2025 Added checkglpostDoc,iSGlLogExists,GetNextGLNo methods
  *  Manoj 08/28/2025 Added GetGlTypeByCode methods
  *  Manoj 09/01/2025 Added GetGLAcctTypes Method
- *  Manoj 09/02/2025 Added  SearchGLDepts,CheckValidGLDept Methods
+ *  Manoj 09/02/2025 Added SearchGLDepts,CheckValidGLDept Methods
  *  Manoj 09/08/2025 Added GetGlCodeAndName,getGLClassData,GetDefaultGrpsFrmUpsIns Methods
- *  Manoj 09/09/2025 Added  CheckGLClassExist,iSGlAcc Methods
- *  Manoj 09/10/2025 Added  setupGlcodesbyClasses,DeleteGLclass Methods
+ *  Manoj 09/09/2025 Added CheckGLClassExist,iSGlAcc Methods
+ *  Manoj 09/10/2025 Added setupGlcodesbyClasses,DeleteGLclass Methods
  *  Manoj 09/15/2025 Added GetTypes Methods
  *  Manoj 09/16/2025 Added AddGLAcct,CheckValidGLAcct,DeleteGLAcct Methods
- *  Manoj 09/18/2025 AddedLogNoFromInvoiceDoc
+ *  Manoj 09/18/2025 Added LogNoFromInvoiceDoc
+ *  Manoj 02/06/2026 Added listofGlTransact,GetListofTrailbalance
  */
 using Microsoft.Data.SqlClient;
 using System.Data;
@@ -217,5 +218,65 @@ namespace YJWebCoreMVC.Services
             return _helperCommonService.DataTableOK(dt) ? Convert.ToString(dt.Rows[0]["log_no"]) : "";
         }
 
+
+        public DataTable GetListofTrailbalance(string glAcc, string dept, string fdate, string tdate, bool isEntryDate = false, string depts = "", bool deptAll = false)
+        {
+            using (var connection = new SqlConnection(_connectionProvider.GetConnectionString()))
+            using (var command = new SqlCommand("GetListofTrailbalance", connection))
+            using (var adapter = new SqlDataAdapter(command))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+
+                command.Parameters.Add("@GlAcc", SqlDbType.VarChar).Value = (object)glAcc ?? DBNull.Value;
+                command.Parameters.Add("@Dept", SqlDbType.VarChar).Value = (object)dept ?? DBNull.Value;
+
+                DateTime fDateVal;
+                command.Parameters.Add("@fdate", SqlDbType.Date).Value = DateTime.TryParse(fdate, out fDateVal) ? (object)fDateVal : DBNull.Value;
+
+                DateTime tDateVal;
+                command.Parameters.Add("@tdate", SqlDbType.Date).Value = DateTime.TryParse(tdate, out tDateVal) ? (object)tDateVal : DBNull.Value;
+
+                command.Parameters.Add("@isentrydate", SqlDbType.Bit).Value = isEntryDate;
+                command.Parameters.Add("@Depts", SqlDbType.VarChar).Value = (object)depts ?? DBNull.Value;
+                command.Parameters.Add("@Deptsall", SqlDbType.Bit).Value = deptAll;
+
+                var dataTable = new DataTable();
+                connection.Open();
+                adapter.Fill(dataTable);
+                return dataTable;
+            }
+        }
+
+        public DataTable listofGlTransact(string glcode, string gldept, string fromdate, string todate, bool IsEnterDate, string manual)
+        {
+            DataTable dataTable = new DataTable();
+
+            // Ensure correct date format if required
+            string f = Convert.ToDateTime(fromdate).ToString("yyyy-MM-dd");  // Corrected date format
+            string t = Convert.ToDateTime(todate).ToString("yyyy-MM-dd");  // Corrected date format
+
+            using (var connection = new SqlConnection(_connectionProvider.GetConnectionString()))
+            using (var dataAdapter = new SqlDataAdapter())
+            {
+                // Set up the command object
+                dataAdapter.SelectCommand = new SqlCommand("listofglentries", connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                // Add parameters
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@GLACC", glcode);
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@GLDEPT", gldept);
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@fromdate", f);
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@todate", t);
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@IsEnterDate", IsEnterDate);
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@manual", manual);
+
+                // Fill the DataTable with the results of the query
+                dataAdapter.Fill(dataTable);
+            }
+
+            return dataTable;
+        }
     }
 }

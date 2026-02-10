@@ -1,4 +1,9 @@
-﻿using Microsoft.Data.SqlClient;
+﻿/*
+ * Dharani 02/04/2026 Added Getsoldqtyvendors method.
+ * Dharani 02/06/2026 Added GetDetByMultiCCLog, GetDetByCCLog method.
+ */
+
+using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Xml;
 
@@ -399,6 +404,65 @@ namespace YJWebCoreMVC.Services
             {
                 throw new Exception("Database Error: " + ex.Message);
             }
+        }
+        public DataTable Getsoldqtyvendors(string vendoracc, bool allvendors, bool isshowprevious = false,
+            string Fdate = "", string Tdate = "", int Check = 0, string RetFdate = "", string RetTdate = "",
+            bool RetDateCheck = false, bool isincludepartpaid = false, bool isincludeLaySpcl = false, bool seperateByStore = false)
+        {
+            DataTable dataTable = new DataTable();
+
+            using (var connection = _connectionProvider.GetConnection())
+            using (var command = new SqlCommand("SoldQtyReporttoVendor", connection))
+            using (var adapter = new SqlDataAdapter(command))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+                command.CommandTimeout = 6000;
+
+                command.Parameters.AddWithValue("@vendoracc", vendoracc);
+                command.Parameters.AddWithValue("@allvendors", allvendors);
+                command.Parameters.AddWithValue("@isshowprevious", isshowprevious);
+                command.Parameters.AddWithValue("@DateALl", Check);
+                command.Parameters.AddWithValue("@RetDateCheck", RetDateCheck);
+                command.Parameters.AddWithValue("@isincludepartpaid", isincludepartpaid);
+                command.Parameters.AddWithValue("@isincludeLaySpcl", isincludeLaySpcl);
+                command.Parameters.AddWithValue("@SeperateByStore", seperateByStore);
+                // Safely handle date conversions
+                DateTime parsedFdate;
+                if (DateTime.TryParse(Fdate, out parsedFdate))
+                    command.Parameters.AddWithValue("@Fdate", parsedFdate);
+                else
+                    command.Parameters.AddWithValue("@Fdate", DBNull.Value);
+
+                DateTime parsedTdate;
+                if (DateTime.TryParse(Tdate, out parsedTdate))
+                    command.Parameters.AddWithValue("@Tdate", parsedTdate);
+                else
+                    command.Parameters.AddWithValue("@Tdate", DBNull.Value);
+
+                DateTime parsedRetFdate;
+                if (DateTime.TryParse(RetFdate, out parsedRetFdate))
+                    command.Parameters.AddWithValue("@RetFdate", parsedRetFdate);
+                else
+                    command.Parameters.AddWithValue("@RetFdate", DBNull.Value);
+
+                DateTime parsedRetTdate;
+                if (DateTime.TryParse(RetTdate, out parsedRetTdate))
+                    command.Parameters.AddWithValue("@RetTdate", parsedRetTdate);
+                else
+                    command.Parameters.AddWithValue("@RetTdate", DBNull.Value);
+
+                adapter.Fill(dataTable);
+            }
+
+            return dataTable;
+        }
+        public DataTable GetDetByMultiCCLog(string logno)
+        {
+            return _helperCommonService.GetSqlData("select b.Acc,a.* from bil_ccrd a with (nolock) , bills b with (nolock) where trim(a.BILL_NO)=trim(b.INV_NO) and log_no in (" + logno + ")", "@log", logno);
+        }
+        public DataTable GetDetByCCLog(string logno)
+        {
+            return _helperCommonService.GetSqlData("select * from bil_ccrd where log_no=@log", "@log", logno);
         }
     }
 

@@ -1,0 +1,95 @@
+<!--
+  * Created by Phanindra on 12-12-2024
+    Phanindra 12/30/2024 Worked on print related changes.
+-->
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model YJWeb.Models.SalesPaymentsCreditsModel
+
+<div id="content-center" class="row">
+
+    <div class="web-form page login-page col-sm-12" id="FormForEditQuotation">
+
+        <div class="form-horizontal">
+            <div>
+                <div class="row">
+                    <div class="col-sm-3 text-right">
+                        <label>Receipt No</label>
+                    </div>
+                    <div class="col-sm-3 ">
+                        <input type="text" id="receipt_no" />
+                    </div>
+                    <div class="col-sm-2">
+                        <button class="formsGlobalUniqueBtn printAdjRcvable" id="printAdjRcvable">OK</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-9 print_options"></div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+</div>
+
+<script type="text/javascript">
+
+    $(document).on('click', '#printAdjRcvable', function () {
+        $('#printAdjRcvable').html('Loading...');
+        receipt_no = $("#receipt_no").val();
+        $.ajax({
+            url: "../SalesPaymentsCredits/GetPayment",
+            type: "POST",
+            data: {
+                inv_no: receipt_no,
+                rtv_pay: 'F'
+            },
+            success: function (res) {
+                if (res != "" && res != null && res != "null") {
+                    $.ajax({
+                        url: "../SalesPaymentsCredits/PrintAdjRcvable",
+                        type: "POST",
+                        data: {
+                            inv_no: receipt_no
+                        },
+                        success: function (res) {
+                            $(".print_options").html(res);
+                            $('#printAdjRcvable').html('OK');
+                        }
+                    })
+                } else {
+                    alert("Invalid Receivable No.");
+                }
+            }
+        })
+
+    })
+
+    $(document).on('click', '#btnPrint', function () {
+        $('.cashReceiptInfo').removeClass('d-none');
+        printNormalHtmlTable('cashReceiptInfo');
+        $('.cashReceiptInfo').addClass('d-none');
+    })
+
+    $(document).on('click', '#btnPreview', function () {
+        previewNormalHtmlTable('cashReceiptInfo');
+    })
+
+    $(document).on('click', '.btnDownloadPDF', function () {
+        $('.cashReceiptInfo').removeClass('d-none');
+        pdfNormalHtmlDiv('cashReceiptInfo');
+        $('.cashReceiptInfo').addClass('d-none');
+    })
+
+    $(document).on('click', '.btnDownloadExcel', function () {
+        excelFromNormalDivTable("cashReceiptInfo");
+    })
+
+
+</script>

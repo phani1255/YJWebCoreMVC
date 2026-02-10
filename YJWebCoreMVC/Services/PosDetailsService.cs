@@ -13,7 +13,6 @@ using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Net;
 using YJWebCoreMVC.Models;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace YJWebCoreMVC.Services
 {

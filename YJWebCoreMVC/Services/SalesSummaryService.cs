@@ -1,6 +1,4 @@
-﻿//25-Aug-2024 - Created by hemanth to show sales summary report 
-
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 using System.Data;
 using YJWebCoreMVC.Models;
 

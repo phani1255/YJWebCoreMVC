@@ -1,8 +1,14 @@
-﻿namespace YJWebCoreMVC.Models
+/*
+ *  Sravan 02/06/2026 Create New 
+ *  
+ */
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
+
+namespace YJWebCoreMVC.Models
 {
     public class APCreditViewModel
     {
-
         public string CreditNo { get; set; }
         public string VendorCode { get; set; }
         public string VendorName { get; set; }
@@ -23,7 +29,5 @@
         public bool? ON_QB { get; set; } = false;
 
         public string loggeduser { get; set; } = string.Empty;
-
-
     }
 }

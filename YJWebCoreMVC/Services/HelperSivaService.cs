@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿// Siva 02/05/2026 Added new methods for edit bill and Changes to work in yjcore
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Jpeg;
-using SixLabors.ImageSharp.PixelFormats;
 using System.Data;
 using System.Numerics;
 using System.Text;
@@ -785,7 +785,7 @@ namespace YJWebCoreMVC.Services
         {
             using (SqlCommand dbCommand = new SqlCommand())
             {
-                dbCommand.Connection = _connectionProvider.GetConnection();
+                dbCommand.Connection = new SqlConnection(_connectionProvider.GetConnectionString());
                 dbCommand.CommandType = CommandType.Text;
 
                 if (BillTemplateModel.Issavenewtemplate == "Yes")
@@ -848,36 +848,36 @@ namespace YJWebCoreMVC.Services
                 dbCommand.Parameters.AddWithValue("@COLOR_WT", BillTemplateModel.ColorWt ?? "");
                 dbCommand.Parameters.AddWithValue("@CQLTY", BillTemplateModel.ColorQuality ?? "");
 
-                dbCommand.Parameters.AddWithValue("@Attrib1", BillTemplateModel.Attrib1 ?? "");
-                dbCommand.Parameters.AddWithValue("@Attrib2", BillTemplateModel.Attrib2 ?? "");
-                dbCommand.Parameters.AddWithValue("@Attrib3", BillTemplateModel.Attrib3 ?? "");
-                dbCommand.Parameters.AddWithValue("@Attrib4", BillTemplateModel.Attrib4 ?? "");
-                dbCommand.Parameters.AddWithValue("@Attrib5", BillTemplateModel.Attrib5 ?? "");
-                dbCommand.Parameters.AddWithValue("@Attrib6", BillTemplateModel.Attrib6 ?? "");
-                dbCommand.Parameters.AddWithValue("@Attrib7", BillTemplateModel.Attrib7 ?? "");
-                dbCommand.Parameters.AddWithValue("@Attrib8", BillTemplateModel.Attrib8 ?? "");
-                dbCommand.Parameters.AddWithValue("@Attrib9", BillTemplateModel.Attrib9 ?? "");
-                dbCommand.Parameters.AddWithValue("@Attrib10", BillTemplateModel.Attrib10 ?? "");
-                dbCommand.Parameters.AddWithValue("@Attrib11", BillTemplateModel.Attrib11 ?? "");
-                dbCommand.Parameters.AddWithValue("@Attrib12", BillTemplateModel.Attrib12 ?? "");
+                dbCommand.Parameters.AddWithValue("@Attrib1", BillTemplateModel.Attr_Attrib1 ?? "");
+                dbCommand.Parameters.AddWithValue("@Attrib2", BillTemplateModel.Attr_Attrib2 ?? "");
+                dbCommand.Parameters.AddWithValue("@Attrib3", BillTemplateModel.Attr_Attrib3 ?? "");
+                dbCommand.Parameters.AddWithValue("@Attrib4", BillTemplateModel.Attr_Attrib4 ?? "");
+                dbCommand.Parameters.AddWithValue("@Attrib5", BillTemplateModel.Attr_Attrib5 ?? "");
+                dbCommand.Parameters.AddWithValue("@Attrib6", BillTemplateModel.Attr_Attrib6 ?? "");
+                dbCommand.Parameters.AddWithValue("@Attrib7", BillTemplateModel.Attr_Attrib7 ?? "");
+                dbCommand.Parameters.AddWithValue("@Attrib8", BillTemplateModel.Attr_Attrib8 ?? "");
+                dbCommand.Parameters.AddWithValue("@Attrib9", BillTemplateModel.Attr_Attrib9 ?? "");
+                dbCommand.Parameters.AddWithValue("@Attrib10", BillTemplateModel.Attr_Attrib10 ?? "");
+                dbCommand.Parameters.AddWithValue("@Attrib11", BillTemplateModel.Attr_Attrib11 ?? "");
+                dbCommand.Parameters.AddWithValue("@Attrib12", BillTemplateModel.Attr_Attrib12 ?? "");
 
-                dbCommand.Parameters.AddWithValue("@Attrib19", BillTemplateModel.Attrib19 ?? "");
-                dbCommand.Parameters.AddWithValue("@Attrib20", BillTemplateModel.Attrib20 ?? "");
-                dbCommand.Parameters.AddWithValue("@Attrib21", BillTemplateModel.Attrib21 ?? "");
+                dbCommand.Parameters.AddWithValue("@Attrib19", BillTemplateModel.Attr_Attrib19 ?? "");
+                dbCommand.Parameters.AddWithValue("@Attrib20", BillTemplateModel.Attr_Attrib20 ?? "");
+                dbCommand.Parameters.AddWithValue("@Attrib21", BillTemplateModel.Attr_Attrib21 ?? "");
 
-                dbCommand.Parameters.AddWithValue("@ATTR_CHECK1", BillTemplateModel.StyleCheck1 ?? "");
-                dbCommand.Parameters.AddWithValue("@ATTR_CHECK2", BillTemplateModel.StyleCheck2 ?? "");
-                dbCommand.Parameters.AddWithValue("@ATTR_CHECK3", BillTemplateModel.StyleCheck3 ?? "");
-                dbCommand.Parameters.AddWithValue("@ATTR_CHECK4", BillTemplateModel.StyleCheck4 ?? "");
-                dbCommand.Parameters.AddWithValue("@ATTR_CHECK5", BillTemplateModel.StyleCheck5 ?? "");
-                dbCommand.Parameters.AddWithValue("@ATTR_CHECK6", BillTemplateModel.StyleCheck6 ?? "");
+                dbCommand.Parameters.AddWithValue("@ATTR_CHECK1", BillTemplateModel.Check_StyleCheck1 ?? "");
+                dbCommand.Parameters.AddWithValue("@ATTR_CHECK2", BillTemplateModel.Check_StyleCheck2 ?? "");
+                dbCommand.Parameters.AddWithValue("@ATTR_CHECK3", BillTemplateModel.Check_StyleCheck3 ?? "");
+                dbCommand.Parameters.AddWithValue("@ATTR_CHECK4", BillTemplateModel.Check_StyleCheck4 ?? "");
+                dbCommand.Parameters.AddWithValue("@ATTR_CHECK5", BillTemplateModel.Check_StyleCheck5 ?? "");
+                dbCommand.Parameters.AddWithValue("@ATTR_CHECK6", BillTemplateModel.Check_StyleCheck6 ?? "");
                 dbCommand.Parameters.AddWithValue("@Disclaimer", BillTemplateModel.Disclaimer ?? "");
 
-                dbCommand.Parameters.AddWithValue("@Fieldvalue4", BillTemplateModel.StyleField1 ?? "");
-                dbCommand.Parameters.AddWithValue("@Fieldvalue5", BillTemplateModel.StyleField2 ?? "");
-                dbCommand.Parameters.AddWithValue("@Fieldvalue6", BillTemplateModel.StyleField3 ?? "");
-                dbCommand.Parameters.AddWithValue("@Fieldvalue7", BillTemplateModel.StyleField4 ?? "");
-                dbCommand.Parameters.AddWithValue("@Fieldvalue8", BillTemplateModel.StyleField5 ?? "");
+                dbCommand.Parameters.AddWithValue("@Fieldvalue4", BillTemplateModel.Field_StyleField1 ?? "");
+                dbCommand.Parameters.AddWithValue("@Fieldvalue5", BillTemplateModel.Field_StyleField2 ?? "");
+                dbCommand.Parameters.AddWithValue("@Fieldvalue6", BillTemplateModel.Field_StyleField3 ?? "");
+                dbCommand.Parameters.AddWithValue("@Fieldvalue7", BillTemplateModel.Field_StyleField4 ?? "");
+                dbCommand.Parameters.AddWithValue("@Fieldvalue8", BillTemplateModel.Field_StyleField5 ?? "");
 
                 dbCommand.Parameters.AddWithValue("@ItemType", BillTemplateModel.ItemType ?? "");
                 dbCommand.Parameters.AddWithValue("@CertType", BillTemplateModel.CertType ?? "");
@@ -967,6 +967,67 @@ namespace YJWebCoreMVC.Services
             if (_helperCommonService.DataTableOK(dataRow))
                 return dataRow["use_dash"] == null || dataRow["use_dash"] == DBNull.Value || dataRow["use_dash"].ToString() == string.Empty ? false : Convert.ToBoolean(dataRow["use_dash"]);
             return false;
+        }
+        public DataTable GetBillsByVendorAcc(string acc, DateTime fromDate, DateTime toDate, string storeNo = "")
+        {
+            DataTable dt = new DataTable();
+            using (var connection = new SqlConnection(_connectionProvider.GetConnectionString()))
+            using (var command = new SqlCommand())
+            using (var adapter = new SqlDataAdapter(command))
+            {
+                // Configure the command
+                command.Connection = connection;
+                command.CommandType = CommandType.Text;
+                command.CommandTimeout = 6000;
+                command.CommandText = @"
+                SELECT  
+                    b.Inv_no, 
+                    b.Acc, 
+                    a.NAME AS Vend_Name, 
+                    b.[Date], 
+                    b.vnd_no,
+                    ISNULL(b.[Amount], 0) AS [Amount], 
+                    ISNULL(b.[Balance], 0) AS [Balance]
+                FROM Bills b with (nolock)
+                LEFT OUTER JOIN Vendors a with (nolock) ON a.Acc = b.Acc
+                WHERE TRY_CAST(b.[Date] AS DATE) BETWEEN TRY_CAST(@fromDate AS DATE) AND TRY_CAST(@toDate AS DATE)
+                    AND b.Acc = (CASE WHEN @acc <> '' THEN @acc ELSE b.Acc END)
+                    AND (@storeNo = '' OR b.store_no = @storeNo)";
+
+                // Add parameters explicitly with proper data types
+                command.Parameters.Add("@acc", SqlDbType.VarChar).Value = acc ?? string.Empty;
+                command.Parameters.Add("@fromDate", SqlDbType.DateTime).Value = fromDate;
+                command.Parameters.Add("@toDate", SqlDbType.DateTime).Value = toDate;
+                command.Parameters.Add("@storeNo", SqlDbType.VarChar).Value = storeNo ?? string.Empty;
+
+                // Fill the DataTable
+                adapter.Fill(dt);
+            }
+            return dt;
+        }
+        public DataRow GetBillData(string inv_no)
+        {
+            return _helperCommonService.GetSqlRow("SELECT a.ACC,isnull(b.name,'') name,isnull(b.gl_code,'') gl_code,a.term FROM BILLS a with (nolock) left outer join vendors b with (nolock) on a.acc=b.acc WHERE trim(a.INV_NO) = @inv_no", "@inv_no", inv_no.Trim());
+        }
+
+        public DataTable GetListofBillsByVendInvNo(string VndNo)
+        {
+            return _helperCommonService.GetSqlData($"select cast(0 as bit) Sel, Inv_no, Acc,Date,Amount from bills where trim(vnd_no)=@VndNo", "@VndNo", VndNo.Trim());
+        }
+        public DataTable GetConsignmentGLDetails(string inv_no, bool IsForReport = false)
+        {
+            return _helperCommonService.GetStoreProc("GetConsignmentGLDetails", "@inv_no", inv_no, "@IsForReport", IsForReport.ToString());
+        }
+        public DataRow GetUpsData()
+        {
+            return _helperCommonService.GetSqlRow(@"SELECT * FROM UPS_INS with (nolock)");
+        }
+        public DataTable CheckStyleInstockqty(string inv_no)
+        {
+            return _helperCommonService.GetSqlData(@"SELECT bi.inv_no, bi.STYLE, BI.PCS QTY,(st.IN_STOCK - st.LAYAWAY- st.IN_SHOP) IN_STOCK 
+                FROM BIL_ITEM BI with (nolock) 
+                LEFT JOIN stock st with (nolock) on st.STYLE=dbo.invstyle(BI.STYLE) and st.store_no=bi.store_no 
+                where ltrim(rtrim(bi.INV_NO))=ltrim(rtrim(@inv_no)) order by bi.line_no, BI.STYLE", "@inv_no", inv_no);
         }
 
     }

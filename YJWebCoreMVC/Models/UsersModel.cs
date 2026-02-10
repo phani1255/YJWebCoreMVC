@@ -8,10 +8,6 @@
  */
 
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Data.SqlClient;
-using System.Data;
-using System.Text;
-using YJWebCoreMVC.Services;
 
 namespace YJWebCoreMVC.Models
 {

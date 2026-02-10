@@ -1,8 +1,13 @@
-﻿namespace YJWebCoreMVC.Models
+/*
+ * Siva 01/05/2026 created
+ * Siva 01/29/2026 Added new class BillTemplateModel
+ * Siva 02/05/2026 Changes to work in yjcore
+ */
+namespace YJWebCoreMVC.Models
 {
     public class BillModel
     {
-
+        // Bill add new style
         public string Style { get; set; }
         public string VndStyle { get; set; }
         public decimal Cost { get; set; }
@@ -25,30 +30,18 @@
         public decimal StoneWeight { get; set; }
         public decimal ColorWeight { get; set; }
 
-
         // Bill add new style  end
-
         // Bill model
         public string INV_NO { get; set; } = string.Empty;
-
         public string ACC { get; set; } = string.Empty;
-
         public decimal? AMOUNT { get; set; } = 0;
-
         public DateTime? DATE { get; set; } = null;
-
         public string VND_NO { get; set; } = string.Empty;
-
         public decimal? TERM { get; set; } = 0;
-
         public DateTime? DUE_DATE { get; set; } = null;
-
         public decimal? BALANCE { get; set; } = 0;
-
         public DateTime? ENTER_DATE { get; set; } = null;
-
         public bool? SFM { get; set; } = false;
-
         public bool? ON_QB { get; set; } = false;
         public string Store_No { get; set; } = string.Empty;
         public string PaymentTerms { get; set; } = string.Empty;
@@ -91,8 +84,6 @@
         public bool IsDraft { get; set; } = false;
         public bool IsbillWoStyles { get; set; } = false;
 
-
-
         public class BillItemModel
         {
             public string Group { get; set; }
@@ -100,20 +91,13 @@
             public string VendorStyle { get; set; }
             public string ItemType { get; set; }
             public bool IsNewStyle { get; set; }
-
             public string GLClass { get; set; }
             public decimal Total { get; set; }
-
-
-
         }
+
         public class BillItems
         {
-
-
             public string GLClass { get; set; }
-
-
             public string STYLE { get; set; }
             public string GROUP { get; set; }
 
@@ -230,35 +214,35 @@
             public string ColorWt { get; set; }
             public string ColorQuality { get; set; }
 
-            public string Attrib1 { get; set; }
-            public string Attrib2 { get; set; }
-            public string Attrib3 { get; set; }
-            public string Attrib4 { get; set; }
-            public string Attrib5 { get; set; }
-            public string Attrib6 { get; set; }
-            public string Attrib7 { get; set; }
-            public string Attrib8 { get; set; }
-            public string Attrib9 { get; set; }
-            public string Attrib10 { get; set; }
-            public string Attrib11 { get; set; }
-            public string Attrib12 { get; set; }
-            public string Attrib19 { get; set; }
-            public string Attrib20 { get; set; }
-            public string Attrib21 { get; set; }
+            public string Attr_Attrib1 { get; set; }
+            public string Attr_Attrib2 { get; set; }
+            public string Attr_Attrib3 { get; set; }
+            public string Attr_Attrib4 { get; set; }
+            public string Attr_Attrib5 { get; set; }
+            public string Attr_Attrib6 { get; set; }
+            public string Attr_Attrib7 { get; set; }
+            public string Attr_Attrib8 { get; set; }
+            public string Attr_Attrib9 { get; set; }
+            public string Attr_Attrib10 { get; set; }
+            public string Attr_Attrib11 { get; set; }
+            public string Attr_Attrib12 { get; set; }
+            public string Attr_Attrib19 { get; set; }
+            public string Attr_Attrib20 { get; set; }
+            public string Attr_Attrib21 { get; set; }
 
-            public string StyleCheck1 { get; set; }
-            public string StyleCheck2 { get; set; }
-            public string StyleCheck3 { get; set; }
-            public string StyleCheck4 { get; set; }
-            public string StyleCheck5 { get; set; }
-            public string StyleCheck6 { get; set; }
+            public string Check_StyleCheck1 { get; set; }
+            public string Check_StyleCheck2 { get; set; }
+            public string Check_StyleCheck3 { get; set; }
+            public string Check_StyleCheck4 { get; set; }
+            public string Check_StyleCheck5 { get; set; }
+            public string Check_StyleCheck6 { get; set; }
 
             public string Disclaimer { get; set; }
-            public string StyleField1 { get; set; }
-            public string StyleField2 { get; set; }
-            public string StyleField3 { get; set; }
-            public string StyleField4 { get; set; }
-            public string StyleField5 { get; set; }
+            public string Field_StyleField1 { get; set; }
+            public string Field_StyleField2 { get; set; }
+            public string Field_StyleField3 { get; set; }
+            public string Field_StyleField4 { get; set; }
+            public string Field_StyleField5 { get; set; }
 
             public string ItemType { get; set; }
             public string CertType { get; set; }
@@ -298,5 +282,6 @@
             public bool IsOverWrite { get; set; }
             public int txtrowsskip { get; set; }
         }
+
     }
 }

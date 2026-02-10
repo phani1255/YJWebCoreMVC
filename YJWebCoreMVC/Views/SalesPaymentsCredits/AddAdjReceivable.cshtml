@@ -1,0 +1,508 @@
+<!--
+  * Created by Phanindra on 12-12-2024
+    Phanindra 12/30/2024 Worked on print related and credits and debits related changes.
+  * Phanindra 01/07/2025 Worked on Customercode selection issue and data passing issue to save data.
+-->
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model YJWeb.Models.SalesPaymentsCreditsModel
+
+<div id="content-center" class="row">
+
+    <div class="web-form page login-page col-sm-12" id="FormForEditQuotation">
+        <input type="hidden" id="pageType" value="@ViewBag.PageType" />
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            @(ViewBag.PageType == "Refund" ? "Refund No." : "Rcvable No.")
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" id="txtAdjRcvableNo" class="form-control activateFormRefreshBtn" value="@ViewBag.AdjRcvableNo">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="row">
+                        <label class="col-sm-4 customerType">
+                            Customer
+                        </label>
+                        <div class="col-sm-8">
+                            <div class="autocomplete-dropdown">
+                                <div id="CustomerCodesForAutofill1" class="d-none">@Html.Raw(Json.Encode(Model.CustomerCodes)) </div>
+                                <input type="text" id="txtCustomerCode" class="form-control activateFormRefreshBtn defaultdisabled" maxlength="15" placeholder="Search...">
+                                <div id="autocomplete-list1" class="autocomplete-items"></div>
+                            </div>
+                            <div class="customerCodeSearchDiv">
+                                <button class="formsGlobalUniqueBtn customerCodeSearchBtn1 showbsmodal activateFormRefreshBtn" data-modal-id="selectCustomerAccModal" data-bs-toggle="modal" data-bs-target="#selectCustomerAccModal">...</button>
+                            </div>
+                            <p id="txtCustomerName"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Entry Date
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtEntryDate" class="form-control fs-13 activateFormRefreshBtn " />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-8">
+                    <div class="row">
+                        <label class="col-sm-2">
+                            Note
+                        </label>
+                        <div class="col-sm-10">
+                            <input type="text" id="txtNote" class="form-control fs-13 activateFormRefreshBtn " />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="checkbox" id="txtIsShowMemo" class="activateFormRefreshBtn" /> Show Memo
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <p class="blue-bg-para">Adj. Receivable Details</p>
+            <div class="mt-2 white-box pos-rel" id="">
+                <div class="row">
+                    <div class="well empty-well CashReceiptsInfo">
+                        <p>No Data to display</p>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="row">
+                    <div class="col-sm-7">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="row">
+                                    <label class="col-sm-6">Credits</label>
+                                    <div class="col-sm-6"><input type="text" id="credits" class="form-control" value="$0.00" readonly /></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="row">
+                                    <label class="col-sm-6">Debits</label>
+                                    <div class="col-sm-6"><input type="text" id="debits" class="form-control" value="$0.00" readonly /></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="row">
+                                    <label class="col-sm-6">Difference</label>
+                                    <div class="col-sm-6"><input type="text" id="diference" class="form-control" value="$0.00" readonly /></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-5 text-right">
+                        <button class="formsGlobalUniqueBtn saveReceipt">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+</div>
+<input type="hidden" id="methodName" value="AddAdjReceivable" />
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var now = new Date();
+        var day = ("0" + now.getDate()).slice(-2);
+        var month = ("0" + (now.getMonth() + 1)).slice(-2);
+
+        var today = now.getFullYear() + "-" + (month) + "-" + (day);
+        $("#txtEntryDate").val(today);
+
+        var CustomerCodes1 = JSON.parse($("#CustomerCodesForAutofill1").html());
+        $("#txtCustomerCode").on("input", function () {
+            var capval = 0;
+            var query = $(this).val().toLowerCase();
+            var list = $("#autocomplete-list1");
+            list.empty();
+
+            if (!query) return;
+
+            var results = CustomerCodes1.filter(function (item) {
+                return item.Text.toLowerCase().indexOf(query) === 0;
+            });
+
+            results.forEach(function (item) {
+                capval++;
+                if (capval <= 20) {
+                    var itemElement = $("<div>")
+                        .addClass("autocomplete-item2")
+                        .text(item.Text)
+                        .on("click", function () {
+                            $("#txtCustomerCode").val(item.Text);
+                            //alert(item.Text);
+                            GetReceiptData(item.Text);
+                            //list.empty();
+                        });
+
+                    list.append(itemElement);
+                }
+            });
+        });
+    })
+
+    $(document).on('blur', "#txtCustomerCode", function () {
+        setTimeout(function () {
+            customerCode = $("#txtCustomerCode").val();
+
+            var CustomerCodes1 = JSON.parse($("#CustomerCodesForAutofill1").html());
+            var exists = CustomerCodes1.some(function (item) {
+                return item.Text.toLowerCase() === customerCode.toLowerCase();
+            });
+
+            if (!exists) {
+                alert("Invalid Customer Code");
+                //$("#txtCustomerCode").val('');
+                $("#txtCustomerCode").focus();
+                $("#CashReceiptsInfo").empty();
+                return false;
+            }
+            setTimeout(function () {
+                getCustomerNameByCode(customerCode);
+            }, 1000);
+            GetReceiptData(customerCode);
+        }, 1000);
+
+    })
+
+    $("#txtIsShowMemo").change(function () {
+        customerCode = $("#txtCustomerCode").val();
+        GetReceiptData(customerCode);
+    })
+
+    function GetReceiptData(customerCode) {
+
+        var CustomerCodes1 = JSON.parse($("#CustomerCodesForAutofill1").html());
+        var exists = CustomerCodes1.some(function (item) {
+            return item.Text.toLowerCase() === customerCode.toLowerCase();
+        });
+
+        if (!exists) {
+            alert("Invalid Customer Code");
+            //$("#txtCustomerCode").val('');
+            $("#txtCustomerCode").focus('');
+            $("#CashReceiptsInfo").empty();
+            return false;
+        }
+
+        //$(".autocomplete-items").empty();
+        $(".CashReceiptsInfo").html();
+        var now = new Date();
+        var day = ("0" + now.getDate()).slice(-2);
+        var month = ("0" + (now.getMonth() + 1)).slice(-2);
+
+        var today = now.getFullYear() + "-" + (month) + "-" + (day);
+        //customerCode = $("#txtCustomerCode").val();
+        if (customerCode.trim() == '') {
+            $(".CashReceiptsInfo").html('');
+            return false;
+        }
+        AdjRcvableNo = $("#txtAdjRcvableNo").val();
+        $.ajax({
+            url: '../SalesPaymentsCredits/GetAdjReceivableData',
+            async: false,
+            data: {
+                acc: customerCode
+            },
+            success: function (response) {
+                //alert(response);
+                var json;
+                if (response instanceof Object)
+                    json = response;
+                else
+                    json = $.parseJSON(response);
+
+                cashReceipts = "";
+                cashReceipts += "<table class='table tabled-bordered'>";
+                cashReceipts += "<thead>";
+                cashReceipts += "<tr><th>Ref Type</th><th>Ref No</th><th>Ref Date</th><th>Orig Amt</th><th>Balance</th><th>Applied</th><th class='d-none'></th><th class='d-none'></th><th class='d-none'></th></tr>";
+                cashReceipts += "</thead>";
+                cashReceipts += "<tbody id='CashReceiptsInfo'>";
+                var trans = json;
+                isShowMemo = false;
+                if ($("#txtIsShowMemo:checked").length > 0) {
+                    isShowMemo = true;
+                }
+                for (var i = 0; i < json.length; i++) {
+                    if (json[i].REF_TYPE == "MEMO" && isShowMemo == false) {
+                        continue;
+                    }
+                    cashReceipts += "<tr>";
+                    cashReceipts += "<td class='ref_type'>" + json[i].REF_TYPE + "</td>";
+                    cashReceipts += "<td class='ref_no' id='ref_no_" + json[i].REF_NO + "'>" + json[i].REF_NO + "</td>";
+                    cashReceipts += "<td class='ref_date'>" + json[i].REF_DATE.split('T')[0] + "</td>";
+                    cashReceipts += "<td class='original'>" + numberWithCommas(json[i].ORIGINAL) + "</td>";
+                    cashReceipts += "<td class='bal_amount'>" + numberWithCommas(json[i].BAL_AMOUNT) + "</td>";
+                    cashReceipts += "<td class='app_amt_td'><input type='text' class='app_amount_values' value='" + numberWithCommas(json[i].APP_AMOUNT) + "'></td>";
+                    cashReceipts += "<td class='d-none appamt'>" + json[i].APPAMT + "</td>";
+                    cashReceipts += "<td class='d-none appflg'>" + json[i].APPFLG + "</td>";
+                    cashReceipts += "<td class='d-none credits'>" + numberWithCommas(json[i].CREDITS) + "</td>";
+                    cashReceipts += "</tr>";
+
+                }
+                cashReceipts += "</tbody>";
+                cashReceipts += "</table>";
+                $(".CashReceiptsInfo").html(cashReceipts);
+                $("#ref_no_" + AdjRcvableNo).siblings(".app_amt_td").find(".app_amount_values").focus();
+                //$("#autocomplete-list1").empty();
+                //updateRecordAmounts();
+                calculateCrDb();
+            }
+        })
+
+    }
+
+    $(document).on('click', ".saveReceipt", function () {
+        AdjRcvableNo = $("#txtAdjRcvableNo").val();
+        customerCode = $("#txtCustomerCode").val();
+        entryDate = $("#txtEntryDate").val().replace('{', '').replace('}', '');
+        paymentNote = $("#txtPaymentNote").val();
+        if (AdjRcvableNo.trim() == "") {
+            alert("Adj# should not blank.");
+            return false;
+        }
+        if (customerCode.trim() == "") {
+            alert("Billing Account no. cannot be empty");
+            return false;
+        }
+        calculateCrDb();
+        credits = $("#credits").val().replace("$", "").replace(",", "");
+        debits = $("#debits").val().replace("$", "").replace(",", "");
+        if (Math.abs(credits) != Math.abs(debits)) {
+            alert("Credits Must match Debits");
+            return false;
+        }
+
+        $.ajax({
+            url: '../SalesPaymentsCredits/CheckReceiptExistOrNot',
+            async: false,
+            data: {
+                RecNo: AdjRcvableNo,
+                RTV_PAY: "F"
+            },
+            success: function (response) {
+                if (response != null && response != "False") {
+                    alert("Receipt#(" + AdjRcvableNo + ")  already Exists.");
+                    return false;
+                }
+            }
+        })
+
+        dtAddCashReceipt = [];
+        index = 0;
+        $("#CashReceiptsInfo tr").each(function () {
+            //alert($(this).find('.styleno').val());
+            dtAddCashReceipt[index] = {};
+            dtAddCashReceipt[index]['REF_TYPE'] = $(this).find('.ref_type').html();
+            dtAddCashReceipt[index]['REF_NO'] = $(this).find('.ref_no').html();
+            dtAddCashReceipt[index]['REF_DATE'] = $(this).find('.ref_date').html();
+            dtAddCashReceipt[index]['ORIGINAL'] = parseFloat($(this).find('.original').html().replace("$", "")).toFixed(2);
+            dtAddCashReceipt[index]['BAL_AMOUNT'] = parseFloat($(this).find('.bal_amount').html().replace("$", "")).toFixed(2);
+            //dtAddCashReceipt[index]['CURR_TYPE'] = $(this).find('.curr_type').html();
+            //dtAddCashReceipt[index]['CURR_RATE'] = $(this).find('.curr_rate').html().replace("$", "");
+            //dtAddCashReceipt[index]['CURR_AMOUNT'] = $(this).find('.curr_amount').html().replace("$", "");
+            dtAddCashReceipt[index]['APP_AMOUNT'] = parseFloat($(this).find('.app_amt_td').find('.app_amount_values').val().replace("$", "")).toFixed(2);
+            dtAddCashReceipt[index]['APPAMT'] = parseFloat($(this).find('.appamt').html().replace("$", "")).toFixed(2);
+            dtAddCashReceipt[index]['APPFLG'] = $(this).find('.appflg').html();
+            //dtAddCashReceipt[index]['CREDITS'] = $(this).find('.credits').html().replace("$", "");
+            index++;
+        })
+        //alert(dtAddCashReceipt);
+        //dtAddCashReceiptXml = jsonToXml("PaymentItems", dtAddCashReceipt);
+        dtAddCashReceiptJson = JSON.stringify(dtAddCashReceipt);
+        showmemo = false;
+        if ($("#txtIsShowMemo:checked").length > 0) {
+            showmemo = true;
+        }
+        pcname = "";
+        Cash_Register = "";
+        storecodeinuse = $("#StoreCodeInUse").val();
+        loggeduser = $("#UserId").val();
+
+        $.ajax({
+            url: '../SalesPaymentsCredits/SaveAdjRcvable',
+            type: 'post',
+            data: {
+                dtPaymentJson: dtAddCashReceiptJson,
+                acc: customerCode,
+                adj_no: AdjRcvableNo,
+                entry_date: entryDate,
+                showmemo: showmemo
+            },
+            success: function (response) {
+                if (response == "Success") {
+                    alert("Adj. receivable Added Successfully");
+                    //window.location.reload();
+                    $.ajax({
+                        url: "../SalesPaymentsCredits/PrintAdjRcvable",
+                        type: "POST",
+                        data: {
+                            inv_no: AdjRcvableNo
+                        },
+                        success: function (res) {
+                            //alert(res);
+                            $("#firstCommonBsModal .modal-title").html("Print Receipt");
+                            $("#firstCommonBsModal .modal-body").html(res);
+                            $("#firstCommonBsModal").show();
+                            $("#firstCommonBsModal").addClass('show');
+                            $("#firstCommonBsModal .closeModal").addClass("closePrintModel");
+                        }
+                    })
+                    //ClearControls();
+                } else {
+                    alert(response);
+                }
+            }
+        })
+
+    })
+
+    $(document).on('blur', '.app_amount_values', function () {
+        curelm = $(this);
+        applied = curelm.val().replace("$", "");
+        if (Math.abs(applied) == 0 || Math.abs(applied) == 0.00) {
+            return false;
+        }
+        balance = curelm.parent('td').siblings('.bal_amount').html().replace("$", "").replace(",", "");
+        original = curelm.parent('td').siblings('.original').html().replace("$", "").replace(",", "");
+        credits = curelm.parent('td').siblings('.credits').html().replace("$", "").replace(",", "");
+        ref_type = curelm.parent('td').siblings('.ref_type').html();
+        appflg = curelm.parent('td').siblings('.appflg').html();
+
+        if ((Math.abs(applied) > Math.abs(balance) || Math.sign(applied) != Math.sign(balance))) {
+            alert("Applied amount should be between 0 and " + balance);
+            curelm.val('0.00');
+            curelm.focus();
+            return false;
+        }
+        curelm.val(parseFloat(applied, 2));
+
+        calculateCrDb();
+    })
+
+    function calculateCrDb() {
+        totalcredits = 0; totaldebits = 0;
+
+        $("#CashReceiptsInfo tr").each(function () {
+            ref_type = $(this).find('.ref_type').html().toUpperCase();
+            if (ref_type == "PAYMENT" || ref_type == "CREDIT" || ref_type == "RTV" || ref_type == "DEBIT" || ref_type == "D") {
+                totalcredits += parseFloat($(this).find('.app_amt_td').find('.app_amount_values').val().replace("$", ""));
+            }
+            if (ref_type == "INVOICE" || ref_type == "MEMO") {
+                totaldebits += parseFloat($(this).find('.app_amt_td').find('.app_amount_values').val().replace("$", ""));
+            }
+        })
+
+        $("#credits").val('$' + Math.abs(totalcredits).toFixed(2));
+        $("#debits").val('$' + Math.abs(totaldebits).toFixed(2));
+        $("#diference").val('$' + (Math.abs(totalcredits) - Math.abs(totaldebits)).toFixed(2));
+    }
+
+    $(document).on('click', '#btnPrint', function () {
+        $('.cashReceiptInfo').removeClass('d-none');
+        printNormalHtmlTable('cashReceiptInfo');
+        $('.cashReceiptInfo').addClass('d-none');
+    })
+
+    $(document).on('click', '#btnPreview', function () {
+        previewNormalHtmlTable('cashReceiptInfo');
+    })
+
+    $(document).on('click', '.btnDownloadPDF', function () {
+        $('.cashReceiptInfo').removeClass('d-none');
+        pdfNormalHtmlDiv('cashReceiptInfo');
+        $('.cashReceiptInfo').addClass('d-none');
+    })
+
+    $(document).on('click', '.btnDownloadExcel', function () {
+        excelFromNormalDivTable("cashReceiptInfo");
+    })
+
+    function ClearControls() {
+        window.location.href = "../SalesPaymentsCredits/AddAdjReceivable";
+    }
+
+    $(document).on('click', ".closePrintModel", function () {
+        ClearControls();
+    })
+
+    function getCustomerNameByCode(acc) {
+        $.ajax({
+            url: "../Common/GetCustomerNameByCode",
+            type: "POST",
+            data: {
+                acc: acc
+            },
+            success: function (res) {
+                $("#txtCustomerName").html(res);
+            }
+        })
+    }
+
+</script>
+
+<style>
+    .blue-bg-para {
+        background: blue;
+        color: #fff;
+        text-align: center;
+        padding: 3px;
+    }
+
+    .empty-well p {
+        padding: 100px;
+    }
+
+    .CashReceiptsInfo {
+        max-height: 300px;
+        overflow-y: scroll;
+    }
+
+    .app_amount_values {
+        background: #fdfdfd;
+        border: 1px solid #f8f8f8;
+        width: 100px;
+    }
+
+        .app_amount_values:focus {
+            border: 1px solid #8aaf6a;
+            box-shadow: 0px 0px 4px #6da141;
+        }
+
+    .autocomplete-item2 {
+        padding: 10px;
+        cursor: pointer;
+        background-color: #fff;
+        border-bottom: 1px solid #d4d4d4;
+    }
+
+    #txtCustomerName {
+        margin-bottom: 0px;
+        margin-top: 0px;
+        font-size: 12px;
+    }
+</style>

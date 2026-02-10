@@ -1,26 +1,49 @@
-﻿using Microsoft.Data.SqlClient;
+// venkat 02/06/06 service added
+
+using Microsoft.Data.SqlClient;
+using ShopifySharp;
+using ShopifySharp.Filters;
 using System.Data;
+using System.Globalization;
+using System.Net;
+using System.Net.Http.Headers;
+using System.Text.Json;
+using System.Text.RegularExpressions;
+using YJWebCoreMVC.Models;
+
 namespace YJWebCoreMVC.Services
 {
     public class ShopifyService
     {
 
         private readonly ConnectionProvider _connectionProvider;
-        private readonly HelperCommonService _helperCommonService;
+        private readonly HelperService _helperService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly StylesService _stylesService;
 
-        public ShopifyService(ConnectionProvider connectionProvider, HelperCommonService helperCommonService)
+        private int _MaxLimit = 0, _MinLimit = 0, TotalOrdersProcessed = 0;
+        Int64 value = 0, getmaxval = 0;
+        private string _ShopifyCustId, INVOICE_NO = string.Empty, _storeName = "";
+        DataTable dtDownloadedOrders;
+        bool unattended = false;
+
+        public ShopifyService(ConnectionProvider connectionProvider, HelperService helperService, StylesService stylesService)
         {
             _connectionProvider = connectionProvider;
-            _helperCommonService = helperCommonService;
+            _helperService = helperService;
+            _stylesService = stylesService;
         }
 
-        public async Task<bool> IsValidShopifyCredentials(string url, string Apikey, String SecreatKey)
+        public async Task<bool> IsValidShopifyCredentials(ShopifyCredentialsModel creds)
         {
             try
             {
+                var url = creds.Url;
+                var Apikey = creds.ApiKey;
+                var secret = creds.Secret;
                 using (HttpClient client = new HttpClient())
                 {
-                    var credentials = System.Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes($"{Apikey}:{SecreatKey}"));
+                    var credentials = System.Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes($"{Apikey}:{secret}"));
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", credentials);
 
                     client.BaseAddress = new Uri(url);
@@ -37,7 +60,7 @@ namespace YJWebCoreMVC.Services
 
         public DataTable GetShopifyOrderNumbers()
         {
-            return Helper.GetSqlData("SELECT LTRIM(RTRIM(ISNULL(PON,''))) as SHPY_ORDERNO FROM INVOICE WHERE ISNULL(PON,'')<>'' UNION SELECT LTRIM(RTRIM(SHOPIFYORDERNUMBER)) as SHPY_ORDERNO FROM INVOICE WHERE SHOPIFYORDERNUMBER<>''  ");
+            return _helperService.HelperCommon.GetSqlData("SELECT LTRIM(RTRIM(ISNULL(PON,''))) as SHPY_ORDERNO FROM INVOICE WHERE ISNULL(PON,'')<>'' UNION SELECT LTRIM(RTRIM(SHOPIFYORDERNUMBER)) as SHPY_ORDERNO FROM INVOICE WHERE SHOPIFYORDERNUMBER<>''  ");
         }
 
         public DataTable GetInvoicePayments(string inv_no, bool showlayaway = true, bool is_return = false, bool iSFromReturn = false)
@@ -72,32 +95,32 @@ namespace YJWebCoreMVC.Services
             {
                 CustomersModel.ID = 0;
                 CustomersModel.ACC = acc;
-                CustomersModel.NAME = Helper.CheckForNull<string>(bill_addr.Name);
-                CustomersModel.ADDR1 = Helper.CheckForNull<string>(bill_addr.Address1);
-                CustomersModel.ADDR12 = Helper.CheckForNull<string>(bill_addr.Address2);
+                CustomersModel.NAME = _helperService.HelperVenkat.CheckForNull<string>(bill_addr.Name);
+                CustomersModel.ADDR1 = _helperService.HelperVenkat.CheckForNull<string>(bill_addr.Address1);
+                CustomersModel.ADDR12 = _helperService.HelperVenkat.CheckForNull<string>(bill_addr.Address2);
                 CustomersModel.ADDR13 = "";
-                CustomersModel.CITY1 = Helper.CheckForNull<string>(bill_addr.City);
+                CustomersModel.CITY1 = _helperService.HelperVenkat.CheckForNull<string>(bill_addr.City);
                 CustomersModel.STATE1 = bill_addr.ProvinceCode == null ? "" : bill_addr.ProvinceCode.ToUpper();
-                CustomersModel.ZIP1 = Helper.CheckForNull<string>(bill_addr.Zip);
+                CustomersModel.ZIP1 = _helperService.HelperVenkat.CheckForNull<string>(bill_addr.Zip);
                 CustomersModel.TEL = GetPhoneNumber(bill_addr.Phone) ?? GetPhoneNumber(ship_addr.Phone);
                 CustomersModel.TEL2 = Convert.ToDecimal(GetPhoneNumber(ship_addr.Phone));
-                CustomersModel.COUNTRY = Helper.CheckForNull<string>(bill_addr.Country);
+                CustomersModel.COUNTRY = _helperService.HelperVenkat.CheckForNull<string>(bill_addr.Country);
                 CustomersModel.WWW = "";
-                CustomersModel.EMAIL = Helper.CheckForNull<string>(email);
+                CustomersModel.EMAIL = _helperService.HelperVenkat.CheckForNull<string>(email);
                 CustomersModel.TAX_ID = "";
                 CustomersModel.EST_DATE = DateTime.Now;
                 CustomersModel.PRICE_FILE = "";
                 CustomersModel.JBT = "";
-                CustomersModel.NAME2 = Helper.CheckForNull<string>(ship_addr.Name);
+                CustomersModel.NAME2 = _helperService.HelperVenkat.CheckForNull<string>(ship_addr.Name);
                 CustomersModel.BILL_ACC = acc;
-                CustomersModel.ADDR2 = Helper.CheckForNull<string>(ship_addr.Address1);
-                CustomersModel.ADDR22 = Helper.CheckForNull<string>(ship_addr.Address2);
+                CustomersModel.ADDR2 = _helperService.HelperVenkat.CheckForNull<string>(ship_addr.Address1);
+                CustomersModel.ADDR22 = _helperService.HelperVenkat.CheckForNull<string>(ship_addr.Address2);
                 CustomersModel.ADDR23 = "";
-                CustomersModel.CITY2 = Helper.CheckForNull<string>(ship_addr.City);
+                CustomersModel.CITY2 = _helperService.HelperVenkat.CheckForNull<string>(ship_addr.City);
                 CustomersModel.STATE2 = ship_addr.ProvinceCode == null ? "" : ship_addr.ProvinceCode.ToUpper();
-                CustomersModel.ZIP2 = Helper.CheckForNull<string>(ship_addr.Zip);
+                CustomersModel.ZIP2 = _helperService.HelperVenkat.CheckForNull<string>(ship_addr.Zip);
                 CustomersModel.FAX = 0;
-                CustomersModel.COUNTRY2 = Helper.CheckForNull<string>(ship_addr.Country);
+                CustomersModel.COUNTRY2 = _helperService.HelperVenkat.CheckForNull<string>(ship_addr.Country);
                 CustomersModel.BUYER = "";
                 CustomersModel.SHIP_VIA = "N";
                 CustomersModel.IS_COD = "N";
@@ -166,7 +189,7 @@ namespace YJWebCoreMVC.Services
                 CustomersModel.WEB_USER = "";
                 CustomersModel.WEB_PASSWORD = "";
                 CustomersModel._Action = true;
-                //return Helper.AddCustomer(CustomerModel);
+                //return _helperCommonService.AddCustomer(CustomerModel);
                 return (AddCustomer(CustomersModel));
 
             }
@@ -181,7 +204,7 @@ namespace YJWebCoreMVC.Services
             using (SqlCommand dbCommand = new SqlCommand())
             {
                 // Set the command object properties
-                dbCommand.Connection = new SqlConnection(Helper.connString);
+                dbCommand.Connection = _connectionProvider.GetConnection();
                 dbCommand.CommandType = CommandType.StoredProcedure;
                 dbCommand.CommandText = "AddUpdateCustomer";
 
@@ -356,13 +379,17 @@ namespace YJWebCoreMVC.Services
                 return rowsAffected > 0;
             }
         }
-        public async Task<bool> AddNewInvoice(Order order)
+        public async Task<bool> AddNewInvoice(Order order, ShopifyCredentialsModel creds)
         {
-            /*if (Helper.DataTableOK(Helper.GetSqlRow("select * from invoice where isnull(pon,'')=@order", "@order", order.OrderNumber.ToString())))
+            /*if (_helperCommonService.DataTableOK(_helperCommonService.GetSqlRow("select * from invoice where isnull(pon,'')=@order", "@order", order.OrderNumber.ToString())))
                 return false;*/
             string _Phone = string.Empty, _CustEmail = string.Empty;
             string _ShopifyOrderNo = order.OrderNumber.ToString();
             string _NextInvoice = string.Empty;
+
+            var shopUrl = creds.Url;
+            var apiKey = creds.ApiKey;
+            var secret = creds.Secret;
 
             if (order.BillingAddress == null && order.ShippingAddress == null)
                 order.BillingAddress = new ShopifySharp.Address();
@@ -377,9 +404,9 @@ namespace YJWebCoreMVC.Services
             IEnumerable<ShopifySharp.DiscountApplication> discountapps = order.DiscountApplications;
             IEnumerable<ShopifySharp.ShippingLine> shippinglines = order.ShippingLines;
 
-            if (Helper.IsValidInvoiceNo(_ShopifyOrderNo))
+            if (_helperService.HelperCommon.IsValidInvoiceNo(_ShopifyOrderNo))
             {
-                while (Helper.IsValidInvoiceNo(_ShopifyOrderNo))
+                while (_helperService.HelperCommon.IsValidInvoiceNo(_ShopifyOrderNo))
                 {
                     _NextInvoice = GetNextInvoice().PadLeft(6, ' ');//GetNextInvoiceNumber(_ShopifyOrderNo);
                     break;
@@ -388,24 +415,24 @@ namespace YJWebCoreMVC.Services
 
             if (po_customer != null)
             {
-                _Phone = Helper.CheckForDBNull(po_customer.Phone, typeof(string).FullName);
-                _ShopifyCustId = Helper.CheckForDBNull(po_customer.Id, typeof(long).FullName);
+                _Phone = _helperService.HelperCommon.CheckForDBNull(po_customer.Phone, typeof(string).FullName);
+                _ShopifyCustId = _helperService.HelperCommon.CheckForDBNull(po_customer.Id, typeof(long).FullName);
                 if (string.IsNullOrWhiteSpace(_Phone))
-                    _CustEmail = Helper.CheckForDBNull(po_customer.Email, typeof(string).FullName);
+                    _CustEmail = _helperService.HelperCommon.CheckForDBNull(po_customer.Email, typeof(string).FullName);
             }
 
             if (string.IsNullOrEmpty(_ShopifyCustId) && !string.IsNullOrEmpty(_CustEmail))
             {
                 DataRow drcheckCust = CheckCustomerExists(0, 0, "", _CustEmail);
-                if (Helper.DataTableOK(drcheckCust))
-                    _ShopifyCustId = Helper.CheckForDBNull(drcheckCust["acc"], typeof(string).FullName);
+                if (_helperService.HelperCommon.DataTableOK(drcheckCust))
+                    _ShopifyCustId = _helperService.HelperCommon.CheckForDBNull(drcheckCust["acc"], typeof(string).FullName);
             }
             else
             {
                 if (string.IsNullOrEmpty(_ShopifyCustId))
                 {
-                    DataRow drCust = Helper.getHighestCustAccValue(_MinLimit, _MaxLimit);
-                    if (Helper.CheckForDBNull(drCust["acc"], typeof(string)) != "")
+                    DataRow drCust = _helperService.HelperVenkat.getHighestCustAccValue(_MinLimit, _MaxLimit);
+                    if (_helperService.HelperCommon.CheckForDBNull(drCust["acc"], typeof(string)) != "")
                     {
                         getmaxval = System.Convert.ToInt64(drCust["acc"].ToString());
                         if (getmaxval > 999999999999)
@@ -423,11 +450,11 @@ namespace YJWebCoreMVC.Services
             DataRow custRow = CheckCustomerExists(0, 0, _ShopifyCustId, "");
             string cust_acc, salesman;
             cust_acc = _ShopifyCustId;
-            salesman = Helper.DataTableOK(Helper.GetSalesmancodeonly()) ? Helper.GetSalesmancodeonly().Rows[0]["CODE"].ToString() : "";
+            salesman = _helperService.HelperCommon.DataTableOK(_helperService.HelperSravan.GetSalesmancodeonly()) ? _helperService.HelperSravan.GetSalesmancodeonly().Rows[0]["CODE"].ToString() : "";
             if (custRow == null)
                 AddNewCustomer(bill_addr, ship_addr, order.Email, _Phone, cust_acc);
             else
-                cust_acc = Helper.CheckForDBNull(custRow["acc"]);
+                cust_acc = _helperService.HelperCommon.CheckForDBNull(custRow["acc"]);
 
             DateTimeOffset orderDate = (DateTimeOffset)order.CreatedAt;
             InvoiceModel InvoiceModel = new InvoiceModel()
@@ -444,21 +471,22 @@ namespace YJWebCoreMVC.Services
                 MESSAGE = "",
                 GR_TOTAL = order.TotalPrice, //order.SubtotalPrice,
 
-                ADDR1 = Helper.CheckForNull<string>(ship_addr.Address1),
-                NAME = Helper.CheckForNull<string>(ship_addr.Name),
-                ADDR2 = Helper.CheckForNull<string>(ship_addr.Address2),
+                ADDR1 = _helperService.HelperVenkat.CheckForNull<string>(ship_addr.Address1),
+                NAME = _helperService.HelperVenkat.CheckForNull<string>(ship_addr.Name),
+                ADDR2 = ship_addr.Address2 ?? "",
+
                 ADDR3 = "",
-                CITY = Helper.CheckForNull<string>(ship_addr.City),
+                CITY = _helperService.HelperVenkat.CheckForNull<string>(ship_addr.City),
                 STATE = ship_addr.ProvinceCode == null ? "" : ship_addr.ProvinceCode.ToUpper(),
                 ZIP = ship_addr.Zip != null ? ship_addr.Zip.Trim() : "",
                 COUNTRY = ship_addr.CountryCode == null ? "" : ship_addr.CountryCode.ToUpper(),
-                OPERATOR = Helper.LoggedUser,
+                OPERATOR = _helperService.HelperCommon.LoggedUser,
                 SALESMAN1 = salesman,
                 SALESMAN2 = "",
                 SALESMAN3 = "",
                 SALESMAN4 = "",
-                STORE_NO = Helper.StoreCodeInUse1,
-                //SALES_TAX = ((order.TotalPrice-order.TotalTax) * Helper.StoreSalesTax)/100, // order.TotalTax,
+                STORE_NO = _helperService.HelperCommon.StoreCodeInUse1,
+                //SALES_TAX = ((order.TotalPrice-order.TotalTax) * _helperCommonService.StoreSalesTax)/100, // order.TotalTax,
                 TAXINCLUDED = false,
                 CUST_PON = "",
                 SHIP_BY = "",
@@ -492,7 +520,7 @@ namespace YJWebCoreMVC.Services
                 SAMPLE = "",
                 ShipType = 0,
                 UPSTRAK = "",
-                SYSTEMNAME = Helper.GetRegisterNames(),
+                SYSTEMNAME = _helperService.HelperCommon.GetRegisterNames(),
                 ShopifyStoreNo = _storeName,
 
             };
@@ -558,10 +586,10 @@ namespace YJWebCoreMVC.Services
 
                 InvoiceModel.TAXABLE = orderItem.Taxable;
 
-                if (!Helper.isValidStyle(productsku))
-                //if (/*!Helper.is_RK &&*/ !Helper.CheckStyle(productsku, out returnstyle, out isbar))
+                if (!_helperService.HelperCommon.isValidStyle(productsku))
+                //if (/*!_helperCommonService.is_RK &&*/ !_helperCommonService.CheckStyle(productsku, out returnstyle, out isbar))
                 {
-                    //Helper.MsgBox("style# " + productsku + " was not found, it was automatically added to inventory items");
+                    //_helperCommonService.MsgBox("style# " + productsku + " was not found, it was automatically added to inventory items");
 
                     decimal _ItemPrice = Convert.ToDecimal(orderItem.Price);
                     CreateNewStyle(productsku, orderItem.Title, _ItemPrice);
@@ -667,7 +695,7 @@ namespace YJWebCoreMVC.Services
             InvoiceModel.Sales_Tax_Rate = (order.TotalTax * 100) / order.SubtotalPrice;
 
 
-            var Transact_service = new TransactionService(Helper.ShopifyURL, Helper.ShopifySecret);
+            var Transact_service = new TransactionService(shopUrl, secret);
             var transactions = await Transact_service.ListAsync(order.Id.Value);
             paymentItems.Clear();
             if (transactions.Count() > 0)
@@ -699,7 +727,7 @@ namespace YJWebCoreMVC.Services
 
                         ValidatePaymentType(_FinPaymentmethod);
 
-                        decimal _TotTransactionsAmount = Helper.DataTableOK(paymentItems) ? Convert.ToDecimal(paymentItems.Compute("sum(amount)", "")) : 0;
+                        decimal _TotTransactionsAmount = _helperService.HelperCommon.DataTableOK(paymentItems) ? Convert.ToDecimal(paymentItems.Compute("sum(amount)", "")) : 0;
                         DataRow drShopifyPayment = paymentItems.NewRow();
                         if (_TotTransactionsAmount < transaction.Amount)
                         {
@@ -726,7 +754,7 @@ namespace YJWebCoreMVC.Services
                                 if (!IsValidGiftCard(GiftCardNo))
                                 {
 
-                                    Helper.GetSqlData(@"insert into StoreCreditVoucher (CreditNo,Cust_Code,Amount,AvailableAmt,Date,IsGiftCert,UserGCNo,Style,IsShopify) 
+                                    _helperService.HelperCommon.GetSqlData(@"insert into StoreCreditVoucher (CreditNo,Cust_Code,Amount,AvailableAmt,Date,IsGiftCert,UserGCNo,Style,IsShopify) 
                                             values (@CreditNo,@Cust_Code,@Amount,@AvailableAmt,@Date,@IsGiftCert,@UserGCNo,@Style,@IsShopify)",
                                             "@CreditNo", "",
                                             "@Cust_Code", _ShopifyCustId,
@@ -739,7 +767,7 @@ namespace YJWebCoreMVC.Services
                                             "@IsShopify", Convert.ToString(1));
 
 
-                                    Helper.GetSqlData(@"insert into StoreCreditVoucherHistory(CreditNo,Cust_Code,Amount,Used_Amt,Bal_Amt,Inv_No,inv_Date,Style,from_Shopify)
+                                    _helperService.HelperCommon.GetSqlData(@"insert into StoreCreditVoucherHistory(CreditNo,Cust_Code,Amount,Used_Amt,Bal_Amt,Inv_No,inv_Date,Style,from_Shopify)
                                             values (@CreditNo,@Cust_Code,@Amount,@Used_Amt,@Bal_Amt,@Inv_No,@inv_Date,@Style,@from_Shopify)",
                                             "@CreditNo", "",
                                             "@Cust_Code", _ShopifyCustId,
@@ -776,29 +804,33 @@ namespace YJWebCoreMVC.Services
 
             InvoiceModel.SALES_TAX = _WebSalesTax;
             InvoiceModel.SNH = _WebSnh;
-            String xmlInvoice = Helper.GetDataTableXML("InvoiceItems", invoiceItems);
-            String xmlPayment = Helper.GetDataTableXML("PaymentItems", paymentItems);
-            String xmlDiscount = Helper.GetDataTableXML("DiscountItems", discountItems);
+            String xmlInvoice = _helperService.HelperCommon.GetDataTableXML("InvoiceItems", invoiceItems);
+            String xmlPayment = _helperService.HelperCommon.GetDataTableXML("PaymentItems", paymentItems);
+            String xmlDiscount = _helperService.HelperCommon.GetDataTableXML("DiscountItems", discountItems);
 
-            bool csuccess = AddInvoice(InvoiceModel, xmlInvoice, xmlPayment, xmlDiscount, out out_inv_no, false, false, false, Helper.StoreCodeInUse1, order.OrderNumber.ToString());
+            bool csuccess = AddInvoice(InvoiceModel, xmlInvoice, xmlPayment, xmlDiscount, out out_inv_no, false, false, false, _helperService.HelperCommon.StoreCodeInUse1, order.OrderNumber.ToString());
             if (csuccess)
                 dtDownloadedOrders.Rows.Add(order.OrderNumber.ToString(), out_inv_no);
             return csuccess;
         }
-        public static async Task<string> GetStoreNameAsync()
+        public async Task<string> GetStoreNameAsync(ShopifyCredentialsModel creds)
         {
+            var shopUrl = creds.Url;
+            var apiKey = creds.ApiKey;
+            var secret = creds.Secret;
             using (HttpClient client = new HttpClient())
             {
+
                 client.DefaultRequestHeaders.Clear();
-                client.DefaultRequestHeaders.Add("X-Shopify-Access-Token", Helper.ShopifySecret);
-                client.BaseAddress = new Uri(Helper.ShopifyURL);
+                client.DefaultRequestHeaders.Add("X-Shopify-Access-Token", secret);
+                client.BaseAddress = new Uri(shopUrl);
 
                 var url = "/admin/api/2023-01/shop.json";
                 var response = await client.GetAsync(url);
 
                 // Log the full response for debugging
                 var responseContent = await response.Content.ReadAsStringAsync();
-                //Helper.AddKeepRec($"Response for {_ShopifyUrl}: {responseContent}", null, "Admin");
+                //_helperCommonService.AddKeepRec($"Response for {_ShopifyUrl}: {responseContent}", null, "Admin");
 
                 if (!response.IsSuccessStatusCode)
                 {
@@ -809,113 +841,122 @@ namespace YJWebCoreMVC.Services
                 return jsonResponse.RootElement.GetProperty("shop").GetProperty("name").GetString();
             }
         }
-        public static string GetNextInvoice()
+        public string GetNextInvoice()
         {
-            return Helper.GetNextSeqNo("Invoice", "Inv_no", "100000", "", "1", "").PadLeft(6, ' ');
+            return _helperService.HelperCommon.GetNextSeqNo("Invoice", "Inv_no", "100000", "", "1", "").PadLeft(6, ' ');
         }
-        public async Task<bool> DownloadShopifyOrders(DateTime fromdate, DateTime todate, string jobId)
+        public async Task<bool> DownloadShopifyOrders(DateTime fromdate, DateTime todate, string jobId, ShopifyCredentialsModel creds)
         {
             bool success = true;
-            _storeName = await GetStoreNameAsync();
+
+            var shopUrl = creds.Url;
+            var apiKey = creds.ApiKey;
+            var secret = creds.Secret;
+
+            _storeName = await GetStoreNameAsync(creds);
+
 
             dtDownloadedOrders = new DataTable();
             dtDownloadedOrders.Columns.Add("ORDER_NO", typeof(string));
             dtDownloadedOrders.Columns.Add("INVOICE_NO", typeof(string));
 
-            string Nextinvoice = Helper.GetNextSeqNo("Invoice", "Inv_no", "100000", "", "1", "").PadLeft(6, ' ');
+            string Nextinvoice = _helperService.HelperCommon.GetNextSeqNo("Invoice", "Inv_no", "100000", "", "1", "").PadLeft(6, ' ');
             HttpWebResponse response = null;
 
             Stream dataStream = null;
             StreamReader reader = null;
 
-            try
+            //try
+            //{
+
+            IList<ShopifySharp.Order> orderList = new List<ShopifySharp.Order>();
+            //System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Ssl3 | System.Net.SecurityProtocolType.Tls | System.Net.SecurityProtocolType.Tls11 | System.Net.SecurityProtocolType.Tls12;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+
+            //string startdate = DateTime.SpecifyKind(this.dateFrom.Value, DateTimeKind.Utc).ToString("o");
+            //string enddate = DateTime.SpecifyKind(this.dateTo.Value, DateTimeKind.Utc).ToString("o");
+
+            DateTime startDate = fromdate;
+            DateTime endDate = todate;
+
+            ShopifySharp.OrderService Ord_Service = new ShopifySharp.OrderService(shopUrl, secret);
+            List<ShopifySharp.Order> lstOrders = new List<ShopifySharp.Order>();
+            var totalOrders = await Ord_Service.CountAsync();
+            var startDateOffset = new DateTime(startDate.Year, startDate.Month, startDate.Day, 00, 00, 00, DateTimeKind.Utc); // Start of the day
+            var endDateOffset = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59, DateTimeKind.Utc);  // End of the day
+                                                                                                                       //var endDate1 = DateTime.Now;
+            /* var page = await Ord_Service.ListAsync(new OrderListFilter { Limit = 250 });*/
+            var page = await Ord_Service.ListAsync(new OrderListFilter
             {
-                IList<ShopifySharp.Order> orderList = new List<ShopifySharp.Order>();
-                System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Ssl3 | System.Net.SecurityProtocolType.Tls | System.Net.SecurityProtocolType.Tls11 | System.Net.SecurityProtocolType.Tls12;
+                Limit = 250,
+                CreatedAtMin = startDateOffset,
+                CreatedAtMax = endDateOffset,
+                //FinancialStatus="Paid",
+                //FulfillmentStatus= "unfulfilled"
+                Status = "any"
+            });
+            while (true)
+            {
+                lstOrders.AddRange(page.Items);
+                if (!page.HasNextPage)
+                    break;
+                page = await Ord_Service.ListAsync(page.GetNextPageFilter());
+            }
 
-                //string startdate = DateTime.SpecifyKind(this.dateFrom.Value, DateTimeKind.Utc).ToString("o");
-                //string enddate = DateTime.SpecifyKind(this.dateTo.Value, DateTimeKind.Utc).ToString("o");
+            int totalcount = lstOrders.Count, counter = 0;
 
-                DateTime startDate = fromdate;
-                DateTime endDate = todate;
+            DataTable dtShopifyOrderNos = GetShopifyOrderNumbers();
+            if (!_helperService.HelperCommon.DataTableOK(dtShopifyOrderNos))
+                dtShopifyOrderNos.Rows.Add("test");
 
-                OrderService Ord_Service = new ShopifySharp.OrderService(Helper.ShopifyURL, Helper.ShopifySecret);
-                List<ShopifySharp.Order> lstOrders = new List<ShopifySharp.Order>();
-                var totalOrders = await Ord_Service.CountAsync();
-                var startDateOffset = new DateTime(startDate.Year, startDate.Month, startDate.Day, 00, 00, 00, DateTimeKind.Utc); // Start of the day
-                var endDateOffset = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59, DateTimeKind.Utc);  // End of the day
-                //var endDate1 = DateTime.Now;
-                /* var page = await Ord_Service.ListAsync(new OrderListFilter { Limit = 250 });*/
-                var page = await Ord_Service.ListAsync(new OrderListFilter
-                {
-                    Limit = 250,
-                    CreatedAtMin = startDateOffset,
-                    CreatedAtMax = endDateOffset,
-                    //FinancialStatus="Paid",
-                    //FulfillmentStatus= "unfulfilled"
-                    Status = "any"
-                });
-                while (true)
-                {
-                    lstOrders.AddRange(page.Items);
-                    if (!page.HasNextPage)
-                        break;
-                    page = await Ord_Service.ListAsync(page.GetNextPageFilter());
-                }
+            var existingOrderNumbers = dtShopifyOrderNos.AsEnumerable().Select(row => row.Field<string>("SHPY_ORDERNO")).ToList();
+            var FinallistOrders = default(List<ShopifySharp.Order>);
+            if (existingOrderNumbers != null && existingOrderNumbers.Count > 0)
+            {
+                FinallistOrders = (List<Order>)lstOrders.Where(order => !existingOrderNumbers.Contains(order.OrderNumber.ToString())).ToList();
+            }
+            else
+            {
+                FinallistOrders = lstOrders;
+            }
+            BackgroundJobProgress.SetTotal(jobId, FinallistOrders.Count);
+            if (FinallistOrders.Count == 0)
+            {
+                TotalOrdersProcessed = 0;
+                return true;
+            }
+            bool finished = false;
+            foreach (ShopifySharp.Order order in FinallistOrders)
+            {
+                await AddNewInvoice(order, creds);
+                BackgroundJobProgress.Increment(jobId);
+            }
 
-                int totalcount = lstOrders.Count, counter = 0;
-
-                DataTable dtShopifyOrderNos = GetShopifyOrderNumbers();
-                if (!Helper.DataTableOK(dtShopifyOrderNos))
-                    dtShopifyOrderNos.Rows.Add("test");
-
-                var existingOrderNumbers = dtShopifyOrderNos.AsEnumerable().Select(row => row.Field<string>("SHPY_ORDERNO")).ToList();
-                var FinallistOrders = default(List<ShopifySharp.Order>);
-                if (existingOrderNumbers != null && existingOrderNumbers.Count > 0)
+            if (!unattended)
+            {
+                if (_helperService.HelperCommon.DataTableOK(dtDownloadedOrders))
                 {
-                    FinallistOrders = (List<Order>)lstOrders.Where(order => !existingOrderNumbers.Contains(order.OrderNumber.ToString())).ToList();
-                }
-                else
-                {
-                    FinallistOrders = lstOrders;
-                }
-                BackgroundJobProgress.SetTotal(jobId, FinallistOrders.Count);
-                if (FinallistOrders.Count == 0)
-                {
-                    TotalOrdersProcessed = 0;
-                    return true;
-                }
-                bool finished = false;
-                foreach (ShopifySharp.Order order in FinallistOrders)
-                {
-                    await AddNewInvoice(order);              // heavy work
-                    BackgroundJobProgress.Increment(jobId); // increment AFTER
-                }
-
-                if (!unattended)
-                {
-                    if (Helper.DataTableOK(dtDownloadedOrders))
-                    {
-                        TotalOrdersProcessed = dtDownloadedOrders.Rows.Count;
-                    }
+                    TotalOrdersProcessed = dtDownloadedOrders.Rows.Count;
                 }
             }
-            catch (Exception ex)
-            {
-                BackgroundJobProgress.SetError(jobId, ex.Message);
-                success = false;
-                return false;
-            }
-            finally
-            {
-                // Cleanup the streams and the response.
-                if (reader != null)
-                {
-                    reader.Close();
-                    dataStream.Close();
-                    response.Close();
-                }
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    BackgroundJobProgress.SetError(jobId, ex.Message);
+            //    success = false;
+            //    return false;
+            //}
+            //finally
+            //{
+            //    // Cleanup the streams and the response.
+            //    if (reader != null)
+            //    {
+            //        reader.Close();
+            //        dataStream.Close();
+            //        response.Close();
+            //    }
+            //}
             return success;
         }
 
@@ -926,7 +967,7 @@ namespace YJWebCoreMVC.Services
             {
                 // Create the command and set its properties
                 SqlDataAdapter.SelectCommand = new SqlCommand();
-                SqlDataAdapter.SelectCommand.Connection = new SqlConnection(Helper.connString);
+                SqlDataAdapter.SelectCommand.Connection = new SqlConnection(_connectionProvider.GetConnectionString());
                 SqlDataAdapter.SelectCommand.CommandType = CommandType.Text;
                 // Assign the SQL to the command object
 
@@ -946,7 +987,7 @@ namespace YJWebCoreMVC.Services
                 // Fill the datatable from adapter
                 SqlDataAdapter.Fill(dataTable);
             }
-            return Helper.GetRowOne(dataTable);
+            return _helperService.HelperCommon.GetRowOne(dataTable);
         }
 
         public static decimal? GetPhoneNumber(string phone)
@@ -974,7 +1015,7 @@ namespace YJWebCoreMVC.Services
 
             return null;
         }
-        public static DataTable GetInvoiceItems(string invno, bool includeinvoiceno = false, bool is_return = false, bool iSVatInclude = false)
+        public DataTable GetInvoiceItems(string invno, bool includeinvoiceno = false, bool is_return = false, bool iSVatInclude = false)
         {
             DataTable dataTable = new DataTable();
 
@@ -982,7 +1023,7 @@ namespace YJWebCoreMVC.Services
             {
                 // Create the command and set its properties
                 dataAdapter.SelectCommand = new SqlCommand();
-                dataAdapter.SelectCommand.Connection = new SqlConnection(Helper.connString);
+                dataAdapter.SelectCommand.Connection = new SqlConnection(_connectionProvider.GetConnectionString());
                 dataAdapter.SelectCommand.CommandType = CommandType.StoredProcedure;
                 dataAdapter.SelectCommand.CommandText = "GetInvoiceItems_SingerShopify"; // common sp 
 
@@ -998,7 +1039,7 @@ namespace YJWebCoreMVC.Services
                 return dataTable;
             }
         }
-        public static DataTable GetInvoiceDiscount(string inv_no, bool iSRepair = false)
+        public DataTable GetInvoiceDiscount(string inv_no, bool iSRepair = false)
         {
             DataTable dataTable = new DataTable();
 
@@ -1006,7 +1047,7 @@ namespace YJWebCoreMVC.Services
             {
                 // Create the command and set its properties
                 dataAdapter.SelectCommand = new SqlCommand();
-                dataAdapter.SelectCommand.Connection = new SqlConnection(Helper.connString);
+                dataAdapter.SelectCommand.Connection = _connectionProvider.GetConnection();
                 dataAdapter.SelectCommand.CommandType = CommandType.Text;
                 dataAdapter.SelectCommand.CommandText = iSRepair ? @"select Inv_no,trim(Discount) Discount,Amount from Invoice_Discounts where inv_no = trim(@inv_no)" : @"select Inv_no,trim(Discount) Discount,Amount from Invoice_Discounts where RIGHT('     '+ CONVERT(VARCHAR,ltrim(rtrim(inv_no))),6) =RIGHT('     '+ CONVERT(VARCHAR,ltrim(rtrim(@inv_no))),6)";
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@inv_no", inv_no);
@@ -1022,7 +1063,7 @@ namespace YJWebCoreMVC.Services
         private bool CreateNewStyle(string enteredStyle, string productTitle, decimal ItemPrice)
         {
 
-            enteredStyle = Helper.InvStyle(enteredStyle);
+            enteredStyle = _helperService.HelperCommon.InvStyle(enteredStyle);
 
             DiamondInventoryModel diamondinvModel = new DiamondInventoryModel()
             {
@@ -1148,26 +1189,26 @@ namespace YJWebCoreMVC.Services
             };
             string error;
 
-            DataTable dtStoneData = Helper.GetStoneGridData(enteredStyle);
+            DataTable dtStoneData = _helperService.HelperPhanindra.GetStoneGridData(enteredStyle);
 
-            StylesModel stylesModel = new StylesModel();
-            return stylesModel.AddAStyle(diamondinvModel, "insert", Helper.LoggedUser, Helper.StoreCodeInUse1, dtStoneData == null ? string.Empty : Helper.GetDataTableXML("STONES", dtStoneData), null, out error, null, null);
+
+            return _stylesService.AddAStyle(diamondinvModel, "insert", _helperService.HelperCommon.LoggedUser, _helperService.HelperCommon.StoreCodeInUse1, dtStoneData == null ? string.Empty : _helperService.HelperCommon.GetDataTableXML("STONES", dtStoneData), null, out error, null, null);
         }
 
-        public static void ValidatePaymentType(string Type)
+        public void ValidatePaymentType(string Type)
         {
-            Helper.GetSqlData("EXEC ValidatePaymentType @PaymentType", "@PaymentType", Type.ToString());
+            _helperService.HelperCommon.GetSqlData("EXEC ValidatePaymentType @PaymentType", "@PaymentType", Type.ToString());
         }
-        public static bool IsValidGiftCard(string GcNo)
+        public bool IsValidGiftCard(string GcNo)
         {
-            return Helper.DataTableOK(Helper.GetSqlData("select * from StoreCreditVoucher where LTRIM(RTRIM(UserGCNo))=@GcNo", "@GcNo", GcNo.Trim()));
+            return _helperService.HelperCommon.DataTableOK(_helperService.HelperCommon.GetSqlData("select * from StoreCreditVoucher where LTRIM(RTRIM(UserGCNo))=@GcNo", "@GcNo", GcNo.Trim()));
         }
 
-        public static bool AddInvoice(InvoiceModel invoice, string invoiceItems, string paymentItems, string discountItems, out string out_inv_no, bool ispayment = false, bool is_update = false, bool is_return = false, string storecodeinuse = "", string ShopifyOrderNo = "")
+        public bool AddInvoice(InvoiceModel invoice, string invoiceItems, string paymentItems, string discountItems, out string out_inv_no, bool ispayment = false, bool is_update = false, bool is_return = false, string storecodeinuse = "", string ShopifyOrderNo = "")
         {
             using (SqlCommand dbCommand1 = new SqlCommand())
             {
-                dbCommand1.Connection = new SqlConnection(Helper.connString);
+                dbCommand1.Connection = _connectionProvider.GetConnection();
                 dbCommand1.CommandType = CommandType.StoredProcedure;
                 dbCommand1.CommandText = "UPDATE_INVOICE";
                 dbCommand1.CommandTimeout = 6000;
@@ -1184,7 +1225,7 @@ namespace YJWebCoreMVC.Services
 
             using (SqlCommand dbCommand = new SqlCommand())
             {
-                dbCommand.Connection = new SqlConnection(Helper.connString);
+                dbCommand.Connection = _connectionProvider.GetConnection();
                 dbCommand.CommandType = CommandType.StoredProcedure;
                 dbCommand.CommandText = "MakeInvoiceFromShopifyOrders";
                 dbCommand.CommandTimeout = 12000;

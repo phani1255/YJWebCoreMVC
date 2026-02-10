@@ -1,9 +1,5 @@
-﻿//-- Neetha    05/06/2025 Added OnClick property.
-// venkat 01/07/2026 added AskPassword
-
+﻿
 using System.Xml;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using YJWebCoreMVC.Models;
 
 public interface IMenuService
@@ -137,7 +133,7 @@ namespace YJWebCoreMVC.Services
             //    int menuLevel;
             //    if (int.TryParse(node.Attributes["UserLevel"].Value, out menuLevel))
             //    {
-            //        if (Helper.LoggedUserLevel < menuLevel)
+            //        if (_helperCommonService.LoggedUserLevel < menuLevel)
             //            return false;
             //    }
             //}
@@ -155,15 +151,15 @@ namespace YJWebCoreMVC.Services
             //        if (!(bool)sessionValue)
             //            return false;
             //    }
-            //    else if (Enum.IsDefined(typeof(Helper.Modules), value))
+            //    else if (Enum.IsDefined(typeof(_helperCommonService.Modules), value))
             //    {
-            //        Helper.Modules module =
-            //            (Helper.Modules)Enum.Parse(typeof(Helper.Modules), value, true);
+            //        _helperCommonService.Modules module =
+            //            (_helperCommonService.Modules)Enum.Parse(typeof(_helperCommonService.Modules), value, true);
 
-            //        if (!Helper.CheckModuleEnabled(module))
+            //        if (!_helperCommonService.CheckModuleEnabled(module))
             //            return false;
             //    }
-            //    else if (!Helper.GetVariableValue(value))
+            //    else if (!_helperCommonService.GetVariableValue(value))
             //    {
             //        return false;
             //    }
@@ -182,15 +178,15 @@ namespace YJWebCoreMVC.Services
             //        if ((bool)sessionValue)
             //            return false;
             //    }
-            //    else if (Enum.IsDefined(typeof(Helper.Modules), value))
+            //    else if (Enum.IsDefined(typeof(_helperCommonService.Modules), value))
             //    {
-            //        Helper.Modules module =
-            //            (Helper.Modules)Enum.Parse(typeof(Helper.Modules), value, true);
+            //        _helperCommonService.Modules module =
+            //            (_helperCommonService.Modules)Enum.Parse(typeof(_helperCommonService.Modules), value, true);
 
-            //        if (Helper.CheckModuleEnabled(module))
+            //        if (_helperCommonService.CheckModuleEnabled(module))
             //            return false;
             //    }
-            //    else if (Helper.GetVariableValue(value))
+            //    else if (_helperCommonService.GetVariableValue(value))
             //    {
             //        return false;
             //    }

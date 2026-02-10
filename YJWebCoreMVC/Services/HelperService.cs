@@ -5,7 +5,7 @@ namespace YJWebCoreMVC.Services
     {
         public HelperCommonService HelperCommon { get; }
         public HelperPhanindraService HelperPhanindra { get; }
-        public HelperDharaniService HelperDharani{ get; }
+        public HelperDharaniService HelperDharani { get; }
         public HelperLokeshService HelperLokesh { get; }
         public HelperManojService HelperManoj { get; }
         public HelperSivaService HelperSiva { get; }

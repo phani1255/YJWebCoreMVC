@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "ncQXk9x202A=",
+  "dgSpecHash": "6g5W0Ii2rZo=",
   "success": true,
   "projectFilePath": "D:\\dotnet\\YJWebCoreMVC\\YJWebCoreMVC\\YJWebCoreMVC.csproj",
   "expectedPackageFiles": [
@@ -13,18 +13,12 @@
     "C:\\Users\\HP\\.nuget\\packages\\microsoft.aspnet.razor\\3.3.0\\microsoft.aspnet.razor.3.3.0.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\microsoft.aspnet.webpages\\3.3.0\\microsoft.aspnet.webpages.3.3.0.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\microsoft.aspnetcore.http.extensions\\2.3.9\\microsoft.aspnetcore.http.extensions.2.3.9.nupkg.sha512",
-    "C:\\Users\\HP\\.nuget\\packages\\microsoft.aspnetcore.mvc.razor.extensions\\6.0.0\\microsoft.aspnetcore.mvc.razor.extensions.6.0.0.nupkg.sha512",
-    "C:\\Users\\HP\\.nuget\\packages\\microsoft.aspnetcore.mvc.razor.runtimecompilation\\10.0.2\\microsoft.aspnetcore.mvc.razor.runtimecompilation.10.0.2.nupkg.sha512",
-    "C:\\Users\\HP\\.nuget\\packages\\microsoft.aspnetcore.razor.language\\6.0.0\\microsoft.aspnetcore.razor.language.6.0.0.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\8.0.0\\microsoft.bcl.asyncinterfaces.8.0.0.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\microsoft.codeanalysis.analyzers\\3.11.0\\microsoft.codeanalysis.analyzers.3.11.0.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\microsoft.codeanalysis.common\\5.0.0\\microsoft.codeanalysis.common.5.0.0.nupkg.sha512",
-    "C:\\Users\\HP\\.nuget\\packages\\microsoft.codeanalysis.csharp\\4.0.0\\microsoft.codeanalysis.csharp.4.0.0.nupkg.sha512",
-    "C:\\Users\\HP\\.nuget\\packages\\microsoft.codeanalysis.razor\\6.0.0\\microsoft.codeanalysis.razor.6.0.0.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\microsoft.codeanalysis.visualbasic\\5.0.0\\microsoft.codeanalysis.visualbasic.5.0.0.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\microsoft.data.sqlclient\\6.1.4\\microsoft.data.sqlclient.6.1.4.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\microsoft.data.sqlclient.sni.runtime\\6.0.2\\microsoft.data.sqlclient.sni.runtime.6.0.2.nupkg.sha512",
-    "C:\\Users\\HP\\.nuget\\packages\\microsoft.extensions.dependencymodel\\10.0.2\\microsoft.extensions.dependencymodel.10.0.2.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\microsoft.identity.client\\4.80.0\\microsoft.identity.client.4.80.0.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\microsoft.identity.client.extensions.msal\\4.78.0\\microsoft.identity.client.extensions.msal.4.78.0.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\microsoft.identitymodel.abstractions\\8.14.0\\microsoft.identitymodel.abstractions.8.14.0.nupkg.sha512",
@@ -42,6 +36,7 @@
     "C:\\Users\\HP\\.nuget\\packages\\runtime.win-arm64.runtime.native.system.data.sqlclient.sni\\4.4.0\\runtime.win-arm64.runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\runtime.win-x64.runtime.native.system.data.sqlclient.sni\\4.4.0\\runtime.win-x64.runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\runtime.win-x86.runtime.native.system.data.sqlclient.sni\\4.4.0\\runtime.win-x86.runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512",
+    "C:\\Users\\HP\\.nuget\\packages\\shopifysharp\\6.25.4\\shopifysharp.6.25.4.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\sixlabors.imagesharp\\3.1.12\\sixlabors.imagesharp.3.1.12.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\system.clientmodel\\1.8.0\\system.clientmodel.1.8.0.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\system.codedom\\10.0.0\\system.codedom.10.0.0.nupkg.sha512",
@@ -67,18 +62,6 @@
       "warningLevel": 1,
       "filePath": "D:\\dotnet\\YJWebCoreMVC\\YJWebCoreMVC\\YJWebCoreMVC.csproj",
       "libraryId": "Microsoft.AspNetCore.Http.Extensions",
-      "targetGraphs": [
-        "net10.0"
-      ]
-    },
-    {
-      "code": "NU1608",
-      "level": "Warning",
-      "message": "Detected package version outside of dependency constraint: Microsoft.CodeAnalysis.CSharp 4.0.0 requires Microsoft.CodeAnalysis.Common (= 4.0.0) but version Microsoft.CodeAnalysis.Common 5.0.0 was resolved.",
-      "projectPath": "D:\\dotnet\\YJWebCoreMVC\\YJWebCoreMVC\\YJWebCoreMVC.csproj",
-      "warningLevel": 1,
-      "filePath": "D:\\dotnet\\YJWebCoreMVC\\YJWebCoreMVC\\YJWebCoreMVC.csproj",
-      "libraryId": "Microsoft.CodeAnalysis.Common",
       "targetGraphs": [
         "net10.0"
       ]

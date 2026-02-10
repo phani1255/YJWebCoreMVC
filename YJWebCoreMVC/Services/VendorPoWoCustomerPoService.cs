@@ -1,7 +1,8 @@
-﻿/*
- *  Created By Dharani on 07-Jan-2026 and added getvendorPoinfobasedoninv, getvendorPoinfobasedoninvwithvendorinfo and getvendorDetails methods.
- *  Dharani 01/09/2026 Added getllpodetails method.
+﻿/* Created By Dharani on 02/04/2026
+ * 
  */
+
+using Microsoft.Data.SqlClient;
 using System.Data;
 
 namespace YJWebCoreMVC.Services
@@ -9,32 +10,46 @@ namespace YJWebCoreMVC.Services
     public class VendorPoWoCustomerPoService
     {
         private readonly ConnectionProvider _connectionProvider;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly HelperCommonService _helperCommonService;
+        private readonly IWebHostEnvironment _env;
+        private readonly string _companyName;
+        private readonly string _storeCodeInUse;
+        private readonly string _loggedUser;
 
-        public VendorPoWoCustomerPoService(ConnectionProvider connectionProvider, HelperCommonService helperCommonService)
+        public VendorPoWoCustomerPoService(ConnectionProvider connectionProvider, IHttpContextAccessor httpContextAccessor, HelperCommonService helperCommonService, IWebHostEnvironment env)
         {
             _connectionProvider = connectionProvider;
+            _httpContextAccessor = httpContextAccessor;
             _helperCommonService = helperCommonService;
+            _companyName = _httpContextAccessor.HttpContext?.Session.GetString("COMPANYNAME");
+            _storeCodeInUse = _httpContextAccessor.HttpContext?.Session.GetString("STORE_CODE");
+            _loggedUser = _httpContextAccessor.HttpContext?.Session.GetString("UserId");
+            _env = env;
         }
 
-        public DataTable getvendorPoinfobasedoninv(string inv)
+        public DataTable addVendorPo_AP(string xml, string fdate = "", string tdate = "", bool isAllDates = false, bool includePrevious = false, bool printList = false)
         {
-            return _helperCommonService.GetSqlData("select co.inv_no,co.date,co.style,co.size,co.qty,co.rcvd,co.acc,co.due_date,co.gold_price,s.price,co.Approved,co.Approve_Date,co.Approve_Note from CAST_ORD co left join styles s on s.style = co.style where trim(co.inv_no) in(@inv) ", "@inv", inv.Trim());
-        }
-        public DataTable getvendorPoinfobasedoninvwithvendorinfo(string inv)
-        {
-            return _helperCommonService.GetStoreProc("VendorPoInfoBasedOnInv", "@inv", inv);
-        }
+            var dataTable = new DataTable();
 
-        public DataRow getvendorDetails(string vendorname)
-        {
-            return _helperCommonService.GetSqlRow("select name,addr11,addr12,city1,state1,zip1,tel,email from vendors where acc=@vendorname", "@vendorname", vendorname);
-        }
-        public DataTable getllpodetails(string selectedvendor, string fvendorpo, string tvendorpo, string fponumber, string tponumber, string fdate, string tdate, string summarydetails, string opendetails)
-        {
-            return _helperCommonService.GetStoreProc("ListofVendorPoWoCustomerPo", "@SELECTEDVENDOR", selectedvendor, "@FROMVENDORPO", fvendorpo, "@TOVENDORPO", tvendorpo, "@FROMPONUMBER", fponumber, "@TOPONUMBER", tponumber, "@FROMDATE", Convert.ToDateTime(fdate).ToString(),
-                                            "@TODATE", Convert.ToDateTime(tdate).ToString(), "@SUMMERYOPTION", summarydetails, "@OPENOPTION", opendetails);
+            using (var connection = _connectionProvider.GetConnection())
+            using (var command = new SqlCommand("addVendorPo_AP", connection))
+            {
+                command.CommandType = CommandType.StoredProcedure;
 
+                command.Parameters.Add(new SqlParameter("@XMLDATA", SqlDbType.Xml) { Value = xml });
+                command.Parameters.Add(new SqlParameter("@fdate", SqlDbType.Date) { Value = fdate });
+                command.Parameters.Add(new SqlParameter("@tdate", SqlDbType.Date) { Value = tdate });
+                command.Parameters.AddWithValue("@isAlldates", isAllDates);
+                command.Parameters.AddWithValue("@isshowprevious", includePrevious);
+                command.Parameters.AddWithValue("@PrintList", printList);
+
+                using (var adapter = new SqlDataAdapter(command))
+                {
+                    adapter.Fill(dataTable);
+                }
+            }
+            return dataTable;
         }
     }
 }

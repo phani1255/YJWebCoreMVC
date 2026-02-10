@@ -1,0 +1,970 @@
+<!--
+  * Created by Phanindra
+  * Phanindra 12/09/2024 Worked on fixing issues with pricing changes and printout
+  * Phanindra 12/12/2024 Worked on fixing issues related to validations
+    Phanindra 12/30/2024 Worked on print related and credits and debits related changes.
+  * Phanindra 01/07/2025 Worked on validation alert change.
+  * Phanindra 01/10/2025 Added bank related changes for customer refund page
+    Phanindra 03/26/2025 Added PrintCheck functionality and calculation issues
+    Phanindra 04/06/2025 Worked on issues related checkno
+    Phanindra 04/24/2025 Worked on issue while saving refund info.
+    Phanindra 06/09/2025 Worked on fixing save issue for customer refund.
+-->
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model YJWeb.Models.SalesPaymentsCreditsModel
+
+<div id="content-center" class="row">
+
+    <div class="web-form page login-page col-sm-12" id="FormForEditQuotation">
+        <input type="hidden" id="pageType" value="@ViewBag.PageType" />
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            @(ViewBag.PageType == "Refund" ? "Refund No." : "Receipt No.")
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" id="txtReceiptNo" class="form-control activateFormRefreshBtn" value="@ViewBag.ReceiptNo">
+                            <input type="hidden" id="txtReceiptNoOrig" value="@ViewBag.ReceiptNo" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-4 customerType">
+                            Customer
+                        </label>
+                        <div class="col-sm-8">
+                            <div class="autocomplete-dropdown">
+                                <div id="CustomerCodesForAutofill1" class="d-none">@Html.Raw(Json.Encode(Model.CustomerCodes)) </div>
+                                <input type="text" id="txtCustomerCode2" class="form-control activateFormRefreshBtn defaultdisabled" maxlength="15" placeholder="Search...">
+                                <div id="autocomplete-list1" class="autocomplete-items"></div>
+                            </div>
+                            <div class="customerCodeSearchDiv">
+                                <button class="formsGlobalUniqueBtn customerCodeSearchBtn1 showbsmodal activateFormRefreshBtn" data-modal-id="selectCustomerAccModal" data-bs-toggle="modal" data-bs-target="#selectCustomerAccModal">...</button>
+                            </div>
+                            <p id="txtCustomerName"></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Check No.
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" id="txtCustomerCheckNo" class="form-control activateFormRefreshBtn">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-4">
+                            @(ViewBag.PageType == "Refund" ? "Refund Amt." : "Amount Paid.")
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" id="txtAmountPaid" class="form-control activateFormRefreshBtn updateRecordAmounts" value="0.00">
+                        </div>
+                    </div>
+                    <div class="row @(ViewBag.PageType == "Refund" ? "d-none" : "")">
+                        <label class="col-sm-4">
+                            Disc. Taken
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" id="txtDiscTaken" class="form-control activateFormRefreshBtn updateRecordAmounts" value="0">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Entry Date
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtEntryDate" class="form-control fs-13 activateFormRefreshBtn defaultdisabled" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-4">
+                            @(ViewBag.PageType == "Refund" ? "Refund Date" : "Deposit Date")
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtDepositDate" class="form-control fs-13 activateFormRefreshBtn defaultdisabled" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-4">
+                            @(ViewBag.PageType == "Refund" ? "Refund From" : "Deposit To")
+                        </label>
+                        <div class="col-sm-8">
+                            @Html.DropDownListFor(x => x.DefaultBank, Model.DefaultBanks, new { @class = "form-control defaultdisabled resetSelectField activateFormRefreshBtn", @id = "txtDepositTo" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-4">
+
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="checkbox" id="txtIsShowMemo" class="activateFormRefreshBtn" /> Show Memo
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            @(ViewBag.PageType == "Refund" ? "Refund Type" : "Payment Type")
+                        </label>
+                        <div class="col-sm-8">
+                            @Html.DropDownListFor(x => x.PaymentType, Model.PaymentTypes, new { @class = "form-control defaultdisabled resetSelectField activateFormRefreshBtn", @id = "txtPaymentType" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Payment Note
+                        </label>
+                        <div class="col-sm-8">
+                            <textarea id="txtPaymentNote" class="form-control activateFormRefreshBtn"></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-4">
+                        </label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtSearchRefNo" class="form-control activateFormRefreshBtn" />
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="button" id="btnSearchStyle" value="Search" class="formsGlobalUniqueBtn" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p class="blue-bg-para">@(ViewBag.PageType == "Refund" ? "Refund Details" : "Cash Receipt Details")</p>
+            <div class="mt-2 white-box pos-rel" id="">
+                <div>
+
+                </div>
+                <div class="row">
+                    <div class="well empty-well CashReceiptsInfo">
+                        <p>No Data to display</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="showRefundBank" class="d-none">
+                <div class="row">
+                    <div class="col-sm-4 col-lg-6">
+                    </div>
+                    <div class="col-sm-8 col-lg-6">
+                        <div class="row">
+                            <label class="col-sm-2">Issuing Bank</label>
+                            <div class="col-sm-3">
+                                @Html.DropDownListFor(x => x.DefaultBank, Model.AllBankCodes, new { @class = "form-control defaultdisabled resetSelectField activateFormRefreshBtn", @id = "txtBank" })
+                            </div>
+                            <label class="col-sm-2">Check#</label>
+                            <div class="col-sm-2">
+                                <input type="text" class="form-control" id="txtCheckNo" value="" />
+                            </div>
+                            <div class="col-sm-3">
+                                <input type="checkbox" id="printCheck" /> Print Check
+                            </div>
+                            <input type="hidden" id="MicrReport" value="@ViewBag.MICR" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="row">
+                    <div class="col-sm-7">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="row">
+                                    <label class="col-sm-6">Credits</label>
+                                    <div class="col-sm-6"><input type="text" id="credits" class="form-control" value="$0.00" readonly /></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="row">
+                                    <label class="col-sm-6">Debits</label>
+                                    <div class="col-sm-6"><input type="text" id="debits" class="form-control" value="$0.00" readonly /></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="row">
+                                    <label class="col-sm-6">Difference</label>
+                                    <div class="col-sm-6"><input type="text" id="diference" class="form-control" value="$0.00" readonly /></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-5 text-right">
+                        <button class="formsGlobalUniqueBtn saveReceipt">Save</button>
+                        <button class="formsGlobalUniqueBtn autoAppyReceipt  @(ViewBag.PageType == "Refund" ? "d-none" : "")">Auto Apply</button>
+                        <button class="formsGlobalUniqueBtn cancelReceipt">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<div class="modal fade" id="printCheckBsModal" tabindex="-1" aria-labelledby="printCheckBsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="printCheckBsModalLabel"></h5>
+                <button type="button" class="formsGlobalUniqueCloseBtn btn-close closeModal" data-modal-id="printCheckBsModal" data-bs-dismiss="modal" aria-label="Close">X</button>
+            </div>
+            <div class="modal-body">
+                <div class="row col-md-6 report_buttons1">
+                    <div style="margin:3px;">
+                        <input type="button" value="Preview" id="btnPreview1" class="formsGlobalUniqueBtn refNoForPrint" />
+                    </div>
+                    <div style="margin:3px;">
+                        <input type="button" value="Print" id="btnPrint1" class="formsGlobalUniqueBtn refNoForPrint1" />
+                    </div>
+                    <div style="margin:3px;">
+                        <input type="button" value="PDF" class="formsGlobalUniqueBtn btnDataTableDownloadPDF" id="getReprintChecktoPdf1" />
+                    </div>
+                    <div style="margin:3px;">
+                        <input type="button" value="Excel" class="formsGlobalUniqueBtn btnDataTableDownloadExcel" id="getReprintChecktoExcel1" />
+                    </div>
+                    <div style="margin:3px;display:none;">
+                        <input type="button" value="Email" class="formsGlobalUniqueBtn" />
+                    </div>
+                    <div style="margin:3px;display:none;">
+                        <input type="button" value="Simple Excel" class="formsGlobalUniqueBtn" />
+                    </div>
+                </div>
+                <div class="printCheckContent d-none">
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="formsGlobalUniqueCloseBtn closeModal" data-modal-id="printCheckBsModal" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var now = new Date();
+        var day = ("0" + now.getDate()).slice(-2);
+        var month = ("0" + (now.getMonth() + 1)).slice(-2);
+
+        var today = now.getFullYear() + "-" + (month) + "-" + (day);
+        $("#txtEntryDate").val(today);
+        $("#txtDepositDate").val(today);
+
+        var CustomerCodes1 = JSON.parse($("#CustomerCodesForAutofill1").html());
+        $("#txtCustomerCode2").on("input", function () {
+            var capval = 0;
+            var query = $(this).val().toLowerCase();
+            var list = $("#autocomplete-list1");
+            list.empty();
+
+            if (!query) return;
+
+            var results = CustomerCodes1.filter(function (item) {
+                return item.Text.toLowerCase().indexOf(query) === 0;
+            });
+
+            results.forEach(function (item) {
+                capval++;
+                if (capval <= 20) {
+                    var itemElement = $("<div>")
+                        .addClass("autocomplete-item2")
+                        .text(item.Text)
+                        .on("click", function () {
+                            $("#txtCustomerCode2").val(item.Text);
+                            //alert(item.Text);
+                            GetReceiptData(item.Text);
+                            //list.empty();
+                        });
+
+                    list.append(itemElement);
+                }
+            });
+        });
+    })
+
+    $(document).on('blur', "#txtCustomerCode2", function () {
+        setTimeout(function () {
+            customerCode = $("#txtCustomerCode2").val();
+
+            var CustomerCodes1 = JSON.parse($("#CustomerCodesForAutofill1").html());
+            var exists = CustomerCodes1.some(function (item) {
+                return item.Text.toLowerCase() === customerCode.toLowerCase();
+            });
+
+            if (!exists) {
+                alert("Invalid Customer Code");
+                //$("#txtCustomerCode2").val('');
+                $("#txtCustomerCode2").focus('');
+                $("#CashReceiptsInfo").empty();
+                return false;
+            }
+            setTimeout(function () {
+                getCustomerNameByCode(customerCode);
+            }, 1000);
+            GetReceiptData(customerCode);
+        }, 1000);
+
+    })
+
+    $("#txtIsShowMemo").change(function () {
+        customerCode = $("#txtCustomerCode2").val();
+        GetReceiptData(customerCode);
+    })
+
+    function GetReceiptData(customerCode) {
+
+        var CustomerCodes1 = JSON.parse($("#CustomerCodesForAutofill1").html());
+        var exists = CustomerCodes1.some(function (item) {
+            return item.Text.toLowerCase() === customerCode.toLowerCase();
+        });
+
+        if (!exists) {
+            alert("Invalid Customer Code");
+            //$("#txtCustomerCode2").val('');
+            $("#txtCustomerCode2").focus('');
+            $("#CashReceiptsInfo").empty();
+            return false;
+        }
+
+        //$(".autocomplete-items").empty();
+        $(".CashReceiptsInfo").html();
+        var now = new Date();
+        var day = ("0" + now.getDate()).slice(-2);
+        var month = ("0" + (now.getMonth() + 1)).slice(-2);
+
+        var today = now.getFullYear() + "-" + (month) + "-" + (day);
+        //customerCode = $("#txtCustomerCode2").val();
+        if (customerCode.trim() == '') {
+            $(".CashReceiptsInfo").html('');
+            return false;
+        }
+        receiptNo = $("#txtReceiptNo").val();
+        lRefund = false;
+        if ($("#pageType").val() == "Refund") {
+            lRefund = true;
+        }
+        isccswipe = false;
+        if (lRefund && $("#txtPaymentType").val().toUpperCase() == "CC SWIPE") {
+            isccswipe = true;
+        }
+        $.ajax({
+            url: '../SalesPaymentsCredits/GetReceiptData',
+            async: false,
+            data: {
+                acc: customerCode,
+                receipt_no: receiptNo,
+                lRefund: lRefund,
+                isccswipe: isccswipe
+            },
+            success: function (response) {
+                //alert(response);
+                var json;
+                if (response instanceof Object)
+                    json = response;
+                else
+                    json = $.parseJSON(response);
+
+                cashReceipts = "";
+                cashReceipts += "<table class='table tabled-bordered'>";
+                cashReceipts += "<thead>";
+                if (lRefund) {
+                    cashReceipts += "<tr><th>Ref Type</th><th>Ref No</th><th>Ref Date</th><th>Max Refund</th><th>Credits</th><th class='d-none'></th><th class='d-none'></th><th class='d-none'></th><th class='d-none'></th><th class='d-none'></th><th class='d-none'></th><th>Refund</th></tr>";
+                } else {
+                    cashReceipts += "<tr><th>Ref Type</th><th>Ref No</th><th>Ref Date</th><th>Orig Amt</th><th>Balance</th><th class='d-none'></th><th class='d-none'></th><th class='d-none'></th><th class='d-none'></th><th class='d-none'></th><th class='d-none'></th><th>Applied</th></tr>";
+                }
+
+                cashReceipts += "</thead>";
+                cashReceipts += "<tbody id='CashReceiptsInfo'>";
+                var trans = json;
+                isShowMemo = false;
+                if ($("#txtIsShowMemo:checked").length > 0) {
+                    isShowMemo = true;
+                }
+                for (var i = 0; i < json.length; i++) {
+                    if (json[i].REF_TYPE == "MEMO" && isShowMemo == false) {
+                        //cashReceipts += "<tr class='d-none'>";
+                        continue;
+                    }
+                    cashReceipts += "<tr>";
+                    cashReceipts += "<td class='ref_type'>" + json[i].REF_TYPE + "</td>";
+                    cashReceipts += "<td class='ref_no' id='ref_no_" + json[i].REF_NO + "'>" + json[i].REF_NO + "</td>";
+                    cashReceipts += "<td class='ref_date'>" + json[i].REF_DATE.split('T')[0] + "</td>";
+                    cashReceipts += "<td class='original'>" + numberWithCommas(json[i].ORIGINAL) + "</td>";
+                    if (lRefund) {
+                        cashReceipts += "<td class='credits'>" + numberWithCommas(json[i].CREDITS) + "</td>";
+                    } else {
+                        cashReceipts += "<td class='bal_amount'>" + numberWithCommas(json[i].BAL_AMOUNT) + "</td>";
+                    }
+                    cashReceipts += "<td class='d-none curr_type'>" + json[i].CURR_TYPE + "</td>";
+                    cashReceipts += "<td class='d-none curr_rate'>" + json[i].CURR_RATE + "</td>";
+                    cashReceipts += "<td class='d-none curr_amount'>" + json[i].CURR_AMOUNT + "</td>";
+                    cashReceipts += "<td class='app_amt_td'><input type='text' class='app_amount_values' value='" + numberWithCommas(json[i].APP_AMOUNT) + "'></td>";
+                    cashReceipts += "<td class='d-none appamt'>" + json[i].APPAMT + "</td>";
+                    cashReceipts += "<td class='d-none appflg'>" + json[i].APPFLG + "</td>";
+                    if (!lRefund) {
+                        cashReceipts += "<td class='d-none credits'>" + numberWithCommas(json[i].CREDITS) + "</td>";
+                    } else {
+                        cashReceipts += "<td class='d-none bal_amount'>" + numberWithCommas(json[i].BAL_AMOUNT) + "</td>";
+                    }
+                    cashReceipts += "</tr>";
+
+                }
+                cashReceipts += "</tbody>";
+                cashReceipts += "</table>";
+                $(".CashReceiptsInfo").html(cashReceipts);
+                $("#ref_no_" + receiptNo).siblings(".app_amt_td").find(".app_amount_values").focus();
+                //$("#autocomplete-list1").empty();
+                updateRecordAmounts();
+            }
+        })
+
+    }
+
+    $(document).on('click', ".saveReceipt", function () {
+
+        receiptNo = $("#txtReceiptNo").val();
+        customerCode = $("#txtCustomerCode2").val();
+        paymentType = $("#txtPaymentType").val();
+        checkNo = $("#txtCustomerCheckNo").val();
+        entryDate = $("#txtEntryDate").val().replace('{', '').replace('}', '');
+        depositDate = $("#txtDepositDate").val().replace('{', '').replace('}', '');
+        paymentNote = $("#txtPaymentNote").val();
+
+        txtBank = $("#txtDepositTo").val();
+        if (lRefund && paymentType.toUpperCase() == "CHECK") {
+            txtBank = $("#txtBank").val(); // we need to check this
+            checkNo = $("#txtCheckNo").val();
+        } else {
+            txtBank = ddlBankAcc = ""; // we need to check this
+            //checkNo = $("#txtCustomerCheckNo").val();
+        }
+
+        checkAmount = $("#txtAmountPaid").val();
+        discountTaken = $("#txtDiscTaken").val();
+
+        calculateCrDb();
+        credits = $("#credits").val().replace("$", "").replace(/\$|,/g, "");
+        debits = $("#debits").val().replace("$", "").replace(/\$|,/g, "");
+        if ($("#pageType").val() == "Refund") {
+            finalTotal = 0;
+            $('.app_amount_values').each(function () {
+                finalTotal += parseFloat($(this).val().replace("$", "").replace(/\$|,/g, ""));
+            })
+            if (finalTotal > 0) {
+                alert("Total Refund amount must be less than zero");
+                return false;
+            }
+            if (checkAmount != finalTotal && finalTotal != 0) {
+                alert("Refund amount must be " + finalTotal);
+                return false;
+            }
+        } else {
+            if (Math.abs(credits) != Math.abs(debits)) {
+                alert("Credits Must match Debits");
+                return false;
+            }
+        }
+
+        async function validateChecksAndReceipts() {
+            if (checkNo !== "" && paymentType.toUpperCase() === "CHECK") {
+                try {
+                    const checkResponse = await $.ajax({
+                        url: '../Common/GetChecknoWithAccinPayTm',
+                        data: { reciptno: checkNo, Acc: customerCode }
+                    });
+
+                    if (checkResponse) {
+                        let data = JSON.parse(checkResponse); // Convert JSON string to an object
+
+                        if (Array.isArray(data) && data.length > 0) {
+                            // If data is an array and has at least one record
+                            alert(`Check#(${checkNo}) has already been used for the customer: ${customerCode}. Please enter a different Check#.`);
+                            return false;
+                        }
+                    }
+                } catch (error) {
+                    console.error("Error in check validation:", error);
+                    return false;
+                }
+            }
+
+            try {
+                const receiptResponse = await $.ajax({
+                    url: '../Common/CheckReceiptExistOrNot',
+                    data: { RecNo: receiptNo, RTV_PAY: "P" }
+                });
+
+                if (receiptResponse && receiptResponse !== "False") {
+                    alert(`Receipt#(${receiptNo}) already exists.`);
+                    return false;
+                }
+            } catch (error) {
+                console.error("Error in receipt validation:", error);
+                return false;
+            }
+
+            return true; // Proceed if both checks pass
+        }
+
+        // Usage:
+        validateChecksAndReceipts().then(valid => {
+            if (valid) {
+
+                dtAddCashReceipt = [];
+                index = 0;
+                $("#CashReceiptsInfo tr").each(function () {
+                    dtAddCashReceipt[index] = {};
+                    dtAddCashReceipt[index]['REF_TYPE'] = $(this).find('.ref_type').html();
+                    dtAddCashReceipt[index]['REF_NO'] = $(this).find('.ref_no').html();
+                    dtAddCashReceipt[index]['REF_DATE'] = $(this).find('.ref_date').html();
+                    if ($("#pageType").val() == "Refund") {
+                        dtAddCashReceipt[index]['ORIGINAL'] = 0;
+                    } else {
+                        dtAddCashReceipt[index]['ORIGINAL'] = $(this).find('.original').html().replace("$", "").replace(/\$|,/g, "");
+                    }
+                    dtAddCashReceipt[index]['CREDITS'] = $(this).find('.credits').html().replace("$", "").replace(/\$|,/g, "");
+
+                    dtAddCashReceipt[index]['CURR_TYPE'] = $(this).find('.curr_type').html();
+                    dtAddCashReceipt[index]['CURR_RATE'] = $(this).find('.curr_rate').html().replace("$", "").replace(/\$|,/g, "");
+                    dtAddCashReceipt[index]['CURR_AMOUNT'] = $(this).find('.curr_amount').html().replace("$", "").replace(/\$|,/g, "");
+                    dtAddCashReceipt[index]['APP_AMOUNT'] = $(this).find('.app_amt_td').find('.app_amount_values').val().replace("$", "").replace(/\$|,/g, "");
+                    dtAddCashReceipt[index]['APPAMT'] = $(this).find('.appamt').html().replace("$", "").replace(/\$|,/g, "");
+                    dtAddCashReceipt[index]['APPFLG'] = $(this).find('.appflg').html();
+                    dtAddCashReceipt[index]['BAL_AMOUNT'] = parseFloat($(this).find('.bal_amount').html().replace("$", "").replace(/\$|,/g, ""));
+                    index++;
+                })
+                dtAddCashReceiptXml = "<DocumentElement>" + jsonToXml("PaymentItems", dtAddCashReceipt) + "</DocumentElement>";
+
+                showmemo = false;
+                if ($("#txtIsShowMemo:checked").length > 0) {
+                    showmemo = true;
+                }
+                pcname = "";
+                Cash_Register = "";
+                storecodeinuse = $("#StoreCodeInUse").val();
+                loggeduser = $("#UserId").val();
+
+                $.ajax({
+                    url: '../SalesPaymentsCredits/SaveReceipt',
+                    type: 'post',
+                    data: {
+                        dtPayment: dtAddCashReceiptXml,
+                        acc: customerCode,
+                        receipt_no: receiptNo,
+                        pay_date: entryDate,
+                        chk_date: depositDate,
+                        bank: txtBank,
+                        checkno: checkNo,
+                        chk_amt: parseFloat(checkAmount),
+                        discount: parseFloat(discountTaken),
+                        showmemo: showmemo,
+                        error: '',
+                        pcname: pcname,
+                        PaymentsTypes: paymentType,
+                        PaymentNote: paymentNote,
+                        Cash_Register: Cash_Register,
+                        StoreCode: storecodeinuse,
+                        loggeduser: loggeduser,
+                        storecodeinuse: storecodeinuse,
+                        isRefund: lRefund
+                    },
+                    success: function (response) {
+                        if (response == "Success") {
+                            if ($("#pageType").val() == "Refund") {
+                                alert("Customer Refund Saved Successfully");
+                            } else {
+                                alert("Cash Receipt Added Successfully");
+                            }
+                            //window.location.reload();
+                            $.ajax({
+                                url: "../SalesPaymentsCredits/PrintCashReceipt",
+                                type: "POST",
+                                data: {
+                                    inv_no: receiptNo
+                                },
+                                success: function (res) {
+                                    //alert(res);
+                                    $("#firstCommonBsModal .modal-title").html("Print Receipt");
+                                    $("#firstCommonBsModal .modal-body").html(res);
+                                    $("#firstCommonBsModal").show();
+                                    $("#firstCommonBsModal").addClass('show');
+                                    $("#firstCommonBsModal .closeModal").addClass("closePrintModel");
+                                }
+                            })
+                            //ClearControls();
+                        } else {
+                            alert(response);
+                        }
+                    }
+                })
+
+            }
+        });
+
+
+    })
+
+    $(".updateRecordAmounts").blur(function () {
+        updateRecordAmounts();
+
+    })
+
+    function updateRecordAmounts() {
+        amountPaid = discountTaken = 0;
+        receiptNo = $("#txtReceiptNo").val();
+        lRefund = false;
+        if ($("#pageType").val() == "Refund") {
+            lRefund = true;
+        }
+        if ($("#txtAmountPaid").val() != '') {
+            amountPaid = $("#txtAmountPaid").val();
+        }
+        if ($("#txtDiscTaken").val() != '') {
+            discountTaken = $("#txtDiscTaken").val();
+        }
+
+        if ($("#pageType").val() == "Refund") {
+            $("#ref_no_" + receiptNo).siblings(".original").html("-$" + amountPaid);
+            $("#ref_no_" + receiptNo).siblings(".credits").html("$" + amountPaid);
+            $("#ref_no_" + receiptNo).siblings(".app_amt_td").find(".app_amount_values").val("$" + amountPaid);
+        } else {
+            finalAmount = parseFloat(amountPaid) + parseFloat(discountTaken);
+            $("#ref_no_" + receiptNo).siblings(".original").html("$" + finalAmount);
+            $("#ref_no_" + receiptNo).siblings(".bal_amount").html("-$" + finalAmount);
+            $("#ref_no_" + receiptNo).siblings(".app_amt_td").find(".app_amount_values").val("-$" + finalAmount);
+        }
+        calculateCrDb();
+    }
+
+    $(document).on('blur', '.app_amount_values', function () {
+        curelm = $(this);
+        applied = curelm.val().replace("$", "");
+        if (Math.abs(applied) == 0 || Math.abs(applied) == 0.00) {
+            return false;
+        }
+        balance = curelm.parent('td').siblings('.bal_amount').html().replace("$", "").replace(/\$|,/g, "");
+        original = curelm.parent('td').siblings('.original').html().replace("$", "").replace(/\$|,/g, "");
+        credits = curelm.parent('td').siblings('.credits').html().replace("$", "").replace(/\$|,/g, "");
+        ref_type = curelm.parent('td').siblings('.ref_type').html();
+        appflg = curelm.parent('td').siblings('.appflg').html();
+        if ($("#pageType").val() != "Refund") {
+            //if ((ref_type == "Payment" || ref_type == "Credit" || ref_type == "RTV") && (applied > 0 || applied < balance)) {
+            //    alert("Applied amount should be between 0 and " + balance);
+            //    curelm.val('0.00');
+            //    curelm.focus();
+            //    return false;
+            //}
+            if (Math.abs(applied) > Math.abs(balance) || Math.sign(applied) != Math.sign(balance)) {
+                alert("Applied amount should be between 0 and " + balance);
+                curelm.val('0.00');
+                curelm.focus();
+                return false;
+            }
+        } else {
+            if (original > 0 && appflg != "C") {
+                alert("Refund can be applied to overpaid invoices or unapplied payments/credits only");
+                e.Cancel = true;
+                return;
+            }
+
+            if (Math.abs(applied) > Math.abs(balance) && appflg != "C") {
+                alert("Refund Amount, Must be between 0 && " + balance);
+                curelm.val('0.00');
+                curelm.focus();
+                e.Cancel = true;
+                return;
+            }
+
+            if (original < 0 && applied > 0 && appflg != "C") {
+                alert("Refund Amount, Must be between 0 && " + balance);
+                curelm.val('0.00');
+                curelm.focus();
+                e.Cancel = true;
+                return;
+            }
+            curelm.parent('td').siblings('.credits').html(parseFloat(applied).toFixed(2));
+        }
+        //if ($("#pageType").val() == "Refund" && (original > applied || applied < credits)) {
+        //    alert("Applied amount should be between " + credits +" and " + original);
+        //    curelm.val('0.00');
+        //    curelm.focus();
+        //    return false;
+        //}
+        curelm.val(parseFloat(applied).toFixed(2));
+        calculateCrDb();
+    })
+
+    //$(document).on('blur', '#txtAmountPaid', function () {
+    //    receiptNo = $("#txtReceiptNo").val();
+    //    if ($("#pageType").val() == "Refund") {
+    //        $("#ref_no_" + receiptNo).siblings(".app_amt_td").find(".app_amount_values").focus();
+    //    }
+    //})
+
+    function enforcePrecision(input) {
+        const value = parseFloat(input.value);
+        if (!isNaN(value)) {
+            input.value = value.toFixed(2); // Always format to 2 decimal places
+        }
+    }
+
+    function calculateCrDb() {
+        totalcredits = 0; totaldebits = 0;
+        if ($("#pageType").val() == "Refund") {
+            $("#CashReceiptsInfo tr").each(function () {
+                appflg = $(this).find('.appflg').html();
+                if (appflg != "C") {
+                    totalcredits += parseFloat($(this).find('.app_amt_td').find('.app_amount_values').val().replace("$", ""));
+                } else {
+                    totaldebits += parseFloat($(this).find('.app_amt_td').find('.app_amount_values').val().replace("$", ""));
+                }
+            })
+        } else {
+            $("#CashReceiptsInfo tr").each(function () {
+                ref_type = $(this).find('.ref_type').html().toUpperCase();
+                if (ref_type == "PAYMENT" || ref_type == "CREDIT" || ref_type == "RTV" || ref_type == "DEBIT" || ref_type == "D") {
+                    totalcredits += parseFloat($(this).find('.app_amt_td').find('.app_amount_values').val().replace("$", ""));
+                }
+                if (ref_type == "INVOICE" || ref_type == "MEMO") {
+                    totaldebits += parseFloat($(this).find('.app_amt_td').find('.app_amount_values').val().replace("$", ""));
+                }
+            })
+        }
+
+        $("#credits").val('$' + Math.abs(totalcredits).toFixed(2));
+        $("#debits").val('$' + Math.abs(totaldebits).toFixed(2));
+        $("#diference").val('$' + (Math.abs(totalcredits) - Math.abs(totaldebits)).toFixed(2));
+    }
+
+    $(document).on('click', '#btnPrint', function () {
+        $('.cashReceiptInfo').removeClass('d-none');
+        printNormalHtmlTable('cashReceiptInfo');
+        $('.cashReceiptInfo').addClass('d-none');
+    })
+
+    $(document).on('click', '#btnPreview', function () {
+        previewNormalHtmlTable('cashReceiptInfo');
+    })
+
+    $(document).on('click', '.btnDownloadPDF', function () {
+        $('.cashReceiptInfo').removeClass('d-none');
+        pdfNormalHtmlDiv('cashReceiptInfo');
+        $('.cashReceiptInfo').addClass('d-none');
+    })
+
+    $(document).on('click', '.btnDownloadExcel', function () {
+        excelFromNormalDivTable("cashReceiptInfo");
+    })
+
+    function ClearControls() {
+        if ($("#pageType").val() == "Refund") {
+            window.location.href = "../SalesPaymentsCredits/CustomerRefund";
+        } else {
+            window.location.href = "../SalesPaymentsCredits/AddCashReceipt";
+        }
+    }
+
+    $(document).on('click', ".closePrintModel", function () {
+
+        if ($("#printCheck:checked").length > 0) {
+            checkNo = $("#txtCheckNo").val();
+            bankCode = $("#txtBank").val();
+            if ($("#MicrReport").val() == "True") {
+                posturl = "../AccountsPayable/PrintCheckWithMicr";
+            } else {
+                posturl = "../AccountsPayable/PrintCheckWithoutMicr";
+            }
+
+            postData = {
+                checkNo: checkNo,
+                bankCode: bankCode
+            };
+
+            $.ajax({
+                url: posturl,
+                type: 'POST',
+                data: postData,
+                success: function (result) {
+                    //console.log('result :' + result);
+                    if (result == '') {
+                        alert('Invalid Check No.!');
+                        //$('.fetchData').html('OK');
+                        //return;
+                    } else {
+                        //$(".report_buttons").removeClass('d-none');
+                        //$(".printResult").html(result);
+                        //$('.fetchData').html('OK');
+
+                        $("#printCheckBsModal .closeModal").removeClass("closePrintModel");
+                        $("#printCheckBsModal .modal-title").html("Print Check");
+                        $("#printCheckBsModal .modal-body .printCheckContent").html(result);
+                        $("#printCheckBsModal").show();
+                        $("#printCheckBsModal").addClass('show');
+                        $("#printCheckBsModal .closeModal").addClass("closePrintCheckModel");
+                    }
+
+                }
+            });
+        } else {
+            ClearControls();
+        }
+
+    })
+
+    $(document).on('click', '.closePrintCheckModel', function () {
+        ClearControls();
+    })
+
+    function getCustomerNameByCode(acc) {
+        $.ajax({
+            url: "../Common/GetCustomerNameByCode",
+            type: "POST",
+            data: {
+                acc: acc
+            },
+            success: function (res) {
+                $("#txtCustomerName").html(res);
+            }
+        })
+    }
+
+    $(document).on('change', "#txtPaymentType", function () {
+        txtPaymentType = $("#txtPaymentType").val();
+        if (txtPaymentType == "CHECK") {
+            $("#txtDepositTo").val('').prop('disabled', true);
+            $("#txtCustomerCheckNo").val('').prop('disabled', true);
+        } else {
+            $("#txtDepositTo").prop('disabled', false);
+            $("#txtCustomerCheckNo").prop('disabled', false);
+        }
+        if ($("#pageType").val() == "Refund" && txtPaymentType == "CHECK") {
+            bank = $("#txtBank").val();
+            $.ajax({
+                url: "../SalesPaymentsCredits/GetNxtCheckNo",
+                type: "POST",
+                data: {
+                    bank: bank
+                },
+                success: function (res) {
+                    //alert(res);
+                    $("#txtCheckNo").val(res);
+                    $("#showRefundBank").removeClass('d-none');
+                }
+            })
+        } else {
+            $("#showRefundBank").addClass('d-none');
+        }
+    })
+
+
+    $(document).on('click', '#btnPrint1', function () {
+        $('.printCheckContent').removeClass('d-none');
+        printNormalHtmlTable('printCheckContent');
+        $('.printCheckContent').addClass('d-none');
+        $("#firstCommonBsModal").hide();
+        $("#firstCommonBsModal").removeClass('show');
+    })
+
+    $(document).on('click', '#btnPreview1', function () {
+        previewNormalHtmlTable('printCheckContent');
+        $("#firstCommonBsModal").hide();
+        $("#firstCommonBsModal").removeClass('show');
+    })
+
+    $(document).on('click', '.btnDownloadPDF1', function () {
+        $('.printCheckContent').removeClass('d-none');
+        pdfNormalHtmlDiv('printCheckContent');
+        $('.printCheckContent').addClass('d-none');
+        $("#firstCommonBsModal").hide();
+        $("#firstCommonBsModal").removeClass('show');
+    })
+
+    $(document).on('click', '.btnDownloadExcel1', function () {
+        excelFromNormalDivTable("printCheckContent");
+        $("#firstCommonBsModal").hide();
+        $("#firstCommonBsModal").removeClass('show');
+    })
+
+    $(document).on('change', '#txtBank', function () {
+        txtBank = $(this).val();
+        $.ajax({
+            url: "../SalesPaymentsCredits/GetNextCheckNoByBank",
+            type: "POST",
+            data: {
+                bank: txtBank
+            },
+            success: function (res) {
+                //alert(res);
+                $("#txtCheckNo").val(res);
+                $("#showRefundBank").removeClass('d-none');
+            }
+        })
+    })
+
+    $(document).on('blur', '#txtReceiptNo', function () {
+        txtReceiptNo = $("#txtReceiptNo").val();
+        txtReceiptNoOrig = $("#txtReceiptNoOrig").val();
+        if (txtReceiptNo != txtReceiptNoOrig) {
+            alert("You cannot skip the Receipt#");
+            $("#txtReceiptNo").val(txtReceiptNoOrig);
+            return false;
+        }
+    })
+
+
+</script>
+
+<style>
+    .blue-bg-para {
+        background: blue;
+        color: #fff;
+        text-align: center;
+        padding: 3px;
+    }
+
+    .empty-well p {
+        padding: 100px;
+    }
+
+    .CashReceiptsInfo {
+        max-height: 300px;
+        overflow-y: scroll;
+    }
+
+    .app_amount_values {
+        background: #fdfdfd;
+        border: 1px solid #f8f8f8;
+        width: 100px;
+    }
+
+        .app_amount_values:focus {
+            border: 1px solid #8aaf6a;
+            box-shadow: 0px 0px 4px #6da141;
+        }
+
+    .autocomplete-item2 {
+        padding: 10px;
+        cursor: pointer;
+        background-color: #fff;
+        border-bottom: 1px solid #d4d4d4;
+    }
+
+    #txtCustomerName {
+        margin-bottom: 0px;
+        margin-top: 0px;
+        font-size: 12px;
+    }
+
+    #printCheckBsModal {
+        position: absolute;
+    }
+</style>

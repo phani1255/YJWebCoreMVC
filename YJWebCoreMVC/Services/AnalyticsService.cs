@@ -101,7 +101,7 @@ namespace YJWebCoreMVC.Services
                         In_STOCK = Math.Round(Decimal.Parse(dr["IN_STOCK"].ToString()), 2),
                         StoreNo = dr["Store_no"].ToString().Trim(),
                         //Qty_Open = Qty_Open,
-                        //OrderDate = Helper.TryDateTimeParse(dr["OrderDate"].ToString()),
+                        //OrderDate = _helperCommonService.TryDateTimeParse(dr["OrderDate"].ToString()),
                     });
                 }
                 return lstSoldorInStock;

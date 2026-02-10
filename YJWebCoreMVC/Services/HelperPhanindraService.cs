@@ -1,5 +1,4 @@
 ﻿using HtmlAgilityPack;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 using System.Data;

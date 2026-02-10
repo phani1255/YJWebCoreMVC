@@ -1,5 +1,5 @@
-﻿// Chakri 02/05/2026 Added EmailSettingsService and EmployeeService.
-// venkat 02/05/2026 RapnetService added
+﻿// Chakri 02/05/2026  Added EmailSettingsService and EmployeeService.
+// venkat 02/05/2026  RapnetService added
 // Dharani 02/05/2026 Added ReportService, VendorPoWoCustomerPoService, CustomerReturnsService and MemoServices.
 // Dharani 02/06/2026 Added JsonSerializerOptions to keep the propery names to pascal case
 // Chakri  02/06/2026 added SalesQuotesWishlistService.
@@ -7,9 +7,10 @@
 // Manoj   02/06/2026 Added CustomerService,PhysicalInventoryService,GLAcctService,SalesmenService
 // Dharani 02/05/2025 Added ReportService, VendorPoWoCustomerPoService, CustomerReturnsService and MemoServices.
 // venkat  02/06/2026 Registered ShopifyService , StylesService
-/*
- * Phanindra 02/09/2026 Added AddRazorRuntimeCompilation, RepairService, ListOfItemsSoldService, SalesmenService, ImageService, RegisterProvider
- */
+// Neetha  02/06/2026 Added AdminMessagesService, AdminMiscService.
+// Dharani 02/09/2026 Added CustomerService
+// Phanindra 02/09/2026 Added AddRazorRuntimeCompilation, RepairService, ListOfItemsSoldService, SalesmenService, ImageService, RegisterProvider
+
 using YJWebCoreMVC.ReportEngine;
 using YJWebCoreMVC.Services;
 
@@ -20,8 +21,7 @@ builder.Services.AddControllersWithViews().AddJsonOptions(options =>
 {
     // This keeps property names exactly as they are in C# (PascalCase)
     options.JsonSerializerOptions.PropertyNamingPolicy = null;
-})
-    .AddRazorRuntimeCompilation();
+});
 
 // REQUIRED for session
 builder.Services.AddDistributedMemoryCache();   // 🔴 MISSING
@@ -50,9 +50,9 @@ builder.Services.AddScoped<AnalyticsService>();
 builder.Services.AddScoped<UsersService>();
 builder.Services.AddScoped<ICryptoService, CryptoService>();
 builder.Services.AddScoped<SalesSummaryService>();
-// builder.Services.AddScoped<EmployeeService>();
+builder.Services.AddScoped<EmployeeService>();
 builder.Services.AddScoped<EmailSettingsService>();
-//builder.Services.AddScoped<SalesmenService>();
+builder.Services.AddScoped<SalesmenService>();
 builder.Services.AddScoped<SalesPOSReportsService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSession();
@@ -65,7 +65,7 @@ builder.Services.AddScoped<MemoService>();
 builder.Services.AddScoped<GLAcctService>();
 builder.Services.AddScoped<PhysicalInventoryService>();
 builder.Services.AddScoped<CustomerService>();
-builder.Services.AddScoped<BankAccService>(); builder.Services.AddScoped<BankAccService>();
+builder.Services.AddScoped<BankAccService>();
 builder.Services.AddScoped<AccountsPayableService>();
 builder.Services.AddScoped<CustomerService>();
 builder.Services.AddScoped<CashRegisterService>();
@@ -77,9 +77,11 @@ builder.Services.AddScoped<CustomerNewService>();
 builder.Services.AddScoped<APCreditViewService>();
 builder.Services.AddScoped<ShopifyService>();
 builder.Services.AddScoped<StylesService>();
+builder.Services.AddScoped<AdminMessagesService>();
+builder.Services.AddScoped<AdminMiscService>();
+builder.Services.AddScoped<CustomerService>();
 builder.Services.AddScoped<RepairService>();
 builder.Services.AddScoped<ListOfItemsSoldService>();
-builder.Services.AddScoped<SalesmenService>();
 builder.Services.AddScoped<ImageService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSession();

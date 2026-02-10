@@ -1,10 +1,10 @@
 ﻿
-using System.Data;
-using System.Xml;
-using static YJWebCoreMVC.Services.HelperCommonService;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Processing;
+using System.Data;
+using System.Xml;
+using static YJWebCoreMVC.Services.HelperCommonService;
 
 namespace YJWebCoreMVC.Services
 {

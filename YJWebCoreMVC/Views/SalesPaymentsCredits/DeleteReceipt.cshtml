@@ -1,0 +1,75 @@
+<!--
+  * Created by Phanindra
+    Phanindra 12/07/2024 Worked on confirmation message related issue
+-->
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model YJWeb.Models.SalesPaymentsCreditsModel
+
+<div id="content-center" class="row">
+
+    <div class="web-form page login-page col-sm-12" id="FormForEditQuotation">
+
+        <div class="form-horizontal">
+            <div>
+                <div class="row">
+                    <div class="col-sm-3 text-right">
+                        <label>Receipt/Refund No</label>
+                    </div>
+                    <div class="col-sm-3 ">
+                        <input type="text" id="receipt_no" />
+                    </div>
+                    <div class="col-sm-2">
+                        <button class="formsGlobalUniqueBtn deleteCashReceipt" id="deleteCashReceipt">Delete Receipt</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+</div>
+
+<script type="text/javascript">
+
+    $(document).on('click', '#deleteCashReceipt', function () {
+
+        receipt_no = $("#receipt_no").val();
+        $.ajax({
+            url: "../SalesPaymentsCredits/CheckDeleteCashReceipt",
+            type: "POST",
+            data: {
+                inv_no: receipt_no
+            },
+            success: function (response) {
+                //alert(res);
+                var data = JSON.parse(response);
+                if (data.message.includes("Customer:")) {
+                    if (confirm(data.message)) {
+                        $.ajax({
+                            url: "../SalesPaymentsCredits/DeleteCashReceipt",
+                            type: "POST",
+                            data: {
+                                acc: data.acc,
+                                receipt_no: receipt_no,
+                                paid: data.paid,
+                                transact: data.transact
+                            },
+                            success: function (res) {
+                                alert(res);
+                                $("#receipt_no").val('');
+                            }
+                        })
+                    }
+                } else {
+                    alert(data.message);
+                }
+            }
+        })
+    })
+
+</script>

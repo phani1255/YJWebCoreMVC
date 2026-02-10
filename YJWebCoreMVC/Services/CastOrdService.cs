@@ -3,7 +3,6 @@
 
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
-using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
 using YJWebCoreMVC.Models;
@@ -570,7 +569,7 @@ namespace YJWebCoreMVC.Services
                 #endregion
 
                 #region Grid details
-                cashOrdModel.STYLE = dt.Rows[0]["STYLE"].ToString();
+                cashOrdModel.Style = dt.Rows[0]["STYLE"].ToString();
                 cashOrdModel.Description = dt.Rows[0]["DESC"].ToString();
                 cashOrdModel.CostQty = Convert.ToDecimal(dt.Rows[0]["QTY"].ToString());
                 cashOrdModel.TagAmount = Convert.ToDecimal(dt.Rows[0]["TAG_PRICE"].ToString());

@@ -452,7 +452,7 @@ namespace YJWebCoreMVC.Services
             // Initialize a new store object
             Store store = null;
 
-            using (var conn = _connectionProvider.GetConnection() )
+            using (var conn = _connectionProvider.GetConnection())
             {
                 try
                 {

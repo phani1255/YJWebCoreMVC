@@ -1,7 +1,4 @@
-﻿/*
- Created by Phanindra 05-Feb-2026
- */
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 
 namespace YJWebCoreMVC.Services
 {

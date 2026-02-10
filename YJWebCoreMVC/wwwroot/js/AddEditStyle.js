@@ -632,7 +632,7 @@ function fillFirstTabStyleFormFields(json) {
 
     $("#min_price").val(json.MIN_PRICE ? json.MIN_PRICE.toFixed(2) : '0.00');
     $("#web_price").val(json.WEB_PRICE ? json.WEB_PRICE.toFixed(2) : '0.00');
-    //if (Helper.is_Catherine)
+    //if (_helperCommonService.is_Catherine)
     $("#itemType").val(sval(json.ITEM_TYPE));
     //else
     //    $("#itemType").val(sval(json.ITEM_TYPE).ToString() == string.Empty ? "Jewelry" : json.ITEM_TYPE);
@@ -652,7 +652,7 @@ function fillFirstTabStyleFormFields(json) {
     $("#year").val(sval(json.year));
     $("#size").val(sval(json.bullionsize));
     $("#metal").val(sval(json.METAL));
-    //if (Helper.CompanyName.ToUpper().Contains("JADE") && string.IsNullOrWhiteSpace(metal.Text))
+    //if (_helperCommonService.CompanyName.ToUpper().Contains("JADE") && string.IsNullOrWhiteSpace(metal.Text))
     //    $("#metal").val("14K");
     $("#ddlmetalcolor").val(sval(json.MetalColor));
     $("#cast_no").val(sval(json.VND_STYLE));
@@ -675,9 +675,9 @@ function fillFirstTabStyleFormFields(json) {
     //}
     //$("#txtSharedInevntory").val(stylerow.Table.Columns.Contains("sharedinv") ? json.sharedinv);
     //if (iSCopyOld)
-    //    $("#qty_stock").val(Helper.is_Auto_stock ? 1 : 0);
+    //    $("#qty_stock").val(_helperCommonService.is_Auto_stock ? 1 : 0);
     //else
-    //    $("#qty_stock").val(mode == "insert" ? 0 : Helper.Is_Symphony ? GetStoreInStock() : Helper.DecimalCheckForDBNull(json.IN_STOCK));
+    //    $("#qty_stock").val(mode == "insert" ? 0 : _helperCommonService.Is_Symphony ? GetStoreInStock() : _helperCommonService.DecimalCheckForDBNull(json.IN_STOCK));
     $("#qty_stock").val(sval(json.IN_STOCK));
     $("#wt_stock").val(sval(json.WT_STOCK));
     if ($("#isEdit").val() == "") {
@@ -694,7 +694,7 @@ function fillFirstTabStyleFormFields(json) {
     $("#note1").val(sval(json.NOTE));
     $("#diamond_wt").val(sval(json.STONE_WT));
     $("#diamond_type").val(sval(json.DQLTY));
-    //if (Helper.CompanyName.ToUpper().Contains("JADE") && string.IsNullOrWhiteSpace(diamond_type.Text))
+    //if (_helperCommonService.CompanyName.ToUpper().Contains("JADE") && string.IsNullOrWhiteSpace(diamond_type.Text))
     //    $("#diamond_type").val("14K");
     $("#color_wt").val(sval(json.COLOR_WT));
     $("#color_type").val(sval(json.CQLTY));
@@ -834,7 +834,7 @@ function fillFirstTabStyleFormFields(json) {
     //$("#lOnJomashop").val(json.on_jomashop);
     //$("#lblOnJomashop").val(lOnJomashop ? "On JomaShop" : "Not on JomaShop");
 
-    //chkUseCostDetailsFrmHere.$("#Checked").val((stylerow != null && !Helper.CheckModuleEnabled(Helper.Modules.PriceBasedOnGold))) ? !json.PCOMPLETE;
+    //chkUseCostDetailsFrmHere.$("#Checked").val((stylerow != null && !_helperCommonService.CheckModuleEnabled(_helperCommonService.Modules.PriceBasedOnGold))) ? !json.PCOMPLETE;
     //chktakepricefromhere.$("#Checked").val(stylerow != null ? json.IsPriceTaken);
     //chkOverWriteCost.$("#Checked").val(stylerow != null ? (json.OVER_WT != "FALSE") : false);
     $("#purchase_price").val(sval(json.COST));
@@ -898,19 +898,19 @@ function fillFirstTabStyleFormFields(json) {
     //    $("#txtMfgDetails").val(json.mfg_det);
     //}
     //calc_markup();
-    //$("#dtStyleCase").val(Helper.GetStylesCase(styleno.Text.Trim()));
+    //$("#dtStyleCase").val(_helperCommonService.GetStylesCase(styleno.Text.Trim()));
     //ddlDisclaimer.$("#SelectedIndex").val(ddlDisclaimer.FindStringExact(json.Disclaimer));
-    //if (Helper.is_DiamondDealer)
+    //if (_helperCommonService.is_DiamondDealer)
     //    chkPriceByWt.$("#Checked").val(Convert.ToBoolean(json.PRICEBYWT);
     //itemType_SelectedIndexChanged(null, null);
 
-    //if (Helper.CheckModuleEnabled(Helper.Modules.GroupBasedOnType)) {
+    //if (_helperCommonService.CheckModuleEnabled(_helperCommonService.Modules.GroupBasedOnType)) {
     //    $("#Group").val(json.group);
     //    $("#cate_gory").val(json.CATEGORY);
     //    $("#sub_category").val(json.SUBCAT);
     //    $("#metal").val(json.METAL);
     //}
-    //$("#mounted_stock").val(Helper.GetMountedStock(styleno.Text));
+    //$("#mounted_stock").val(_helperCommonService.GetMountedStock(styleno.Text));
 
     //if (json.Tag_Template);
     $("#ddlTempName").val(sval(json.Tag_Template));
@@ -1061,7 +1061,7 @@ function fillCostDetailsTabFields(json) {
     $("#txtAssemblyCost").val(json.ASSEMBLY_COST ? json.ASSEMBLY_COST.toFixed(2) : '0.00');
 
     // lefk
-    //if (Helper.is_Lefk) {
+    //if (_helperCommonService.is_Lefk) {
     $("#LefkstylesCost1").val(json.cost1 ? json.cost1.toFixed(2) : '0.00');
     $("#LefkstylesCost2").val(json.cost2 ? json.cost2.toFixed(2) : '0.00');
     $("#LefkstylesCost3").val(json.cost3 ? json.cost3.toFixed(2) : '0.00');
@@ -2131,7 +2131,7 @@ function AddCostbom() {
         parseFloat($("#txtAssemblyCostbom").val() || 0) +
         SumOfNumerics();
 
-    return tCost + (Helper.is_Lefk ? (Convert.ToDecimal(purchase_price.Text) * (100 + Convert.ToDecimal(LefkstylesCost11.Text)) / 100) : 0);
+    return tCost + (_helperCommonService.is_Lefk ? (Convert.ToDecimal(purchase_price.Text) * (100 + Convert.ToDecimal(LefkstylesCost11.Text)) / 100) : 0);
 }
 
 function SumOfNumerics() {

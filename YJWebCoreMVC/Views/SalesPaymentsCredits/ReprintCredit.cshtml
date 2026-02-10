@@ -1,0 +1,116 @@
+﻿<!--
+  * Created by Phanindra
+  *  Phanindra 12/11/2024 Added additional check to validate check_no
+  *  Phanindra 12/30/2024 Worked on print related changes.
+  *  Dharani   10/22/2025 Added params variable to get the credit_no on redirect
+  *  Dharani   10/24/2025 Commented params variable to get the credit_no and removed cancel button
+-->
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model YJWeb.Models.SalesPaymentsCreditsModel
+
+<div id="content-center" class="row">
+
+    <div class="web-form page login-page col-sm-12" id="FormForEditQuotation">
+
+        <div class="form-horizontal">
+            <div>
+                <div class="row">
+                    <div class="col-sm-3 text-right">
+                        <label>Receipt No</label>
+                    </div>
+                    <div class="col-sm-3 ">
+                        <input type="text" id="credit_no" />
+                    </div>
+                    <div class="col-sm-2">
+                        <button class="formsGlobalUniqueBtn printCashReceipt" id="printCredit">OK</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-9 print_options"></div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+</div>
+
+<script type="text/javascript">
+
+    //const params = new URLSearchParams(window.location.search);
+    //const creditNo = params.get("credit_no");
+    //const returnUrl = params.get("returnUrl");
+    //if (creditNo) {
+    //    $("#credit_no").val(creditNo);
+    //}
+    //$(document).on('click', '#btnCancel', function () {
+    //    if (returnUrl) {
+    //        window.location.href = decodeURIComponent(returnUrl);
+    //    } else if (document.referrer) {
+    //        window.location.href = document.referrer;
+    //    } else {
+    //        window.history.back();
+    //    }
+    //});
+
+    $(document).on('click', '#printCredit', function () {
+        $('#printCredit').html('Loading...');
+        credit_no = $("#credit_no").val();
+        $.ajax({
+            url: "../SalesPaymentsCredits/GetPayment",
+            type: "POST",
+            data: {
+                inv_no: credit_no,
+                rtv_pay: 'C'
+            },
+            success: function (res) {
+                if (res != "" && res != null && res != "null") {
+                    $.ajax({
+                        url: "../SalesPaymentsCredits/PrintCredit",
+                        type: "POST",
+                        data: {
+                            inv_no: credit_no
+                        },
+                        success: function (res) {
+                            $(".print_options").html(res);
+                            $('#printCashReceipt').html('OK');
+                        }
+                    })
+                } else {
+                    alert("Invalid Credit No.");
+                }
+            }
+        })
+    })
+    $(document).on('keyup', '#receipt_no', function () {
+        $(".print_options").html('');
+    })
+
+    $(document).on('click', '#btnPrint', function () {
+        $('.CreditInfo').removeClass('d-none');
+        printNormalHtmlTable('CreditInfo');
+        $('.CreditInfo').addClass('d-none');
+    })
+
+    $(document).on('click', '#btnPreview', function () {
+        previewNormalHtmlTable('CreditInfo');
+    })
+
+    $(document).on('click', '.btnDownloadPDF', function () {
+        $('.CreditInfo').removeClass('d-none');
+        pdfNormalHtmlDiv('CreditInfo');
+        $('.CreditInfo').addClass('d-none');
+    })
+
+    $(document).on('click', '.btnDownloadExcel', function () {
+        excelFromNormalDivTable("CreditInfo");
+    })
+
+
+</script>

@@ -1,0 +1,84 @@
+<!--
+  * Created by Phanindra
+-->
+@{
+    if (Session["UserID"] == null)
+    {
+        Layout = null;
+        Response.Redirect("~/Login/Index");
+    }
+    else
+    {
+        Layout = null;
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+}
+
+@model YJWeb.Models.SalesPaymentsCreditsModel
+
+@if (ViewBag.Message != null)
+{
+    <div class="alert @ViewBag.MessageType">
+        @ViewBag.Message
+    </div>
+}
+
+
+<div id="content-center" class="row">
+
+    <div class="web-form page login-page col-sm-12" id="FormForEditQuotation">
+
+        <div class="form-horizontal">
+            <div>
+                <div class="row">
+                    <div class="col-sm-3 text-right">
+                        <label>Credit No</label>
+                    </div>
+                    <div class="col-sm-3 ">
+                        <input type="text" id="creditNo" />
+                    </div>
+                    <div class="col-sm-2">
+                        <button class="formsGlobalUniqueBtn deleteCredit" id="deleteCredit">Delete Credit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#deleteCredit").click(function () {
+            var creditNo = $("#creditNo").val();
+
+            if (!creditNo.trim()) {
+                showMessage("Please enter Credit No.", "alert-warning");
+                return;
+            }
+
+            $.ajax({
+                url: "../SalesPaymentsCredits/DeleteCredit",
+                type: 'POST',
+                data: { creditNo: creditNo },
+                success: function (response) {
+                    if (response.success) {
+                        alert(response.message);
+                        $("#creditNo").val(""); 
+                    } else {
+                        alert(response.message, "alert-danger");
+                    }
+                },
+                error: function () {
+                    alert("An error occurred while processing the request.", "alert-danger");
+                }
+            });
+        });
+
+        
+    });
+</script>

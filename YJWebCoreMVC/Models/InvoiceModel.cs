@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+
+
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace YJWebCoreMVC.Models
 {
@@ -66,6 +68,10 @@ namespace YJWebCoreMVC.Models
         public string PRICE_FILE { get; set; } = "";
         public decimal? TERM3 { get; set; } = 0;
         public bool? no_stat { get; set; }
+
+        public bool? NotStock { get; set; }
+
+
         public bool iSByPicInv { get; set; } = false;
 
         public decimal? TERM4 { get; set; } = 0;
@@ -307,6 +313,6 @@ namespace YJWebCoreMVC.Models
         public decimal NEW_CreditAmt { get; set; }
         public decimal NEW_EnteredAmt { get; set; }
         public bool? No_TAX { get; set; }
-
+        public bool? IsReturn { get; set; }
     }
 }

@@ -272,7 +272,7 @@ namespace YJWebCoreMVC.Services
                 {
                     Console.WriteLine(ex.Message);
                 }
-                
+
                 int decimalPlaces = int.TryParse(_httpContextAccessor.HttpContext?.Session.GetString("DecimalsInPrices"), out int value) ? value : 0; ;
                 // Get the datarow from the table
                 //foreach (DataRow dr in dataTable.Select("INV_NO='     1'").CopyToDataTable().Rows)
@@ -831,7 +831,7 @@ namespace YJWebCoreMVC.Services
         #endregion
 
         #region Total Sales Per Vendor Details
-        
+
         public List<SalesProfitModel> GetTotalSalesPerVendorDetails(string fdate, string tdate, bool iSInvoiceCost = false)
         {
             DataTable dataTable = new DataTable();
@@ -1213,7 +1213,7 @@ namespace YJWebCoreMVC.Services
 
         #region Sales COG/ Profit By Salesrep        
 
-        
+
         public List<SalesProfitModel> GetSalesCOGProfitBySalesman(string storeName = "", string salesMan = "", bool isLayaway = false, string byWhichDate = "", string fdate = "", string tdate = "", string brand = "", string category = "", bool seperatebycategory = false, bool iSIncludeRepwarranty = false, bool isBankFee = false)
         {
             DataTable dataTable = new DataTable();
@@ -1342,7 +1342,7 @@ namespace YJWebCoreMVC.Services
 
 
         #region Sales COG/ Profit Report
-        
+
         public DataTable GetSalesCOGProfitReportDetails(string ccode, string fdate, string tdate, string ct, string subct, string metalval, string brandval, string fromstyle, string tostyle, string strVendor, string store, bool withGP = false, bool separateSM = false, bool isSalesCOG = false, string byWhichDate = "", bool isLayaway = false, string salesMan = "", bool monthproft = false, bool iSLaySpe = false, bool isinclbankfee = false, bool isExport = false)
         {
             DataTable dataTable = new DataTable();

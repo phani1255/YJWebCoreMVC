@@ -1,0 +1,192 @@
+<!--
+  * Created by Phanindra
+    Phanindra 12/30/2024 Worked on print related changes.
+  *  Phanindra 01/20/2025 Fixed date and note columns position and format.
+    Phanindra 03/26/2025 fixed issue with pay items related data
+-->
+@{
+    Layout = null;
+}
+
+@model YJWeb.Models.SalesPaymentsCreditsModel
+
+<div id="content-center" class="row">
+
+    <div class="web-form page login-page col-sm-12" id="FormForEditQuotation">
+
+        <div class="row col-md-6 report_buttons1 text-center">
+            <div style="margin:3px;">
+                <input type="button" value="PDF" table-id="tableForCredit" class="formsGlobalUniqueBtn btnDownloadPDF" id="btnPDF" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Excel" table-id="tableForCredit" class="formsGlobalUniqueBtn btnDownloadExcel" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Preview" table-id="tableForCredit" id="btnPreview" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Print" table-id="tableForCredit" id="btnPrint" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Email" table-id="tableForCredit" class="formsGlobalUniqueBtn" />
+            </div>
+
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Simple Excel" class="formsGlobalUniqueBtn" />
+            </div>
+        </div>
+
+        <div class="CreditInfo d-none">
+            <table class="table" id="tableForCredit">
+                <tr>
+                    <td>
+                        <p class="text-center">
+                            <strong>
+                                @ViewBag.upsInsInfo["CompanyName"]<br />
+                                @ViewBag.upsInsInfo["Company_Addr1"]<br />
+                                @ViewBag.upsInsInfo["Company_Addr2"]<br />
+                                @ViewBag.upsInsInfo["Company_Tel"]
+                            </strong>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p class="text-center">Credit Memo</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table class="">
+                            @if (Model.DtCreditDetails != null && Model.DtCreditDetails.Rows.Count > 0)
+                            {
+                                var firstRow = Model.DtCreditDetails.Rows[0];
+                                <tr>
+                                    @{
+                                        DateTime date;
+                                        string formattedDate = DateTime.TryParse(Convert.ToString(firstRow["chk_date"]), out date)
+                                            ? date.ToString("MM/dd/yyyy")
+                                            : "";
+                                    }
+                                    <td>Credit No:</td>
+                                    <td>@firstRow["INV_NO"]</td>
+                                    <td>Credit Date:</td>
+                                    <td>@formattedDate</td>
+                                </tr>
+                                <tr>
+                                    <td>Customer:</td>
+                                    <td>
+                                        @firstRow["ACC"] <br />
+                                        @firstRow["NAME"] <br />
+                                        @firstRow["ADDR1"] <br />
+                                        @firstRow["ADDR12"]
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            }
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>Please Note that your account has been credited for:</p>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Customer Ref No:</th>
+                                    <th>Ref. Date</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            @if (Model.DtCreditDetails != null && Model.DtCreditDetails.Rows.Count > 0)
+                            {
+                                var firstRow = Model.DtCreditDetails.Rows[0];
+                                <tr>
+                                    @{
+                                        DateTime date1;
+                                        string formattedDate1 = DateTime.TryParse(Convert.ToString(firstRow["chk_date"]), out date1)
+                                            ? date1.ToString("MM/dd/yyyy")
+                                            : "";
+                                    }
+                                    <td>
+                                        @firstRow["check_no"]
+                                    </td>
+                                    <td>
+                                        @formattedDate1
+                                    </td>
+                                    <td>
+                                        @firstRow["Amount"]
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table>
+                            <tr><td>This credit was applied using receipt#: @Model.Rcots</td></tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table style="max-width: 350px;">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Ref. No</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            @if (Model.DvPayItems != null && Model.DvPayItems.Count > 0)
+                            {
+                                foreach (System.Data.DataRowView row in Model.DvPayItems)
+                                {
+                                    <tr>
+                                        <td>
+                                            @if (row["RTV_PAY"].ToString() == "C")
+                                            {
+                                                <span>Credit</span>
+                                            }
+                                            else if (row["RTV_PAY"].ToString() == "I")
+                                            {
+                                                <span>Invoice</span>
+                                            }
+                                            else if (row["RTV_PAY"].ToString() == "P")
+                                            {
+                                                <span>Payment</span>
+                                            }
+                                            else if (row["RTV_PAY"].ToString() == "M")
+                                            {
+                                                <span>Memo</span>
+                                            }
+                                            else
+                                            {
+                                                <span>@row["RTV_PAY"]</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @row["INV_NO"]
+                                        </td>
+                                        <td>
+                                            @row["amount"]
+                                        </td>
+                                    </tr>
+                                }
+                            }
+
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Note : @Model.Note</td>
+                </tr>
+            </table>
+        </div>
+
+    </div>
+
+
+</div>

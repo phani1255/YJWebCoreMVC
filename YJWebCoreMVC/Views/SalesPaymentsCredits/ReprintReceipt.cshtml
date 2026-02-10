@@ -1,0 +1,101 @@
+<!--
+  * Created by Phanindra
+  * Phanindra 12/25/2024 Working on validating Receipt number
+  * Phanindra 12/26/2024 Working on implementing print,preview,..... options in same page instead of popup.
+    Phanindra 12/30/2024 Worked on print related changes.
+-->
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model YJWeb.Models.SalesPaymentsCreditsModel
+
+<div id="content-center" class="row">
+
+    <div class="web-form page login-page col-sm-12" id="FormForEditQuotation">
+
+        <div class="form-horizontal">
+            <div>
+                <div class="row">
+                    <div class="col-sm-3 text-right">
+                        <label>Receipt No</label>
+                    </div>
+                    <div class="col-sm-3 ">
+                        <input type="text" id="receipt_no" />
+                    </div>
+                    <div class="col-sm-2">
+                        <button class="formsGlobalUniqueBtn printCashReceipt" id="printCashReceipt">OK</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-9 print_options"></div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+</div>
+
+<script type="text/javascript">
+
+    $(document).on('click', '#printCashReceipt', function () {
+        $('#printCashReceipt').html('Loading...');
+        receipt_no = $("#receipt_no").val();
+        $.ajax({
+            url: "../SalesPaymentsCredits/GetPayment",
+            type: "POST",
+            data: {
+                inv_no: receipt_no
+            },
+            success: function (res) {
+                if (res != "" && res != null && res != "null") {
+                    $.ajax({
+                        url: "../SalesPaymentsCredits/PrintCashReceipt",
+                        type: "POST",
+                        data: {
+                            inv_no: receipt_no
+                        },
+                        success: function (res) {
+                            $(".print_options").html(res);
+                            $('#printCashReceipt').html('OK');
+                        }
+                    })
+                } else {
+                    alert("Invalid Receipt No.");
+                }
+            }
+        })
+
+    })
+    $(document).on('keyup', '#receipt_no', function () {
+        $(".print_options").html('');
+    })
+
+    $(document).on('click', '#btnPrint', function () {
+        $('.cashReceiptInfo').removeClass('d-none');
+        printNormalHtmlTable('cashReceiptInfo');
+        $('.cashReceiptInfo').addClass('d-none');
+        $("#firstCommonBsModal").hide();
+        $("#firstCommonBsModal").removeClass('show');
+    })
+
+    $(document).on('click', '#btnPreview', function () {
+        previewNormalHtmlTable('cashReceiptInfo');
+    })
+
+    $(document).on('click', '.btnDownloadPDF', function () {
+        $('.cashReceiptInfo').removeClass('d-none');
+        pdfNormalHtmlDiv('cashReceiptInfo');
+        $('.cashReceiptInfo').addClass('d-none');
+    })
+
+    $(document).on('click', '.btnDownloadExcel', function () {
+        excelFromNormalDivTable("cashReceiptInfo");
+    })
+
+
+</script>

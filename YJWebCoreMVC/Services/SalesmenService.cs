@@ -1,16 +1,18 @@
-﻿/*
+/*
  *  Created by Manoj 03-June-2025
- *  03-June-2025 Manoj Added GetSalesmen and getstoresdataforsetdefault and SalesmanActivityReport methods
- *  04-June-2025 Manoj Added GetInvoiceByInvNo And GetInvoiceMasterDetailPO methods
- *  05-June-2025 Manoj Added GetInvoicePrintofSalesTaxReport methods
- *  13-June-2025 Manoj Added getAllSales, GetInvoieComisionAmount methods
- *  09-July-2025 Manoj Fixed SalesmanActivityReport method result issues
- *  10-July-2025 Manoj Added telephone_no,PON,ship_via,paid,store_no,ShippingAddr_Name,ShippingAddr_Addr1,ShippingAddr_Addr2,ShippingAddr_City,ShippingAddr_State,ShippingAddr_Country,ShippingAddr_ZipCode properties
- *  10-July-2025 Manoj Fixed GetInvoicePrintofSalesTaxReport for Memo preview type
- *  31-July-2025 Manoj Fixed GetInvoicePrintofSalesTaxReport Issues
- *  01-Aug-2025  Manoj Added GetMemoByInvNo,GetInvoiceMemoNote Methods and Added storeInfo,StoreLogoImage,StoreName Properties
- *  23-DEC-2025  Manoj Added OtherCharges,Deduction,StyleTable Propertied And modified GetInvoicePrintofSalesTaxReport for data table issues and  updated email issue in store Address
+ *  Manoj 03-June-2025  Added GetSalesmen and getstoresdataforsetdefault and SalesmanActivityReport methods
+ *  Manoj 04-June-2025 Added GetInvoiceByInvNo And GetInvoiceMasterDetailPO methods
+ *  Manoj 05-June-2025 Added GetInvoicePrintofSalesTaxReport methods
+ *  Manoj 13-June-2025 Added getAllSales, GetInvoieComisionAmount methods
+ *  Manoj 09-July-2025 Fixed SalesmanActivityReport method result issues
+ *  Manoj 10-July-2025 Added telephone_no,PON,ship_via,paid,store_no,ShippingAddr_Name,ShippingAddr_Addr1,ShippingAddr_Addr2,ShippingAddr_City,ShippingAddr_State,ShippingAddr_Country,ShippingAddr_ZipCode properties
+ *  Manoj 10-July-2025 Fixed GetInvoicePrintofSalesTaxReport for Memo preview type
+ *  Manoj 31-July-2025 Fixed GetInvoicePrintofSalesTaxReport Issues
+ *  Manoj 01-Aug-2025  Added GetMemoByInvNo,GetInvoiceMemoNote Methods and Added storeInfo,StoreLogoImage,StoreName Properties
+ *  Manoj 23-DEC-2025  Added OtherCharges,Deduction,StyleTable Propertied And modified GetInvoicePrintofSalesTaxReport for data table issues and  updated email issue in store Address
+ *  Manoj 02/04/2025 PayCommision_Post, AddUpdateComm,iSDMExists,GetDMCommission,GetCommissionPerItem,GetRepairOrderNoFromInvoice
  */
+
 using Microsoft.Data.SqlClient;
 using System.Data;
 using YJWebCoreMVC.Models;
@@ -347,6 +349,88 @@ namespace YJWebCoreMVC.Services
                     invoicenote = _helperCommonService.CheckForDBNull(dtInvoiceMemoNotes.Rows[0]["invoicenote"]);
                     memonote = _helperCommonService.CheckForDBNull(dtInvoiceMemoNotes.Rows[0]["memonote"]);
                 }
+            }
+        }
+
+        public bool PayCommision_Post(string salesman, string commisiondata, string loggeduser, string in_paid_ref, out string paidref, out string error)
+        {
+            error =
+                paidref = string.Empty;
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_connectionProvider.GetConnectionString()))
+                using (var dbCommand = new SqlCommand("PayCommision_post", connection))
+                {
+                    dbCommand.CommandType = CommandType.StoredProcedure;
+                    dbCommand.CommandTimeout = 5000;
+
+                    dbCommand.Parameters.AddWithValue("@SALESMAN", salesman);
+                    dbCommand.Parameters.AddWithValue("@LOGGEDINUSER", loggeduser);
+                    dbCommand.Parameters.AddWithValue("@INPAIDREF", in_paid_ref);
+
+                    var outResult = new SqlParameter("@PAIDREF", SqlDbType.NVarChar, 20)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    dbCommand.Parameters.Add(outResult);
+
+                    var xmlParam = new SqlParameter
+                    {
+                        ParameterName = "@COMMISIONDATA",
+                        SqlDbType = SqlDbType.Xml,
+                        Value = commisiondata
+                    };
+                    dbCommand.Parameters.Add(xmlParam);
+
+                    connection.Open();
+                    var rowsAffected = dbCommand.ExecuteNonQuery();
+                    paidref = outResult.Value.ToString();
+
+                    return rowsAffected > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                error = ex.Message;
+                paidref = string.Empty;
+                return false;
+            }
+        }
+        public String GetRepairOrderNoFromInvoice(String invoiceNo)
+        {
+            return _helperCommonService.GetValue(_helperCommonService.GetSqlData($"SELECT PON FROM INVOICE with (nolock) WHERE INV_NO=@InvNo AND V_CTL_NO='REPAIR'", "@InvNo", invoiceNo), "PON");
+        }
+
+        public DataTable GetCommissionPerItem(string inv_no)
+        {
+            return _helperCommonService.GetStoreProc("GetCommissionPerItem", "@Inv_no", inv_no);
+        }
+
+        public DataTable GetDMCommission(string invNo, string salesman, bool isFromDM)
+        {
+            return _helperCommonService.GetStoreProc("Get_DM_Commission", "@Inv_no", invNo, "@Salesman", salesman, "@iSFromDM", isFromDM.ToString());
+        }
+
+        public bool iSDMExists(string inv_no, string salesman)
+        {
+            return _helperCommonService.DataTableOK(_helperCommonService.GetSqlData($"Select 1 from dm_commission with (nolock) where inv_no=@inv_no and salesman=@salesman", "@inv_no", inv_no, "@salesman", salesman));
+        }
+
+        public bool AddUpdateComm(string spName, string invoiceItems, string invNo)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionProvider.GetConnectionString()))
+            using (var command = new SqlCommand(spName, connection))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+                command.CommandTimeout = 12000;
+
+                command.Parameters.AddWithValue("@inv_no", invNo);
+                command.Parameters.Add("@invoiceItems", SqlDbType.Xml).Value = invoiceItems;
+
+                connection.Open();
+                int rowsAffected = command.ExecuteNonQuery();
+                return rowsAffected > 0;
             }
         }
 

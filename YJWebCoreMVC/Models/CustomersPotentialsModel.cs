@@ -80,7 +80,7 @@ namespace YJWebCoreMVC.Models
 
     }
 
-    
+
     public class PotentialcustomerModel
     {
         public string ACC { get; set; }

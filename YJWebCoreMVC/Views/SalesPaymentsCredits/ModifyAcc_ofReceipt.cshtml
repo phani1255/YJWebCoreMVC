@@ -1,0 +1,146 @@
+<!--
+  * Created by Phanindra
+-->
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model YJWeb.Models.SalesPaymentsCreditsModel
+
+<div id="content-center" class="row">
+
+    <div class="web-form page login-page col-sm-12" id="FormForEditQuotation">
+
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="col-sm-5">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Receipt No.
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" id="txtReceiptNo" class="form-control activateFormRefreshBtn">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Old Customer Code
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" id="txtOldCustomerCode" class="form-control activateFormRefreshBtn" readonly>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-4 customerType">
+                            Customer Code
+                        </label>
+                        <div class="col-sm-8">
+                            <div class="autocomplete-dropdown">
+                                <div id="CustomerCodesForAutofill" class="d-none">@Html.Raw(Json.Encode(Model.CustomerCodes)) </div>
+                                <input type="text" id="txtCustomerCode" class="form-control activateFormRefreshBtn defaultdisabled" maxlength="15" placeholder="Search...">
+                                <div id="autocomplete-list1" class="autocomplete-items"></div>
+                            </div>
+                            <div class="customerCodeSearchDiv">
+                                <button class="formsGlobalUniqueBtn customerCodeSearchBtn1 showbsmodal activateFormRefreshBtn" data-modal-id="selectCustomerAccModal" data-bs-toggle="modal" data-bs-target="#selectCustomerAccModal">...</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="row">
+
+                    <div class="col-sm-5 text-right">
+                        <button class="formsGlobalUniqueBtn modifyAccofReceipt">Ok</button>
+                        <button class="formsGlobalUniqueBtn cancelReceipt">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+</div>
+
+<script type="text/javascript">
+    $(document).on('blur', '#txtReceiptNo', function () {
+        receiptNo = $.trim($("#txtReceiptNo").val());//$("#txtReceiptNo").val();
+        if (receiptNo) {
+            $.ajax({
+                url: "../SalesPaymentsCredits/GetCustomerofReceipt",
+                type: "post",
+                data: {
+                    recno: receiptNo,
+                },
+                cache: false,
+                success: function (response) {
+                    var data = JSON.parse(response);
+                    if (data.error && data.error !== "") {
+                        alert(data.error);
+                    }
+                    else if (data.acc && data.acc !== "") {
+                        $("#txtOldCustomerCode").val(data.acc);
+                        $("#txtCustomerCode").val(data.acc);
+                    }
+                    else {
+                        alert("Invalid Receipt#");
+                    }
+                }
+            })
+        }
+    });
+
+    $(document).on('click', ".modifyAccofReceipt", function (e) {
+        e.preventDefault();
+        receiptNo = $("#txtReceiptNo").val();
+        customerCode = $("#txtCustomerCode").val();
+        oldCustomerCode = $("#txtOldCustomerCode").val();
+
+        if (receiptNo === "") {
+            alert("Receipt number cannot be empty.");
+            return;
+        }
+        if (customerCode === "") {
+            alert("Choose new Customer Code");
+            return;
+        }
+        if (customerCode === oldCustomerCode) {
+            alert("No change found in Customer Code. Please enter another Customer Code.");
+            return;
+        }
+        $.ajax({
+            url: "../SalesPaymentsCredits/ModifyAccofReceipt",
+            type: "post",
+            cache: false,
+            data: {
+                recno: receiptNo,
+                OldAcc: oldCustomerCode,
+                NewAcc: customerCode,
+            },
+            success: function (response) {
+                var data = JSON.parse(response);
+                if (data.error && data.error !== "") {
+                    alert(data.error);
+                } else if (data.result && data.result !== "") {
+                    alert("Customer code modified successfully on Receipt.");
+                    setTimeout(function () {
+                        //location.reload();
+                        $("#txtReceiptNo").val("");
+                        $("#txtCustomerCode").val("");
+                        $("#txtOldCustomerCode").val("");
+                    }, 500);
+                } else {
+                    alert("Failed to modify customer code on Receipt.");
+                }
+            }
+
+
+        })
+
+    })
+
+</script>

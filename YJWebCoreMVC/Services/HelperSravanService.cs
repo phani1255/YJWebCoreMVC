@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿// Sravan 02/06/2026 Added new  GetAgingReportDetails() 
+using Microsoft.Data.SqlClient;
 using System.Data;
 
 namespace YJWebCoreMVC.Services
@@ -128,6 +129,10 @@ namespace YJWebCoreMVC.Services
         public DataTable IssueCheckForAllVendor(DateTime? FromDt, DateTime? ToDt, bool IsBillDt, string storeno = "")
         {
             return _helperCommonService.GetStoreProc("Get_IssueCheckForAllVendor", "@FromDt", FromDt.ToString(), "@ToDt", ToDt.ToString(), "@IsBillDt", IsBillDt.ToString(), "@storeno", storeno);
+        }
+        public DataTable GetAgingReportDetails(string Stores, string Attribute = "")
+        {
+            return _helperCommonService.GetStoreProc("APAgingReport", "@store", Stores.ToString(), "@attributes", Attribute.ToString());
         }
 
     }

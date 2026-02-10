@@ -1,0 +1,727 @@
+<!--
+  * Created by Phanindra
+  *  Phanindra 12/04/2024 Worked on box sizing change.
+  *  Phanindra 12/11/2024 Worked on implementing edit functionality, and print after saving.
+  *  Phanindra 12/30/2024 Worked on print related and credits and debits related changes.
+  *  Phanindra 01/07/2025 Worked on focus issue and validation fix.
+  *  Phanindra 01/20/2025 Fixed clearing the form after credit save.
+  *  Phanindra 04/24/2025 Fixed customer selection issue and validation issue
+  *  Phanindra 06/10/2025 Worked on issues in validations and report
+  *  Phanindra 06/17/2025 Fixed validation issue for applied amount.
+  *  Phanindra 09/17/2025 Fixed validation issue while saving
+  *  Phanindra 09/22/2025 Added Cancel button and fixed validations while saving form
+-->
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model YJWeb.Models.SalesPaymentsCreditsModel
+
+<div id="content-center" class="row">
+
+    <div class="web-form page login-page col-sm-12" id="FormForEditQuotation">
+        <input type="hidden" id="pageType" value="" />
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Credit No.
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" id="creditNo" class="form-control" value="@ViewBag.CreditNo.Trim()">
+                            <input type="hidden" id="nextCreditNo" class="form-control" value="@ViewBag.CreditNo.Trim()">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Date
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtEntryDate" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Reason
+                        </label>
+                        <div class="col-sm-8">
+                            @Html.DropDownListFor(x => x.reason, Model.AllReasons, new { @class = "form-control resetSelectField activateFormRefreshBtn", @id = "ddlReason" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="row">
+                        <label class="col-sm-4 customerType">
+                            Billing Acct. No.
+                        </label>
+                        <div class="col-sm-8">
+                            <div class="autocomplete-dropdown">
+                                <div id="CustomerCodesForAutofill1" class="d-none">@Html.Raw(Json.Encode(Model.CustomerCodes)) </div>
+                                <input type="text" id="txtCustomerCode" class="form-control activateFormRefreshBtn defaultdisabled" maxlength="15" placeholder="Search...">
+                                <div id="autocomplete-list1" class="autocomplete-items"></div>
+                            </div>
+                            <div class="customerCodeSearchDiv">
+                                <button class="formsGlobalUniqueBtn customerCodeSearchBtn1 showbsmodal activateFormRefreshBtn" data-modal-id="selectCustomerAccModal" data-bs-toggle="modal" data-bs-target="#selectCustomerAccModal">...</button>
+                            </div>
+                            <p id="txtCustomerName"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Credit Code
+                        </label>
+                        <div class="col-sm-8 pt-1">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="creditCode" id="credicodeA" checked>
+                                        <label class="form-check-label p-0" for="credicodeA">
+                                            A
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="creditCode" id="credicodeB">
+                                        <label class="form-check-label p-0" for="credicodeB">
+                                            B
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="creditCode" id="credicodeC">
+                                        <label class="form-check-label p-0" for="credicodeC">
+                                            C
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Credit Amount
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" id="creditAmount" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Note
+                        </label>
+                        <div class="col-sm-8">
+                            <textarea class="form-control" id="notearea"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="row">
+                        <label class="col-sm-4">Customer Ref. No.</label>
+                        <div class="col-sm-8">
+                            <input type="text" id="customerRefNo" class="form-control" maxlength="8" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="row">
+                        <label class="col-sm-4">Ref. Date</label>
+                        <div class="col-sm-8">
+                            <input type="date" id="refDate" class="form-control" />
+                        </div>
+                        <label class="col-sm-4">&nbsp;</label>
+                        <div class="col-sm-8">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="showMemo">
+                                <label class="form-check-label p-0" for="showMemo">
+                                    Show Memo
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-2 white-box pos-rel pl-0 pr-0" id="">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="well empty-well mh-300">
+                            <!--  <p>No Data to display</p>-->
+                            <table id="creditGrid" class="table table-bordered table-striped table-condensed table-sm fs-13 mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Ref. Type</th>
+                                        <th>Ref. No.</th>
+                                        <th>Ref. Date</th>
+                                        <th>Orig. Amt</th>
+                                        <th>Balance</th>
+                                        <th>Applied</th>
+                                        <th class="d-none">APPAMT</th>
+                                        <th class="d-none">APPFLG</th>
+                                        <th class="d-none">RSORT</th>
+                                        <th class="d-none">IREFNO</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Data will be  loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="row">
+                    <div class="col-sm-7">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="row">
+                                    <label class="col-sm-6">Credits</label>
+                                    <div class="col-sm-6"><input type="text" id="credits" class="form-control" value="$0.00" /></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="row">
+                                    <label class="col-sm-6">Debits</label>
+                                    <div class="col-sm-6"><input type="text" id="debits" class="form-control" value="$0.00" /></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="row">
+                                    <label class="col-sm-6">Difference</label>
+                                    <div class="col-sm-6"><input type="text" id="diference" class="form-control" value="$0.00" /></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-5 text-right">
+                        <button class="formsGlobalUniqueBtn saveCredit">Save</button>
+                        <button class="formsGlobalUniqueBtn autoAppyReceipt d-none">Auto Apply</button>
+                        <input type="button" id="gotoHome" value="Cancel" class="formsGlobalUniqueBtn">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="methodName" value="AddEditCredit" />
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $(document).on('click', '#gotoHome', function () {
+            //if (confirm("Ok to Discard the changes and Close This Form ?")) {
+            window.location.href = "../Home/Index";
+            //}
+        })
+
+        txtBillAcc = $.trim($("#txtCustomerCode").val());
+        txtCreditNo = $.trim($("#creditNo").val());
+
+        var CustomerCodes1 = JSON.parse($("#CustomerCodesForAutofill1").html());
+        $("#txtCustomerCode").on("input", function () {
+            var capval = 0;
+            var query = $(this).val().toLowerCase();
+            var list = $("#autocomplete-list1");
+            list.empty();
+
+            if (!query) return;
+
+            var results = CustomerCodes1.filter(function (item) {
+                return item.Text.toLowerCase().indexOf(query) === 0;
+            });
+
+            results.forEach(function (item) {
+                capval++;
+                if (capval <= 20) {
+                    var itemElement = $("<div>")
+                        .addClass("autocomplete-item2")
+                        .text(item.Text)
+                        .on("click", function () {
+                            $("#txtCustomerCode").val(item.Text);
+                            //alert(item.Text);
+                            loadGridData(item.Text);
+                            //list.empty();
+                        });
+
+                    list.append(itemElement);
+                }
+            });
+        });
+
+        loadGridData(); //, #creditNo
+        $("#txtCustomerCode").on("blur", function () {
+            loadGridData();
+            setTimeout(function () {
+                acc = $("#txtCustomerCode").val();
+                getCustomerNameByCode(acc);
+            }, 1000);
+        });
+        $("#showMemo").on("change", function () {
+            loadGridData();
+        });
+        var now = new Date();
+        var day = ("0" + now.getDate()).slice(-2);
+        var month = ("0" + (now.getMonth() + 1)).slice(-2);
+
+        var today = now.getFullYear() + "-" + (month) + "-" + (day);
+        $("#txtEntryDate").val(today);
+        $("#refDate").val(today);
+    });
+
+    $("#creditNo").blur(function () {
+        creditNo = $("#creditNo").val();
+        nextCreditNo = $("#nextCreditNo").val();
+        if (creditNo > nextCreditNo) {
+            alert("Cannot skip Credit No.");
+            $("#creditNo").val(nextCreditNo);
+        }
+
+        $.ajax({
+            url: "../SalesPaymentsCredits/CheckCreditAdj",
+            type: "POST",
+            data: {
+                creditno: creditNo,
+                iscreditordebit: "C"
+            },
+            success: function (response) {
+                if (response != "") {
+                    alert(response);
+                } else {
+                    if (confirm("This Credit Exists Already, Would You Like To Edit It?")) {
+                        $.ajax({
+                            url: "../SalesPaymentsCredits/GetCredit",
+                            type: "POST",
+                            data: {
+                                inv_no: creditNo
+                            },
+                            success: function (response) {
+                                if (response != "") {
+                                    var data = JSON.parse(response);
+                                    //console.log("INV_NO:", data.INV_NO);
+                                    $("#txtCustomerCode").val(data.ACC);
+
+                                    entry_date1 = data.DATE.split('T')[0];
+                                    entry_date = entry_date1.split('-');
+                                    entry_date_val = entry_date[0] + "-" + entry_date[1] + "-" + entry_date[2];
+                                    //alert(entry_date_val);
+                                    $("#txtEntryDate").val(entry_date_val);
+
+                                    ref_date1 = data.REF_DATE.split('T')[0];
+                                    ref_date = ref_date1.split('-');
+                                    ref_date_val = ref_date[0] + "-" + ref_date[1] + "-" + ref_date[2];
+                                    //alert(ref_date_val);
+                                    $("#refDate").val(ref_date_val);
+                                    $("#creditAmount").val(data.AMOUNT);
+                                    $("#credicodeA").prop('checked', 'true');
+                                    $("#notearea").text(data.NOTE);
+                                    if (data.SHOWMEMO == 1) {
+                                        $("#showMemo").prop('checked', 'true');
+                                    }
+                                    $("#ddlReason").val(data.crd_reason);
+                                    $("#customerRefNo").val(data.VND_NO);
+                                    loadGridData();
+                                }
+                            },
+                            error: function () {
+                                alert("Failed to load data.");
+                            }
+                        });
+                    } else {
+                        $("#creditNo").val(nextCreditNo);
+                    }
+
+                }
+            },
+            error: function () {
+                alert("Failed to load data.");
+            }
+        });
+    })
+
+    function loadGridData() {
+        const billAcc = $("#txtCustomerCode").val();
+        const creditNo = $("#creditNo").val().trim();
+        const showMemo = $("#showMemo").is(":checked");
+        if (billAcc === "" || creditNo === "") {
+            return;
+        }
+
+        $.ajax({
+            url: "../SalesPaymentsCredits/GetCreditData",
+            type: "GET",
+            data: {
+                txtBillAcc: billAcc,
+                txtCreditNo: creditNo,
+                chkShowMemo: showMemo
+            },
+            success: function (response) {
+                const parsedResponse = JSON.parse(response);
+                const data = parsedResponse.Data;
+                const selectedRowIndex = parsedResponse.SelectedRowIndex;
+                const tbody = $("#creditGrid tbody");
+
+                tbody.empty();
+
+                if (data && data.length > 0) {
+                    data.forEach((row, index) => {
+                        const isSelected = index === selectedRowIndex;
+                        tbody.append(`
+                            <tr class="${isSelected ? 'highlight' : ''}">
+                                <td><input type="text" class="form-control refType" readonly value="${row.REF_TYPE}" /></td>
+                                <td><input type="text" class="form-control refNo" id="creditNo_${row.REF_NO.trim()}" readonly value="${row.REF_NO}" /></td>
+                                <td><input type="text" class="form-control refDate" readonly value="${row.REF_DATE.split('T')[0]}" /></td>
+                                <td><input type="text" class="form-control origAmt" readonly value="${row.ORIGINAL.toFixed(2)}" /></td>
+                                <td><input type="text" class="form-control balance" readonly value="${row.BAL_AMOUNT.toFixed(2)}" /></td>
+                                <td><input type="text" class="form-control appAmount" id="app_amount_values_${row.REF_NO.trim()}" value="${row.APP_AMOUNT.toFixed(2)}" /></td>
+                                <td class="d-none"><input type="text" class="form-control appAmt" value="${row.APPAMT.toFixed(2)}" /></td>
+                                <td class="d-none"><input type="text" class="form-control appFlg" value="${row.APPFLG}" /></td>
+                                <td class="d-none"><input type="text" class="form-control rsort" value="${row.RSORT}" /></td>
+                                <td class="d-none"><input type="text" class="form-control irefno" value="${row.IREFNO}" /></td>
+                            </tr>
+                        `);
+                    });
+                    updateCreditRecord();
+                    $("#app_amount_values_" + creditNo).focus();
+                } else {
+                    tbody.append(`<tr><td colspan="6" class="text-center">No data available</td></tr>`);
+                }
+            },
+            error: function () {
+                alert("Failed to load data.");
+            }
+        });
+    }
+
+    $(document).on('click', ".saveCredit", function (e) {
+        e.preventDefault();
+        var txtDate = $("#txtEntryDate").val();  // Entry Date
+        var txtRefDate = $("#refDate").val();  // Reference Date
+        var txtNote = $("#notearea").val();  // Note Area
+        var txtAmount = $("#creditAmount").val();  // Credit Amount
+        var showMemoChecked = $("#showMemo").is(':checked');  // Show Memo Checkbox
+        var ddlReason = $("#ddlReason").val();  // Reason Dropdown
+        var storeCodeInUse = "123"; // $("#StoreCodeInUseStoreCodeInUse").val();
+        txtCreditNo = $("#creditNo").val();
+        txtCustomerCode = $("#txtCustomerCode").val();
+        txtCustomerRefNo = $("#customerRefNo").val();
+
+        if (txtCreditNo === "") {
+            alert("Credit No. should not be blank.");
+            $("#creditNo").focus();
+            return;
+        }
+        if (txtCustomerCode === "Billing Account no. cannot be empty") {
+            $("#txtCustomerCode").focus();
+        }
+
+        let totalCredits = 0, totalDebits = 0, totalApplied = 0, capplied = 0;
+        $("#creditGrid tbody tr").each(function () {
+            appFlg = $(this).find(".appFlg").val();
+            ref_type = $(this).find('.refType').val();
+
+            let val = $(this).find('.appAmount').val() || "0";
+            // Remove everything except digits, minus, and decimal
+            let appAmount = parseFloat(val.replace(/[^0-9.-]/g, ""));
+
+            if (ref_type.toLowerCase() == "payment" || ref_type.toLowerCase() == "credit" || ref_type.toLowerCase() == "rtv") {
+                totalCredits += appAmount;
+            }
+            if (ref_type.toLowerCase() == "invoice" || ref_type.toLowerCase() == "memo") {
+                totalDebits += appAmount;
+            }
+            if (appFlg == "C") {
+                capplied += appAmount;
+            }
+
+            totalApplied += appAmount;
+        });
+
+        // If applied credits match total credits and there are no debits, reset the grid
+        if (capplied === totalCredits && totalDebits === 0) {
+            $("#creditGrid tbody tr").find(".appAmount").val(0);
+            totalApplied = 0;
+        }
+
+        if (totalApplied != 0) {
+            alert("Credits must match Debits.");
+            return;
+        }
+
+        let dtCredit = []; // Initialize the array
+        $("#creditGrid tbody tr").each(function () {
+            let rowData = {};
+
+            rowData["REF_TYPE"] = $(this).find(".refType").val();
+            rowData["REF_NO"] = $(this).find(".refNo").val();
+            rowData["REF_DATE"] = $(this).find(".refDate").val();
+            rowData["ORIGINAL"] = $(this).find(".origAmt").val();
+            rowData["BAL_AMOUNT"] = $(this).find(".balance").val();
+            rowData["APP_AMOUNT"] = $(this).find(".appAmount").val();
+            rowData["APPAMT"] = $(this).find(".appAmt").val();
+            rowData["APPFLG"] = $(this).find(".appFlg").val();
+            rowData["RSORT"] = $(this).find(".rsort").val();
+            rowData["IREFNO"] = $(this).find(".irefno").val();
+
+            dtCredit.push(rowData);
+        });
+
+        dtCredit.forEach(row => {
+            delete row["RSORT"];
+            delete row["IREFNO"];
+        });
+
+        dtCreditJson = JSON.stringify(dtCredit);
+        //dtCreditXml = jsonToXml("credits", dtCredit);
+        $.ajax({
+            url: "../SalesPaymentsCredits/AddEditCreditDetails",
+            type: "post",
+            cache: false,
+            data: {
+                dtCreditJson: dtCreditJson,
+                txtBillAcc: txtCustomerCode,
+                txtCreditNo: txtCreditNo,
+                txtDate: txtDate,
+                txtRefDate: txtRefDate,
+                txtNote: txtNote,
+                txtAmount: txtAmount,
+                chkShowMemo: showMemoChecked,
+                ddlReason: ddlReason,
+                custRef: txtCustomerRefNo
+            },
+            success: function (response) {
+                if (response.success) {
+                    alert("Credit saved successfully.");
+                    //resetFormFields();
+                    //window.location.reload();
+
+                    $.ajax({
+                        url: "../SalesPaymentsCredits/GetPayment",
+                        type: "POST",
+                        data: {
+                            inv_no: txtCreditNo,
+                            rtv_pay: "C"
+                        },
+                        success: function (res) {
+                            if (res != "" && res != null && res != "null") {
+                                $.ajax({
+                                    url: "../SalesPaymentsCredits/PrintCredit",
+                                    type: "POST",
+                                    data: {
+                                        inv_no: txtCreditNo
+                                    },
+                                    success: function (res) {
+                                        $("#firstCommonBsModal .modal-title").html("Print Credit");
+                                        $("#firstCommonBsModal .modal-body").html(res);
+                                        $("#firstCommonBsModal").show();
+                                        $("#firstCommonBsModal").addClass('show');
+                                        $("#firstCommonBsModal .closeModal").addClass("closePrintCreditModel");
+                                    }
+                                })
+                            } else {
+                                alert("Invalid Credit No.");
+                            }
+                        }
+                    })
+                } else {
+                    alert("Unable to save receipt: " + response.error);
+                }
+            },
+            error: function (error) {
+                alert("An error occurred while saving the receipt.");
+            }
+        });
+    });
+
+    $(document).on('blur', '#creditAmount', function () {
+        creditAmt = parseFloat($('#creditAmount').val());
+        $('#creditAmount').val(creditAmt.toFixed(2));
+        updateCreditRecord();
+        //if (creditAmt >= 0) {
+        //    alert("Applied Amount, must be between 0 and -" + creditAmt);
+        //} else {
+        //    alert("Applied Amount, must be between 0 and " + Math.abs(creditAmt));
+        //}
+    });
+
+    //row selection logic
+    $(document).on('click', '#creditGrid tbody tr', function () {
+        $('#creditGrid tbody tr').removeClass('selected');
+        $(this).addClass('selected');
+    });
+
+    function resetFormFields() {
+        $("#creditNo").val('');
+        $("#txtCustomerCode").val('');
+        $("#txtEntryDate").val('');
+        $("#refDate").val('');
+        $("#notearea").val('');
+        $("#creditAmount").val(0);
+        $("#ddlReason").val('');
+        $("#showMemo").prop("checked", false);
+        $("#StoreCodeInUseStoreCodeInUse").val('');
+        $("#creditGrid tbody tr").find(".appAmount").val('');
+        $("#creditGrid tbody").empty();
+        $("#customerRefNo").val('');
+    }
+
+    function updateCreditRecord() {
+        const paidAmt = parseFloat($('#creditAmount').val()) || 0;
+        const txtAmount = $.trim($("#creditAmount").val());
+        if (txtAmount === "") {
+            return;
+        }
+        if ($("#creditNo").val().trim() != "") {
+            creditNo = $("#creditNo").val().trim();
+            if ($("#creditNo_" + creditNo).length > 0) {
+                selectedRow = $("#creditNo_" + creditNo).parent("td").parent("tr");
+                const oldAppAmt = parseFloat(selectedRow.find(".appAmt").val()) || 0;
+                selectedRow.find(".origAmt").val(paidAmt.toFixed(2));
+                selectedRow.find(".balance").val(((paidAmt - Math.abs(oldAppAmt)) * -1).toFixed(2));
+                selectedRow.find(".appAmount").val((paidAmt * -1).toFixed(2));
+            }
+        }
+        updateCrDr();
+    }
+    $(document).on("blur", ".appAmount", function () {
+        selectedRow = $(this).parent("td").parent("tr");
+
+        balance = parseFloat(selectedRow.find(".balance").val()) || 0;
+        appAmount = parseFloat($(this).val()) || 0;
+
+        if (appAmount != 0 && balance > 0 && (appAmount < 0 || appAmount > balance)) {
+            alert("Applied amount must be between 0 and " + balance);
+            $(this).val(0);
+            return false;
+        }
+        if (appAmount != 0 && balance < 0 && (appAmount > 0 || Math.abs(appAmount) > Math.abs(balance))) {
+            alert("Applied amount must be between 0 and " + balance);
+            $(this).val(0);
+            return false;
+        }
+        updateCrDr();
+    })
+
+    function updateCrDr() {
+        let totalCredits = 0, totalDebits = 0, totalApplied = 0, capplied = 0;
+        $("#creditGrid tbody tr").each(function () {
+            appFlg = $(this).find(".appFlg").val();
+            ref_type = $(this).find('.refType').val();
+            //appAmount = Math.abs($(this).find('.appAmount').val().replace("$", ""));
+
+            let val = $(this).find('.appAmount').val() || "0";
+            // Remove everything except digits, minus, and decimal
+            let appAmount = parseFloat(val.replace(/[^0-9.-]/g, ""));
+
+            if (ref_type.toLowerCase() == "payment" || ref_type.toLowerCase() == "credit" || ref_type.toLowerCase() == "rtv") {
+                totalCredits += appAmount;
+            }
+            if (ref_type.toLowerCase() == "invoice" || ref_type.toLowerCase() == "memo") {
+                totalDebits += appAmount;
+            }
+            if (appFlg == "C") {
+                capplied += appAmount;
+            }
+
+            totalApplied += appAmount;
+        });
+
+        $("#credits").val('$' + totalCredits.toFixed(2) * -1);
+        $("#debits").val('$' + totalDebits.toFixed(2));
+        $("#diference").val('$' + ((totalCredits * -1) - totalDebits).toFixed(2));
+    }
+
+
+    $(document).on('click', '#btnPrint', function () {
+        $('.CreditInfo').removeClass('d-none');
+        printNormalHtmlTable('CreditInfo');
+        $('.CreditInfo').addClass('d-none');
+    })
+
+    $(document).on('click', '#btnPreview', function () {
+        previewNormalHtmlTable('CreditInfo');
+    })
+
+    $(document).on('click', '.btnDownloadPDF', function () {
+        $('.CreditInfo').removeClass('d-none');
+        pdfNormalHtmlDiv('CreditInfo');
+        $('.CreditInfo').addClass('d-none');
+    })
+
+    $(document).on('click', '.btnDownloadExcel', function () {
+        excelFromNormalDivTable("CreditInfo");
+    })
+
+    function getCustomerNameByCode(acc) {
+        $.ajax({
+            url: "../Common/GetCustomerNameByCode",
+            type: "POST",
+            data: {
+                acc: acc
+            },
+            success: function (res) {
+                $("#txtCustomerName").html(res);
+            }
+        })
+    }
+
+    $(document).on('click', '.closePrintCreditModel', function () {
+        window.location.href = "../SalesPaymentsCredits/AddEditCredit";
+    })
+</script>
+
+<style>
+    .highlight {
+        background-color: #f0f8ff; /* Light blue or any color to indicate selection */
+        font-weight: bold;
+    }
+
+    .mh-300 {
+        max-height: 300px;
+        overflow-y: scroll;
+    }
+
+    #txtCustomerName {
+        margin-bottom: 0px;
+        margin-top: 0px;
+        font-size: 12px;
+    }
+
+    .app_amount_values {
+        background: #fdfdfd;
+        border: 1px solid #f8f8f8;
+        width: 100px;
+    }
+
+        .app_amount_values:focus {
+            border: 1px solid #8aaf6a;
+            box-shadow: 0px 0px 4px #6da141;
+        }
+
+    .autocomplete-item2 {
+        padding: 10px;
+        cursor: pointer;
+        background-color: #fff;
+        border-bottom: 1px solid #d4d4d4;
+    }
+</style>

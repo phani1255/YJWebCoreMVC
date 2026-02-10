@@ -1,0 +1,536 @@
+<!--
+  * Created by Phanindra
+  * Phanindra 12/09/2024 Worked on fixing issues with pricing changes and printout
+  * Phanindra 12/12/2024 Added condition to validate Receipt#
+    Phanindra 12/30/2024 Worked on print related and credits and debits related changes.
+-->
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model YJWeb.Models.SalesPaymentsCreditsModel
+
+<div id="content-center" class="row">
+
+    <div class="web-form page login-page col-sm-12" id="FormForEditQuotation">
+        <input type="hidden" id="pageType" value="@ViewBag.PageType" />
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Receipt No.
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" id="txtReceiptNo" class="form-control activateFormRefreshBtn" value="@ViewBag.ReceiptNo">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-4 customerType">
+                            Customer
+                        </label>
+                        <div class="col-sm-8">
+                            <div class="autocomplete-dropdown">
+                                <input type="text" id="txtCustomerCode" class="form-control activateFormRefreshBtn defaultdisabled" disabled maxlength="15">
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Check No.
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" id="txtCheckNo" class="form-control activateFormRefreshBtn">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Amount Paid.
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" id="txtAmountPaid" class="form-control activateFormRefreshBtn updateRecordAmounts">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Disc. Taken
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" id="txtDiscTaken" class="form-control activateFormRefreshBtn updateRecordAmounts">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Entry Date
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtEntryDate" class="form-control fs-13 activateFormRefreshBtn defaultdisabled" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Deposit Date
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtDepositDate" class="form-control fs-13 activateFormRefreshBtn defaultdisabled" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Deposit To
+                        </label>
+                        <div class="col-sm-8">
+                            @Html.DropDownListFor(x => x.bankcode, Model.AllBankCodes, new { @class = "form-control defaultdisabled resetSelectField activateFormRefreshBtn", @id = "txtBank" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-4">
+
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="checkbox" id="txtIsShowMemo" class="activateFormRefreshBtn" /> Show Memo
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Payment Type
+                        </label>
+                        <div class="col-sm-8">
+                            @Html.DropDownListFor(x => x.PaymentType, Model.PaymentTypes, new { @class = "form-control defaultdisabled resetSelectField activateFormRefreshBtn", @id = "txtPaymentType" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Payment Note
+                        </label>
+                        <div class="col-sm-8">
+                            <textarea id="txtPaymentNote" class="form-control activateFormRefreshBtn"></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-4">
+                        </label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtSearchRefNo" class="form-control activateFormRefreshBtn" />
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="button" id="btnSearchStyle" value="Search" class="formsGlobalUniqueBtn" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p class="blue-bg-para">Cash Receipt Details</p>
+            <div class="mt-2 white-box pos-rel" id="">
+                <div>
+
+                </div>
+                <div class="row">
+                    <div class="well empty-well CashReceiptsInfo">
+                        <p>No Data to display</p>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="row">
+                    <div class="col-sm-7">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="row">
+                                    <label class="col-sm-6">Credits</label>
+                                    <div class="col-sm-6"><input type="text" id="credits" class="form-control" value="$0.00" readonly /></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="row">
+                                    <label class="col-sm-6">Debits</label>
+                                    <div class="col-sm-6"><input type="text" id="debits" class="form-control" value="$0.00" readonly /></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="row">
+                                    <label class="col-sm-6">Difference</label>
+                                    <div class="col-sm-6"><input type="text" id="diference" class="form-control" value="$0.00" readonly /></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-5 text-right">
+                        <button class="formsGlobalUniqueBtn saveReceipt">Save</button>
+                        <button class="formsGlobalUniqueBtn autoAppyReceipt">Auto Apply</button>
+                        <button class="formsGlobalUniqueBtn cancelReceipt">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+</div>
+
+<script type="text/javascript">
+
+    $(document).on('blur', "#txtReceiptNo", function () {
+        var now = new Date();
+        var day = ("0" + now.getDate()).slice(-2);
+        var month = ("0" + (now.getMonth() + 1)).slice(-2);
+
+        var today = now.getFullYear() + "-" + (month) + "-" + (day);
+        //customerCode = $("#txtCustomerCode").val();
+        receiptNo = $("#txtReceiptNo").val();
+
+        $.ajax({
+            url: '../SalesPaymentsCredits/GetPayment',
+            async: false,
+            type: 'post',
+            data: {
+                inv_no: receiptNo
+            },
+            success: function (response) {
+                if (response == null || response == "null" || response == "") {
+                    alert("Please enter valid Rcvable#");
+                    $("#txtReceiptNo").focus();
+                    return false;
+                } else {
+                    var json;
+                    if (response instanceof Object)
+                        json = response;
+                    else
+                        json = $.parseJSON(response);
+
+                    const data = json.Table[0];
+                    $("#txtCustomerCode").val(data.ACC);
+                    $("#txtCheckNo").val(data.CHECK_NO);
+                    $("#txtAmountPaid").val(data.CHK_AMT.toFixed(2));
+                    $("#txtDiscTaken").val(data.DISCOUNT.toFixed(2));
+                    entry_date1 = data.CHK_DATE.split('T')[0];
+                    entry_date = entry_date1.split('-');
+                    entry_date_val = entry_date[0] + "-" + entry_date[1] + "-" + entry_date[2];
+                    $("#txtEntryDate").val(entry_date_val);
+
+                    check_date1 = data.CHK_DATE.split('T')[0];
+                    check_date = check_date1.split('-');
+                    check_date_val = check_date[0] + "-" + check_date[1] + "-" + check_date[2];
+
+                    $("#txtDepositDate").val(check_date_val);
+                    $("#txtBank").val(data.BANK.trim());
+                    if (data.showmemo != 0) {
+                        $("#txtIsShowMemo").prop("checked", true);
+                    }
+                    $("#txtPaymentType").val(data.PAYMENTTYPE);
+                    $("#txtPaymentNote").val(data.NOTE);
+
+
+                    customerCode = $("#txtCustomerCode").val();
+
+                    lRefund = false;
+                    isccswipe = false;
+                    if (lRefund && $("#txtPaymentType").val().toUpperCase() == "CC SWIPE") {
+                        isccswipe = true;
+                    }
+                    $.ajax({
+                        url: '../SalesPaymentsCredits/GetReceiptEditData',
+                        async: false,
+                        type: 'post',
+                        data: {
+                            acc: customerCode,
+                            receipt_no: receiptNo,
+                            lRefund: lRefund,
+                            isccswipe: isccswipe
+                        },
+                        success: function (response) {
+                            //alert(response);
+                            $(".CashReceiptsInfo").html();
+                            var json;
+                            if (response instanceof Object)
+                                json = response;
+                            else
+                                json = $.parseJSON(response);
+
+                            cashReceipts = "";
+                            cashReceipts += "<table class='table tabled-bordered'>";
+                            cashReceipts += "<thead>";
+                            cashReceipts += "<tr><th>Ref Type</th><th>Ref No</th><th>Ref Date</th><th>Orig Amt</th><th>Balance</th><th class='d-none'></th><th class='d-none'></th><th class='d-none'></th><th class='d-none'></th><th class='d-none'></th><th class='d-none'></th><th>Applied</th></tr>";
+                            cashReceipts += "</thead>";
+                            cashReceipts += "<tbody id='CashReceiptsInfo'>";
+                            var trans = json;
+                            credits = debits = 0;
+
+                            for (var i = 0; i < json.length; i++) {
+                                cashReceipts += "<tr>";
+                                cashReceipts += "<td class='ref_type'>" + json[i].REF_TYPE + "</td>";
+                                cashReceipts += "<td class='ref_no' id='ref_no_" + json[i].REF_NO + "'>" + json[i].REF_NO + "</td>";
+                                cashReceipts += "<td class='ref_date'>" + json[i].REF_DATE.split('T')[0] + "</td>";
+                                cashReceipts += "<td class='original'>" + numberWithCommas(json[i].ORIGINAL) + "</td>";
+                                cashReceipts += "<td class='bal_amount'>" + numberWithCommas(json[i].BAL_AMOUNT) + "</td>";
+                                cashReceipts += "<td class='d-none curr_type'>" + json[i].CURR_TYPE + "</td>";
+                                cashReceipts += "<td class='d-none curr_rate'>" + json[i].CURR_RATE + "</td>";
+                                cashReceipts += "<td class='d-none curr_amount'>" + json[i].CURR_AMOUNT + "</td>";
+                                cashReceipts += "<td class='app_amt_td'><input type='text' class='app_amount_values' value='" + numberWithCommas(json[i].APP_AMOUNT) + "'></td>";
+                                cashReceipts += "<td class='d-none appamt'>" + json[i].APPAMT + "</td>";
+                                cashReceipts += "<td class='d-none appflg'>" + json[i].APPFLG + "</td>";
+                                cashReceipts += "<td class='d-none credits'>" + json[i].CREDITS + "</td>";
+                                cashReceipts += "</tr>";
+                                if (json[i].APP_AMOUNT < 0) {
+                                    credits = credits - json[i].APP_AMOUNT;
+                                } else {
+                                    debits = debits + json[i].APP_AMOUNT;
+                                }
+
+                            }
+                            $("#credits").val('$' + credits.toFixed(2));
+                            $("#debits").val('$' + debits.toFixed(2));
+                            cashReceipts += "</tbody>";
+                            cashReceipts += "</table>";
+                            $(".CashReceiptsInfo").html(cashReceipts);
+                            $("#ref_no_" + receiptNo).siblings('td').find('.app_amount_values').focus();
+
+                        }
+                    })
+                }
+
+            }
+        })
+
+    })
+
+    $(document).on('click', ".saveReceipt", function () {
+        receiptNo = $("#txtReceiptNo").val();
+        customerCode = $("#txtCustomerCode").val();
+        paymentType = $("#txtPaymentType").val();
+        checkNo = $("#txtCheckNo").val();
+        entryDate = $("#txtEntryDate").val().replace('{', '').replace('}', '');
+        depositDate = $("#txtDepositDate").val().replace('{', '').replace('}', '');
+        paymentNote = $("#txtPaymentNote").val();
+
+        credits_val = $("#credits").val();
+        debits_val = $("#debits").val();
+        if (credits_val != debits_val) {
+            alert("Credits and Debits should match");
+            return false;
+        }
+
+        txtBank = $("#txtBank").val();
+        if (lRefund && paymentType.ToUpperCase() == "CHECK") {
+            checkNo = $("#txtCheckNo").val();
+        } else {
+            ddlBankAcc = ""; // we need to check this
+            //checkNo = $("#txtCustomerCheckNo").val();
+        }
+        checkAmount = $("#txtAmountPaid").val();
+        discountTaken = $("#txtDiscTaken").val();
+
+
+        dtAddCashReceipt = [];
+        index = 0;
+        $("#CashReceiptsInfo tr").each(function () {
+            //alert($(this).find('.styleno').val());
+            dtAddCashReceipt[index] = {};
+            dtAddCashReceipt[index]['REF_TYPE'] = $(this).find('.ref_type').html();
+            dtAddCashReceipt[index]['REF_NO'] = $(this).find('.ref_no').html();
+            dtAddCashReceipt[index]['REF_DATE'] = $(this).find('.ref_date').html();
+            dtAddCashReceipt[index]['ORIGINAL'] = $(this).find('.original').html().replace("$", "");
+            dtAddCashReceipt[index]['BAL_AMOUNT'] = $(this).find('.bal_amount').html().replace("$", "");
+            dtAddCashReceipt[index]['CURR_TYPE'] = $(this).find('.curr_type').html();
+            dtAddCashReceipt[index]['CURR_RATE'] = $(this).find('.curr_rate').html().replace("$", "");
+            dtAddCashReceipt[index]['CURR_AMOUNT'] = $(this).find('.curr_amount').html().replace("$", "");
+            dtAddCashReceipt[index]['APP_AMOUNT'] = $(this).find('.app_amt_td').find('.app_amount_values').val().replace("$", "");
+            dtAddCashReceipt[index]['APPAMT'] = $(this).find('.appamt').html().replace("$", "");
+            dtAddCashReceipt[index]['APPFLG'] = $(this).find('.appflg').html();
+            dtAddCashReceipt[index]['CREDITS'] = $(this).find('.credits').html().replace("$", "");
+            index++;
+        })
+        //alert(dtAddCashReceipt);
+        dtAddCashReceiptXml = jsonToXml("PaymentItems", dtAddCashReceipt);
+        showmemo = false;
+        if ($("#txtIsShowMemo:checked").length > 0) {
+            showmemo = true;
+        }
+        pcname = "";
+        Cash_Register = "";
+        storecodeinuse = $("#StoreCodeInUse").val();
+        loggeduser = $("#UserId").val();
+
+        $.ajax({
+            url: '../SalesPaymentsCredits/SaveReceipt',
+            type: 'post',
+            data: {
+                dtPayment: dtAddCashReceiptXml,
+                acc: customerCode,
+                receipt_no: receiptNo,
+                pay_date: entryDate,
+                chk_date: depositDate,
+                bank: txtBank,
+                checkno: checkNo,
+                chk_amt: checkAmount,
+                discount: discountTaken,
+                showmemo: showmemo,
+                error: '',
+                pcname: pcname,
+                PaymentsTypes: paymentType,
+                PaymentNote: paymentNote,
+                Cash_Register: Cash_Register,
+                StoreCode: storecodeinuse,
+                loggeduser: loggeduser,
+                storecodeinuse: storecodeinuse,
+                isRefund: 0
+            },
+            success: function (response) {
+                if (response == "Success") {
+                    alert("Cash Receipt Updated Successfully");
+                    //window.location.reload();
+                    $.ajax({
+                        url: "../SalesPaymentsCredits/PrintCashReceipt",
+                        type: "POST",
+                        data: {
+                            inv_no: receiptNo
+                        },
+                        success: function (res) {
+                            //alert(res);
+                            $("#firstCommonBsModal .modal-title").html("Print Receipt");
+                            $("#firstCommonBsModal .modal-body").html(res);
+                            $("#firstCommonBsModal").show();
+                            $("#firstCommonBsModal").addClass('show');
+                            $("#firstCommonBsModal .closeModal").addClass("closePrintModel");
+                        }
+                    })
+                } else {
+                    alert(response);
+                }
+            }
+        })
+
+    })
+
+    $(".updateRecordAmounts").blur(function () {
+        updateRecordAmounts();
+    })
+
+    function updateRecordAmounts() {
+        amountPaid = discountTaken = 0;
+        receiptNo = $("#txtReceiptNo").val();
+        if ($("#txtAmountPaid").val() != '') {
+            amountPaid = $("#txtAmountPaid").val();
+        }
+        if ($("#txtDiscTaken").val() != '') {
+            discountTaken = $("#txtDiscTaken").val();
+        }
+
+        finalAmount = parseFloat(amountPaid) + parseFloat(discountTaken);
+        $("#ref_no_" + receiptNo).siblings(".original").html("$" + finalAmount);
+        $("#ref_no_" + receiptNo).siblings(".bal_amount").html("-$" + finalAmount);
+        $("#ref_no_" + receiptNo).siblings(".app_amt_td").find(".app_amount_values").val("-$" + finalAmount);
+
+        calculateCrDb();
+    }
+
+    $(document).on('blur', 'txtAmountPaid', function () {
+        pageType = $("#pageType").val();
+        if (pageType == "Refund") {
+            receiptNo = $("#txtReceiptNo").val();
+            $("#ref_no_" + receiptNo).siblings(".app_amt_td").find(".app_amount_values").focus();
+        }
+
+        calculateCrDb();
+    })
+
+    function enforcePrecision(input) {
+        const value = parseFloat(input.value);
+        if (!isNaN(value)) {
+            input.value = value.toFixed(2); // Always format to 2 decimal places
+        }
+    }
+
+    $(document).on('blur', '.app_amount_values', function () {
+        curelm = $(this);
+        applied = curelm.val().replace("$", "");
+        if (Math.abs(applied) == 0 || Math.abs(applied) == 0.00) {
+            return false;
+        }
+        balance = curelm.parent('td').siblings('.bal_amount').html().replace("$", "").replace(",", "");
+        if ((Math.abs(applied) > Math.abs(balance) || Math.sign(applied) != Math.sign(balance))) {
+            alert("Applied amount should be between 0 and " + balance);
+            curelm.val('0.00');
+            curelm.focus();
+            return false;
+        }
+        calculateCrDb();
+    })
+
+    function calculateCrDb() {
+        totalcredits = 0; totaldebits = 0;
+
+        $("#CashReceiptsInfo tr").each(function () {
+            appflg = $(this).find('.appflg').html();
+            if (appflg != "C") {
+                totalcredits += parseFloat($(this).find('.app_amt_td').find('.app_amount_values').val().replace("$", ""));
+            } else {
+                totaldebits += parseFloat($(this).find('.app_amt_td').find('.app_amount_values').val().replace("$", ""));
+            }
+        })
+
+        $("#credits").val('$' + Math.abs(totalcredits).toFixed(2));
+        $("#debits").val('$' + Math.abs(totaldebits).toFixed(2));
+        $("#diference").val('$' + (Math.abs(totalcredits) - Math.abs(totaldebits)).toFixed(2));
+    }
+
+    $(document).on('click', '#btnPrint', function () {
+        $('.cashReceiptInfo').removeClass('d-none');
+        printNormalHtmlTable('cashReceiptInfo');
+        $('.cashReceiptInfo').addClass('d-none');
+    })
+
+    $(document).on('click', '#btnPreview', function () {
+        previewNormalHtmlTable('cashReceiptInfo');
+    })
+
+    $(document).on('click', '.btnDownloadPDF', function () {
+        $('.cashReceiptInfo').removeClass('d-none');
+        pdfNormalHtmlDiv('cashReceiptInfo');
+        $('.cashReceiptInfo').addClass('d-none');
+    })
+
+    $(document).on('click', '.btnDownloadExcel', function () {
+        excelFromNormalDivTable("cashReceiptInfo");
+    })
+
+    function ClearControls() {
+        window.location.href = "../SalesPaymentsCredits/EditCashReceipt";
+    }
+
+    $(document).on('click', ".closePrintModel", function () {
+        ClearControls();
+    })
+
+</script>
+
+<style>
+    .blue-bg-para {
+        background: blue;
+        color: #fff;
+        text-align: center;
+        padding: 3px;
+    }
+
+    .empty-well p {
+        padding: 100px;
+    }
+
+    .CashReceiptsInfo {
+        max-height: 300px;
+        overflow-y: scroll;
+    }
+
+    .app_amount_values {
+        background: #fdfdfd;
+        border: 1px solid #f8f8f8;
+        width: 100px;
+    }
+</style>

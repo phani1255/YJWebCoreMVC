@@ -1,4 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿/*
+ * Manoj 02/04/2026 created file
+ * Manoj 02/04/2026 Added charity,charities Properties
+ */
+
+using Microsoft.AspNetCore.Mvc.Rendering;
+
 
 namespace YJWebCoreMVC.Models
 {

@@ -1,0 +1,97 @@
+<!--
+  * Created by Phanindra on 12-12-2024
+-->
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model YJWeb.Models.SalesPaymentsCreditsModel
+
+<div id="content-center" class="row">
+
+    <div class="web-form page login-page col-sm-12" id="FormForEditQuotation">
+
+        <div class="form-horizontal">
+            <div>
+                <div class="row">
+                    <div class="col-sm-3 text-right">
+                        <label>Receivable No</label>
+                    </div>
+                    <div class="col-sm-3 ">
+                        <input type="text" id="receipt_no" maxlength="6" />
+                    </div>
+                    <div class="col-sm-2">
+                        <button class="formsGlobalUniqueBtn deleteCashReceipt" id="deleteCashReceipt">Delete Receivable</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+</div>
+
+<script type="text/javascript">
+
+    $(document).on('click', '#deleteCashReceipt', function () {
+
+        receipt_no = $("#receipt_no").val();
+        $.ajax({
+            url: "../SalesPaymentsCredits/GetPayment",
+            type: "POST",
+            data: {
+                inv_no: receipt_no,
+                rtv_pay: "F"
+            },
+            success: function (response) {
+                //alert(res);
+                
+                if (response == "null") {
+                    alert("Invalid Receivable No.");
+                    return false;
+                } else {
+                    var json;
+                    if (response instanceof Object)
+                        json = response;
+                    else
+                        json = $.parseJSON(response);
+
+                    var tableData = json.Table;
+
+                    customerCode = "";
+                    entryDate = "";
+                    // Iterate through the Table array
+                    tableData.forEach(function (row) {
+                        customerCode = row.ACC;
+                        entryDate = row.DATE.split('T')[0];
+                        paid = row.PAID;
+                        transact = row.TRANSACT;
+                    });
+                    if (paid == "") {
+                        paid = 0;
+                    }
+
+                    if (confirm("Customer: " + customerCode + "\nDate: " + entryDate + "\nAre you sure you want to delete the Adj. Receivable?")) {
+                        $.ajax({
+                            url: "../SalesPaymentsCredits/DeleteAdjRcvable",
+                            type: "POST",
+                            data: {
+                                acc: customerCode,
+                                receipt_no: receipt_no,
+                                paid: paid,
+                                transact: transact
+                            },
+                            success: function (res) {
+                                alert(res);
+                                $("#receipt_no").val('');
+                            }
+                        })
+                    }
+                }
+            }
+        })
+    })
+
+</script>

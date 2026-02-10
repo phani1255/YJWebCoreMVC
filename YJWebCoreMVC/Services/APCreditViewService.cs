@@ -1,4 +1,11 @@
-﻿using Microsoft.Data.SqlClient;
+/*
+ *  Created By Phanindra on 26-Mar-2025
+ *  Chakri 06/05/2025 Added DeleteEmployee method.
+ *  chakri 06/06/2025 Added VacationRequest, GetEmployeeCode, GetEmployeeVacationDays and AddEmpVacation methods.
+ *  Chakri 02/05/2026 Created EmploueeService.
+ */
+
+using Microsoft.Data.SqlClient;
 using System.Data;
 using YJWebCoreMVC.Models;
 
@@ -6,24 +13,34 @@ namespace YJWebCoreMVC.Services
 {
     public class APCreditViewService
     {
-
         private readonly ConnectionProvider _connectionProvider;
-        private readonly HelperCommonService _helperCommonService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly HelperCommonService _helperService;
+        private readonly IWebHostEnvironment _env;
 
-        public APCreditViewService(ConnectionProvider connectionProvider, HelperCommonService helperCommonService, IWebHostEnvironment env)
+        private readonly string _companyName;
+        private readonly string _storeCodeInUse;
+        private readonly string _loggedUser;
+
+        public APCreditViewService(ConnectionProvider connectionProvider, IHttpContextAccessor httpContextAccessor, HelperCommonService helperService, IWebHostEnvironment env)
         {
             _connectionProvider = connectionProvider;
-            _helperCommonService = helperCommonService;
+            _httpContextAccessor = httpContextAccessor;
+            _helperService = helperService;
+            _env = env;
+
+            _companyName = _httpContextAccessor.HttpContext?.Session.GetString("COMPANYNAME");
+            _storeCodeInUse = _httpContextAccessor.HttpContext?.Session.GetString("STORE_CODE");
+            _loggedUser = _httpContextAccessor.HttpContext?.Session.GetString("UserId");
         }
 
-
-        public bool AddAPCredit(APCreditViewModel apcredit, string ReturnStatus, out string error)
+        public bool AddAPCredit(APCreditViewModel apcredit, out string error)
         {
             error = string.Empty;
 
             try
             {
-                using (var connection = _connectionProvider.GetConnection())
+                using (var connection = new SqlConnection(_connectionProvider.GetConnectionString()))
                 using (var dbCommand = new SqlCommand("AddAPCreditWOBill", connection))
                 {
                     // Set command properties
@@ -40,10 +57,10 @@ namespace YJWebCoreMVC.Services
                     dbCommand.Parameters.AddWithValue("@MESSAGE", apcredit.Notes);
                     dbCommand.Parameters.AddWithValue("@NOTE1", string.IsNullOrEmpty(apcredit.Notes1) ? "" : apcredit.Notes1);
                     dbCommand.Parameters.AddWithValue("@NOTE2", string.IsNullOrEmpty(apcredit.Notes2) ? "" : apcredit.Notes2);
-                    dbCommand.Parameters.AddWithValue("@REPL_IT", ReturnStatus == "DoNotReplace" ? "0" : ReturnStatus == "Replace" ? "1" : "2");
+                    dbCommand.Parameters.AddWithValue("@REPL_IT", apcredit.ReturnStatus == "DoNotReplace" ? "0" : apcredit.ReturnStatus == "Replace" ? "1" : "2");
                     dbCommand.Parameters.AddWithValue("@ON_QB", apcredit.ON_QB);
                     dbCommand.Parameters.AddWithValue("@Store_no", string.IsNullOrEmpty(apcredit.Store) ? "" : apcredit.Store);
-                    dbCommand.Parameters.AddWithValue("@loggeduser", _helperCommonService.LoggedUser);
+                    dbCommand.Parameters.AddWithValue("@loggeduser", _helperService.LoggedUser);
 
                     // Open connection, execute command, and close connection
                     connection.Open();
@@ -62,7 +79,7 @@ namespace YJWebCoreMVC.Services
 
             try
             {
-                using (SqlConnection connection = _connectionProvider.GetConnection())
+                using (SqlConnection connection = new SqlConnection(_connectionProvider.GetConnectionString()))
                 using (SqlCommand command = new SqlCommand("UpdateAPCreditWOBill", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;

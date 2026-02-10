@@ -1,4 +1,4 @@
-﻿using System.Data;
+using System.Data;
 
 namespace YJWebCoreMVC.Models
 {
@@ -6,6 +6,7 @@ namespace YJWebCoreMVC.Models
     {
         public string VendorCode { get; set; }
 
+        public string VendorName { get; set; }
         public string Checkno { get; set; }
 
         public string banks { get; set; }

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
 namespace YJWebCoreMVC.Models
@@ -102,6 +102,8 @@ namespace YJWebCoreMVC.Models
         public string Order_no { get; set; }
         public string Jobbagno { get; set; }
         public IEnumerable<SelectListItem> VenderTypes { get; set; }
+
+        public IEnumerable<SelectListItem> VenderTypes1 { get; set; }
         public IEnumerable<SelectListItem> AllStores { get; set; }
         public IEnumerable<AccountsPayableModel> getBestSellerCategoryReport { get; set; }
         public List<AccountsPayableModel> lstVendorStatement { get; set; } = new List<AccountsPayableModel>();
@@ -306,4 +308,5 @@ namespace YJWebCoreMVC.Models
         public string ACC { get; set; }
         public decimal Amount { get; set; }
     }
+   
 }

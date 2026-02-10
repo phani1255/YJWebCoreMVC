@@ -27,33 +27,4 @@ namespace YJWebCoreMVC.Models
         public IEnumerable<SelectListItem> AllStoreCodes { get; set; }
 
     }
-
-    public class QuoteModel
-    {
-        public string QN { get; set; }
-        public string ACC { get; set; }
-        public string STYLE { get; set; }
-        public string ENTER_DATE { get; set; }
-        public string DESC { get; set; }
-        public string OPERATOR { get; set; }
-        public decimal PRICE { get; set; }
-    }
-    public class PotentialCustomerModel
-    {
-        public string ACC { get; set; }
-        public string NAME { get; set; }
-        public string ADDR1 { get; set; }
-        public string ADDR12 { get; set; }
-        public string CITY1 { get; set; }
-        public string STATE1 { get; set; }
-        public string ZIP1 { get; set; }
-        public string COUNTRY { get; set; }
-        public string EMAIL { get; set; }
-        public string NOTE1 { get; set; }
-        public string TEL { get; set; }
-        public string FAX { get; set; }
-        public DateTime? EST_DATE { get; set; }
-        public string SALESMAN { get; set; }
-        public string DNB { get; set; }
-    }
 }

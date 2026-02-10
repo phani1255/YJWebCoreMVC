@@ -1,8 +1,10 @@
-﻿namespace YJWebCoreMVC.Models
+// Chakri  12/31/2025  Created New Model.
+// Chakri   02/05/2026 The code has been separated into the Employee model and service layers.
+
+namespace YJWebCoreMVC.Models
 {
     public class EmailSettingsModel
     {
-
         public string DisplayName { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
@@ -16,6 +18,10 @@
         public bool UsePictureSignature { get; set; }
         public byte[] SignatureImage { get; set; }
         public byte[] SignatureImageBytes { get; set; }
+
+
+
+
 
     }
 }

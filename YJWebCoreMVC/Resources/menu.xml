@@ -311,7 +311,7 @@
 		</GroupMenuItem>
 		<GroupMenuItem Name="24" Text="Salesreps">
 			<TopLevelMenu Name="240" Text="Salesreps" image="salesman">
-				<MenuItem Name="241"   Text="Add/Edit A Salesrep"                 weblink="CustomersSalesman/Salesman"                OnClick="F:frmSalesman"                  image="salesman" TBD="DHR"/>
+				<MenuItem Name="241"   Text="Add/Edit A Salesrep"                 weblink="CustomersSalesReps/Salesman"                OnClick="F:frmSalesman"                  image="salesman" TBD="DHR"/>
 				<MenuItem Name="242"   Text="Delete A Salesrep"                   weblink="Customers/Salesman"                        OnClick="F:frmDeleteSalesman"            image="cancel" TBD="CHKR" />
 				<MenuItem Name="243"   Text="Salesreps List"                      weblink="Customers/ListSalesman"		              OnClick="F:frmListSalesman"  image="report" TBD="CHKR"/>
 				<MenuItem Text="-" />
@@ -635,10 +635,10 @@
 				<MenuItem Name="6312"  Text="Reprint A Check"                     weblink="AccountsPayable/ReprintCheck"          OnClick="F:frmReprintCheck"              image="list" />
 			</TopLevelMenu>
 			<TopLevelMenu Name="671" Text="Credit:Card" image="payments">
-				<MenuItem Name="672"   Text="Pay One Vendor Using Credit Card"    weblink="AccountsPayable/AskVendorCode"    OnClick="F:frmAskVendorCode"                image="check" TBD="SRV" />
+				<MenuItem Name="672"   Text="Pay One Vendor Using Credit Card"    weblink="AccountsPayable/AskVendorCode"          OnClick="F:frmAskVendorCode"                image="check" TBD="SRV" />
 				<MenuItem Name="677"   Text="Pay Multiple Vendors Using Credit Card" OnClick="F:frmPayMultiVendorByCC"        image="check" TBD="SRV" />
-				<MenuItem Name="673"   Text="Delete Credit Card Log"              weblink="AccountsPayable/GetDeleteCcrdLog"      OnClick="F:frmDeleteCcrdLog"             image="cancel" TBD="CHKR" />
-				<MenuItem Name="674"   Text="Reprint Credit Card Log"             OnClick="F:frmReprintCcrdLog"               image="check" />
+				<MenuItem Name="673"   Text="Delete Credit Card Log"              weblink="AccountsPayable/GetDeleteCcrdLog"       OnClick="F:frmDeleteCcrdLog"             image="cancel" TBD="CHKR" />
+				<MenuItem Name="674"   Text="Reprint Credit Card Log"             weblink="PayablesCreditCard/ReprintCcrdLog"      OnClick="F:frmReprintCcrdLog"               image="check" />
 				<MenuItem Name="675"   Text="Credit Card Transactions"            weblink="AccountsPayable/CreditCardTransactions" OnClick="F:frmCcrdTransaction"           image="check" />
 				<MenuItem Name="676"   Text="Pay the Credit Card Company"         OnClick="F:frmAskCCVendorCode"           image="check" />
 			</TopLevelMenu>
@@ -663,7 +663,7 @@
 				<MenuItem Name="656"   Text="Delete A Consignment"                weblink="AccountsPayable/GetDeleteConsignment"  OnClick="F:frmDeleteConsignment"         image="cancel"  TBD="CHKR" />
 				<MenuItem Name="657"   Text="List Of Consignments"                weblink="AccountsPayable/ListOfConsignment"     OnClick="F:frmListOfConsignment"         image="list" />
 				<MenuItem Name="658"   Text="Status Of Styles On A Consignment"   weblink="PayablesBills/StatusOfStylesOnABill?Isconsignment=true"               OnClick="P:StatusOfStylesOnAConsignment" image="list" TBD="Neetha"/>
-				<MenuItem Name="659"   Text="Consignments Sold But Not Billed By Vendor" OnClick="F:frmSoldQtytoReporttoVendor"   image="list" />
+				<MenuItem Name="659"   Text="Consignments Sold But Not Billed By Vendor" weblink="PayablesConsignments/SoldQtytoReporttoVendor"  OnClick="F:frmSoldQtytoReporttoVendor"   image="list" />
 				<MenuItem Name="6510"  Text="Enter Memo Invoice from Vendor"      OnClick="F:frmnewvsfm"                    image="bills" />
 				<MenuItem Name="660"   Text="Export A Consignment"                OnClick="P:ExportConsignment"             image="list" />
 				<MenuItem Name="6511"  Text="Guaranteed Consignment Buys"         OnClick="F:frmGuaranteedConsignmentsbuys" image="list" />

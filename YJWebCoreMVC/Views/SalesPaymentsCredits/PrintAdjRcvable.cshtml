@@ -1,0 +1,107 @@
+<!--
+  * Created by Phanindra
+  * Phanindra 12/12/2024 Added report title
+-->
+@{
+    Layout = null;
+}
+
+@model YJWeb.Models.SalesPaymentsCreditsModel
+
+<div id="content-center" class="row">
+
+    <div class="web-form page login-page col-sm-12" id="FormForEditQuotation">
+
+        <div class="row col-md-6 report_buttons1 text-center">
+            <div style="margin:3px;">
+                <input type="button" value="PDF" table-id="tableForCashReceipt" class="formsGlobalUniqueBtn btnDownloadPDF" id="btnPDF" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Excel" table-id="tableForCashReceipt" class="formsGlobalUniqueBtn btnDownloadExcel" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Preview" table-id="tableForCashReceipt" id="btnPreview" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Print" table-id="tableForCashReceipt" id="btnPrint" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Email" table-id="tableForCashReceipt" class="formsGlobalUniqueBtn" />
+            </div>
+
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Simple Excel" class="formsGlobalUniqueBtn" />
+            </div>
+        </div>
+
+        <div class="cashReceiptInfo d-none">
+            <table class="table" id="tableForCashReceipt">
+                <tr>
+                    <td colspan="2" style="text-align:center;">
+                        <p style="font-size:18px;"><strong>Adj. Receivable Details</strong></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-left">Customer : @Model.ReceiptInfo["ACC"]</td>
+                    <td class="text-right">Receivable No : @Model.ReceiptInfo["INV_NO"]</td>
+                </tr>
+                <tr>
+                    <td class="text-left">Entry Date : @Model.ReceiptInfo["DATE"]</td>
+                    <td class="text-right"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="text-left">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Ref. No</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (System.Data.DataRowView rowView in ViewBag.DvPayItems)
+                                {
+                                    <tr>
+                                        @if (rowView["RTV_PAY"].ToString() == "C")
+                                        {
+                                            <td>CREDIT</td>
+                                        }
+                                        else if (rowView["RTV_PAY"].ToString() == "I")
+                                        {
+                                            <td>INVOICE</td>
+                                        }
+                                        else if (rowView["RTV_PAY"].ToString() == "M")
+                                        {
+                                            <td>MEMO</td>
+                                        }
+                                        else if (rowView["RTV_PAY"].ToString() == "P")
+                                        {
+                                            <td>PAYMENT</td>
+                                        }
+                                        else if (rowView["RTV_PAY"].ToString() == "D")
+                                        {
+                                            <td>DEBIT</td>
+                                        }
+                                        else 
+                                        {
+                                            <td>@rowView["RTV_PAY"]</td>
+                                        }
+                                        <td>@rowView["INV_NO"]</td>
+                                        <td>@rowView["AMOUNT"]</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-left">Note : @Model.ReceiptInfo["NOTE"]</td>
+                    <td class="text-right"></td>
+                </tr>
+            </table>
+        </div>
+
+    </div>
+
+</div>

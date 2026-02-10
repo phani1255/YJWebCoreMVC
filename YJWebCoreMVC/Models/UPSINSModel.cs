@@ -1,5 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
-using YJWebCoreMVC.Services;
+﻿using YJWebCoreMVC.Services;
 
 namespace YJWebCoreMVC.Models
 {

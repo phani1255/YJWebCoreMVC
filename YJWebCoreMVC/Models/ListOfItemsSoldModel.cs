@@ -4,7 +4,7 @@ namespace YJWebCoreMVC.Models
 {
     public class ListOfItemsSoldModel
     {
-        
+
         public IEnumerable<SelectListItem> CustomerCodes { get; set; }
         public IEnumerable<SelectListItem> VenderTypes { get; set; }
         public string FROMDATE { get; set; }

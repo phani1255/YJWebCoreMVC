@@ -1,7 +1,4 @@
-﻿// Sravan 12/17/2025 Create new 
-// Sravan 12/24/2025 Added new GL_CODE_AMOUNT() this call from unapplychecks for gl records also added few more parameter its use in controller 
-// Sravan 01/02/2026 msg was commet its not use for this Missing
-
+// Sravan 02/06/2026 Uncommnted code and fix refreshButton2_Click
 using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Text;
@@ -15,6 +12,7 @@ namespace YJWebCoreMVC.Services
         private readonly ConnectionProvider _connectionProvider;
         private readonly HelperCommonService _helperCommonService;
         private readonly HelperSravanService _helperSravanService;
+        CheckOneVendorModel _CheckOneVendorModel = new CheckOneVendorModel();
 
         public CheckOneVendorService(ConnectionProvider connectionProvider, HelperCommonService helperCommonService, HelperSravanService helperSravanService, IWebHostEnvironment env)
         {
@@ -68,39 +66,39 @@ namespace YJWebCoreMVC.Services
         }
 
         // -- Commented at YJCore Migration
-        /*public void refreshButton2_Click(out StringBuilder sbStrReason1, out StringBuilder excludeCheck, out StringBuilder excludeBank)
+        public void refreshButton2_Click(out StringBuilder sbStrReason1, out StringBuilder excludeCheck, out StringBuilder excludeBank)
         {
             try
             {
                 sbStrReason1 = new StringBuilder(); excludeCheck = new StringBuilder(); excludeBank = new StringBuilder();
-                if (string.IsNullOrWhiteSpace(Checkno) || string.IsNullOrWhiteSpace(banks))
+                if (string.IsNullOrWhiteSpace(_CheckOneVendorModel.Checkno) || string.IsNullOrWhiteSpace(_CheckOneVendorModel.banks))
                 {
                     return;
                 }
-                DataTable dtCheck = _helperSravanService.CheckForExistingBankCheck(Checkno, banks);
+                DataTable dtCheck = _helperSravanService.CheckForExistingBankCheck(_CheckOneVendorModel.Checkno, _CheckOneVendorModel.banks);
                 if (!_helperCommonService.DataTableOK(dtCheck))
                 {
-                    sbStrReason1.Append("\nBank : " + banks.Trim().PadRight(10) + "Check# : " + Checkno);
-                    excludeCheck.Append("'" + Checkno.ToString().Trim() + "',");
-                    excludeBank.Append("'" + banks.ToString().Trim() + "',");
+                    sbStrReason1.Append("\nBank : " + _CheckOneVendorModel.banks.Trim().PadRight(10) + "Check# : " + _CheckOneVendorModel.Checkno);
+                    excludeCheck.Append("'" + _CheckOneVendorModel.Checkno.ToString().Trim() + "',");
+                    excludeBank.Append("'" + _CheckOneVendorModel.banks.ToString().Trim() + "',");
                     return;
                 }
-                VendorCode = _helperCommonService.CheckForDBNull(dtCheck.Rows[0]["ACC"]);
-                EnteredCheckAmt = Convert.ToDecimal(_helperCommonService.CheckForDBNull(dtCheck.Rows[0]["AMOUNT"], typeof(decimal)));
-                txtBalChkAmt = EnteredCheckAmt; // Update the balance check amount field
-                CheckDate = Convert.ToDateTime(_helperCommonService.CheckForDBNull(dtCheck.Rows[0]["DATE"], typeof(DateTime)));
+                _CheckOneVendorModel.VendorCode = _helperCommonService.CheckForDBNull(dtCheck.Rows[0]["ACC"]);
+                _CheckOneVendorModel.EnteredCheckAmt = Convert.ToDecimal(_helperCommonService.CheckForDBNull(dtCheck.Rows[0]["AMOUNT"], typeof(decimal)));
+                _CheckOneVendorModel.txtBalChkAmt = _CheckOneVendorModel.EnteredCheckAmt; // Update the balance check amount field
+                _CheckOneVendorModel.CheckDate = Convert.ToDateTime(_helperCommonService.CheckForDBNull(dtCheck.Rows[0]["DATE"], typeof(DateTime)));
 
-                dtAPCredit = _helperSravanService.GetVendorCheckIssueData(VendorCode);
+                _CheckOneVendorModel.dtAPCredit = _helperSravanService.GetVendorCheckIssueData(_CheckOneVendorModel.VendorCode);
                 string GL_CODE = "";
                 decimal AMOUNT = 0;
 
 
                 try
                 {
-                    decimal checkamt = EnteredCheckAmt;
-                    if (_helperCommonService.DataTableOK(dtAPCredit))
+                    decimal checkamt = _CheckOneVendorModel.EnteredCheckAmt;
+                    if (_helperCommonService.DataTableOK(_CheckOneVendorModel.dtAPCredit))
                     {
-                        foreach (DataRow dr in dtAPCredit.Rows)
+                        foreach (DataRow dr in _CheckOneVendorModel.dtAPCredit.Rows)
                         {
                             decimal balance = _helperCommonService.CheckForDBNull(dr["Balance"].ToString(), typeof(decimal).FullName);
                             decimal payment = _helperCommonService.CheckForDBNull(dr["payment"].ToString(), typeof(decimal).FullName);
@@ -125,7 +123,7 @@ namespace YJWebCoreMVC.Services
                     throw new Exception("Error in Update Balc and Payments : " + ex.Message, ex);
                 }
 
-                DataTable dtGLAccts = _helperCommonService.GL_CODE_AMOUNT(Checkno, banks, out GL_CODE, out AMOUNT);
+                DataTable dtGLAccts = _helperCommonService.GL_CODE_AMOUNT(_CheckOneVendorModel.Checkno, _CheckOneVendorModel.banks, out GL_CODE, out AMOUNT);
 
                 //if (string.IsNullOrEmpty(GL_CODE) || AMOUNT == 0)
                 //{
@@ -140,6 +138,6 @@ namespace YJWebCoreMVC.Services
 
                 throw new Exception("Error in refreshButton2_Click: " + ex.Message, ex);
             }
-        }*/
+        }
     }
 }

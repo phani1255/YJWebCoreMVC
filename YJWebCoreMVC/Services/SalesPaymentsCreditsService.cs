@@ -10,7 +10,6 @@
  *  Phanindra 06/09/2025 Worked on fixing save issue for customer refund.
  *  Phanindra 06/23/2025 Worked on adding the Register value
  */
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 using System.Data;
@@ -94,7 +93,7 @@ namespace YJWebCoreMVC.Services
                 }
                 if (rowsAffected > 0)
                 {
-                    _httpContextAccessor.HttpContext ?.Session.SetString("ReceiptNo", "");
+                    _httpContextAccessor.HttpContext?.Session.SetString("ReceiptNo", "");
                     return "Success";
                 }
                 else

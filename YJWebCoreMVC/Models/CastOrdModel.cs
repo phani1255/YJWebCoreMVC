@@ -1,4 +1,7 @@
-﻿using System;
+﻿/*
+ * Phanindra 02/09/2026 Added all neededparameters.
+ */
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -63,6 +66,7 @@ namespace YJWebCoreMVC.Models
         public string Stores { get; set; }
         public string Salesman { get; set; }
         public string Register { get; set; }
+        public string Style { get; set; }
 
         // ===== Notes =====
         public string NOTE { get; set; }

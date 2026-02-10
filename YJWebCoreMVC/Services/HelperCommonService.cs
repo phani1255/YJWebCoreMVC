@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.DataProtection.KeyManagement;
+﻿/*
+ * Dharani 02/06/2026 Added GetDefaultValues() for core.
+ */
+
+
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 using Newtonsoft.Json;
@@ -37,12 +41,12 @@ namespace YJWebCoreMVC.Services
         public int LoggedUserLevel = 4, GIPTOTAL = 0, LastVersion = 0, IdleTimer = 0, noOfdecimals = 0, RefreshIntervalAuthCode = 7, Warranty = 0, _PCFeedVersion = 0, GiftExpDays, RoundOff;
         public string InvoiceNote = "NO REFUNDS 7 DAYS EXCHANGE ONLY ON unworn, unaltered, undamaged items.ONE TIME EXCHANGE ONLY. NO RETURNS OR EXCHANGE ARE ACCEPTED ON EARRINGS. LAYAWAY Purchase is being held for the person’s name on this invoice until the balance owed is paid in full. By signing this LAYAWAY agreement, I agree to make  payments according to the payment frequency printed above until the total balance owed is paid in full. If we do not receive full payment by the FINAL DUE DATE printed above, we will automatically cancel your layaway purchase. Monies paid will be forfeit and are non-refundable. Canceling a Layaway is subject to a 25% RESTOCKING FEE.          \n\n CUSTOMER’S SIGNATURE";
         public string SupportMailId = "Support@ishalinc.com";
-        
+
         public string StoreCodeUse = "", FixedStoreCode = "", AccessToken = "", LoggedUser = "ADMIN", StoreCode = "", MemoNote = "", ImagesPath = "", _WorkingPrinter = "",
             tagPrinterPort = "", tagTemplateName = "", RepairNote = "", RepairInvoiceNote = "", RepairDisclaimer = "", selectedStore = "";
         public bool StoreCodeInUse = false, is_Malakov, is_Zhaveri, is_WatchKing, is_Glenn, Tel_0_prefix = false, is_StyleItem, is_Briony, ByFieldValue5 = false, ByFieldValue6 = false, is_Mahin, is_Loyalty, Can_Text, isNoTaxRepair, Read_Signature_CC, Read_Signature;
         public string _connString = "", CompanyEmail, mask_tel = "", StoreCodeInUse1 = "IT SOLUTIO", warrentynote = "", CompanyName, registerInUse = string.Empty, Cash_Register = "", CompanyAddr1 = "", CompanyAddr2 = "", CompanyTel = "", CompanyCity = "", CompanyZip = "", CompanyState = "", CompanyWebsite = "";
-        
+
         public readonly DateTime DefStart = new DateTime(1900, 1, 1), DefEnd = new DateTime(9998, 12, 31);
 
         public bool DashBoardOpen = false, is_ret_inv_no = false, isopenmemo = false, IsPhysicalInv = false, closejb = false, isDueReport = false, Not_Stock = false, NotSideBySide1, is_Wrist, is_devam, iSSpecialOrder,
@@ -2307,8 +2311,8 @@ namespace YJWebCoreMVC.Services
                 dataAdapter.SelectCommand.Connection = _connectionProvider.GetConnection();
                 dataAdapter.SelectCommand.CommandType = CommandType.StoredProcedure;
                 dataAdapter.SelectCommand.CommandText = followList ? "SalesFollowUp" : "SalesFollowsUp";
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@salemancode", saleman1 ??= "");
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@store", store ??= "");
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@salemancode", saleman1);
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@store", store);
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@Fdate1", Fdate);
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@Tdate2", Tdate);
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@allstore", Allstore);
@@ -2524,7 +2528,7 @@ namespace YJWebCoreMVC.Services
             {
                 using (SqlCommand dbCommand = new SqlCommand())
                 {
-                    dbCommand.Connection = _connectionProvider.GetConnection(); 
+                    dbCommand.Connection = _connectionProvider.GetConnection();
                     dbCommand.CommandType = CommandType.Text;
                     dbCommand.CommandTimeout = 0;
 
@@ -8728,22 +8732,22 @@ namespace YJWebCoreMVC.Services
                                         and a.inv_no =@repairNo) c order by id asc", "@repairNo", repairNo);
         }
 
-        //public bool UpdateRepairCustomerDetails(String repairno, CustomerModel customerModel)
-        //{
-        //    using (SqlCommand dbCommand = new SqlCommand())
-        //    {
-        //        // Set the command object properties
-        //        dbCommand.Connection = _connectionProvider.GetConnection();
-        //        dbCommand.CommandType = CommandType.Text;
-        //        dbCommand.CommandText = $"update repair set name = '{customerModel.NAME}', addr1 = '{customerModel.ADDR1}', addr2 = '{customerModel.ADDR12}', city = '{customerModel.CITY1}', state = '{customerModel.STATE1}', zip = '{customerModel.ZIP1}', country = '{customerModel.COUNTRY}' where trim(repair_no)= trim('{repairno}')";
+        public bool UpdateRepairCustomerDetails(String repairno, CustomerModelNew customerModel)
+        {
+            using (SqlCommand dbCommand = new SqlCommand())
+            {
+                // Set the command object properties
+                dbCommand.Connection = _connectionProvider.GetConnection();
+                dbCommand.CommandType = CommandType.Text;
+                dbCommand.CommandText = $"update repair set name = '{customerModel.NAME}', addr1 = '{customerModel.ADDR1}', addr2 = '{customerModel.ADDR12}', city = '{customerModel.CITY1}', state = '{customerModel.STATE1}', zip = '{customerModel.ZIP1}', country = '{customerModel.COUNTRY}' where trim(repair_no)= trim('{repairno}')";
 
-        //        // Open the connection, execute the query and close the connection
-        //        dbCommand.Connection.Open();
-        //        var rowsAffected = dbCommand.ExecuteNonQuery();
-        //        dbCommand.Connection.Close();
-        //        return rowsAffected > 0;
-        //    }
-        //}
+                // Open the connection, execute the query and close the connection
+                dbCommand.Connection.Open();
+                var rowsAffected = dbCommand.ExecuteNonQuery();
+                dbCommand.Connection.Close();
+                return rowsAffected > 0;
+            }
+        }
 
         public DataTable GetSelectData(string tblname, string fldname)
         {
@@ -11670,6 +11674,78 @@ namespace YJWebCoreMVC.Services
             public string cancellationTransactionId { get; set; }
         }
 
+        public void GetDefaultValues(ISession session)
+        {
+            try
+            {
+                var isNoTaxRepair = CheckModuleEnabled(Modules.NoTaxRepair);
+                var isJMcare = CheckModuleEnabled(Modules.JMcare);
+
+                DataTable dataTable = GetSqlData("select * from ups_ins");
+                DataTable dataTable1 = GetSqlData("select * from ups_ins1 with (nolock)");
+
+                if (DataTableOK(dataTable))
+                {
+                    string companyName = CheckForDBNullUPS(dataTable, "COMPANYNAME");
+                    SessionExtensions.SetString(session, "PrintMode", CheckForDBNullUPS(dataTable, "print_mode") ?? "");
+                    session.SetString("CompanyName", companyName ?? "");
+                    SessionExtensions.SetString(session, "CompanyAddr1", CheckForDBNullUPS(dataTable, "COMPANY_ADDR1") ?? "");
+                    SessionExtensions.SetString(session, "CompanyAddr2", CheckForDBNullUPS(dataTable, "COMPANY_ADDR2") ?? "");
+                    SessionExtensions.SetString(session, "CompanyTel", CheckForDBNullUPS(dataTable, "COMPANY_TEL") ?? "");
+                    SessionExtensions.SetString(session, "CompanyCity", CheckForDBNullUPS(dataTable, "CompanyCity") ?? "");
+                    SessionExtensions.SetString(session, "CompanyZip", CheckForDBNullUPS(dataTable, "CompanyZip") ?? "");
+                    SessionExtensions.SetString(session, "CompanyState", CheckForDBNullUPS(dataTable, "CompanyState") ?? "");
+                    SessionExtensions.SetString(session, "CompanyEmail", CheckForDBNullUPS(dataTable, "Company_email") ?? "");
+                    SessionExtensions.SetString(session, "ImagesPath", CheckForDBNullUPS(dataTable, "ImagesPath") ?? "");
+
+                    decimal signBelow = DataTableOK(dataTable1) ? DecimalCheckForDBNull(dataTable1.Rows[0]["sign_below"]) : 0;
+                    session.SetString("SignBelow", signBelow.ToString());
+
+                    for (int i = 1; i <= 8; i++)
+                    {
+                        SessionExtensions.SetString(session, $"CustAttr{i}", CheckForDBNullUPS(dataTable, $"CustAttr{i}") ?? "");
+                        SessionExtensions.SetString(session, $"CustCheckAttr{i}", CheckForDBNullUPS(dataTable, $"CustCheck{i}") ?? "");
+                    }
+
+                    for (int i = 1; i <= 29; i++)
+                    {
+                        if (i > 8 && i < 20) continue;
+                        SessionExtensions.SetString(session, $"StyleField{i}", CheckForDBNullUPS(dataTable1, $"StyleField{i}") ?? "");
+                    }
+
+                    SessionExtensions.SetString(session, "RepairDisclaimer", CheckForDBNullUPS(dataTable, "REPAIR_DISCLAIMER") ?? "");
+                    SessionExtensions.SetString(session, "GL_ASSET", CheckForDBNullUPS(dataTable, "ASSET_GL") ?? "");
+                }
+
+                SessionExtensions.SetString(session, "ShopifyURL", CheckForDBNullUPS(dataTable, "ShopifyURL") ?? "");
+
+                bool negativeInv = Convert.ToBoolean(CheckForDBNull(dataTable.Rows[0]["negativeinv"], typeof(bool).FullName));
+                session.SetString("NegativeInv", negativeInv.ToString());
+
+                string compNameUpper = (session.GetString("CompanyName") ?? "").ToUpper();
+                session.SetString("iS_emCity", compNameUpper.Contains("EMERALD").ToString());
+                session.SetString("is_RFID", CheckModuleEnabled(Modules.RFID).ToString());
+
+                using (Aes aes = Aes.Create())
+                {
+                    aes.Padding = PaddingMode.PKCS7;
+                    aes.KeySize = 128;
+                    aes.Key = new byte[128 / 8];
+                    aes.IV = new byte[128 / 8];
+
+                    if (dataTable.Rows.Count > 0)
+                    {
+                        byte[] binaryAccessToken = dataTable.Rows[0]["sq_accesstoken"] as byte[];
+                        if (binaryAccessToken != null)
+                        {
+                            // AccessToken = Decrypt(binaryAccessToken, aes.Key, aes.IV);
+                        }
+                    }
+                }
+            }
+            catch { }
+        }
+
 
     }
 
@@ -11689,6 +11765,38 @@ namespace YJWebCoreMVC.Services
         public bool is_return { get; set; }
         public bool is_update { get; set; }
     }
+    /*
+    public class CustomerModel
+    {
+        public string ACC { get; set; }
+        public string BILL_ACC { get; set; }
+        public string NAME { get; set; }
+        public string ADDR1 { get; set; }
+        public string ADDR12 { get; set; }
+        public string ADDR13 { get; set; }
+        public string CITY1 { get; set; }
+        public string STATE1 { get; set; }
+        public string ZIP1 { get; set; }
+        public string COUNTRY { get; set; }
+        public decimal TEL { get; set; }
+        public string CELL { get; set; } = string.Empty;
+        public bool ON_ACCOUNT { get; set; }
+        public string old_customer { get; set; }
+        public string EMAIL { get; set; }
+        public DateTime? DOB { get; set; } = null;
+        public string driverlicense_state { get; set; } = string.Empty;
+        public string driverlicense_number { get; set; } = string.Empty;
+        public bool declined { get; set; } = false;
+        public string Store_no { get; set; }
+        public string Non_Taxable { get; set; }
+        public IEnumerable<SelectListItem> AllStatesList { get; set; }
+        public IEnumerable<SelectListItem> AllCountriesList { get; set; }
+        public IEnumerable<SelectListItem> AllSalesManList { get; set; }
+        public IEnumerable<SelectListItem> MainEventList { get; set; }
+        public IEnumerable<SelectListItem> SubEventList { get; set; }
+        public IEnumerable<SelectListItem> AllStores { get; set; }
+    }
+    */
 
     public class CustomerAttribute
     {

@@ -1,0 +1,162 @@
+<!--
+  * Created by Phanindra
+  * Phanindra 12/12/2024 Added report title
+  * Phanindra 12/25/2024 Worked on fixing data related issues
+    Phanindra 12/30/2024 Worked on print related changes.
+    Phanindra 06/17/2025 Worked on chnges in data
+-->
+@{
+    Layout = null;
+}
+
+@model YJWeb.Models.SalesPaymentsCreditsModel
+
+<div id="content-center" class="row">
+
+    <div class="web-form page login-page col-sm-12" id="FormForEditQuotation">
+
+        <div class="row col-md-6 report_buttons1 text-center">
+            <div style="margin:3px;">
+                <input type="button" value="PDF" table-id="tableForCashReceipt" class="formsGlobalUniqueBtn btnDownloadPDF" id="btnPDF" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Excel" table-id="tableForCashReceipt" class="formsGlobalUniqueBtn btnDownloadExcel" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Preview" table-id="tableForCashReceipt" id="btnPreview" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Print" table-id="tableForCashReceipt" id="btnPrint" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Email" table-id="tableForCashReceipt" class="formsGlobalUniqueBtn" />
+            </div>
+
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Simple Excel" class="formsGlobalUniqueBtn" />
+            </div>
+        </div>
+
+        <div class="cashReceiptInfo d-none">
+            <table class="table" id="tableForCashReceipt">
+                <tr>
+                    <td colspan="2" style="text-align:center;">
+                        @if (Model.ReceiptInfo["IS_REFUND"].ToString() == "True")
+                        {
+                            <p style="font-size:18px;"><strong>Refund Details</strong></p>
+                        }
+                        else
+                        {
+                            <p style="font-size:18px;"><strong>Payment Details</strong></p>
+                        }
+                        <p style="font-size:14px;"><strong>Store : @Model.ReceiptInfo["STORE_NO"]</strong></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-left">Customer Code & Name : @Model.ReceiptInfo["ACC"] : @ViewBag.CustomerName</td>
+                    <td class="text-right">Receivable No : @Model.ReceiptInfo["INV_NO"]</td>
+                </tr>
+                <tr>
+                    @{
+                        DateTime date;
+                        string formattedDate = DateTime.TryParse(Convert.ToString(Model.ReceiptInfo["DATE"]), out date)
+                            ? date.ToString("MM/dd/yyyy")
+                            : "";
+                    }
+                    <td class="text-left">Entry Date: @formattedDate</td>
+                    <td class="text-right">Check No : @Model.ReceiptInfo["CHECK_NO"]</td>
+                </tr>
+                <tr>
+                    @{
+                        string formattedDate1 = DateTime.TryParse(Convert.ToString(Model.ReceiptInfo["CHK_DATE"]), out date)
+                            ? date.ToString("MM/dd/yyyy")
+                            : "";
+                    }
+                    <td class="text-left">Check Date: @formattedDate1</td>
+                    <td class="text-right">Amount : @Model.ReceiptInfo["CHK_AMT"]</td>
+                </tr>
+                <tr>
+                    <td class="text-left">Payment Type : @Model.ReceiptInfo["PAYMENTTYPE"]</td>
+                    <td class="text-right">Discount Taken : @Model.ReceiptInfo["DISCOUNT"]</td>
+                </tr>
+                <tr>
+                    <td class="text-left">Payment Note : @Model.ReceiptInfo["NOTE"]</td>
+                    <td class="text-right">Register : @Model.ReceiptInfo["REGISTER"]</td>
+                </tr>
+
+                <tr>
+                    <td colspan="2" class="text-left">
+                        <table class="table table-bordered" style="max-width: 350px;">
+                            <thead style="background:#ccc;">
+                                <tr>
+                                    <th></th>
+                                    <th>Ref. No</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (System.Data.DataRowView rowView in ViewBag.DvPayItems)
+                                {
+                                    <tr>
+                                        @if (rowView["RTV_PAY"].ToString() == "C")
+                                        {
+                                            <td>CREDIT</td>
+                                        }
+                                        else if (rowView["RTV_PAY"].ToString() == "R")
+                                        {
+                                            <td>RTV</td>
+                                        }
+                                        else if (rowView["RTV_PAY"].ToString() == "I")
+                                        {
+                                            <td>INVOICE</td>
+                                        }
+                                        else if (rowView["RTV_PAY"].ToString() == "M")
+                                        {
+                                            <td>MEMO</td>
+                                        }
+                                        else if (rowView["RTV_PAY"].ToString() == "P")
+                                        {
+                                            if (Model.ReceiptInfo["IS_REFUND"].ToString() == "True")
+                                            {
+                                                <td>RECEIVABLE</td>
+                                            }
+                                            else
+                                            {
+                                                <td>PAYMENT</td>
+                                            }
+                                        }
+                                        else if (rowView["RTV_PAY"].ToString() == "D")
+                                        {
+                                            if (Model.ReceiptInfo["IS_REFUND"].ToString() == "True")
+                                            {
+                                                <td>REPAIR</td>
+                                            }
+                                            else
+                                            {
+                                                <td>DEBIT</td>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <td>@rowView["RTV_PAY"]</td>
+                                        }
+                                        <td>@rowView["INV_NO"]</td>
+                                        <td>@rowView["AMOUNT"]</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+    </div>
+
+
+</div>
+
+<script type="text/javascript">
+
+
+</script>

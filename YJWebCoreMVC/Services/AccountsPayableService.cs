@@ -59,7 +59,7 @@ namespace YJWebCoreMVC.Services
             _connectionProvider = connectionProvider;
             _httpContextAccessor = httpContextAccessor;
             _helperCommonService = helperCommonService;
-            _decimalPlaces = int.TryParse(_httpContextAccessor.HttpContext?.Session.GetString("DecimalsInPrices"), out int value)? value: 0;
+            _decimalPlaces = int.TryParse(_httpContextAccessor.HttpContext?.Session.GetString("DecimalsInPrices"), out int value) ? value : 0;
         }
 
         public List<AccountsPayableModel> getVendorStatementDetails(string acc, bool openonly, DateTime? fromdate, DateTime? todate, string store = "", bool paybygold = false)

@@ -1,7 +1,7 @@
-﻿// Chakri  12/31/2025  Created New Model.
-// Chakri  12/31/2025  Added UpdateEmailSettings method.
+﻿// Chakri  12/31/2025  Added UpdateEmailSettings method.
 // Chakri  01/01/2026  Added SetEmailSetupPerUser method and related properties.
 // Chakri  01/02/2026  Changes in SetEmailSetupPerUser  method, and added related properties.
+// Chakri  02/05/2026 Created EmploueeService.
 
 using Microsoft.Data.SqlClient;
 using System.Data;
@@ -11,15 +11,25 @@ namespace YJWebCoreMVC.Services
     public class EmailSettingsService
     {
         private readonly ConnectionProvider _connectionProvider;
-        private readonly HelperCommonService _helperCommonService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly HelperCommonService _helperService;
+        private readonly IWebHostEnvironment _env;
 
-        public EmailSettingsService(ConnectionProvider connectionProvider, HelperCommonService helperCommonService, IWebHostEnvironment env)
+        private readonly string _companyName;
+        private readonly string _storeCodeInUse;
+        private readonly string _loggedUser;
+
+        public EmailSettingsService(ConnectionProvider connectionProvider, IHttpContextAccessor httpContextAccessor, HelperCommonService helperService, IWebHostEnvironment env)
         {
             _connectionProvider = connectionProvider;
-            _helperCommonService = helperCommonService;
+            _httpContextAccessor = httpContextAccessor;
+            _helperService = helperService;
+            _env = env;
+
+            _companyName = _httpContextAccessor.HttpContext?.Session.GetString("COMPANYNAME");
+            _storeCodeInUse = _httpContextAccessor.HttpContext?.Session.GetString("STORE_CODE");
+            _loggedUser = _httpContextAccessor.HttpContext?.Session.GetString("UserId");
         }
-
-
         public bool UpdateEmailSettings(string email, string pass, int port, string smtpserver, bool usessl, string displayname, bool useoauth2, string email_Signature)
         {
             // Use 'using' to ensure proper disposal of resources
@@ -50,8 +60,10 @@ namespace YJWebCoreMVC.Services
                 return rowsAffected > 0;
             }
         }
+
+
         public bool SetEmailSetupPerUser(string user, string email, string pass, int port, string smtpserver,
-            bool usessl, string displayname, bool useoauth2, string email_Signature, bool SignatureIsJpg, byte[] SignatureJpg)
+           bool usessl, string displayname, bool useoauth2, string email_Signature, bool SignatureIsJpg, byte[] SignatureJpg)
         {
             // Use 'using' to ensure resources are properly disposed
             using (SqlConnection connection = _connectionProvider.GetConnection())
@@ -86,5 +98,10 @@ namespace YJWebCoreMVC.Services
             }
         }
 
+
+
+
     }
+
+
 }

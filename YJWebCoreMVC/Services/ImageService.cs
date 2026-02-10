@@ -1,4 +1,4 @@
-﻿namespace YJWebCoreMVC.Services
+namespace YJWebCoreMVC.Services
 {
     public class ImageService
     {
