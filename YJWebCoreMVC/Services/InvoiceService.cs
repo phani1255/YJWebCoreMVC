@@ -348,7 +348,7 @@ namespace YJWebCoreMVC.Services
         public DataTable CheckValidCheckNo(string check_no, string bank)
         {
             string CommandText = "select CHECKS.*, CAST(BANK.CLRD AS BIT) as CLRD1 from checks with (nolock) LEFT JOIN Bank with (nolock) ON TRIM(Bank.inv_no)=TRIM(CHECKS.TRANSACT) WHERE TRIM(checks.bank)= @bank AND TRIM(CHECKS.check_no) = @chk_no";
-            return __helperCommonService.HelperCommon.GetSqlData(CommandText, "@chk_no", check_no.Trim(), "@bank", bank.Trim());
+            return _helper.HelperCommon.GetSqlData(CommandText, "@chk_no", check_no.Trim(), "@bank", bank.Trim());
         }
 
         public object GetSplOrderDetails(string style)
@@ -678,7 +678,7 @@ namespace YJWebCoreMVC.Services
 
                 SqlDataAdapter.Fill(dataTable);
             }
-            return __helperCommonService.HelperCommon.GetRowOne(dataTable);
+            return _helper.HelperCommon.GetRowOne(dataTable);
         }
 
         public List<object> GetStylesFromInvoice(string invoiceNo)
@@ -887,7 +887,7 @@ namespace YJWebCoreMVC.Services
             if (isNoName)
             {
                 if (OpenOnlyinv)
-                    return (__helperCommonService.HelperCommon.GetSqlData(@"Select * from ( SELECT ISNULL(ID,0) As ID,INVOICE.INV_NO,INVOICE.ACC,INVOICE.NAME, 
+                    return (_helper.HelperCommon.GetSqlData(@"Select * from ( SELECT ISNULL(ID,0) As ID,INVOICE.INV_NO,INVOICE.ACC,INVOICE.NAME, 
                  try_cast(customer.TEL as Nvarchar(30)) as TEL,INVOICE.DATE, IN_ITEMS.STYLE,
                  IN_ITEMS.[DESC],GR_TOTAL, ISNULL(GR_TOTAL,0) - ISNULL(CREDITS,0) as BALANCE,[Message],
                  INVOICE.INACTIVE FROM INVOICE LEFT OUTER JOIN CUSTOMER ON INVOICE.ACC = CUSTOMER.ACC     
@@ -895,14 +895,14 @@ namespace YJWebCoreMVC.Services
                  FROM IN_ITEMS GROUP BY INV_NO,RET_INV_NO)IN_ITEMS ON ((INVOICE.INV_NO))=((IN_ITEMS.INV_NO)) 
                  where " + filter + " " + openonly + " AND ISNULL(INVOICE.ACC,'') <>'')a where INV_NO  not in (select RET_INV_NO from in_items where RET_INV_NO <> '')  ORDER BY DATE desc"));
                 if (!string.IsNullOrWhiteSpace(filter))
-                    return (__helperCommonService.HelperCommon.GetSqlData(@"SELECT ISNULL(ID,0) As ID,INVOICE.INV_NO,INVOICE.ACC,INVOICE.NAME, 
+                    return (_helper.HelperCommon.GetSqlData(@"SELECT ISNULL(ID,0) As ID,INVOICE.INV_NO,INVOICE.ACC,INVOICE.NAME, 
                  try_cast(customer.TEL as Nvarchar(30)) as TEL,INVOICE.DATE, IN_ITEMS.STYLE,
                  IN_ITEMS.[DESC],GR_TOTAL, ISNULL(GR_TOTAL,0) - ISNULL(CREDITS,0) as BALANCE,[Message],
                  INVOICE.INACTIVE FROM INVOICE LEFT OUTER JOIN CUSTOMER ON INVOICE.ACC = CUSTOMER.ACC     
                  LEFT OUTER JOIN (SELECT INV_NO,MAX(STYLE)STYLE, MAX([DESC])[DESC]  
                  FROM IN_ITEMS GROUP BY INV_NO)IN_ITEMS ON ((INVOICE.INV_NO))=((IN_ITEMS.INV_NO)) 
                  where " + filter + " AND ISNULL(INVOICE.ACC,'') <>''ORDER BY DATE desc"));
-                return (__helperCommonService.HelperCommon.GetSqlData(@"SELECT ISNULL(ID,0),INVOICE.INV_NO,INVOICE.ACC,INVOICE.NAME,
+                return (_helper.HelperCommon.GetSqlData(@"SELECT ISNULL(ID,0),INVOICE.INV_NO,INVOICE.ACC,INVOICE.NAME,
              try_cast(customer.TEL as Nvarchar(30)) as TEL,INVOICE.DATE,IN_ITEMS.STYLE,
              IN_ITEMS.[DESC],GR_TOTAL, ISNULL(GR_TOTAL,0) - ISNULL(CREDITS,0) as BALANCE,[Message],
              INVOICE.INACTIVE FROM INVOICE LEFT JOIN CUSTOMER ON INVOICE.ACC = CUSTOMER.ACC 
@@ -910,7 +910,7 @@ namespace YJWebCoreMVC.Services
              FROM IN_ITEMS GROUP BY INV_NO)IN_ITEMS ON ((INVOICE.INV_NO))=((IN_ITEMS.INV_NO)) ORDER BY DATE desc"));
             }
             if (OpenOnlyinv)
-                return (__helperCommonService.HelperCommon.GetSqlData(@"Select * from (SELECT ID,INVOICE.INV_NO,CUSTOMER.ACC,INVOICE.NAME, 
+                return (_helper.HelperCommon.GetSqlData(@"Select * from (SELECT ID,INVOICE.INV_NO,CUSTOMER.ACC,INVOICE.NAME, 
              try_cast(customer.TEL as Nvarchar(30)) as TEL,INVOICE.DATE, IN_ITEMS.STYLE,IN_ITEMS.[DESC],
              GR_TOTAL, ISNULL(GR_TOTAL,0) - ISNULL(CREDITS,0) as BALANCE,[Message],INVOICE.INACTIVE 
              FROM INVOICE INNER JOIN CUSTOMER ON INVOICE.ACC = CUSTOMER.ACC     
@@ -918,14 +918,14 @@ namespace YJWebCoreMVC.Services
              IN_ITEMS ON ((INVOICE.INV_NO))=((IN_ITEMS.INV_NO)) 
              where " + filter + "" + openonly + " AND ISNULL(INVOICE.ACC,'') <>'')a where INV_NO  not in (select RET_INV_NO from in_items where RET_INV_NO <> '')  ORDER BY DATE desc"));
             if (!string.IsNullOrWhiteSpace(filter))
-                return (__helperCommonService.HelperCommon.GetSqlData(@"SELECT ID,INVOICE.INV_NO,CUSTOMER.ACC,INVOICE.NAME, 
+                return (_helper.HelperCommon.GetSqlData(@"SELECT ID,INVOICE.INV_NO,CUSTOMER.ACC,INVOICE.NAME, 
              try_cast(customer.TEL as Nvarchar(30)) as TEL,INVOICE.DATE, IN_ITEMS.STYLE,IN_ITEMS.[DESC],
              GR_TOTAL, ISNULL(GR_TOTAL,0) - ISNULL(CREDITS,0) as BALANCE,[Message],INVOICE.INACTIVE 
              FROM INVOICE INNER JOIN CUSTOMER ON INVOICE.ACC = CUSTOMER.ACC     
              LEFT OUTER JOIN (SELECT INV_NO,MAX(STYLE)STYLE, MAX([DESC])[DESC]  FROM IN_ITEMS GROUP BY INV_NO)
              IN_ITEMS ON ((INVOICE.INV_NO))=((IN_ITEMS.INV_NO)) 
              where " + filter + " AND ISNULL(INVOICE.ACC,'') <>''ORDER BY DATE desc"));
-            return (__helperCommonService.HelperCommon.GetSqlData(@"SELECT ID,INVOICE.INV_NO,CUSTOMER.ACC,INVOICE.NAME,
+            return (_helper.HelperCommon.GetSqlData(@"SELECT ID,INVOICE.INV_NO,CUSTOMER.ACC,INVOICE.NAME,
          try_cast(customer.TEL as Nvarchar(30)) as TEL,INVOICE.DATE,IN_ITEMS.STYLE,IN_ITEMS.[DESC],
          GR_TOTAL, ISNULL(GR_TOTAL,0) - ISNULL(CREDITS,0) as BALANCE,[Message],INVOICE.INACTIVE 
          FROM INVOICE LEFT JOIN CUSTOMER ON INVOICE.ACC = CUSTOMER.ACC LEFT OUTER JOIN 
@@ -935,7 +935,7 @@ namespace YJWebCoreMVC.Services
 
         public DataRow GetInvoiceByInvNo(string invno)
         {
-            return (__helperCommonService.HelperCommon.GetSqlRow(@"select top 1 i.*,it.memo_no,iSNULL(it.IsSpecialItem,0) IsSpecialItem,it.fpon 
+            return (_helper.HelperCommon.GetSqlRow(@"select top 1 i.*,it.memo_no,iSNULL(it.IsSpecialItem,0) IsSpecialItem,it.fpon 
          from invoice i  with (nolock)
          left join (select * from IN_ITEMS with (nolock) where Trimmed_inv_no =@inv_no) it on i.inv_no = it.inv_no 
              Where trim(i.inv_no) = @inv_no", "@inv_no", invno.Trim()));
@@ -1168,11 +1168,11 @@ namespace YJWebCoreMVC.Services
 
         public DataTable GetStateCityByZip(string strZip)
         {
-            return __helperCommonService.HelperCommon.GetSqlData(@"Select city,state from zipcodes with(nolock) where zipcode=@ZIP", "@ZIP", strZip);
+            return _helper.HelperCommon.GetSqlData(@"Select city,state from zipcodes with(nolock) where zipcode=@ZIP", "@ZIP", strZip);
         }
         public DataRow CheckValidCustomerCode(string acc)
         {
-            return __helperCommonService.HelperCommon.GetSqlRow("SELECT TOP 1 * FROM Customer with (nolock) WHERE acc=TRIM(@acc)", "@acc", acc);
+            return _helper.HelperCommon.GetSqlRow("SELECT TOP 1 * FROM Customer with (nolock) WHERE acc=TRIM(@acc)", "@acc", acc);
         }
         public DataTable GetAllOpenSpecialOrder(DateTime? fromDt, DateTime? toDt, string stores, string acc, string salesman, string invNo, bool shopInvoice = false)
         {
@@ -1200,29 +1200,29 @@ namespace YJWebCoreMVC.Services
 
         public DataTable SearchRepairOrder(string filter = "", string hFilter = "1=1", bool isNoName = false)
         {
-            return __helperCommonService.HelperCommon.GetStoreProc("GetRepairOrderData", "@nFilter", filter, "@hFilter", hFilter, "@isNoName", isNoName ? "1" : "0");
+            return _helper.HelperCommon.GetStoreProc("GetRepairOrderData", "@nFilter", filter, "@hFilter", hFilter, "@isNoName", isNoName ? "1" : "0");
         }
         public DataRow CheckValidBillingAcct(string billacc)
         {
-            return __helperCommonService.HelperCommon.GetSqlRow("select *  From Customer with (nolock) Where trim(bill_acc)= trim(@bill_acc) and bill_acc = acc", "@bill_acc", billacc);
+            return _helper.HelperCommon.GetSqlRow("select *  From Customer with (nolock) Where trim(bill_acc)= trim(@bill_acc) and bill_acc = acc", "@bill_acc", billacc);
         }
 
 
         public DataRow GetMemoByInvNo(string memo_no)
         {
-            return __helperCommonService.HelperCommon.GetSqlRow("select top 1 i.*, it.memo_no,it.fpon from Memo i with (nolock) left join me_items it with (nolock) on i.memo_no = it.memo_no Where trim(i.memo_no) = trim(@memo_no)", "@memo_no", memo_no);
+            return _helper.HelperCommon.GetSqlRow("select top 1 i.*, it.memo_no,it.fpon from Memo i with (nolock) left join me_items it with (nolock) on i.memo_no = it.memo_no Where trim(i.memo_no) = trim(@memo_no)", "@memo_no", memo_no);
         }
 
         public DataRow GetProformaInvoice(string invno)
         {
-            return __helperCommonService.HelperCommon.GetSqlRow("SELECT TOP 1 i.*, t.memo_no, t.by_wt FROM Proforma_INVOICE i LEFT JOIN Proforma_IN_ITEMS t ON i.inv_no = t.inv_no WHERE i.inv_no=@inv_no", "@inv_no", invno);
+            return _helper.HelperCommon.GetSqlRow("SELECT TOP 1 i.*, t.memo_no, t.by_wt FROM Proforma_INVOICE i LEFT JOIN Proforma_IN_ITEMS t ON i.inv_no = t.inv_no WHERE i.inv_no=@inv_no", "@inv_no", invno);
         }
 
         public bool CheckConvertedInvoice(string p_invno)
         {
-            DataTable dataTable = __helperCommonService.HelperCommon.GetSqlData("SELECT * FROM Proforma_INVOICE WHERE Trimmed_inv_no=TRIM(@P_INVNO) AND LEN(TRIM(CONVERTED_INV_NO))>0 ",
+            DataTable dataTable = _helper.HelperCommon.GetSqlData("SELECT * FROM Proforma_INVOICE WHERE Trimmed_inv_no=TRIM(@P_INVNO) AND LEN(TRIM(CONVERTED_INV_NO))>0 ",
                 "@P_INVNO", p_invno);
-            return (__helperCommonService.HelperCommon.DataTableOK(dataTable));
+            return (_helper.HelperCommon.DataTableOK(dataTable));
         }
 
         public bool ConvertProforma2RegularInvoice(string p_invno, string r_invno, string currUser, bool converted_from_Memo = false)
@@ -1276,7 +1276,7 @@ namespace YJWebCoreMVC.Services
                 {
                     dbCommand.Connection = new SqlConnection(_connectionProvider.GetConnectionString());
                     dbCommand.CommandType = CommandType.Text;
-                    string isValidCustomer = __helperCommonService.HelperCommon.CheckValidCustomerCode(customer.ACC, __helperCommonService.HelperCommon.is_Glenn);
+                    string isValidCustomer = _helper.HelperCommon.CheckValidCustomerCode(customer.ACC, _helper.HelperCommon.is_Glenn);
                     if (isValidCustomer == "0")//,CustCheckVal1
                         dbCommand.CommandText = @"INSERT INTO customer
              (ACC,BILL_ACC ,Name,Addr1,Addr12,Addr13,City1,State1,Zip1,Country,Email,store_no,tel,dob,non_taxable,ON_ACCOUNT,old_customer,declined,DRIVERLICENSE_NUMBER,ok_totext,ok_toemail,ok_tocall,ok_tomail,DRIVERLICENSE_STATE,Cell,
@@ -1476,8 +1476,8 @@ namespace YJWebCoreMVC.Services
 
         public string GetAccfromInvoice(string inv_no)
         {
-            DataTable dtable = __helperCommonService.HelperCommon.GetSqlData($"SELECT top 1 ACC FROM INVOICE WHERE inv_no='{inv_no}'");
-            if (__helperCommonService.HelperCommon.DataTableOK(dtable))
+            DataTable dtable = _helper.HelperCommon.GetSqlData($"SELECT top 1 ACC FROM INVOICE WHERE inv_no='{inv_no}'");
+            if (_helper.HelperCommon.DataTableOK(dtable))
                 return Convert.ToString(dtable.Rows[0]["ACC"]);
             return string.Empty;
         }
@@ -1485,7 +1485,7 @@ namespace YJWebCoreMVC.Services
         public bool CheckNochangedate(DateTime cdate)
         {
             DateTime nochangedate;
-            if (DateTime.TryParse(__helperCommonService.HelperCommon.NoChangeBefore, out nochangedate))
+            if (DateTime.TryParse(_helper.HelperCommon.NoChangeBefore, out nochangedate))
             {
                 return cdate < nochangedate;
             }
@@ -1494,7 +1494,7 @@ namespace YJWebCoreMVC.Services
 
         public bool IsCanceled(string inv_no)
         {
-            return __helperCommonService.HelperCommon.DataTableOK(__helperCommonService.HelperCommon.GetSqlData($@"select 1 from invoice with (nolock) where inv_no=@inv_no and isnull(is_deb,0)=1", "@inv_no", inv_no));
+            return _helper.HelperCommon.DataTableOK(_helper.HelperCommon.GetSqlData($@"select 1 from invoice with (nolock) where inv_no=@inv_no and isnull(is_deb,0)=1", "@inv_no", inv_no));
         }
 
 

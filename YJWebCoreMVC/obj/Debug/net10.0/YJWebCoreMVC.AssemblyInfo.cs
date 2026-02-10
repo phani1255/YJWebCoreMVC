@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("YJWebCoreMVC")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("16.2.2.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("16.02.02.0+7d908cd56fa28114555dfbcb1428c8fa9d401fca")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("16.02.02.0+20aef0fa7e84110f1531f5ea76ddd099c2f1adf4")]
 [assembly: System.Reflection.AssemblyProductAttribute("YJWebCoreMVC")]
 [assembly: System.Reflection.AssemblyTitleAttribute("YJWebCoreMVC")]
 [assembly: System.Reflection.AssemblyVersionAttribute("16.2.2.0")]

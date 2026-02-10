@@ -1,14 +1,33 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
 	  <Version>16.02.02.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\SalesPaymentsCreditsController.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="Views\Analytics\ItemsBoughtByCustomer.cshtml" />
+    <Content Remove="Views\SalesPaymentsCredits\AddAdjReceivable.cshtml" />
+    <Content Remove="Views\SalesPaymentsCredits\AddCashReceipt.cshtml" />
+    <Content Remove="Views\SalesPaymentsCredits\AddEditCredit.cshtml" />
+    <Content Remove="Views\SalesPaymentsCredits\DeleteAdjRcvable.cshtml" />
+    <Content Remove="Views\SalesPaymentsCredits\DeleteCredit.cshtml" />
+    <Content Remove="Views\SalesPaymentsCredits\DeleteReceipt.cshtml" />
+    <Content Remove="Views\SalesPaymentsCredits\EditAdjRcvable.cshtml" />
+    <Content Remove="Views\SalesPaymentsCredits\EditCashReceipt.cshtml" />
+    <Content Remove="Views\SalesPaymentsCredits\ModifyAcc_ofReceipt.cshtml" />
+    <Content Remove="Views\SalesPaymentsCredits\PrintAdjRcvable.cshtml" />
+    <Content Remove="Views\SalesPaymentsCredits\PrintCashReceipt.cshtml" />
+    <Content Remove="Views\SalesPaymentsCredits\PrintCredit.cshtml" />
+    <Content Remove="Views\SalesPaymentsCredits\ReprintAdjRcvable.cshtml" />
+    <Content Remove="Views\SalesPaymentsCredits\ReprintCredit.cshtml" />
+    <Content Remove="Views\SalesPaymentsCredits\ReprintReceipt.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -55,6 +74,7 @@
 
   <ItemGroup>
     <Folder Include="Services\Interfaces\" />
+    <Folder Include="Views\SalesPaymentsCredits\" />
   </ItemGroup>
 
 </Project>

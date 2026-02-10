@@ -17,24 +17,29 @@
  *  Phanindra 04/24/2025 Fixed issues in Save customer refund functionality in saveReceipt function
  */
 using Newtonsoft.Json;
-using System.Data;
-using System.Web.Mvc;
 //using System.Web.UI.WebControls;
 using YJWebCoreMVC.Filters;
 using YJWebCoreMVC.Services;
 using YJWebCoreMVC.Models;
+using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace YJWebCoreMVC.Controllers
 {
+    [SessionCheck("UserId")]
     public class SalesPaymentsCreditsController : Controller
     {
         private readonly HelperCommonService _helperCommonService;
-        public SalesPaymentsCreditsController(HelperCommonService helperCommonService)
+        private readonly SalesPaymentsCreditsService _salesPaymentsCreditsService;
+        private readonly GlobalSettingsService _globalSettingsService;
+        public SalesPaymentsCreditsController(HelperCommonService helperCommonService, SalesPaymentsCreditsService salesPaymentsCreditsService, GlobalSettingsService globalSettingsService)
         {
             _helperCommonService = helperCommonService;
+            _salesPaymentsCreditsService = salesPaymentsCreditsService;
+            _globalSettingsService = globalSettingsService;
         }
 
-        [SessionCheck("UserId")]
+        
         public ActionResult AddCashReceipt()
         {
             SalesPaymentsCreditsModel objModel = new SalesPaymentsCreditsModel();
@@ -42,35 +47,36 @@ namespace YJWebCoreMVC.Controllers
             objModel.CustomerCodes = _helperCommonService.GetAllCustomerCodes();
             objModel.PaymentTypes = _helperCommonService.GetDistPaymentType();
             objModel.AllBankCodes = _helperCommonService.GetAllBankCodes();
-            objModel.DefaultBanks = objModel.GetDefaultBank();
-            DataTable dtBankAcc = _helperCommonService.GetBankAcc(Session["STORE_CODE"].ToString());
+            objModel.DefaultBanks = _salesPaymentsCreditsService.GetDefaultBank();
+            DataTable dtBankAcc = _helperCommonService.GetBankAcc(HttpContext.Session.GetString("STORE_CODE"));
             DataRow[] foundStyle = dtBankAcc.Select("is_default = '" + true + "'");
-            var upsValues = this.HttpContext.Application["GlobalSettings"] as UPS_INS;
+            //var upsValues = this.HttpContext.Application["GlobalSettings"] as UPS_INS;
+            //ViewBag.MICR = upsValues.MICR.ToString();
+            var upsValues = _globalSettingsService.GetGlobalSettings();
             ViewBag.MICR = upsValues.MICR.ToString();
 
             ViewBag.Title = "Add Cash Receipt";
 
-            if (!string.IsNullOrEmpty(Session["ReceiptNo"]?.ToString()))
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("ReceiptNo")))
             {
-                ViewBag.ReceiptNo = Session["ReceiptNo"].ToString();
+                ViewBag.ReceiptNo = HttpContext.Session.GetString("ReceiptNo");
             }
             else
             {
-                Session["ReceiptNo"] = ViewBag.ReceiptNo = _helperCommonService.GetNextSeqNo("PAYMENTS", "Inv_no", "500000", "RTV_PAY", "300000", "P");
+                HttpContext.Session.SetString("ReceiptNo") = ViewBag.ReceiptNo = _helperCommonService.GetNextSeqNo("PAYMENTS", "Inv_no", "500000", "RTV_PAY", "300000", "P");
             }
 
             return View(objModel);
         }
 
-        [SessionCheck("UserId")]
+        
         public string GetReceiptData(string acc, string receipt_no, bool lRefund = false, bool isccswipe = false)
         {
             var data = _helperCommonService.GetStoreProc("GetReceiptData", "@acc", acc, "@receipt_no", receipt_no, "@lRefund", lRefund.ToString(), "@isccswipe", isccswipe.ToString());
             return JsonConvert.SerializeObject(data);
         }
 
-        [SessionCheck("UserId")]
-        [ValidateInput(false)]
+        
         public string SaveReceipt(String dtPayment, string acc, string receipt_no, DateTime? pay_date, DateTime? chk_date, string bank, string checkno, decimal chk_amt, decimal discount, bool showmemo, string pcname, string PaymentsTypes, string PaymentNote, string Cash_Register, string StoreCode, string loggeduser = "", string storecodeinuse = "", bool isRefund = false)
         {
             SalesPaymentsCreditsModel objModel = new SalesPaymentsCreditsModel();
@@ -109,7 +115,7 @@ namespace YJWebCoreMVC.Controllers
             return data;
         }
 
-        [SessionCheck("UserId")]
+        
         public ActionResult EditCashReceipt()
         {
             SalesPaymentsCreditsModel objModel = new SalesPaymentsCreditsModel();
@@ -123,7 +129,7 @@ namespace YJWebCoreMVC.Controllers
             return View(objModel);
         }
 
-        [SessionCheck("UserId")]
+        
         public string GetPayment(string inv_no, string rtv_pay = "")
         {
             SalesPaymentsCreditsModel objModel = new SalesPaymentsCreditsModel();
@@ -140,7 +146,7 @@ namespace YJWebCoreMVC.Controllers
 
         }
 
-        [SessionCheck("UserId")]
+        
         public string GetReceiptEditData(string acc, string receipt_no, bool lRefund = false, bool isccswipe = false)
         {
             var data = _helperCommonService.GetStoreProc(lRefund ? "GetReceiptDataEdit_Refund" : "GetReceiptDataEdit", "@acc", acc, "@receipt_no", receipt_no, "@isccswipe", isccswipe.ToString());
@@ -152,7 +158,7 @@ namespace YJWebCoreMVC.Controllers
             return View();
         }
 
-        [SessionCheck("UserId")]
+        
         public ActionResult PrintCashReceipt(string inv_no)
         {
             SalesPaymentsCreditsModel objModel = new SalesPaymentsCreditsModel();
@@ -229,13 +235,13 @@ namespace YJWebCoreMVC.Controllers
             return error;
         }
 
-        [SessionCheck("UserId")]
+        
         public ActionResult DeleteReceipt()
         {
             return View();
         }
 
-        [SessionCheck("UserId")]
+        
         public string CheckDeleteCashReceipt(string inv_no)
         {
             SalesPaymentsCreditsModel objModel = new SalesPaymentsCreditsModel();
@@ -269,7 +275,7 @@ namespace YJWebCoreMVC.Controllers
 
         }
 
-        [SessionCheck("UserId")]
+        
         public string DeleteCashReceipt(string acc, string receipt_no, decimal paid, string transact)
         {
             SalesPaymentsCreditsModel objModel = new SalesPaymentsCreditsModel();
@@ -306,7 +312,7 @@ namespace YJWebCoreMVC.Controllers
             return View("AddCashReceipt", objModel);
         }
 
-        [SessionCheck("UserId")]
+        
         public ActionResult AddEditCredit()
         {
             SalesPaymentsCreditsModel objModel = new SalesPaymentsCreditsModel();
@@ -425,7 +431,7 @@ namespace YJWebCoreMVC.Controllers
             }
         }
 
-        [SessionCheck("UserId")]
+        
         public ActionResult DeleteCredit()
         {
             return View();
@@ -471,7 +477,7 @@ namespace YJWebCoreMVC.Controllers
             return View();
         }
 
-        [SessionCheck("UserId")]
+        
         public ActionResult PrintCredit(string inv_no)
         {
             SalesPaymentsCreditsModel objModel = new SalesPaymentsCreditsModel();
@@ -609,7 +615,7 @@ namespace YJWebCoreMVC.Controllers
             return View();
         }
 
-        [SessionCheck("UserId")]
+        
         public ActionResult PrintAdjRcvable(string inv_no)
         {
             SalesPaymentsCreditsModel objModel = new SalesPaymentsCreditsModel();
