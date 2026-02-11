@@ -1,0 +1,331 @@
+﻿<!--
+    Created By Dharani 14/09/2025
+    Dharani  10/16/2025 Added contextMenu
+-->
+
+@{
+    ViewBag.Title = "ADD / EDIT DEPARTMENT(s)";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="content-center" class="row">
+    <div class="mt-4 white-box pos-rel" id="divDataTableReport" style="width:100%">
+        <h5 class="text-center mt-3 mb-4 font-weight-bold bg-success text-white p-1 rounded">ADD / EDIT DEPARTMENT(s)</h5>
+        <div class="row dataTableReport">
+            <table id="dataTableForAddEditDepartments" class="dataTable display nowrap table" style="width:100%">
+                <thead>
+                    <tr>
+                        <th class="w-55px">DEPT</th>
+                        <th class="w-55px">HOURS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot>
+                    <tr>
+                    </tr>
+                </tfoot>
+            </table>
+            <div id="btnAddNewRow" class="col-sm-12 text-center mt-2 text-muted" style="cursor:pointer;">
+                Click here to add a new row
+            </div>
+        </div>
+        <div class="row mb-3 mt-3">
+            <div class="col-md-12 text-right">
+                <button type="button" id="btnOk" class="btn btn-success">
+                    ✅ Save
+                </button>
+                <button type="button" id="btnClose" class="btn btn-danger">
+                    ❌ Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Right-click Context Menu -->
+<ul id="contextMenu" class="dropdown-menu" style="display:none; position:absolute; z-index:10000;">
+    <li><a href="#" class="context-action" data-action="copy">Copy</a></li>
+    <li><a href="#" class="context-action" data-action="paste">Paste</a></li>
+    <li><a href="#" class="context-action" data-action="edit">Edit</a></li>
+    <li><a href="#" class="context-action" data-action="clear">Clear Value</a></li>
+    <li><a href="#" class="context-action" data-action="delete">Delete Row</a></li>
+</ul>
+
+<script type="text/javascript">
+
+    let tableData = [];
+
+    function renderRow(row = null) {
+
+        return `
+            <tr>
+                <td><input type="text" class="form-control dept-input text-uppercase" maxlength="10" value="${row?.dept ?? ""}" /></td>
+                <td><input type="number" class="form-control hours-input" step="1" min="0" maxlength="7" value="${row?.hours ? parseFloat(row.hours).toFixed(2) : '0.00'}" /></td>
+            </tr>`;
+    }
+
+    function fetchAndRender() {
+        $.post('@Url.Action("Getalldepts", "SalesShopControl")', function (response) {
+            tableData = typeof response === 'object' ? response : $.parseJSON(response);
+
+            let content = "";
+            tableData.forEach(row => {
+                content += renderRow(row);
+            });
+
+            $('#dataTableForAddEditDepartments tbody').html(content);
+
+            console.log('Rendered ' + tableData.length + ' rows');
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            console.error('Error fetching data: ' + textStatus + ' ' + errorThrown);
+        });
+    }
+
+    $(document).ready(function () {
+
+        var table = $('#dataTableForAddEditDepartments').DataTable({
+            dom: 'lfrtip',
+            searching: false,
+            paging: false,
+            ordering: false,
+            info: false
+        });
+
+        fetchAndRender();
+
+
+        $(document).on('blur', '.dept-input', function () {
+            const currentDept = $(this).val().trim();
+            if (currentDept === "") {
+                alert("Enter Department name");
+                $(this).focus();
+                return;
+            }
+
+            let duplicate = false;
+            $('.dept-input').not(this).each(function () {
+                if ($(this).val().trim().toUpperCase() === currentDept.toUpperCase())
+                    duplicate = true;
+            });
+
+            if (duplicate) {
+                alert("Duplicate department name not allowed");
+                $(this).val("").focus();
+                return;
+            }
+        });
+
+        $(document).on('input', '.hours-input', function () {
+            let val = $(this).val();
+            val = val.replace(/[^0-9.]/g, '');
+            if ((val.match(/\./g) || []).length > 1) {
+                val = val.substring(0, val.lastIndexOf('.'));
+            }
+
+            $(this).val(val);
+        });
+
+        $(document).on('blur', '.hours-input', function () {
+            let val = parseFloat($(this).val());
+            if (isNaN(val)) {
+                val = 0;
+            }
+            $(this).val(val.toFixed(2));
+        });
+
+        $(document).on('click', '#btnOk', function () {
+            let departments = [];
+            let valid = true;
+            let rowNum = 0;
+
+            $('#dataTableForAddEditDepartments tbody tr').each(function () {
+                rowNum++;
+                const dept = $(this).find('.dept-input').val().trim();
+                const hours = $(this).find('.hours-input').val().trim();
+
+                if (dept === "") {
+                    alert("Missing department name in row #" + rowNum);
+                    $(this).find('.dept-input').focus();
+                    valid = false;
+                    return false;
+                }
+
+                if (hours === "") {
+                    alert("Missing hours in row #" + rowNum);
+                    $(this).find('.hours-input').focus();
+                    valid = false;
+                    return false;
+                }
+
+                if (hours.length > 7) {
+                    alert("Invalid length for Hours in row #" + rowNum);
+                    $(this).find('.hours-input').focus();
+                    valid = false;
+                    return false;
+                }
+
+                const existing = tableData.find(x => x.dept.toUpperCase() === dept.toUpperCase());
+                const status = existing ? "1" : "A";
+
+                let deptObj = {
+                    dept: dept,
+                    hours: hours,
+                    STATUS: status
+                };
+                if (status !== "A") {
+                    deptObj.Prev = existing.dept;
+                }
+
+                departments.push(deptObj);
+            });
+
+            if (!valid) return;
+
+            $.ajax({
+                url: '@Url.Action("SaveDepartments", "SalesShopControl")',
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({ departments }),
+                success: function (res) {
+                    if (res.success) {
+                        alert(res.message);
+                        fetchAndRender();
+                        window.location.href = '/Home/Index';
+                    } else {
+                        alert(res.error || "Error while saving");
+                    }
+                },
+                error: function () {
+                    alert("Server error while saving data.");
+                }
+            });
+        });
+
+        $(document).on('click', '#btnAddNewRow', function () {
+            const newRowHtml = renderRow();
+            $('#dataTableForAddEditDepartments tbody').append(newRowHtml);
+        });
+
+        $(document).on('click', '#btnCancel', function () {
+            window.location.href = '/Home/Index';
+        });
+
+        let selectedRow = null;
+        let copiedRowData = null;
+
+        $(document).on('contextmenu', '#dataTableForAddEditDepartments tbody tr', function (e) {
+            e.preventDefault();
+            selectedRow = $(this);
+            $('#contextMenu').css({ top: e.pageY + 'px', left: e.pageX + 'px' }).show();
+        });
+
+        $(document).on('click', function () {
+            $('#contextMenu').hide();
+        });
+
+        $(document).on('click', '.context-action', function (e) {
+            e.preventDefault();
+            const action = $(this).data('action');
+
+            switch (action) {
+                case 'copy':
+                    copiedRowData = {
+                        dept: selectedRow.find('.dept-input').val(),
+                        hours: selectedRow.find('.hours-input').val()
+                    };
+                    alert('Row copied.');
+                    break;
+
+                case 'paste':
+                    if (copiedRowData) {
+                        const newRowHtml = renderRow(copiedRowData);
+                        selectedRow.after(newRowHtml);
+                        alert('Row pasted below.');
+                    } else {
+                        alert('No row copied yet.');
+                    }
+                    break;
+
+                case 'edit':
+                    selectedRow.find('.dept-input').focus();
+                    break;
+
+                case 'clear':
+                    selectedRow.find('.dept-input').val('');
+                    selectedRow.find('.hours-input').val('0.00');
+                    break;
+
+                case 'delete':
+                    if (confirm('Delete this row?')) {
+                        selectedRow.remove();
+                    }
+                    break;
+            }
+
+            $('#contextMenu').hide();
+        });
+
+    });
+</script>
+
+<style>
+    #content-center {
+        max-width: 920px;
+        margin: 0px auto;
+    }
+
+    .form-horizontal .row {
+        padding-left: 0;
+    }
+
+    .form-horizontal label {
+        padding-left: 0;
+    }
+
+    .narrow-input {
+        width: 170px;
+    }
+
+    #btnClose {
+        border-radius: 6px;
+    }
+
+    #dataTableForAddEditDepartments td,
+    #dataTableForAddEditDepartments th {
+        border-right: 1px solid #ececec;
+    }
+
+        #dataTableForAddEditDepartments th:last-child,
+        #dataTableForAddEditDepartments td:last-child {
+            border-right: none;
+        }
+
+    #dataTableForAddEditDepartments tr {
+        border-bottom: 1px solid #ccc;
+    }
+
+    #contextMenu {
+        background: #fff;
+        border: 1px solid #ccc;
+        min-width: 160px;
+        box-shadow: 2px 2px 6px rgba(0,0,0,0.15);
+        border-radius: 4px;
+    }
+
+        #contextMenu li {
+            list-style: none;
+        }
+
+            #contextMenu li a {
+                display: block;
+                padding: 6px 12px;
+                color: #333;
+                text-decoration: none;
+            }
+
+                #contextMenu li a:hover {
+                    background: #007bff;
+                    color: white;
+                }
+</style>

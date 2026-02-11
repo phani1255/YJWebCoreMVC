@@ -1,0 +1,594 @@
+<!--
+  * Created by Phanindra 16-Oct-2025
+    Phanindra 10/26/2025 Worked on fixing issues
+    Phanindra 11/04/2025 Worked on issues
+    Phanindra 11/10/2025 Worked on issues
+    Phanindra 11/19/2025 Worked on issues and Added Print Job option after saving the data.
+    Phanindra 11/27/2025 Worked on parts used button and added related code.
+    Phanindra 12/02/2025 Worked on report load and page redirect issues
+    Phanindra 12/15/2025 Worked on issue fixes
+    Phanindra 01/24/2026 Worked on row click handling on inputs.
+-->
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="content-center" class="row">
+
+    <div class="web-form page login-page col-sm-12">
+
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-2">
+                            Log# :
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" id="jobLogNo" class="form-control" value="@ViewBag.logNo" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">Person:</label>
+                        <div class="col-sm-6">
+                            @Html.DropDownList("setter", (IEnumerable<SelectListItem>)Model.setters, new { @class = "form-control", @id = "ddlSetters" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row align-items-center">
+                        <div class="col-sm-6 d-flex align-items-center">
+                            <label class="me-2 mb-0">Email to All</label>
+                            <input type="radio" name="commu_all" id="emailToAll" class="form-check-input chkEmail radioCommuAll as-checkbox" disabled style="margin-left: 11px;">
+                        </div>
+                        <div class="col-sm-6 d-flex align-items-center">
+                            <label class="me-2 mb-0">Text to All</label>
+                            <input type="radio" name="commu_all" id="textToAll" class="form-check-input chkText radioCommuAll as-checkbox" disabled style="margin-left: 11px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="well empty-well table-responsive">
+                        <table class="dataTable display table tblHistory">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Job</th>
+                                    <th>Note</th>
+                                    <th>Qty</th>
+                                    <th>PON</th>
+                                    <th>Style</th>
+                                    <th>Open</th>
+                                    <th>Invoice</th>
+                                    <th>Invoice Date</th>
+                                    <th>Add To Stock</th>
+                                    <th>Reserve For Invoice</th>
+                                    <th>Email</th>
+                                    <th>text</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody class="GivejobLine"></tbody>
+
+                        </table>
+                        <div class='addRowGiveJobsBox text-center w-100'>Click to add Row</div>
+                        <input type="hidden" name="autonumforstyles" id="autonumforstyles" value="0" />
+                        <input type="hidden" id="SelectedJobNo" value="" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class=" text-right">
+                        <input type="button" id="btnPartsUsed" value="Parts Used" class="formsGlobalUniqueBtn" />
+                        <input type="button" id="gotoHome" value="Close" class="formsGlobalUniqueCloseBtn" />
+                        <input type="button" id="btnSaveReturn" value="Save" class="formsGlobalUniqueBtn" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!--ModAL Reserver Parts for Job Bag strat-->
+<div class="modal" id="costsModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Reserve Parts for Job Bag</h5>
+                <button type="button" class="closeModal formsGlobalUniqueCloseBtn" data-model="costsModal" id="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="costsModalBody" class="modal-body" style="max-height: 600px; overflow-y: auto;">
+
+            </div>
+            <div class="modal-footer d-none">
+                <button type="button" id="closed" class="btn formsGlobalUniqueCloseBtn closeModal" data-model="costsModal" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Modal Reserver Parts for Job Bag End-->
+
+
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        var now = new Date();
+        var day = ("0" + now.getDate()).slice(-2);
+        var month = ("0" + (now.getMonth() + 1)).slice(-2);
+
+        var today = now.getFullYear() + "-" + (month) + "-" + (day);
+        $("#txtDueDate").val(today);
+    });
+
+    $(document).on('click', '#gotoHome', function () {
+        if (confirm("Ok to Discard the changes and Close This Form ?")) {
+            window.location.href = "../Home/Index";
+        }
+    })
+
+    $(document).on('click', '.delete_a_line', function () {
+        var index = $(this).data('index-number');
+        $(".rowIndex" + index).remove();
+    })
+
+    $(document).on('click', '#btnPartsUsed', function () {
+        openModalWithPartialViewforPartsUsed();
+    })
+
+    function openModalWithPartialViewforPartsUsed(strInvNo="", strStyle="") {
+
+        var Repairno = $("#SelectedJobNo").val();
+
+        if (Repairno == '') {
+            if ($(".selectedRepairRow").length > 0) {
+                alert('Selected row does not have valid Job Bag.');
+                return false;
+            } else {
+                alert('No Row Selected.');
+                return false;
+            }
+        }
+        else {
+
+            $('#costsModalBody').html("<p>Loading...</p>");
+            $('#costsModal').fadeIn();
+            scrollTo(200, 50);
+
+            var url = '@Url.Action("ReservePartsJobBag", "POsReportsnew")' + '?JobBagNo=' + Repairno + '&strInvNo=' + strInvNo + '&strStyle=' + strStyle;
+
+             $.ajax({
+                 url: url,
+                 type: 'GET',
+                 success: function (response) {
+
+                     $('#costsModalBody').html(response);
+
+                     //$('#costsModal').fadeIn();
+                 },
+                 error: function () {
+                     alert('Error loading the partial view');
+                 }
+             });
+        }
+    }
+
+
+    $(document).on('click', '.addRowGiveJobsBox', function () {
+
+        autonumforstyles = $("#autonumforstyles").val();
+        var newIndex = parseInt(autonumforstyles) + 1;
+
+        giveJobRow = "<tr class='returnJobRow rowIndex" + newIndex + "' data-row-id='" + newIndex + "'>";
+        giveJobRow += "<td class='selectRepairLine'><span>&rarr;</span></td>";
+        giveJobRow += "<td><input type='text' class='jobNo form-control w-90px' id='jobNo_" + newIndex + "' data-index='" + newIndex + "' data-alerted='false' value=''></td>";
+        giveJobRow += "<td><input type='text' class='form-control Notes w-90px' ></td>";
+        giveJobRow += "<td><input type='text' class='form-control JobQty w-40px' ></td>";
+        giveJobRow += "<td class='w-90px'><input type='text' class='form-control repPON w-90px' readonly></td>";
+        giveJobRow += "<td class='w-90px'><input type='text' class='form-control repStyle w-90px' readonly></td>";
+        giveJobRow += "<td class='w-90px'><input type='text' class='form-control repOpen w-90px' readonly ></td>";
+        giveJobRow += "<td class='w-90px'><input type='text' class='form-control repInvoice w-90px' readonly></td>";
+
+        giveJobRow += "<td class='w-90px'><input type='date' class='form-control repInvoiceDate w-120px' readonly></td>";
+
+        giveJobRow += "<td><input type='radio' name='radioADDRSV" + newIndex + "' class='form-control chkAddStock radioADDRSV as-checkbox' ></td>";
+        giveJobRow += "<td><input type='radio' name='radioADDRSV" + newIndex + "' class='form-control chkRsvInvoice radioADDRSV as-checkbox' ></td>";
+        giveJobRow += "<td><input type='radio' name='radioCommu" + newIndex + "' class='form-control chkEmail radioCommu as-checkbox' disabled ></td>";
+        giveJobRow += "<td><input type='radio' name='radioCommu" + newIndex + "' class='form-control chkText radioCommu as-checkbox' disabled ></td>";
+
+        giveJobRow += "<td><button class='btn btn-danger btn-sm delete_a_line' data-index-number='" + newIndex + "'><i class='fas fa-trash'></i ></button></td > ";
+        giveJobRow += "</tr>";
+        $(".GivejobLine").append(giveJobRow);
+        $("#autonumforstyles").val(newIndex);
+
+        $("#jobNo_" + newIndex).focus();
+    })
+
+    // Click handler for arrow selection
+    $(document).on("click", ".returnJobRow", function () {
+
+        //let $row = $(this).closest("tr");
+        let $row = $(this);
+        let jobNo = $row.find(".jobNo").val().trim();
+
+        // Prevent selection if jobNo is missing
+        //if (jobNo === "") {
+        //    alert("Please enter Job No before selecting.");
+        //    return;
+        //}
+
+        //let currentSelected = $("#SelectedJobNo").val();
+
+        //if (currentSelected === jobNo) {
+        //    $row.removeClass("selectedRepairRow");
+        //    $("#SelectedJobNo").val("");
+        //    return;
+        //}
+
+        // Remove highlight from all rows
+        $(".selectRepairLine").closest("tr").removeClass("selectedRepairRow");
+
+        // Highlight the clicked row
+        $row.addClass("selectedRepairRow");
+
+        // Store selected job#
+        $("#SelectedJobNo").val(jobNo);
+    });
+
+    // Click handler for arrow selection
+    $(document).on("click, focus", ".returnJobRow input", function () {
+
+        let $row = $(this).closest("tr");
+        let jobNo = $row.find(".jobNo").val().trim();
+
+        $(".GivejobLine tr").removeClass("selectedRepairRow");
+
+        // Highlight the clicked row
+        $row.addClass("selectedRepairRow");
+
+        // Store selected job#
+        $("#SelectedJobNo").val(jobNo);
+    });
+
+
+    $(document).on('change', '.radioADDRSV', function () {
+        let $row = $(this).closest('tr');
+        let isAddStock = $row.find('.chkAddStock').is(':checked');
+
+        // Enable email/text only if AddStock selected
+        if (isAddStock) {
+            $row.find('.radioCommu').prop('disabled', false);
+            $('.radioCommuAll').prop('disabled', false);
+        } else {
+            // Disable and uncheck both when not AddStock
+            $row.find('.radioCommu').prop('checked', false).prop('disabled', true);
+            $('.radioCommuAll').prop('checked', false).prop('disabled', true);
+        }
+    });
+
+    $(document).on('change', '.radioCommuAll', function () {
+        let isEmailAll = $('#emailToAll').is(':checked');
+        let isTextAll = $('#textToAll').is(':checked');
+
+        if (isEmailAll) {
+            // Check all Email radios, uncheck all Text radios
+            $('.chkEmail').each(function () {
+                if (!$(this).prop('disabled')) {
+                    $(this).prop('checked', true);
+                }
+            });
+            $('.chkText').prop('checked', false);
+        }
+
+        if (isTextAll) {
+            // Check all Text radios, uncheck all Email radios
+            $('.chkText').each(function () {
+                if (!$(this).prop('disabled')) {
+                    $(this).prop('checked', true);
+                }
+            });
+            $('.chkEmail').prop('checked', false);
+        }
+    });
+
+    $(document).on('click', '#btnSaveReturn', function () {
+
+        const payload = {
+            LogNo: $('#jobLogNo').val().trim(),
+            Setter: $('#ddlSetters').val(),
+            JobItems: []
+        };
+
+        $('.returnJobRow').each(function () {
+            const $r = $(this);
+            const jobNo = $r.find('.jobNo').val().trim();
+            const qty = parseFloat($r.find('.JobQty').val()) || 0;
+            const addStock = $r.find('.chkAddStock').is(':checked');
+            const rsv = $r.find('.chkRsvInvoice').is(':checked');
+            const email = $r.find('.chkEmail').is(':checked');
+            const text = $r.find('.chkText').is(':checked');
+
+            if (jobNo) {
+                payload.JobItems.push({
+                    JobNo: jobNo,
+                    Qty: qty,
+                    AddStock: addStock,
+                    RsvForInvoice: rsv,
+                    Email: email,
+                    Text: text
+                });
+            }
+        });
+
+        if (!payload.LogNo) { alert("Log No. cannot be blank."); return; }
+        if (!payload.Setter) { alert("Setter cannot be blank."); return; }
+        if (payload.JobItems.length === 0) { alert("No Job Bag(s) found."); return; }
+
+        $.ajax({
+            url: '../SalesShopControl/SaveReturnJobBack',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(payload),
+            success: function (res) {
+                if (!res.success) { alert(res.message); return; }
+
+                if (res.notifications) {
+                    const n = res.notifications;
+                    if ((n.emailSent || n.textSent || n.textFailed) && (n.emailSent + n.textSent + n.textFailed) > 0) {
+                        alert(`Email sent: ${n.emailSent}\nText sent: ${n.textSent}\nText failed: ${n.textFailed}`);
+                    }
+                }
+
+                PrintGetJobBackFromPerson(payload.LogNo, payload.Setter);
+
+                if (res.stockJobs && res.stockJobs.length) {
+                    // Open your style selection modal here and handle per job
+                    console.log('Jobs that require style popup:', res.stockJobs);
+                }
+            },
+            error: function (xhr) {
+                console.error(xhr);
+                alert('Error while saving.');
+            }
+        });
+    });
+
+    function normalizeDateFormat(dateStr) {
+        if (!dateStr) return '';
+
+        // Local format: "29-10-2025 02:27:33"
+        if (dateStr.includes('-') && /^\d{2}-\d{2}-\d{4}/.test(dateStr)) {
+            const [d, m, y] = dateStr.split(' ')[0].split('-');
+            return `${y}-${m}-${d}`;
+        }
+
+        // Server format: "10/29/2025 2:27:33 AM"
+        if (dateStr.includes('/') && /^\d{1,2}\/\d{1,2}\/\d{4}/.test(dateStr)) {
+            const [datePart] = dateStr.split(' ');
+            const [m, d, y] = datePart.split('/');
+            return `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`;
+        }
+
+        return '';
+    }
+
+    $(document).on('blur', '.jobNo', function () {
+        const $row = $(this).closest('tr');
+        const jobBagNo = $(this).val().trim();
+        const setterName = $('#ddlSetters').val(); // your setter dropdown
+
+        if (!jobBagNo) return;
+
+        $.ajax({
+            url: '../SalesShopControl/ValidateGivenJobBag',
+            type: 'GET',
+            data: {
+                jobBagNo: jobBagNo,
+                setterName: setterName
+            },
+            success: function (response) {
+                if (!response.success) {
+                    alert(response.message);
+                    $row.find('.jobNo').val(''); // clear invalid entry
+                    $row.find('.repStyle, .JobQty, .repOpen, .repPON, .repInvoice, .repInvoiceDate')
+                        .val('');
+                    return;
+                }
+
+                const data = response.data;
+
+                $row.find('.jobNo').val(data.JobNo || '');
+                $row.find('.repPON').val(data.pon || '');
+                $row.find('.repStyle').val(data.Style || '');
+                $row.find('.repOpen').val(data.OPEN || '');
+                $row.find('.repInvoice').val(data.vend_inv || '');
+
+                if (data.vinv_dte) {
+                    const formattedDate = normalizeDateFormat(data.vinv_dte);
+                    $row.find('.repInvoiceDate').val(formattedDate);
+                } else {
+                    $row.find('.repInvoiceDate').val('');
+                }
+
+                $row.find('.JobQty').val(data.Qty || '');
+                $row.find('.Notes').val(data.note || '');
+
+            },
+            error: function (xhr) {
+                console.error(xhr);
+                alert("An error occurred while validating job bag.");
+            }
+        });
+    });
+
+
+    $(document).on('blur', '.JobQty', function () {
+        const $row = $(this).closest('tr');
+        const enteredQty = parseFloat($(this).val()) || 0;
+        const openQty = parseFloat($row.find('.repOpen').val()) || 0;
+
+        if (enteredQty !== 0 && enteredQty !== openQty) {
+            alert("Qty should be 0 or " + openQty + ".");
+            $(this).val(openQty); // Reset to correct value
+            $(this).focus();
+            return false;
+        }
+    });
+
+    function formatDate(dotNetDate) {
+        if (!dotNetDate) return "";
+        const timestamp = parseInt(dotNetDate.replace(/[^0-9]/g, ""));
+        const date = new Date(timestamp);
+        return date.toLocaleDateString("en-GB");
+    }
+
+    $(document).on('mousedown', '.radioADDRSV', function (e) {
+        var wasChecked = $(this).prop('checked');
+        if (wasChecked) {
+            // Prevent the default behavior of setting it back to checked
+            $(this).one('click', function (e) {
+                $(".radioADDRSV").trigger('change');
+                $(this).prop('checked', false);
+            });
+        }
+    });
+
+    //PrintGetJobBackFromPerson("300235" , "Center");
+    function PrintGetJobBackFromPerson(jobBagNo, settername) {
+        $("#firstCommonBsModalLabel").html("Print JobBag Details");
+        $('#firstCommonBsModal .modal-body').html("Loading...");
+        $("#firstCommonBsModal").show();
+        $("#firstCommonBsModal").addClass("show");
+        $.ajax({
+            url: "../SalesShopControl/PrintGetJobBackFromPerson",
+            type: 'post',
+            data: {
+                jobbagno: jobBagNo,
+                settername: settername
+            },
+            success: function (result) {
+                $('#firstCommonBsModal .modal-body').html(result);
+            },
+            error: function () {
+                alert("An error occurred while fetching the JobBag details.");
+            },
+            complete: function () {
+                $('body').removeClass('loading');
+                $('body').addClass('loaded');
+            }
+        });
+    }
+
+    $(document).on('click', '#firstCommonBsModal .closeModal', function () {
+        window.location.href = "../Home/Index";
+    })
+
+</script>
+<style>
+    .col-5ths {
+        flex: 0 0 20%;
+        max-width: 20%;
+    }
+
+    ul.radButtonsList {
+        margin: 0px;
+        padding: 0px;
+        list-style-type: none;
+    }
+
+        ul.radButtonsList li {
+            list-style: none;
+            float: left;
+            width: 20%;
+        }
+
+    .empty-well {
+        min-height: 200px;
+        margin-bottom: 10px;
+    }
+
+    ul.radButtonsList li button {
+        width: 96%;
+        margin-bottom: 15px;
+    }
+
+    .addRowGiveJobsBox {
+        background: #f5f5f5;
+        padding: 5px;
+    }
+
+    input[type="radio"].as-checkbox {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        width: 18px;
+        height: 18px;
+        border: 2px solid #555;
+        border-radius: 3px; /* makes it square like checkbox */
+        display: inline-block;
+        position: relative;
+        cursor: pointer;
+        background-color: #fff;
+        vertical-align: middle;
+    }
+
+        /* Add check mark when selected */
+        input[type="radio"].as-checkbox:checked::after {
+            content: "";
+            position: absolute;
+            top: 2px;
+            left: 5px;
+            width: 5px;
+            height: 9px;
+            border: solid #007bff; /* blue tick color */
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        /* Optional hover/focus styles */
+        input[type="radio"].as-checkbox:hover {
+            border-color: #007bff;
+        }
+
+        input[type="radio"].as-checkbox:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+    .w-40px {
+        width: 40px;
+    }
+
+    .w-90px {
+        width: 90px;
+    }
+
+    .w-120px {
+        width: 120px;
+    }
+
+    table.dataTable thead th, table.dataTable thead td,
+    table.dataTable tbody th, table.dataTable tbody td {
+        font-size: 13px;
+        padding: 10px 5px !important;
+        vertical-align: bottom;
+    }
+
+    .selectedRepairRow {
+        background-color: #d1ecf1 !important;
+        border-left: 4px solid #0c5460 !important;
+    }
+</style>
+

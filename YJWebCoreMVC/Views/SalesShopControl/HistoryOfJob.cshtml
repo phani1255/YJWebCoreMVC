@@ -1,0 +1,907 @@
+<!--
+  * Created by Manoj 26-May-2025
+  * 02-June-2025 Manoj Fixed issues OnClick Alerts on refresh/notes/Parts used buttons And Fixed Parts used / Notes Model Issues And  Add Notes
+  * 04-June-2025 Manoj Fixed issues on saveHistoryRepairJobsNotes json result
+  * 09-Sep-2025  Hemanth hide jobbag and refresh options from list of locations
+-->
+@{
+    ViewBag.Title = "History Of A Repair Job";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+@model YJWeb.Models.MfgModel
+
+<h2 class="text-center mt-2">History Of A Repair Job</h2>
+<div id="content-center" class="row">
+
+    <div class="web-form page login-page col-sm-12" id="HistoryOfJob">
+
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            JOBBAG # :
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" id="jobBagNo" required name="Job Bag #" class="form-control activateFormRefreshBtn" placeholder="" value="@ViewBag.Jobbag" @ViewBag.IsFromRepair />
+                            <input type="hidden" id="companyName" class="form-control activateFormRefreshBtn" value="" />
+                            <input type="hidden" id="companyAddress" class="form-control activateFormRefreshBtn" value="" />
+                            <input type="hidden" id="companyAddress2" class="form-control activateFormRefreshBtn" value="" />
+                            <input type="hidden" id="companyPhone" class="form-control activateFormRefreshBtn" value="" />
+                            <input type="hidden" id="companyLogo" class="form-control activateFormRefreshBtn" value="" />
+                        </div>
+                    </div>
+                </div>
+
+                <div id="repairDateTopContainer" class="col-sm-3">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Repair Date
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtFromDate1" class="form-control fs-13 resetFromDate activateFormRefreshBtn" />
+                        </div>
+                    </div>
+                </div>
+
+                <div id="dueDateTopContainer" class="col-sm-3">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Due Date
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtToDate1" class="form-control fs-13 resetToDate activateFormRefreshBtn" />
+                        </div>
+                    </div>
+                </div>
+
+                @*<div id="datesBtnContainer" class="col-sm-3">
+                        <div class="row">
+                            <div class="col-sm-12 text-right">
+                                <input type="checkbox" id="cbFillFromToDates" checked /> <span>All Dates</span>
+                                <input type="button" value="Last Month" class="formsGlobalUniqueBtn btnGetLastMonthDates" />
+                                <input type="button" value="Last Week" class="formsGlobalUniqueBtn btnGetLastWeekDates" />
+                            </div>
+                        </div>
+                    </div>*@
+
+            </div>
+            <div id="cusStyleHistory" class="row" style="display:flex; flex-direction:row; justify-content:center;">
+                <div id="customerTopContainer" class="col-sm-3">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Customer :
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" id="customerName" class="form-control fs-13 resetFromDate activateFormRefreshBtn" />
+                        </div>
+                    </div>
+                </div>
+
+                <div id="styleTopContainer" class="col-sm-3">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Style
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" id="historyStyle" class="form-control fs-13 resetToDate activateFormRefreshBtn" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-end">
+
+                <div class="col-sm-4">
+                </div>
+                <div class="col-sm-4 mt-2 text-right">
+                    <input type="button" id="btnFormResultsNotes" value="notes" class="refresh_btn refreshBtnDefault  ml-2" data-bs-toggle="modal" data-bs-target="#historyNotesModel" />
+                    <input type="button" id="btnFormResultsPartsUsed" value="Parts Used" class="refresh_btn refreshBtnDefault ml-2" data-bs-toggle="modal" data-bs-target="#historyPartsUsedModel" />
+                    <input type="button" id="btnFormResultsSearch" value="Refresh" class="refresh_btn refreshBtnDefault ml-2" @Html.Raw(ViewBag.DisplayButton) />
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="mt-4 white-box pos-rel" id="divDataTableReport">
+
+        <div class="row col-md-6 report_buttons">
+            <div style="margin:3px;">
+                <input type="button" value="PDF" table-id="dataTableForHistoryOfJobs" table-count="1" class="formsGlobalUniqueBtn btnDataTableDownloadPDF" id="btnPDF" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Excel" table-id="dataTableForHistoryOfJobs" table-count="1" class="formsGlobalUniqueBtn btnDataTableDownloadExcel" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" id="HistoryOfJobsbtnDataTablePreview" table-sub-headings="List" class="formsGlobalUniqueBtn mx-2" table-id="dataTableForHistoryOfJobs" table-count="1" value="Preview" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Print" table-id="dataTableForHistoryOfJobs" id="HistoryOfJobsBtnDataTablePrint" class="formsGlobalUniqueBtn" table-count="1" report-format="portrait" />
+            </div>
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Email" table-id="dataTableForHistoryOfJobs" class="formsGlobalUniqueBtn" />
+            </div>
+
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Simple Excel" class="formsGlobalUniqueBtn" />
+            </div>
+        </div>
+        <div class="row dataTableReport">
+
+            <table id="dataTableForHistoryOfJobs" class="dataTable display nowrap table" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>GIVEN TO PERSON</th>
+                        <th>TAKE BACK FROM</th>
+                        <th>DATE GIVEN</th>
+                        <th>TIME GIVEN</th>
+                        <th>DATE RVCD</th>
+                        <th>TIME RVCD</th>
+                        <th>QYT GIVEN</th>
+                        <th>QYT RCVD</th>
+                        <th>WT GIVEN</th>
+                        <th>WT RCVD</th>
+                        <th>FROM STORE</th>
+                        <th>TO STORE</th>
+                        <th>LOCATION</th>
+                        <th>USERNAME</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+
+            </table>
+            <br>
+
+        </div>
+    </div>
+
+</div>
+
+
+<div class="modal fade" id="historyNotesModel" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div style="display:flex; flex-direction:row; justify-content:center;">
+                    <h5 class="modal-title mt-2" style="text-align:center;" id="jobBagNotesBsModalLabel">Job Bag Notes Details</h5>
+                </div>
+                <button type="button" class="formsGlobalUniqueCloseBtn btn-close closeModal closeModalNotes" data-modal-id="historyNotesModel" data-bs-dismiss="modal" aria-label="Close">X</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="mt-4 white-box pos-rel" id="divDataTableReport">
+                    <div class="row dataTableReport">
+                        <table id="dataTableForJobNoteHistory" class="dataTable display nowrap table" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Job No</th>
+                                    <th>Date</th>
+                                    <th>Who</th>
+                                    <th>Note</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="button" id="btnNotesSubmit" value="Submit" class="refresh_btn refreshBtnDefault ml-2" />
+                <button type="button" class="formsGlobalUniqueCloseBtn closeModal closeModalNotes" data-modal-id="historyNotesModel" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="historyPartsUsedModel" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="partsUdesBsModalLabel">RESERVE PARTS FOR JOB BAG</h5>
+                <button type="button" class="formsGlobalUniqueCloseBtn btn-close closeModal closeModalPartsUsed" data-modal-id="historyPartsUsedModel" data-bs-dismiss="modal" aria-label="Close">X</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="row">
+                                <label class="col-sm-4">
+                                    JOBBAG # :
+                                </label>
+                                <div class="col-sm-8">
+                                    <input type="text" id="partsUsedJobBagNo" class="form-control activateFormRefreshBtn" placeholder="" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4 white-box pos-rel" id="divDataTableReport">
+                    <div class="row dataTableReport">
+                        <table id="dataTableForPartsUsedJobBags" class="dataTable display nowrap table" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>DATE</th>
+                                    <th>VENDOR</th>
+                                    <th>PART</th>
+                                    <th>NOTE</th>
+                                    <th>QTY</th>
+                                    <th>WEIGHT</th>
+                                    <th>BT_WT</th>
+                                    <th>COST</th>
+                                    <th>TOTAL COST</th>
+                                    <th>ON JOBBAG</th>
+                                    <th>PRICE</th>
+                                    <th>TOTAL PRICE</th>
+                                    <th>STORE NO</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="formsGlobalUniqueCloseBtn closeModal closeModalPartsUsed" data-modal-id="historyPartsUsedModel" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    var txtFromDate1 = "1990-01-01", txtToDate1 = "2099-12-31" , jobBagValue = "000000";
+
+    function ClearControls() {
+        txtFromDate1 = "1990-01-01"; txtToDate1 = "2099-12-31"; jobBagValue = "000000";
+
+        $('#txtFromDate1').val('');
+        $('#txtToDate1').val('');
+        $('#jobBagNo').val('');
+        $('#customerName').val('');
+        $('#historyStyle').val('');
+        existAutoFilledData();
+    }
+    function existAutoFilledData() {
+        if ($('#txtFromDate1').val() != "")
+            fromdate1 = $('#txtFromDate1').val();
+        else
+            fromdate1 = "1990-01-01";
+
+        if ($('#txtToDate1').val() != "")
+            todate1 = $('#txtToDate1').val();
+        else
+            todate1 = "2099-12-31";
+
+        if ($('#jobBagNo').val() != "")
+            jobBagValue = $('#jobBagNo').val();
+        else
+            jobBagValue = "000000";
+
+        if ($('#customerName').val() != "")
+            cusHistory = $('#customerName').val();
+        else
+            cusHistory = "";
+
+        if ($('#historyStyle').val() != "")
+            historyStyle = $('#historyStyle').val();
+        else
+            historyStyle = "";
+
+        BindBagsGivenToPerson(jobBagValue);
+    }
+    function formatDate(dateString) {
+        if (!dateString) return '';
+        const timestamp = parseInt(dateString.replace('/Date(', '').replace(')/', ''), 10);
+        const date = new Date(timestamp);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        return `${year}-${month}-${day}`;
+    }
+
+    function getHistoryNotesJobBagValues(jobBagValue) {
+
+        var url = '@Url.Action("GetListJobbagNotes", "SalesShopControl", new { Area = ""})';
+        var data = {
+            Jobbag : jobBagValue
+        }
+
+        var jqxhr = $.post(url, data, function () { })
+        .done(function (response) {
+            var json;
+            if (response instanceof Object)
+                json = response;
+            else
+                json = $.parseJSON(response);
+
+            var table = $('#dataTableForJobNoteHistory').DataTable();
+            table.clear().draw();
+
+            $('#dataTableForJobNoteHistory tbody').empty();
+
+            for (var i = 0; i < json.length; i++) {
+                var date = json[i].Date ? json[i].Date.split("T")[0] : "";
+                table.row.add([
+                     json[i].Job_no,
+                    '<input type="date"  value="' + date +'" class="form-control HistoryjobBag" readonly/>',
+                    json[i].Who,
+                    '<input type="text"  class="HistoryjobBag  form-control" value="' + json[i].Note + '" data-previous="' + json[i].Note + '" maxlength="20"  />'
+                ])
+            }
+            table.draw();
+            $('#dataTableForJobNoteHistory_filter').hide();
+
+             if ($('#addRowBtn').length === 0) {
+                 var addRowButtonHtml = '<tfoot><tr><td colspan="12" style="text-align: center;padding:0px">' +
+                     '<button id="addRowBtn" class="btn btn-alert" style="margin-top: 10px; display: inline-block;">* Click here to add a new row</button>' +
+                     '</td></tr></tfoot>';
+                 $('#dataTableForJobNoteHistory').append(addRowButtonHtml);
+
+                 $('#addRowBtn').on('click', function () {
+                     var currentDate = new Date();
+                     var currentTimestamp = currentDate.getTime();
+                     var formattedCurrentDate = '/Date(' + currentTimestamp + ')/';
+                     var currentModifiedDate = formatDate(formattedCurrentDate)
+
+                     var table = $('#dataTableForJobNoteHistory').DataTable();
+                     if ($('#jobBagNo').val()) {
+                         var jobBagNo = $('#jobBagNo').val();
+                     }
+                     var User = '@Session["UserId"]';
+
+                     table.row.add([
+                         jobBagNo ?? "",
+                         '<input type="date" value="' + currentModifiedDate + '" class="form-control HisjobBag"/>',
+                         User ?? "",
+                         '<input type="text"  class="HisjobBag  form-control" value = "" data-previous="" maxlength="120"  />'
+                     ]);
+
+                     table.draw();
+                 });
+             };
+
+        })
+        .fail(function (jqxhr, textstatus, error) {
+            var err = textstatus + "," + error;
+            console.log("GetListJobbagNotes Request Failed: " + err);
+        });
+    }
+
+    function BindBagsGivenToPerson(jobBagValue) {
+        var url = '@Url.Action("GetListofHistoryOfJobBag", "SalesShopControl", new { Area = "" })';
+
+        var data = {
+            jobbagno: jobBagValue
+        };
+
+
+        var jqxhr = $.post(url, data, function () { })
+        .done(function (response) {
+            var json;
+            if (response instanceof Object)
+                json = response;
+
+            else
+                json = $.parseJSON(response);
+
+            if (json.result.length > 0) {
+                $('#repairDateTopContainer').show();
+                $('#dueDateTopContainer').show();
+                $('#datesBtnContainer').show();
+                $('#customerTopContainer').show();
+                $('#styleTopContainer').show();
+
+
+                if (json.jobbaginfo[0].can_date) {
+                    var [year, month, date] = json.jobbaginfo[0].can_date.split("T")[0].split("-");
+                    var dueDate = year + "-" + month + "-" + date;
+                }
+                if (json.jobbaginfo[0].DATE) {
+                    var [year, month, date] = json.jobbaginfo[0].DATE.split("T")[0].split("-");
+                    var repairDate = year + "-" + month + "-" + date;
+                }
+
+                if (json.jobbaginfo[0].Acc1 && json.jobbaginfo[0].NAME) {
+                    var customerName = json.jobbaginfo[0].Acc1 + "-" + json.jobbaginfo[0].NAME;
+                }
+                var jobStyle = json.jobbaginfo[0].STYLE ?? "";
+
+                $('#txtFromDate1').val(repairDate);
+                $('#txtToDate1').val(dueDate);
+                $('#customerName').val(customerName);
+                $('#historyStyle').val(jobStyle);
+
+            }
+
+            var table = $('#dataTableForHistoryOfJobs').DataTable();
+            table.clear().draw();
+
+            $("#dataTableForHistoryOfJobs tbody").empty();
+            var trans = json;
+            var tr;
+            //alert(json);
+            for (var i = 0; i < json.result.length; i++) {
+                //totalPrice += parseFloat(json[i].PRICE);
+                table.row.add([
+                    json.result[i].giventoperson??"",
+                    json.result[i].takebackfrom ? json.result[i].takebackfrom : "",
+                    json.result[i].dategiven ? json.result[i].dategiven.split("T")[0] : "",
+                    json.result[i].timegiven ?? "",
+                    json.result[i].dateRCVD ? json.result[i].dateRCVD.split("T")[0] : "",
+                    json.result[i].timeRCVD  ?? "",
+                    json.result[i].GIVENQTY ?? "",
+                    json.result[i].RECEIVEDQTY ?? "",
+                    json.result[i].GIVENWT ?? "",
+                    json.result[i].RECEIVEDWT ?? "",
+                    json.result[i].FROMSTORE ?? "",
+                    json.result[i].TOSTORE ?? "",
+                    json.result[i].LOCATION ?? "",
+                    json.result[i].USERNAME ?? "",
+                ]);
+            }
+
+            $('#companyName').val(json.CompanyName);
+            $('#companyAddress').val(json.storeAddress);
+            $('#companyAddress2').val(json.storeAddress2);
+            $('#companyPhone').val(json.storePhone);
+            $('#companyLogo').val(json.storeImage);
+
+            table.draw();
+        })
+        .fail(function (jqxhr, textStatus, error) {
+            var err = textStatus + ", " + error;
+            console.log("GetListofHistoryOfJobBag Request Failed: " + err);
+        });
+    }
+
+    function getHistoryPartsUsedJobBagValues(jobBagValue) {
+        var url = '@Url.Action("GetListOfPartsUsedJobbag", "SalesShopControl", new {Area =""})';
+        var data = {
+            JobBagno: jobBagValue
+        }
+
+        var jqxhr = $.post(url, data, function () { })
+            .done(function (response) {
+                var json;
+
+                if (response instanceof Object)
+                    json = response;
+                else
+                    json = $.parseJSON(response);
+
+                if (!$('#partsUsedJobBagNo').val()) {
+                    $('#partsUsedJobBagNo').val(jobBagValue);
+                }
+
+                var table = $('#dataTableForPartsUsedJobBags').DataTable();
+                table.clear().draw();
+                $("#dataTableForPartsUsedJobBags tbody").empty();
+
+                for (var i = 0; i < json.length; i++) {
+
+                    var onJobBag = onJobBagcheck = "";
+                    var wt = wtchecked = "";
+
+                    if (json[i].ON_JOBBAG == "true") {
+                        onJobBag = "true";
+                        onJobBagcheck = "checked";
+                    }
+
+                    if (json[i].BY_WT == "true") {
+                        wt = "true";
+                        wtchecked = "checked";
+                    }
+
+                    table.row.add([
+                        json[i].DATE ? json[i].DATE.split("T")[0] : "",
+                        json[i].VENDOR,
+                        json[i].CODE,
+                        json[i].NOTE,
+                        json[i].QTY,
+                        json[i].WEIGHT,
+                        '<input type="checkbox" readonly value"' + wt + '" ' + wtchecked + '>',
+                        json[i].COST,
+                        json[i].TOTAL_COST,
+                        '<input type="checkbox" readonly value = "' + onJobBag + '" ' + onJobBagcheck +'>',
+                        json[i].Price,
+                        json[i].TOTAL_PRICE,
+                        json[i].STORE_NO
+                    ])
+                }
+
+                table.draw();
+            })
+            .fail(function (jqxhr, textStatus, error) {
+                var err = textStatus + "," + error;
+                console.log("GetListOfPartsUsedJobbag Request Failed: " + err);
+            })
+    }
+
+    function saveHistoryRepairJobsNotes(btnType, showSuccessAlert, jobbag) {
+        let customersourcesxml = '<?xml version="1.0" encoding="utf-16"?><DocumentElement>';
+
+        $('#dataTableForJobNoteHistory tbody tr').each(function () {
+            var rowData = $(this);
+
+            var jobNo = rowData.find("td:eq(0)").text().trim();
+            var date = rowData.find("td:eq(1)").find('input').val();
+            var who = rowData.find("td:eq(2)").text().trim();
+            var note = rowData.find("td:eq(3)").find('input').val();
+
+            if (jobNo || date || who || note) {
+                customersourcesxml += '<JobbagNote>';
+                customersourcesxml += '<Job_no>' + jobNo + '</Job_no>';
+                customersourcesxml += '<Date>' + date + '</Date>';
+                customersourcesxml += '<Who>' + who + '</Who>';
+                customersourcesxml += '<Note>' + note + '</Note>';
+                customersourcesxml += '</JobbagNote>';
+            }
+        });
+
+        customersourcesxml += '</DocumentElement>';
+
+        console.log(customersourcesxml);
+        if (customersourcesxml === '<?xml version="1.0" encoding="utf-16"?><DocumentElement></DocumentElement>') {
+            alert("Please enter at least one customer source.");
+            return;
+        }
+        var jobbag = jobbag;
+        var url = '@Url.Action("saveHistoryRepairJobNotes", "SalesShopControl", new {Area=""})'  + '?jobbag=' + encodeURIComponent(jobbag);
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: customersourcesxml,
+            contentType: "application/xml",
+            dataType: "json",
+            success: function (response) {
+                if (response.success == true) {
+                    alert('Updated Successfully!');
+                } else {
+                    alert("Update Failed");
+                }
+            },
+            error: function (error) {
+                console.error('Error sending data:', error);
+            }
+        });
+
+    }
+
+    async function exportTableToCustomPDF(tableid, tablesCount, reportSubTitile = "") {
+
+        if (typeof (tablesCount) != "undefined" && parseInt(tablesCount) > 1) {
+
+            // Create the PDF document
+            var { jsPDF } = window.jspdf;
+            var doc = new jsPDF('l', 'mm', [297, 210]);
+            for (dt = 1; dt <= parseInt(tablesCount); dt++) {
+
+                var dataTableId = tableid + "-" + dt;
+                var currentPageLength = $('#' + dataTableId).DataTable().page.len();
+                // Store the current pagination state
+                var currentPage = $('#' + dataTableId).DataTable().page();
+                var currentPageLength = $('#' + dataTableId).DataTable().page.len();
+
+                // Set the page length to show all entries
+                $('#' + dataTableId).DataTable().page.len(-1).draw();
+
+                // Get the table data
+                var table = document.getElementById(dataTableId);
+                var tableData = [];
+                for (var i = 0, row; row = table.rows[i]; i++) {
+                    var rowData = [];
+                    for (var j = 0, col; col = row.cells[j]; j++) {
+                        if (col.classList.contains("hide-on-print") || col.classList.contains("hideColumns")) {
+                            continue;
+                        }
+                        rowData.push(col.innerText);
+                    }
+                    tableData.push(rowData);
+                }
+
+                doc.autoTable({
+                    head: [tableData[0]],
+                    body: tableData.slice(1),
+                });
+                // Restore the original pagination state
+                $('#' + tableid).DataTable().page.len(currentPageLength).draw();
+                $('#' + tableid).DataTable().page(currentPage).draw(false);
+            }
+
+            // Save the PDF
+            let filname = ($('.form-h1').text() != "undefined" && $('.form-h1').text() != '') ? $('.form-h1').text() : 'data';
+            doc.save(filname + '.pdf');
+
+
+        } else {
+
+            // Store the current pagination state
+            var currentPage = $('#' + tableid).DataTable().page();
+            var currentPageLength = $('#' + tableid).DataTable().page.len();
+
+            // Set the page length to show all entries
+            $('#' + tableid).DataTable().page.len(-1).draw();
+
+            // Get the table data
+            var table = document.getElementById(tableid);
+            var tableData = [];
+            for (var i = 0, row; row = table.rows[i]; i++) {
+                var rowData = [];
+                for (var j = 0, col; col = row.cells[j]; j++) {
+                    if (col.classList.contains("hide-on-print") || col.classList.contains("hideColumns")) {
+                        continue;
+                    }
+                    rowData.push(col.innerText);
+                }
+                tableData.push(rowData);
+            }
+
+
+            // Create the PDF document
+            var { jsPDF } = window.jspdf;
+            var doc = new jsPDF();
+
+            let headingText = ($('.form-h1').text() != "undefined" && $('.form-h1').text() != '') ? $('.form-h1').text() : 'Data Report';
+
+            // Add heading to the PDF
+            let currentY = 15;
+            doc.setFontSize(16); // Set font size for heading
+            doc.text(headingText, 105, currentY, { align: "center" });
+            currentY += 7
+
+            let format = "PNG";
+            var imageSrc = $('#customImage').attr('src');
+            if (imageSrc.startsWith('data:image/jpeg') || imageSrc.startsWith('data:image/jpg')) {
+                format = 'JPEG';
+            } else if (imageSrc.startsWith('data:image/png')) {
+                format = 'PNG';
+            }
+
+            doc.addImage(image, format , 10, 20, 50, 30);
+
+            //Add Sub Heading to PDF
+            if (reportSubTitile.length > 0 && reportSubTitile != "") {
+
+                let subHeading = $('#customSubHeader').text();
+                doc.setFontSize(11); // Set font size for heading
+                doc.text(subHeading, 105, currentY, { align: "center" });
+                currentY += 6
+
+                if ($('#customSubHeader1').text().length > 0 && $('#customSubHeader1').text() != "") {
+
+                    let subHeading1 = $('#customSubHeader1').text();
+                    doc.setFontSize(11); // Set font size for heading
+                    doc.text(subHeading1, 105, currentY, { align: "center" });
+                    currentY += 6
+
+                }
+
+                if ($('#customSubHeader2').text().length > 0 && $('#customSubHeader2').text() != "") {
+
+                    let subHeading2 = $('#customSubHeader2').text();
+                    doc.setFontSize(11); // Set font size for heading
+                    doc.text(subHeading2, 105, currentY, { align: "center" });
+                    currentY += 6
+                }
+
+                if ($('#customSubHeader3').text().length > 0 && $('#customSubHeader3').text() != "") {
+
+                    let subHeading3 = $('#customSubHeader3').text();
+                    doc.setFontSize(11); // Set font size for heading
+                    doc.text(subHeading3, 105, currentY, { align: "center" });
+                    currentY += 6
+                }
+            }
+
+            // Add the table to the PDF
+            doc.autoTable({
+                startY: currentY, // Position table below heading
+                head: [tableData[0]],
+                body: tableData.slice(1),
+                margin: { top: 5, bottom: 5, left: 5, right: 5 },
+                styles: { fontSize: 6, cellPadding: 0.5 },
+            });
+
+            // Save the PDF
+            let filname = headingText;
+            doc.save(filname + '.pdf');
+
+            // Restore the original pagination state
+            let dataTable = $('#' + tableid).DataTable();
+            $('#' + tableid).DataTable().page.len(currentPageLength).draw();
+            $('#' + tableid).DataTable().page(currentPage).draw(false);
+        }
+    }
+
+    function getCustomTitleDateHeader(jobbagNo,storeName, storeAddress, storeAddress2, storePhone, storeImage) {
+
+        var Title = "History Of Job Bag";
+        var Currentdate = "Date: " + new Date().toLocaleDateString();
+        var containerHtml = "";
+
+        if (containerHtml == "") {
+            containerHtml = '<div class="header-container" style="positio: relative; width:100%;">' +
+                '<div class="row" style="width:100%; display:flex; justify-content:left">' +
+                '<img id="customImage" src="' + storeImage +'" class="image"/>'+
+                '</div > ' +
+                '<div class="row" style="width:100%; display:flex; justify-content:center">' +
+                '<h4 class="item" id="customHeader" style="text-align:center;flex-grow:1">' + Title + ' - ' + jobbagNo + '</h4>' +
+                '</div > ' +
+                '<div class="row customHeaderText" style="width:100%; display:flex; flex-direction:column; justify-content: center;">' +
+                '<h6 class="item" id="customSubHeader"   style="text-align: left; flex-grow:1; padding:0px 0px 0px 20px">' + storeName + '</h6>' +
+                '<h6 class="item" id="customSubHeader1"   style="text-align: center;  margin-top:-2px">' + storeAddress + '</h6>' +
+                '<h6 class="item" id="customSubHeader2"   style="text-align: center;  margin-top:-2px">' + storeAddress2 + '</h6>' +
+                '<h6 class="item" id="customSubHeader3"   style="text-align: center;  margin-top:-2px">' + storePhone + '</h6>' +
+                '</div>' +
+                '</div>';
+        } else {
+            containerHtml = "";
+        }
+
+        if ($("#pdfReportHeadingText").html() == "") {
+            $("#pdfReportHeadingText").html(containerHtml);
+            $("#pdfReportHeadingText").hide();
+        }
+        return containerHtml;
+
+    }
+
+    $(document).ready(function () {
+
+        $('#repairDateTopContainer').hide();
+        $('#dueDateTopContainer').hide();
+        $('#datesBtnContainer').hide();
+        $('#customerTopContainer').hide();
+        $('#styleTopContainer').hide();
+
+        $('#btnFormResultsSearch').click(function () {
+
+            if ($('#jobBagNo').val()) {
+                existAutoFilledData();
+                $('#btnFormResultsSearch').removeClass('needToRefreshBtn').addClass('refreshBtnDefault');
+                $('#btnFormResultsSearch').val("Refresh");
+            } else {
+                alert("JobBag # Required* ")
+            }
+
+        });
+
+        var table = $('#dataTableForHistoryOfJobs').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 25,
+            "aaSorting": []
+        });
+        fillFromToDates();
+
+
+
+        /* Print Report */
+        $(document).on('click', '#HistoryOfJobsBtnDataTablePrint', function () {
+            reportFormat = "";
+            //id="companyName"  id="companyAddress" " id="companyAddress2"  id="companyPhone"  id="companyLogo"
+            let jobbagno = $('#jobBagNo').val();
+            let storeName = $('#companyName').val();
+            let storeAddress = $('#companyAddress').val();
+            let storeAddress2 = $('#companyAddress2').val();
+            let storePhone = $('#companyPhone').val();
+            let storeImage = $('#companyLogo').val();
+            //Return Custom Date & Header html Content
+            var customHeader = getCustomTitleDateHeader(jobbagno,storeName, storeAddress, storeAddress2, storePhone, storeImage);
+
+            if ($(this).attr('report-format') !== undefined) {
+                reportFormat = $(this).attr('report-format');
+            }
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+            const tablesSubHeadings = $(this).attr("table-sub-headings");
+
+            printDiv(tableid, tablesCount, tablesSubHeadings,customHeader, reportFormat);
+        })
+
+        $('.closeModalNotes').click(function () {
+            alert("Do You Want Exit From Page");
+            $('#historyNotesModel').modal('hide');
+        })
+        $('.closeModalPartsUsed').click(function () {
+            $('#historyPartsUsedModel').modal('hide');
+        })
+
+
+        //Preview Report
+        $('#HistoryOfJobsbtnDataTablePreview').off('click').on('click', function () {
+
+            let jobbagno = $('#jobBagNo').val();
+            let storeName = $('#companyName').val();
+            let storeAddress = $('#companyAddress').val();
+            let storeAddress2 = $('#companyAddress2').val();
+            let storePhone = $('#companyPhone').val();
+            let storeImage = $('#companyLogo').val();
+            //Return Custom Date & Header html Content
+            var customHeader = getCustomTitleDateHeader(jobbagno, storeName, storeAddress, storeAddress2, storePhone, storeImage);
+
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+            const tablesSubHeadings = $(this).attr("table-sub-headings");
+
+            // Append the container to the Preview content
+
+            previewDiv(tableid, tablesCount, tablesSubHeadings, customHeader);
+
+        });
+
+        // PDF Export
+
+        $('.btnDataTableDownloadPDF').off('click').on('click', function () {
+
+            let jobbagno = $('#jobBagNo').val('');
+            let storeName = $('#companyName').val();
+            let storeAddress = $('#companyAddress').val();
+            let storeAddress2 = $('#companyAddress2').val();
+            let storePhone = $('#companyPhone').val();
+            let storeImage = $('#companyLogo').val();
+            //Return Custom Date & Header html Content
+            var customHeader = getCustomTitleDateHeader(jobbagno, storeName, storeAddress, storeAddress2, storePhone, storeImage);
+
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+
+            exportTableToPDF(tableid, tablesCount, customHeader);
+
+        });
+
+        $(document).on('click', '#btnFormResultsNotes', function () {
+
+            if ($('#jobBagNo').val()) {
+                jobBagValue = $('#jobBagNo').val();
+                $('#historyNotesModel').modal('show');
+                $('.modal-backdrop').hide();
+                getHistoryNotesJobBagValues(jobBagValue);
+            }
+            else {
+                alert("Job Bag # Required *");
+            }
+        })
+
+        $(document).on('click', '#btnFormResultsPartsUsed', function () {
+
+            if ($('#jobBagNo').val()) {
+                jobBagValue = $('#jobBagNo').val();
+                $('#historyPartsUsedModel').modal('show');
+                $('.modal-backdrop').hide();
+                getHistoryPartsUsedJobBagValues(jobBagValue);
+            }
+            else {
+                alert("Job Bag # Required *");
+            }
+        })
+
+        $(document).on('click', '.HistoryjobBag', function () {
+            $(this).removeAttr('readonly')
+        })
+
+        $(document).on('click', '#btnNotesSubmit', function () {
+            let jobbagno = $('#jobBagNo').val();
+            saveHistoryRepairJobsNotes('Save', true, jobbagno);
+        });
+});
+
+</script>
+
+@{
+    if (ViewBag.Jobbag != "")
+    {
+        <script>
+            $(document).ready(function () {
+                $('#btnFormResultsSearch').click();
+            });
+
+        </script>
+    }
+}

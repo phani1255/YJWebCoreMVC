@@ -1,0 +1,226 @@
+<!--
+  * Created by Manoj 30-Apr-2025
+  * Manoj 01-May-2025 Fixed print portarit and header issue
+-->
+@{
+    ViewBag.Title = "List of Completed Jobs";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+@model YJWeb.Models.MfgModel
+
+<h2 class="text-center mt-2">List Of Completed Jobs</h2>
+<div id="content-center" class="row">
+
+    <div class="web-form page login-page col-sm-12" id="FormForBagsGivenToPerson">
+
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            From Date
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtFromDate1" class="form-control fs-13 resetFromDate activateFormRefreshBtn" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            To Date
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtToDate1" class="form-control fs-13 resetToDate activateFormRefreshBtn" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="row">
+                        <div class="col-sm-12 text-right">
+                            <input type="checkbox" id="cbFillFromToDates" checked /> <span>All Dates</span>
+                            <input type="button" value="Last Month" class="formsGlobalUniqueBtn btnGetLastMonthDates" />
+                            <input type="button" value="Last Week" class="formsGlobalUniqueBtn btnGetLastWeekDates" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-end">
+
+                <div class="col-sm-4">
+                </div>
+                <div class="col-sm-4 text-right">
+                    <input type="button"  id="btnFormResultsSearch" value="Refresh" class="refresh_btn refreshBtnDefault" />
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="mt-4 white-box pos-rel" id="divDataTableReport">
+
+        <div class="row col-md-6 report_buttons">
+            <div style="margin:3px;">
+                <input type="button" value="PDF" table-id="dataTableForCompletedJobs" class="formsGlobalUniqueBtn btnDataTableDownloadPDF" id="btnPDF" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Excel" table-id="dataTableForCompletedJobs" class="formsGlobalUniqueBtn btnDataTableDownloadExcel" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Preview" table-id="dataTableForCompletedJobs" id="btnDataTablePreview" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Print" table-id="dataTableForCompletedJobs" id="listOfCompletedJobsbtnDataTablePrint" class="formsGlobalUniqueBtn" report-format="portrait" table-count="1" />
+            </div>
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Email" table-id="dataTableForCompletedJobs" class="formsGlobalUniqueBtn" />
+            </div>
+
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Simple Excel" class="formsGlobalUniqueBtn" />
+            </div>
+        </div>
+        <div class="row dataTableReport">
+
+            <table id="dataTableForCompletedJobs" class="dataTable display nowrap table" style="width:100%">
+                <thead>
+                <tr>
+                    <th>JOB NO</th>
+                    <th>RVC DATE</th>
+                    <th>RVC TIME</th>
+                    <th>QTY</th>
+                    <th>GIVEN WT</th>
+                    <th>RCV WT</th>
+                    <th>LOSS</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+
+            </table>
+            <br>
+
+        </div>
+    </div>
+
+</div>
+
+
+
+
+<script type="text/javascript">
+
+    var txtFromDate1 = "1990-01-01", txtToDate1 = "2099-12-31";
+
+    function ClearControls() {
+        txtFromDate1 = "1990-01-01"; txtToDate1 = "2099-12-31";
+        $('#txtFromDate1').val('');
+        $('#txtToDate1').val('');
+        //$('#ddlPerson').val('All').change();
+
+        existAutoFilledData();
+    }
+    function existAutoFilledData() {
+        if ($('#txtFromDate1').val() != "")
+            fromdate1 = $('#txtFromDate1').val();
+        else
+            fromdate1 = "1990-01-01";
+
+        if ($('#txtToDate1').val() != "")
+            todate1 = $('#txtToDate1').val();
+        else
+            todate1 = "2099-12-31";
+
+        //if ($('#ddlPerson option:selected').val() != 'All')
+        //    person = $('#ddlPerson option:selected').val();
+        //else
+        //    person = "";
+
+
+        BindBagsGivenToPerson(fromdate1, todate1);
+    }
+
+    function BindBagsGivenToPerson(fromdate1, todate1) {
+        var url = '@Url.Action("GetListofCompletedJobs", "SalesShopControl", new { Area = "" })';
+
+        var data = {
+            fromdate: fromdate1,
+            todate: todate1,
+        };
+
+        var jqxhr = $.post(url, data, function () { })
+        .done(function (response) {
+            var json;
+            if (response instanceof Object)
+                json = response;
+
+            else
+                json = $.parseJSON(response);
+
+            var table = $('#dataTableForCompletedJobs').DataTable();
+            table.clear().draw();
+
+            $("#dataTableForCompletedJobs tbody").empty();
+            var trans = json;
+            var totalPrice = 0;
+            var tr;
+            for (var i = 0; i < json.length; i++) {
+                //totalPrice += parseFloat(json[i].PRICE);
+                table.row.add([
+                    json[i].JOB_NO,
+                    json[i].RCV_DATE ? json[i].RCV_DATE.split('T')[0]:'',
+                    json[i].RCVD_TIME,
+                    json[i].QTY,
+                    json[i].GIVENWt,
+                    json[i].RECEIVEDWt,
+                    json[i].DIFF
+                ]);
+            }
+
+            table.draw();
+            //addNumericColumnsClasstoDT("dataTableForBagsGivenToPerson", [1]);
+
+            // TODO : Bind data to table
+        })
+        .fail(function (jqxhr, textStatus, error) {
+            var err = textStatus + ", " + error;
+            console.log("GetListofCompletedJobs Request Failed: " + err);
+        });
+    }
+
+
+    $(document).ready(function () {
+        var table = $('#dataTableForCompletedJobs').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 25,
+            "aaSorting": []
+        });
+
+        $(document).on('click', ".paginate_button", function () {
+            //addNumericColumnsClasstoDT("dataTableForBagsGivenToPerson", [1]);
+        });
+
+        fillFromToDates();
+
+        $(document).on('click', '#listOfCompletedJobsbtnDataTablePrint', function () {
+            reportFormat = "";
+            if ($(this).attr('report-format') !== undefined) {
+                reportFormat = $(this).attr('report-format');
+            }
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+            const tablesSubHeadings = $(this).attr("table-sub-headings");
+
+            printDiv(tableid, tablesCount, tablesSubHeadings,"", reportFormat);
+        });
+    });
+
+</script>
+
+

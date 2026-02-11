@@ -1,0 +1,189 @@
+<!--
+  * Created by Manoj 28-Oct-2025
+-->
+@{
+    ViewBag.Title = "Open Closed Job Bag";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div id="content-center" class="row justify-content-center" style="min-height: 250px;">
+    
+    <div class="web-form page login-page col-md-6" id="FormForOpenClosedJobBag">
+        <h4 class="text-center mt-2 heading">Open Closed Job Bag</h4>
+        <div class="form-horizontal">
+            <div class="row m-3  d-flex flex-column justify-content-center align-items-center" >
+                <div id="customerTopContainer" class="col-md-6 border border-1 rounded " >
+                    <div class="row justify-content-center m-3">
+                        <label class="col-md-5">
+                            Job Bag No # :
+                        </label>
+                        <div class="col-md-7">
+                            <input type="text" id="txtJobBagCode" class="form-control fs-13 resetFromDate activateFormRefreshBtn" />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-12 mt-2">
+                <div class="row mb-2 report_buttons" style="left:520px">
+                    <div style="margin: 3px;" class="mr-2">
+                        <input type="button" value="Ok" class="btn formsGlobalUniqueBtn" id="btnOk" />
+                    </div>
+                    <div style="margin: 3px;">
+                        <input type="button" id="cancelBtn" value="Close" class="btn btn-danger formsGlobalUniqueBtn" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="confirmModal2" class="modal" tabindex="-1" style="display: none; position: fixed; z-index: 1050; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4);">
+    <div style="background: white; margin: 10% auto; padding: 20px; width: 400px; border-radius: 6px; text-align: center;">
+        <p id="confirmMessage"></p>
+        <div style="margin-top: 20px;">
+            <button id="btnConfirmYes" class="btn btn-primary">Yes</button>
+            <button id="btnConfirmNo" class="btn btn-secondary">No</button>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+
+
+    function openCloseJobBagNo() {
+
+        if ($('#txtJobBagCode').val() != "") {
+            jonBagNo = $('#txtJobBagCode').val()
+        } else {
+            jonBagNo = "";
+        }
+
+        BindBagsGivenToPerson(jonBagNo);
+
+    }
+
+    function BindBagsGivenToPerson(jonBagNo) {
+
+        if (jonBagNo == ""){
+            return alert("#Missing Job Bag NO");
+        }
+        else{
+            var url = '@Url.Action("getopenCloseJobNo", "SalesShopControl", new { Area = "" })';
+
+            var data = {
+                jobbagno: jonBagNo
+            }
+
+
+            var jqxhr = $.ajax({
+                url: url,
+                type: 'POST',
+                data: data,
+                async: false,
+                success: function (response) {
+
+                    if (response.code == true) {
+
+                        $('#confirmMessage').html(
+                            "Are you sure you want to open the specified job bag ?"
+                        );
+
+                        $('#confirmModal2').fadeIn();
+
+                        $('#btnConfirmYes').off('click').on('click', function () {
+                            $('#confirmModal2').fadeOut();
+
+                             var url2 = '@Url.Action("openCloseJobBagNo", "SalesShopControl", new { Area = "" })';
+
+                             var data2 = {
+                                 jobbagno1: jonBagNo
+                             }
+                            var jqxhr = $.ajax({
+                                url: url2,
+                                type: 'POST',
+                                data: url2,
+                                async: false,
+                                success: function (response2) {
+                                    if (response2.code == true) {
+                                        alert(response2.message);
+                                        window.location.href = "../Home";
+                                    } else {
+                                        alert(response2.message);
+                                    }
+                                },
+                                error: function (jqxhr, textStatus, error) {
+                                    var err = textStatus + "," + error;
+                                    console.log("FormForOpenClosedJobBag Request Failed: " + err);
+                                }
+
+                            });
+
+                        });
+
+                        $('#btnConfirmNo').off('click').on('click', function () {
+                            $('#confirmModal2').fadeOut();
+                            console.log("User cancelled import.");
+                            return;
+                        });
+
+
+
+                    } else {
+                        alert(response.message);
+                    }
+
+
+                },
+                error: function (jqxhr, textStatus, error) {
+                    var err = textStatus + "," + error;
+                    console.log("FormForOpenClosedJobBag Request Failed: " + err);
+                }
+            });
+         }
+    }
+
+
+
+
+    $(document).ready(function () {
+
+        $('#btnOk').off('click').on('click', function () {
+            openCloseJobBagNo();
+        })
+
+    });
+
+    $(document).on('click', '#cancelBtn', function () {
+        $('#confirmMessage').html(
+            "OK to Discard the Changes and Close This Form?"
+        );
+
+        $('#confirmModal2').fadeIn();
+
+        $('#btnConfirmYes').off('click').on('click', function () {
+            $('#confirmModal2').fadeOut();
+            window.location.href = "../Home";
+        });
+
+        $('#btnConfirmNo').off('click').on('click', function () {
+            $('#confirmModal2').fadeOut();
+            console.log("User cancelled import.");
+            return;
+        });
+    })
+
+</script>
+<style>
+    .heading {
+        background-color: #3b8fe3;
+        color: #fafafa;
+        font-family: 'sans-serif';
+    }
+</style>
+
+

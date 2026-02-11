@@ -1,0 +1,594 @@
+<!--
+  * Created by Manoj 01-May-2025
+    *08-May-2025 Fixed All Date Check Box issue, persons dropdown issue , single record datatable issue, Preview Issue
+    *09-May-2025 Fixed Summary by Persons and checkmark ALL results Issue
+    *12-May-2025 Fixed DueFromDate1,DueToDate issues
+-->
+@{
+    ViewBag.Title = "List Of Open Jobs To Each Person";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+@model YJWeb.Models.MfgModel
+
+<h2 class="text-center mt-2">List Of Open Jobs To Each Person</h2>
+<div id="content-center" class="row">
+
+    <div class="web-form page login-page col-sm-12" id="FormForBagsGivenToPerson">
+
+        <div class="form-horizontal">
+            <div class="row mt-2">
+                <div class="col-sm-3">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            From Date
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtFromDate1" class="form-control fs-13 resetFromDate activateFormRefreshBtn" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            To Date
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtToDate1" class="form-control fs-13 resetToDate activateFormRefreshBtn" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="row">
+                        <div class="col-sm-12 mt-2">
+                            <input type="checkbox" id="cbFillFromToDates" checked /> <span>All Dates</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Due Date From
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtDueDateFrom1" class="form-control fs-13 resetFromDate activateFormRefreshBtn" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Due Date To
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtDueDateTo" class="form-control fs-13 resetToDate activateFormRefreshBtn" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="row">
+                        <div class="col-sm-12 mt-2">
+                            <input type="checkbox" id="cbFillFromToDates1" checked/> <span>All Dates</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="row border border-1 badge text-center">
+                        <div class="col-sm-12 mt-2">
+                            <input type="radio" id="repairDueDate" name="DueDate" class="DueDate activateFormRefreshBtn mr-2" value="repair" checked /> Repair Due Date
+                            <input type="radio" id="personsDueDate" name="DueDate" class="DueDate resetDefaultCheckField activateFormRefreshBtn" value="person" /> Person Due Date
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row  justify-content-between mb-3">
+                <div class="col-sm-4">
+                    <label class="col-sm-3">Summary By: </label>
+                    <input type="radio" id="summaryPerson" name="summary" class="summary activateFormRefreshBtn ml-2" value="P" /> Person
+                    <input type="radio" id="summaryDepartment" name="summary" class="summary resetDefaultCheckField activateFormRefreshBtn ml-2" value="D" /> Department
+                    <input type="radio" id="summaryAll" name="summary" class="summary resetDefaultCheckField activateFormRefreshBtn ml-2" value="all" checked /> All (No Summary)
+                </div>
+                <div class="col-sm-4">
+                    <div class="row">
+                        <div class="col-sm-12 mt-2">
+                            <input type="checkbox" id="pastDue" /> <span>Past Due Only</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="row">
+                        <label id="ddlPersonLabel" class="col-sm-4">
+                            Person
+                        </label>
+                        <div class="col-sm-8">
+                            @Html.DropDownListFor(x => x.setter, Model.setters, new { @class = "form-control resetSelectField activateFormRefreshBtn", @id = "ddlPerson" })
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="row">
+                        <div class="col-sm-12 mt-2">
+                            <input type="checkbox" id="ddlPersonAll" checked /> <span>All</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-end">
+
+                    <div class="col-sm-4">
+                    </div>
+                    <div class="col-sm-4 text-right">
+                        <input type="button" id="btnFormResultsSearch" value="Refresh" class="refresh_btn refreshBtnDefault" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="mt-4 white-box pos-rel" id="divDataTableReport">
+
+        <div class="row col-md-6 report_buttons">
+            <div style="margin:3px;">
+                <input type="button" value="PDF" table-id="dataTableForListofJobToEachPerson" class="formsGlobalUniqueBtn btnDataTableDownloadPDF" id="btnPDF" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Excel" table-id="dataTableForListofJobToEachPerson" class="formsGlobalUniqueBtn btnDataTableDownloadExcel" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Preview" table-id="dataTableForListofJobToEachPerson" id="btnDataTablePreview" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Print" table-id="dataTableForListofJobToEachPerson" id="ListofJobToEachPersonBtnDataTablePrint" class="formsGlobalUniqueBtn" report-format="portrait" table-count="1" />
+            </div>
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Email" table-id="dataTableForListofJobToEachPerson" class="formsGlobalUniqueBtn" />
+            </div>
+
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Simple Excel" class="formsGlobalUniqueBtn" />
+            </div>
+        </div>
+        <div class="row dataTableReport">
+
+            <table id="dataTableForListofJobToEachPerson" class="dataTable display nowrap table" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>JOB NO</th>
+                        <th>DATE</th>
+                        <th>TIME</th>
+                        <th>PCs</th>
+                        <th>PERSON</th>
+                        <th>DEPT</th>
+                        <th>TRANSACT</th>
+                        <th>STYLE</th>
+                        <th>LOG NO</th>
+                        <th>STORE</th>
+                        <th>DUE DATE</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+
+            </table>
+            <br>
+
+        </div>
+    </div>
+    <div class="mt-4 white-box pos-rel" id="divDataFiltredTableReport" style="width:100%">
+
+        <div class="row col-md-6 report_buttons" style="width:100%">
+            <div style="margin:3px;">
+                <input type="button" value="PDF" table-id="dataTableForFilteredListofJobToEachPerson" class="formsGlobalUniqueBtn btnDataTableDownloadPDF" id="btnPDF" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Excel" table-id="dataTableForFilteredListofJobToEachPerson" class="formsGlobalUniqueBtn btnDataTableDownloadExcel" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Preview" table-id="dataTableForFilteredListofJobToEachPerson" id="filteredbtnDataTablePreview" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Print" table-id="dataTableForFilteredListofJobToEachPerson" id="ListofFiltredJobToEachPersonBtnDataTablePrint" class="formsGlobalUniqueBtn" report-format="portrait" table-count="1" />
+            </div>
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Email" table-id="dataTableForFilteredListofJobToEachPerson" class="formsGlobalUniqueBtn" />
+            </div>
+
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Simple Excel" class="formsGlobalUniqueBtn" />
+            </div>
+        </div>
+        <div class="row dataTableReport" style="width:100%">
+
+            <table id="dataTableForFilteredListofJobToEachPerson" class="dataTable display nowrap table">
+                <thead>
+                    <tr>
+                        <th id="Filter"></th>
+                        <th>JOB COUNT</th>
+                        <th>PCs</th>
+                    </tr>
+                </thead>
+                <tbody style="width:100%">
+                </tbody>
+
+            </table>
+            <br>
+
+        </div>
+    </div>
+
+</div>
+
+
+
+
+<script type="text/javascript">
+
+
+    var txtFromDate1 = "1990-01-01", txtToDate1 = "2099-12-31";
+    var txtDueDateFrom1 = "1990-01-01", txtDueDateTo = "2099-12-31";
+
+
+    function ClearControls() {
+        txtFromDate1 = "1990-01-01"; txtToDate1 = "2099-12-31";
+        txtDueDateFrom1 = "1990-01-01"; txtDueDateTo = "2099-12-31";
+        $('#txtFromDate1').val('');
+        $('#txtToDate1').val('');
+        $('#txtDueDateFrom1').val('');
+        $('#txtDueDateTo').val('');
+        $('#ddlPerson').val('All').change();
+
+        existAutoFilledData();
+    }
+
+    function existAutoFilledData() {
+
+        if ($('#txtFromDate1').val() != "")
+            fromdate1 = $('#txtFromDate1').val();
+        else
+            fromdate1 = "1990-01-01";
+
+        if ($('#txtToDate1').val() != "")
+            todate1 = $('#txtToDate1').val();
+        else
+            todate1 = "2099-12-31";
+
+        if ($('#txtDueDateFrom1').val() != "")
+            dueDate1 = $('#txtDueDateFrom1').val();
+        else
+            dueDate1 = "1990-01-01";
+
+        if ($('#txtDueDateTo').val() != "")
+            dueDateTo = $('#txtDueDateTo').val();
+        else
+            dueDateTo = "2099-12-31";
+
+        if ($('#ddlPerson option:selected').val() != "All" && !$('#ddlPersonAll').prop('checked'))
+            filter = $('#ddlPerson option:selected').val();
+        else if ($('#ddlPersonAll:checked'))
+            filter = "";
+
+
+        if ($('.summary:checked').val().toString() == "D" || $('.summary:checked').val().toString() == "P") {
+            summaryBy = $('.summary:checked').val().toString();
+        } else {
+            summaryBy = "";
+        }
+        IsPersonDueDate = IsPastDue = false;
+
+        if ($('#personsDueDate:checked').length > 0) {
+            IsPersonDueDate =  true;
+        }
+        if ($('#pastDue:checked').length > 0) {
+            IsPastDue = true;
+        }
+
+       
+        if (summaryBy == "") {
+            BindBagsGivenToPerson(fromdate1, todate1, summaryBy, filter, dueDate1, dueDateTo, IsPastDue, IsPersonDueDate);
+        }
+        else
+        {
+            BindBagsFiltredGivenToPerson(fromdate1, todate1, summaryBy, filter, dueDate1, dueDateTo, IsPastDue, IsPersonDueDate);
+        }
+    }
+
+    function BindBagsGivenToPerson(fromdate1, todate1, summaryBy, filter, dueDate1, dueDateTo, IsPastDue, IsPersonDueDate) {
+        var url = '@Url.Action("getlistofopenjobstoeachperson", "SalesShopControl", new { Area = "" })';
+
+        var data = {
+            fromdate: fromdate1,
+            todate: todate1,
+            summaryBy: summaryBy,
+            filter: filter,
+            frmDueDate: dueDate1,
+            toDueDate: dueDateTo,
+            IsPastDue: IsPastDue,
+            IsPersonDueDate: IsPersonDueDate
+        };
+
+        var jqxhr = $.post(url, data, function () { })
+            .done(function (response) {
+                $('#divDataFiltredTableReport').hide();
+                $('#divDataTableReport').show();
+            var json;
+            if (response instanceof Object)
+                json = response;
+
+            else
+                json = $.parseJSON(response);
+
+            var table = $('#dataTableForListofJobToEachPerson').DataTable();
+            table.clear().draw();
+
+            $("#dataTableForListofJobToEachPerson tbody").empty();
+            var trans = json;
+            var totalPrice = 0;
+            var tr;
+            //alert(json);
+            for (var i = 0; i < json.length; i++) {
+                //totalPrice += parseFloat(json[i].PRICE);
+                table.row.add([
+                    json[i].JOB_NO,
+                    json[i].DATE ? json[i].DATE.split('T')[0]:'',
+                    json[i].TIME,
+                    json[i].PCs,
+                    json[i].PERSON,
+                    json[i].DEPT,
+                    json[i].TRANSACT,
+                    json[i].STYLE,
+                    json[i].LOG_NO,
+                    json[i].STORE,
+                    json[i].DueDate ? json[i].DueDate.split("T")[0] : ''
+                ]);
+            }
+
+            table.draw();
+            //addNumericColumnsClasstoDT("dataTableForBagsGivenToPerson", [1]);
+
+            // TODO : Bind data to table
+        })
+        .fail(function (jqxhr, textStatus, error) {
+            var err = textStatus + "," + error;
+            console.log("GETBagsGivenToPerson Request Failed: " + err);
+        });
+    }
+
+    function BindBagsFiltredGivenToPerson(fromdate1, todate1, summaryBy, filter, dueDate1, dueDateTo, IsPastDue, IsPersonDueDate) {
+
+        var url = '@Url.Action("GetFilteredSummarizedListofOpenJobs", "SalesShopControl", new { Area = "" })';
+        var data = {
+            fromdate: fromdate1,
+            todate: todate1,
+            summaryBy: summaryBy,
+            filter: filter,
+            frmDueDate: dueDate1,
+            toDueDate: dueDateTo,
+            IsPastDue: IsPastDue,
+            IsPersonDueDate: IsPersonDueDate
+        };
+
+        if (summaryBy == "P") {
+            $('#Filter').text ("Person");
+        } else {
+            $('#Filter').text("Department");
+        }
+
+        var jqxhr = $.post(url, data, function () { })
+        .done(function (response) {
+            $('#divDataFiltredTableReport').show();
+            $('#divDataTableReport').hide();
+            var json
+            if (response instanceof Object) {
+                json = response;
+            } else {
+                json = $.parseJSON(response);
+            }
+
+            var table = $('#dataTableForFilteredListofJobToEachPerson').DataTable();
+            table.clear().draw();
+
+            $("#dataTableForFilteredListofJobToEachPerson tbody").empty();
+            $('#dataTableForFilteredListofJobToEachPerson_wrapper').css('width','100%')
+            var trans = json;
+            var totalPrice = 0;
+            var tr;
+
+            for (var i = 0; i < json.length; i++) {
+
+                table.row.add([
+                    json[i].FILTER,
+                    json[i].Job_Count ? json[i].Job_Count : json[i]["No. of JOB"],
+                    json[i].PCs
+                ]);
+            }
+            table.draw();
+            //addNumericColumnsClasstoDT("dataTableForBagsGivenToPerson", [1]);
+            // TODO : Bind data to table
+        })
+        .fail(function (jqxhr, textStatus, error) {
+            var err = textStatus + ", " + error;
+            console.log("GETBagsGivenToPerson Request Failed: " + err);
+        });
+    }
+
+    function fillDueDateFromDueDateToDates() {
+        if ($("#cbFillFromToDates1").prop('checked')) {
+            if ($('#txtDueDateFrom1').length > 0) {
+                $('#txtDueDateFrom1').val('1900-01-01').prop('disabled', 'true');
+                $('#txtDueDateTo').val('2098-12-31').prop('disabled', 'true');
+            }
+            for (i = 1; i <= 5; i++) {
+                $('#txtDueDateFrom1' + i).val('1900-01-01').prop('disabled', 'true');
+                $('#txtDueDateTo' + i).val('2098-12-31').prop('disabled', 'true');
+            }
+        } else {
+            var now = new Date();
+            var day = ("0" + now.getDate()).slice(-2);
+            var month = ("0" + (now.getMonth() + 1)).slice(-2);
+
+
+            var today = now.getFullYear() + "-" + (month) + "-" + (day);
+            console.log(today)
+            if ($('#txtDueDateFrom1').length > 0) {
+                $('#txtDueDateFrom1').val('2000-01-01').removeAttr('disabled');
+                $('#txtDueDateTo').val(today).removeAttr('disabled');
+            }
+            for (i = 1; i <= 5; i++) {
+                $('#txtDueDateFrom1' + i).val('2000-01-01').removeAttr('disabled');
+                $('#txtDueDateTo' + i).val(today).removeAttr('disabled');
+            }
+        }
+        if ($("#btnFormResultsSearch").length > 0) {
+            buttonStyleClassChange('btnFormResultsSearch');
+        }
+    }
+
+    function getFilterListOfPersons(filter) {
+        var url = '@Url.Action("GetPersonsFilterList", "SalesShopControl", new{Area = ""})';
+
+        var filterVal;
+        if (filter == "D") {
+            filterVal = "Dept";
+            $('#ddlPersonLabel').text('Department');
+        } else {
+            filterVal = "NAME";
+            $('#ddlPersonLabel').text('Person');
+        }
+        var data = {
+            filter: filterVal
+        }
+
+        var jqxhr = $.post(url, data, function () { })
+            .done(function (response) {
+                var json;
+                if (response instanceof Object) {
+                    json = response;
+                } else {
+                    json = $.parseJSON(response);
+                }
+                $('#ddlPerson').empty();
+
+                for (var i = 0; i < json.length; i++) {
+                    //console.log(json[i]['Filter']);
+                    $('#ddlPerson').append($('<option>').val(json[i]['Filter']).text(json[i]['Filter']));
+                }
+            })
+            .fail(function (jqxhr, textStatus, error) {
+                var error = textStatus + ", " + error;
+                console.log("GETBagsGivenToPerson Request Failed: " + error);
+            });
+    }
+
+
+    $(document).ready(function () {
+
+        $('#divDataFiltredTableReport').hide();
+        $('#divDataTableReport').hide();
+
+        if ($('#ddlPersonAll').prop('checked') || $('#summaryAll').prop('checked') ) {
+            $('#ddlPerson').prop('disabled', true);
+        }
+
+        $(document).on('change', '#ddlPersonAll', function () {
+            if ($('#ddlPersonAll').prop('checked') ) {
+                $('#ddlPerson').prop('disabled', true);
+            } else {
+                $('#ddlPerson').prop('disabled', false);
+            }
+        });
+
+        var table = $('#dataTableForListofJobToEachPerson').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 25,
+            "aaSortig":[]
+        })
+        var table = $('#dataTableForFilteredListofJobToEachPerson').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 25,
+            "aaSorting": []
+        })
+        fillFromToDates();
+        fillDueDateFromDueDateToDates();
+
+        $('#filteredbtnDataTablePreview').off('click').on('click', function () {
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+            const tablesSubHeadings = $(this).attr("table-sub-headings");
+            previewDiv(tableid, tablesCount, tablesSubHeadings);
+        });
+
+        $(document).on('click', '#ListofJobToEachPersonBtnDataTablePrint', function () {
+            reportFormat = "";
+            if ($(this).attr('report-format') !== undefined) {
+                reportFormat = $(this).attr('report-format');
+            }
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+            const tablesSubHeadings = $(this).attr("table-sub-headings");
+
+            printDiv(tableid, tablesCount, tablesSubHeadings, "" , reportFormat);
+        })
+
+        $(document).on('click', '#ListofFiltredJobToEachPersonBtnDataTablePrint', function () {
+            reportFormat = "";
+            if ($(this).attr('report-format') !== undefined) {
+                reportFormat = $(this).attr('report-format');
+            }
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+            const tablesSubHeadings = $(this).attr("table-sub-headings");
+
+            printDiv(tableid, tablesCount, tablesSubHeadings, "", reportFormat);
+        })
+
+        $(document).on('change', '.summary', function () {
+            var filter;
+
+
+            $('#ddlPersonAll').prop('checked', true);
+
+            if ($('#ddlPersonAll').prop('checked')) {
+                $('#ddlPerson').prop('disabled', true);
+            }
+            else {
+                $('#ddlPerson').prop('disabled', false);
+            }
+
+            if ($('.summary:checked').val() != "all") {
+                filter = $('.summary:checked').val().toString();
+            }
+
+            getFilterListOfPersons(filter);
+        })
+
+        $(document).on('click', '#cbFillFromToDates1', function () {
+            fillDueDateFromDueDateToDates();
+        })
+
+
+
+    });
+
+
+
+
+</script>
+
+

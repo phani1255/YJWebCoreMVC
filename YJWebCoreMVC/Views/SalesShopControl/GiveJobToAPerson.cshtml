@@ -1,0 +1,350 @@
+<!--
+  * Created by Phanindra 16-Oct-2025
+    Phanindra 10/24/2025 Changed an ajax call to POST for saving job bag details
+    Phanindra 10/26/2025 Worked on fixing issues
+    Phanindra 11/04/2025 Worked on issues
+    Phanindra 11/10/2025 Worked on issues
+    Phanindra 11/19/2025 Worked on Print Job, date and readonly related issues
+    Phanindra 12/02/2025 Worked on report load and other issues
+-->
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<div id="content-center" class="row">
+
+    <div class="web-form page login-page col-sm-12">
+
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-2">
+                            Log# :
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" id="jobLogNo" class="form-control" value="@ViewBag.logNo" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">Person:</label>
+                        <div class="col-sm-6">
+                            @Html.DropDownList("setter", (IEnumerable<SelectListItem>)Model.setters, new { @class = "form-control", @id = "ddlSetters" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Due Date# :
+                        </label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtDueDate" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-9">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="chkRcvdBack">
+                        <label class="form-check-label" for="chkRcvdBack">
+                            If a job is already with another person, mark it as received back.
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="well empty-well">
+                        <table class="dataTable display nowrap table tblHistory">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Job</th>
+                                    <th>Note</th>
+                                    <th>Qty</th>
+                                    <th>PON</th>
+                                    <th>Style</th>
+                                    <th>Open</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody class="GivejobLine"></tbody>
+
+                        </table>
+                        <div class='addRowGiveJobsBox text-center w-100'>Click to add Row</div>
+                        <input type="hidden" name="autonumforstyles" id="autonumforstyles" value="0" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class=" text-right">
+                        <input type="button" id="gotoHome" value="Close" class="formsGlobalUniqueCloseBtn" />
+                        <input type="button" id="btnSaveGiveOutJobs" value="Save" class="formsGlobalUniqueBtn" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        flatpickr("#txtDueDate", {
+            dateFormat: "m/d/Y",
+            defaultDate: new Date()
+        });
+
+    });
+
+    $(document).on('click', '#gotoHome', function () {
+        if (confirm("Ok to Discard the changes and Close This Form ?")) {
+            window.location.href = "../Home/Index";
+        }
+    })
+
+    $(document).on('click', '.delete_a_line', function () {
+        var index = $(this).data('index-number');
+        $(".rowIndex" + index).remove();
+    })
+
+    $(document).on('click', '.addRowGiveJobsBox', function () {
+
+        autonumforstyles = $("#autonumforstyles").val();
+        var newIndex = parseInt(autonumforstyles) + 1;
+        giveJobRow = "<tr class='repairLineRow rowIndex" + newIndex + "' data-row-id='" + newIndex + "'>";
+        giveJobRow += "<td class='selectRepairLine'><span>&rarr;</span></td>";
+        giveJobRow += "<td class='w-120px'><input type='text' class='jobNo form-control w-120px' id='jobNo_" + newIndex + "' data-index='" + newIndex + "' data-alerted='false' value=''></td>";
+        giveJobRow += "<td class='w-120px'><input type='text' class='form-control Notes w-120px' ></td>";
+        giveJobRow += "<td><input type='text' class='form-control JobQty' ></td>";
+        giveJobRow += "<td class='w-100px'><input type='text' class='form-control repPON w-100px' readonly></td>";
+        giveJobRow += "<td class='w-100px'><input type='text' class='form-control repStyle w-100px' readonly></td>";
+        giveJobRow += "<td class='w-100px'><input type='text' class='form-control repOpen w-100px' readonly ></td>";
+        giveJobRow += "<td><button class='btn btn-danger btn-sm delete_a_line' data-index-number='" + newIndex + "'><i class='fas fa-trash'></i ></button></td > ";
+        giveJobRow += "</tr>";
+        $(".GivejobLine").append(giveJobRow);
+        $("#autonumforstyles").val(newIndex);
+
+        $("#jobNo_" + newIndex).focus();
+    })
+
+    $(document).on('click', '#btnSaveGiveOutJobs', function () {
+        const person = $('#ddlSetters').val();
+        const jobBagNo = $('#jobLogNo').val();
+        const dueDate = $('#txtDueDate').val();
+        const isReceivedBack = $('#chkRcvdBack').is(':checked');
+        const deletedList = []; // if you track deleted jobbags client-side
+
+        // Collect all rows
+        const jobBagItems = [];
+        $('.repairLineRow').each(function () {
+            const jobNo = $(this).find('.jobNo').val();
+            const qty = parseFloat($(this).find('.JobQty').val()) || 0;
+            const style = $(this).find('.repStyle').val();
+            const openQty = parseFloat($(this).find('.repOpen').val()) || 0;
+            const notes = $(this).find('.Notes').val();
+            const repPON = $(this).find('.repPON').val();
+
+            if (jobNo) {
+                jobBagItems.push({
+                    JobNo: jobNo,
+                    Qty: qty,
+                    Style: style,
+                    OpenQty: openQty,
+                    Notes: notes,
+                    Pon: repPON
+                });
+            }
+        });
+
+        if (!person) {
+            alert("Person cannot be blank.");
+            return;
+        }
+
+        if (!jobBagNo) {
+            alert("Log No. cannot be blank.");
+            return;
+        }
+
+        if (jobBagItems.length === 0) {
+            alert("No items to save.");
+            return;
+        }
+
+        //printGiveJobToAPerson('413555', person);
+        //return
+        $.ajax({
+            url: '../SalesShopControl/SaveGiveJobToPerson',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                JobBagNo: jobBagNo,
+                Person: person,
+                IsReceivedBack: isReceivedBack,
+                DueDate: dueDate,
+                JobBagItems: jobBagItems,
+                DeletedJobBags: deletedList
+            }),
+            success: function (response) {
+                if (response.success) {
+                    alert(response.message);
+                    printGiveJobToAPerson(jobBagNo, person);
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function (xhr) {
+                console.error(xhr);
+                alert("An error occurred while saving job bag details.");
+            }
+        });
+    });
+
+
+    $(document).on('blur', '.jobNo', function () {
+        const jobBagNo = $(this).val().trim();
+        const $row = $(this).closest('tr');
+        const person = $('#ddlSetters').val();
+
+        if (jobBagNo === '') return;
+
+        $.ajax({
+            url: '../SalesShopControl/loadGiveJobBagDetails',
+            type: 'GET',
+            data: {
+                jobBagNo: jobBagNo,
+                isReceivedBack: $('#chkRcvdBack').is(':checked'),
+                person: person
+            },
+            success: function (response) {
+                if (!response.success) {
+                    alert(response.message);
+                    $row.find('.jobNo').val('').focus();
+                    $row.find('.repStyle, .JobQty, .repOpen, .repPON').val('');
+                    return;
+                }
+
+                const data = response.data;
+                $row.find('.jobNo').val(data.jobNo);
+                $row.find('.JobQty').val(data.Qty);
+                $row.find('.repOpen').val(data.open);
+                $row.find('.repStyle').val(data.Style);
+                $row.find('.repPON').val(data.pon);
+            },
+            error: function (xhr) {
+                console.error(xhr);
+                alert('An error occurred while validating the job bag.');
+            }
+        });
+    });
+
+    $(document).on('blur', '.JobQty', function () {
+        const $row = $(this).closest('tr');
+        const enteredQty = parseFloat($(this).val()) || 0;
+        const openQty = parseFloat($row.find('.repOpen').val()) || 0;
+
+        if (enteredQty !== 0 && enteredQty !== openQty) {
+            alert("Qty should be 0 or " + openQty + ".");
+            $(this).val(openQty); // Reset to correct value
+            $(this).focus();
+            return false;
+        }
+    });
+
+    $(document).on('click', '.closeModal', function () {
+        window.location.href = "../Home/Index";
+    })
+
+
+    function formatDate(dotNetDate) {
+        if (!dotNetDate) return "";
+        const timestamp = parseInt(dotNetDate.replace(/[^0-9]/g, ""));
+        const date = new Date(timestamp);
+        return date.toLocaleDateString("en-GB");
+    }
+
+    //printGiveJobToAPerson("132");
+    function printGiveJobToAPerson(jobBagNo, settername) {
+        $("#firstCommonBsModalLabel").html("Print JobBag Details");
+        $('#firstCommonBsModal .modal-body').html("Loading...");
+        $("#firstCommonBsModal").show();
+        $("#firstCommonBsModal").addClass("show");
+
+        $.ajax({
+            url: "../SalesShopControl/PrintGiveJobToAPerson",
+            type: 'post',
+            data: {
+                jobbagno: jobBagNo,
+                settername: settername
+            },
+            success: function (result) {
+                $('#firstCommonBsModal .modal-body').html(result);
+            },
+            error: function () {
+                alert("An error occurred while fetching the JobBag details.");
+            },
+            complete: function () {
+                $('body').removeClass('loading');
+                $('body').addClass('loaded');
+            }
+        });
+    }
+
+</script>
+<style>
+    .col-5ths {
+        flex: 0 0 20%;
+        max-width: 20%;
+    }
+
+    ul.radButtonsList {
+        margin: 0px;
+        padding: 0px;
+        list-style-type: none;
+    }
+
+        ul.radButtonsList li {
+            list-style: none;
+            float: left;
+            width: 20%;
+        }
+
+    .empty-well {
+        min-height: 200px;
+        margin-bottom: 10px;
+    }
+
+    ul.radButtonsList li button {
+        width: 96%;
+        margin-bottom: 15px;
+    }
+
+    .addRowGiveJobsBox {
+        background: #f5f5f5;
+        padding: 5px;
+    }
+
+    #txtDueDate {
+        background-image: url("../images/calender-icon.png");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        background-size: 18px;
+        padding-right: 35px; /* so text does not overlap icon */
+        background: #fff;
+    }
+</style>
+

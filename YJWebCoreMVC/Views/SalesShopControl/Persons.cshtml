@@ -1,0 +1,564 @@
+﻿<!--
+    Created By Dharani 10/09/2025
+-->
+
+@{
+    ViewBag.Title = "ADD / EDIT A PERSON";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="content-center" class="row">
+    <div class="mt-4 white-box pos-rel" id="divDataTableReport" style="width:100%">
+        <h4 class="text-center mt-3 mb-4 font-weight-bold bg-success text-white p-1 rounded">ADD / EDIT A PERSON</h4>
+        <div class="row dataTableReport">
+            <table id="dataTableForAddEditPersons" class="dataTable display nowrap table" style="width:100%">
+                <thead>
+                    <tr>
+                        <th class="w-55px">PERSONS</th>
+                        <th class="w-55px">FAVORITE</th>
+                        <th class="w-55px">DEPT</th>
+                        <th class="w-55px">G/L CODE</th>
+                        <th class="w-55px">G/L ACCNAME</th>
+                        <th class="w-55px">EMP CODE</th>
+                        <th class="w-55px">INACTIVE</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot>
+                    <tr>
+                    </tr>
+                </tfoot>
+            </table>
+            <table class="d-none" id="dataTableForAddEditPersonsPrint">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Freq Used</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <div id="btnAddNewRow" class="col-sm-12 text-center mt-2 text-muted" style="cursor:pointer;">
+                Click here to add a new row
+            </div>
+        </div>
+        <div class="d-flex justify-content-between mt-4">
+            <div class="d-flex gap-2" id="reportButtons">
+                <div style="margin:3px;">
+                    <input type="button" value="PDF" table-id="dataTableForAddEditPersons" class="formsGlobalUniqueBtn" id="btnPDF" />
+                </div>
+                <div style="margin:3px;">
+                    <input type="button" value="Excel" table-id="dataTableForAddEditPersons" class="formsGlobalUniqueBtn btnDataTableDownloadExcel" id="btnExcel" />
+                </div>
+                <div style="margin:3px;">
+                    <input type="button" value="Preview" table-id="dataTableForAddEditPersonsPrint" class="formsGlobalUniqueBtn" id="btnDataTablePreview1" />
+                </div>
+                <div style="margin:3px;">
+                    <input type="button" value="Print" table-id="dataTableForAddEditPersons" report-format="portrait" class="formsGlobalUniqueBtn" id="btnPrint" />
+                </div>
+                <div style="margin:3px;display:none;">
+                    <input type="button" value="Email" class="formsGlobalUniqueBtn" />
+                </div>
+                <div style="margin:3px;display:none;">
+                    <input type="button" value="Simple Excel" class="formsGlobalUniqueBtn" />
+                </div>
+            </div>
+            <div class="d-flex gap-4">
+                <button type="button" id="btnDelete" class="btn btn-warning">🗑️ Delete</button>
+                <button type="button" id="btnOk" class="btn btn-success">✅ Ok</button>
+                <button type="button" id="btnCancel" class="btn btn-danger">❌ Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    let tableData = [];
+    let glCodes = [];
+    let empCodes = [];
+    let deptCodes = [];
+
+    function loadDropdownData() {
+        return $.when(
+            $.get('@Url.Action("GetGLCodes", "SalesShopControl")', function (res) {
+                glCodes = typeof res === 'object' ? res : $.parseJSON(res);
+            }),
+            $.get('@Url.Action("GetEmpCodes", "SalesShopControl")', function (res) {
+                empCodes = typeof res === 'object' ? res : $.parseJSON(res);
+            }),
+            $.get('@Url.Action("GetDeptCodes", "SalesShopControl")', function (res) {
+                deptCodes = typeof res === 'object' ? res : $.parseJSON(res);
+            })
+        );
+    }
+
+    function renderRow(row = null) {
+        const selectedGL = row?.gl_code ?? "";
+        const selectedEmp = row?.LoginCode ?? "";
+        const selectedDept = row?.DEPT ?? "";
+
+        const glExists = glCodes.some(gl => gl.ACC === selectedGL);
+        const glOptions = (glExists
+            ? glCodes.map(gl => `<option value="${gl.ACC}" ${gl.ACC === selectedGL ? "selected" : ""}>${gl.ACC} - ${gl.Name}</option>`).join('')
+            : `<option value="" selected></option>` + glCodes.map(gl => `<option value="${gl.ACC}">${gl.ACC} - ${gl.Name}</option>`).join('')
+        );
+
+        const empExists = empCodes.some(emp => emp.code === selectedEmp);
+        const empOptions = (empExists
+            ? empCodes.map(emp => `<option value="${emp.code}" ${emp.code === selectedEmp ? "selected" : ""}>${emp.code}</option>`).join('')
+            : `<option value="" selected></option>` + empCodes.map(emp => `<option value="${emp.code}">${emp.code}</option>`).join('')
+        );
+        const deptExists = deptCodes.some(dept => dept.Dept === selectedDept);
+        const deptOptions = (deptExists
+            ? deptCodes.map(dept => `<option value="${dept.Dept}" ${dept.Dept === selectedDept ? "selected" : ""}>${dept.Dept}</option>`).join('')
+            : `<option value="" selected></option>` + deptCodes.map(dept => `<option value="${dept.Dept}">${dept.Dept}</option>`).join('')
+        );
+
+        return `
+            <tr>
+                <td class="name-input"><input type="text" class="form-control" value="${row?.NAME ?? ""}" style="text-transform:uppercase;" /></td>
+                <td><input type="checkbox" class="freqChk" ${row?.freq_used ? "checked" : ""}/></td>
+                <td>
+                    <select class="form-control dept-select" maxlength="20" style="text-transform:uppercase;">${deptOptions}</select>
+                </td>
+                <td>
+                    <select class="form-control gl-select">${glOptions}</select>
+                </td>
+                <td><input type="text" class="form-control acc-name-cell" value="${row?.accname ?? ""}" maxlength="20" style="text-transform:uppercase;" /></td>
+                <td>
+                    <select class="form-control emp-select">${empOptions}</select>
+                </td>
+                <td><input type="checkbox" class="inactiveChk" ${row?.InActive ? "checked" : ""}/></td>
+            </tr>`;
+    }
+
+    function fetchAndRender() {
+        $.post('@Url.Action("GetAllSetters", "SalesShopControl")', function (response) {
+            tableData = typeof response === 'object' ? response : $.parseJSON(response);
+
+            let content = "";
+            tableData.forEach(row => {
+                content += renderRow(row);
+            });
+
+            $('#dataTableForAddEditPersons tbody').html(content);
+
+            printContent = "";
+            for (i = 0; i < tableData.length; i++) {
+                printContent += "<tr>";
+                printContent += "<td>" + tableData[i].NAME + "</td>";
+                printContent += "<td>" + ((tableData[i].freq_used) ? "Yes" : "NO") + "</td>";
+                printContent += "</tr>";
+            }
+            $("#dataTableForAddEditPersonsPrint tbody").html(printContent);
+
+            console.log('Rendered ' + tableData.length + ' rows');
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            console.error('Error fetching data: ' + textStatus + ' ' + errorThrown);
+        });
+    }
+    function getCustomHeader() {
+        var Title = "LIST OF SETTERS";
+        var currentDateTime = new Date().toLocaleString('en-US', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        });
+        let customHeaderText = "";
+        let containerHtml = "";
+
+        if (containerHtml == "" && !containerHtml) {
+            containerHtml = `
+                <div>
+                    <div class="row" style="width:100%; display:flex; justify-content:center">
+                        <h4 class="item" id="" style="text-align:center; flex-grow:1;">${Title}</h4>
+                    </div>
+                    <div class="header-container" style="width:100%; display:flex; flex-direction:row; align-items:center; margin-bottom:10px; position:relative;">
+                        <h6 class="item" id="curDate" style="margin-left:auto; white-space:nowrap;">${currentDateTime}</h6>
+                    </div>
+                </div>`;
+        }
+    }
+    $('#btnAddNewRow').click(function () {
+        const newRowHtml = renderRow();
+        $('#dataTableForAddEditPersons tbody').append(newRowHtml);
+    });
+
+    function previewDiv1(tableid, tablesCount, tablesSubHeadings, customHeader) {
+        // Get table data
+        const $table = $('#' + tableid);
+        if ($table.length === 0) {
+            alert("Preview table not found.");
+            return;
+        }
+
+        // Build HTML content for preview
+        let previewContent = `
+            <html>
+                <head>
+                    <title>Preview - LIST OF SETTERS</title>
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                            padding: 20px;
+                            background-color: #f8f9fa;
+                            color: #333;
+                        }
+                        .preview-container {
+                            background: #fff;
+                            padding: 20px;
+                            border-radius: 10px;
+                            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+                            max-width: 900px;
+                            margin: auto;
+                        }
+                        h4 {
+                            text-align: center;
+                            font-size: 18px;
+                            margin-bottom: 5px;
+                            text-transform: uppercase;
+                        }
+                        h6 {
+                            text-align: center;
+                            margin-top: 0;
+                            color: #555;
+                        }
+                        table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            margin-top: 20px;
+                            font-size: 14px;
+                        }
+                        th, td {
+                            border: 1px solid #ccc;
+                            padding: 6px 8px;
+                            text-align: left;
+                        }
+                        th {
+                            background-color: #e9ecef;
+                            text-transform: uppercase;
+                        }
+                        .btn-print {
+                            display: inline-block;
+                            margin-top: 20px;
+                            padding: 8px 16px;
+                            background: #198754;
+                            color: white;
+                            border: none;
+                            border-radius: 5px;
+                            cursor: pointer;
+                        }
+                        .btn-close {
+                            display: inline-block;
+                            margin-top: 20px;
+                            margin-left: 10px;
+                            padding: 8px 16px;
+                            background: #dc3545;
+                            color: white;
+                            border: none;
+                            border-radius: 5px;
+                            cursor: pointer;
+                        }
+                        @@media print {
+                            .btn-print, .btn-close { display: none; }
+                            body { background: white; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="preview-container">
+                        ${customHeader ? customHeader : '<h4>LIST OF SETTERS</h4>'}
+                        <table>
+                            ${$table.find('thead').html() ?? ''}
+                            ${$table.find('tbody').html() ?? ''}
+                        </table>
+                        <div style="text-align:center;">
+                            <button class="btn-close" onclick="window.close()">❌ Close</button>
+                        </div>
+                    </div>
+                </body>
+            </html>
+        `;
+
+        const previewWindow = window.open('', '_blank', 'width=1000,height=700,scrollbars=yes');
+        previewWindow.document.open();
+        previewWindow.document.write(previewContent);
+        previewWindow.document.close();
+    }
+
+
+    $(document).ready(function () {
+
+        var table = $('#dataTableForAddEditPersons').DataTable({
+            dom: 'lfrtip',
+            searching: false,
+            paging: false,
+            ordering: false,
+            info: false
+        });
+
+        loadDropdownData().done(fetchAndRender);
+        $('#previewContentModal').on('hidden.bs.modal', function () {
+            fetchAndRender();
+            $(".main-content").show();
+        });
+
+        $(document).on('input', '.name-input input', function () {
+            this.value = this.value.toUpperCase();
+        });
+
+
+        $(document).on('change', '.gl-select', function () {
+            const $row = $(this).closest('tr');
+            const selectedAcc = $(this).val();
+            const gl = glCodes.find(g => g.ACC === selectedAcc);
+            $row.find('.acc-name-cell').val(gl ? gl.Name : '');
+        });
+
+        $(document).on('change', '.emp-select', function () {
+            const selectedCode = $(this).val();
+            let duplicate = false;
+            $('.emp-select').not(this).each(function () {
+                if ($(this).val() === selectedCode && selectedCode !== "") duplicate = true;
+            });
+            if (duplicate) {
+                alert("Employee Code Already Used for Another Person");
+                $(this).val("");
+            }
+        });
+
+        $(document).on('blur', '.dept-input', function () {
+            const dept = $(this).val().trim();
+            if (dept === "") {
+                alert("Enter Department");
+                $(this).focus();
+                return;
+            }
+
+            $.post('@Url.Action("CheckValidMfgDept", "SalesShopControl")', { dept: dept }, function (isValid) {
+                if (!isValid) {
+                    alert("Invalid Department");
+                    $(this).val("").focus();
+                }
+            });
+        });
+
+        $(document).on('click', '#btnOk', function () {
+            let persons = [];
+            let isValid = true;
+
+            $('#dataTableForAddEditPersons tbody tr').each(function () {
+                const name = $(this).find('.name-input input').val() ?? "";
+                const dept = $(this).find('.dept-select').val() ?? "";
+                const gl_code = $(this).find('.gl-select').val() ?? "";
+                const accname = $(this).find('.acc-name-cell').val() ?? "";
+                const LoginCode = $(this).find('.emp-select').val() ?? "";
+                const freq_used = $(this).find('.freqChk').is(':checked');
+                const InActive = $(this).find('.inactiveChk').is(':checked');
+
+                if (!name) return;
+
+                if (!dept) {
+                    alert(`Enter Department for ${name}`);
+                    $(this).find('.dept-select').focus();
+                    isValid = false;
+                    return false;
+                }
+
+                persons.push({
+                    NAME: name,
+                    freq_used: freq_used,
+                    DEPT: dept,
+                    gl_code: gl_code,
+                    accname: accname,
+                    LoginCode: LoginCode,
+                    InActive: InActive
+                });
+            });
+
+            if (!isValid) return;
+
+            $.ajax({
+                url: '@Url.Action("SavePersons", "SalesShopControl")',
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({ persons }),
+                success: function (res) {
+                    if (res.success) {
+                        alert("Person Updated Successfully");
+                        fetchAndRender();
+                        window.location.href = '/Home/Index';
+                    } else {
+                        alert(res.error || "Error while saving");
+                    }
+                },
+                error: function () {
+                    alert("Server Error while saving");
+                }
+            });
+        });
+
+        $(document).on('click', '#dataTableForAddEditPersons tbody tr', function () {
+            $(this).toggleClass('selected').siblings().removeClass('selected');
+        });
+
+        $(document).on('click', '#btnDelete', function () {
+            const $selectedRow = $('#dataTableForAddEditPersons tbody tr.selected');
+            if ($selectedRow.length === 0) {
+                alert("Please select a row to delete.");
+                return;
+            }
+            const name = $selectedRow.find('.name-input input').val() || $selectedRow.find('.name-input').text();
+
+            if (!confirm(`Are you sure you want to delete ${name}?`)) return;
+
+            $.post('@Url.Action("DeletePerson", "SalesShopControl")', { name: name }, function (res) {
+                if (res.success) {
+                    alert("Person deleted successfully.");
+                    fetchAndRender();
+                    window.location.href = '/Home/Index';
+                } else {
+                    alert(res.error || "Could not delete the person.");
+                }
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                console.error('Error deleting person:', textStatus, errorThrown);
+                alert("Server error while deleting person.");
+            });
+        });
+
+        $(document).on('click', '#btnCancel', function () {
+            window.location.href = '/Home/Index';
+        });
+
+        function printPersonsTable(tableId) {
+            let $table = $('#' + tableId);
+            let $printTable = $('<table class="table table-bordered"></table>');
+
+            $printTable.append(`<thead><tr><th>NAME:</th><th>Freq Used:</th></tr></thead>`);
+
+            let $tbody = $('<tbody></tbody>');
+            $table.find('tbody tr').each(function () {
+                const name = $(this).find('td').eq(0).find('input').val()?.trim() ?? "";
+                const freq = $(this).find('td').eq(1).find('input:checkbox').is(':checked') ? 'Yes' : 'No';
+                $tbody.append(`<tr><td>${name}</td><td>${freq}</td></tr>`);
+            });
+            $printTable.append($tbody);
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0');
+            var yyyy = today.getFullYear();
+            var formattedDate = `${mm}/${dd}/${yyyy}-`;
+            $('.printableContent').empty()
+                .append(`<h4 style="text-align:center; margin-bottom: 0.2em;">LIST OF SETTERS</h4>`)
+                .append(`<div style="text-align:center; margin-bottom: 1em;">DATE: ${formattedDate}</div>`)
+                .append($printTable);
+
+            $(".main-content").hide();
+            window.print();
+            $(".main-content").show();
+            $('.printableContent').empty();
+        }
+
+        function exportPersonsTableToExcel(tableId, fileName = "LIST OF SETTERS") {
+            let $table = $('#' + tableId);
+            let $exportTable = $('<table></table>');
+            $exportTable.append(`<thead><tr><th>NAME:</th><th>Freq Used:</th></tr></thead>`);
+
+            let $tbody = $('<tbody></tbody>');
+            $table.find('tbody tr').each(function () {
+                const name = $(this).find('td').eq(0).find('input').val()?.trim() ?? "";
+                const freq = $(this).find('td').eq(1).find('input:checkbox').is(':checked') ? 'Yes' : 'No';
+                $tbody.append(`<tr><td>${name}</td><td>${freq}</td></tr>`);
+            });
+            $exportTable.append($tbody);
+
+            const wb = XLSX.utils.table_to_book($exportTable[0], { sheet: "Sheet1" });
+            XLSX.writeFile(wb, fileName + '.xlsx');
+        }
+
+        async function exportPersonsTableToPDF(tableId, fileName = "LIST OF SETTERS") {
+            let $table = $('#' + tableId);
+            let tableData = [];
+
+            tableData.push(["NAME:", "Freq Used:"]);
+
+            $table.find('tbody tr').each(function () {
+                const name = $(this).find('td').eq(0).find('input').val()?.trim() ?? "";
+                const freq = $(this).find('td').eq(1).find('input:checkbox').is(':checked') ? 'Yes' : 'No';
+                tableData.push([name, freq]);
+            });
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            doc.setFontSize(16);
+            doc.text("LIST OF SETTERS", 105, 15, { align: "center" });
+
+            doc.autoTable({
+                startY: 22,
+                head: [tableData[0]],
+                body: tableData.slice(1),
+                styles: { fontSize: 8, cellPadding: 1 },
+            });
+
+            doc.save(fileName + '.pdf');
+        }
+        $('#btnDataTablePreview1').on('click', function () {
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+            const tablesSubHeadings = $(this).attr("table-sub-headings");
+
+            const customHeader = getCustomHeader();
+
+            previewDiv1(tableid, tablesCount, tablesSubHeadings, customHeader);
+        });
+        $('#btnPrint').click(function () { printPersonsTable($(this).attr("table-id")); });
+        $('#btnExcel').click(function () { exportPersonsTableToExcel($(this).attr("table-id")); });
+        $('#btnPDF').click(function () { exportPersonsTableToPDF($(this).attr("table-id")); });
+
+    });
+</script>
+
+<style>
+    #content-center {
+        max-width: 920px;
+        margin: 0px auto;
+    }
+
+    .checkColumns {
+        text-align: center !important;
+    }
+
+    .form-horizontal .row {
+        padding-left: 0;
+    }
+
+    .form-horizontal label {
+        padding-left: 0;
+    }
+
+    .narrow-input {
+        width: 170px;
+    }
+
+    #btnClose {
+        border-radius: 6px;
+    }
+
+    #dataTableForAddEditPersons td,
+    #dataTableForAddEditPersons th {
+        border-right: 1px solid #ececec;
+    }
+
+    #dataTableForAddEditPersons th:last-child,
+    #dataTableForAddEditPersons td:last-child {
+        border-right: none;
+    }
+
+    #dataTableForAddEditPersons tr {
+        border-bottom: 1px solid #ccc;
+    }
+    
+</style>

@@ -1,0 +1,1004 @@
+﻿<!--
+  * Created by Phanindra 16-Oct-2025
+  * Phanindra 10/24/2025 Worked on fixing issues with saving and loading job bag details
+  * Phanindra 10/29/2025 Worked on fixing issues
+    Phanindra 10/30/2025 fixed style and qty populating issue
+  * Phanindra 11/04/2025 Worked on fixing issues
+    Phanindra 11/10/2025 Worked on issues
+    Phanindra 11/19/2025 Worked on issues
+    Phanindra 11/27/2025 Worked on issues
+    Phanindra 12/02/2025 Worked on modal related issues
+-->
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<div id="content-center" class="row">
+
+    <div class="web-form page login-page col-sm-12">
+
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="row">
+                        <label class="col-sm-2">
+                            Job Bag# :
+                        </label>
+                        <div class="col-sm-2">
+                            <input type="text" id="txtJobBagNo" class="form-control activateFormRefreshBtn" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-right">
+                        <button id="jobBagNotes" class="formsGlobalUniqueBtn">Job Bag Notes</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="row">
+                        <label class="col-sm-2">
+                            Style# :
+                        </label>
+                        <div class="col-sm-2">
+                            <input type="text" id="txtStyleNum" class="form-control activateFormRefreshBtn" />
+                        </div>
+                        <label class="col-sm-2">
+                            Qty :
+                        </label>
+                        <div class="col-sm-2">
+                            <input type="text" id="txtQty" class="form-control activateFormRefreshBtn" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="well empty-well table-responsive mh-500">
+                        <table class="dataTable display nowrap table tblHistory">
+                            <thead>
+                                <tr>
+                                    <th>Give To Person</th>
+                                    <th>Take Back From</th>
+                                    <th>Date Given</th>
+                                    <th>Time</th>
+                                    <th>Date Rcvd</th>
+                                    <th>Time</th>
+                                    <th>Qty Given</th>
+                                    <th>Qty Rcvd</th>
+                                    <th>Wt Given</th>
+                                    <th>Wt Rcvd</th>
+                                    <th>Due Date</th>
+                                    <th>Note1</th>
+                                    <th>Note2</th>
+                                    <th style="display:none">TRASANCT</th>
+                                    <th>Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row text-center">
+                <div class="col-5ths">
+                    <div class="row">
+                        <label class="col-sm-4">Give it to</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="txtGiveItTo" />
+                            <div id="autocomplete-list" class="autocomplete-items"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-5ths">
+                    <div class="row">
+                        <label class="col-sm-4">Due Date</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="txtDueDate" />
+                            <input type="hidden" id="delTransactNo" value="">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-5ths">
+                    <button class="formsGlobalUniqueBtn commonnbtnCompletedAddToStock" id="btnCompletedAddToStock" data-fin_rsrv="0">Completed, Add to Stock</button>
+                </div>
+                <div class="col-5ths">
+                    <button class="formsGlobalUniqueBtn commonnbtnCompletedAddToStock" id="btnCompletedReadyforPickup" data-fin_rsrv="1">Completed, Ready for Pickup</button>
+                </div>
+                <div class="col-5ths">
+                    <input type="radio" name="rdCommunicationType" value="Email" /> Email
+                    <input type="radio" name="rdCommunicationType" value="Text" /> Text
+                    <input type="radio" name="rdCommunicationType" value="None" /> None
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <ul class="radButtonsList">
+                    </ul>
+                </div>
+            </div>
+
+            <div class="row footer-buttons">
+                <div class="col-md-8 text-right">
+                    <button id="btnCustomerNotes" class="formsGlobalUniqueBtn">Customer Notes</button>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-right">
+                        <input type="button" id="gotoHome" value="Close" class="formsGlobalUniqueCloseBtn" />
+                        <input type="button" id="btnPartsUsed" value="Parts Used" class="formsGlobalUniqueBtn" />
+                        <input type="button" id="SaveJobBag" value="Save" class="formsGlobalUniqueBtn" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Notes Modal Start -->
+<div class="modal fade" id="customerNotesModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">CUSTOMER NOTES</h5>
+                <button type="button" class="formsGlobalUniqueCloseBtn closeModal closeModalSelectCustomer" data-modal-id="customerNotesModal" data-bs-dismiss="modal" aria-label="Close">X</button>
+            </div>
+            <div class="modal-body">
+                <p>Loading...</p>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Notes Modal End -->
+<!--ModAL Reserver Parts for Job Bag strat-->
+<div class="modal" id="costsModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Reserve Parts for Job Bag</h5>
+                <button type="button" class="closeModal formsGlobalUniqueCloseBtn" data-model="costsModal" id="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="costsModalBody" class="modal-body" style="max-height: 600px; overflow-y: auto;">
+
+            </div>
+            <div class="modal-footer d-none">
+                <button type="button" id="closed" class="btn formsGlobalUniqueCloseBtn closeModal" data-model="costsModal" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Modal Reserver Parts for Job Bag End-->
+
+
+<div class="modal fade" id="historyNotesModel" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div style="display:flex; flex-direction:row; justify-content:center;">
+                    <h5 class="modal-title mt-0" style="text-align:center;" id="jobBagNotesBsModalLabel">Job Bag Notes Details</h5>
+                </div>
+                <button type="button" class="formsGlobalUniqueCloseBtn btn-close closeModal closeModalNotes" data-modal-id="historyNotesModel" data-bs-dismiss="modal" aria-label="Close">X</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="mt-0 white-box pos-rel" id="divDataTableReport">
+                    <div class="row dataTableReport">
+                        <table id="dataTableForJobNoteHistory" class="dataTable display nowrap table" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Job No</th>
+                                    <th>Date</th>
+                                    <th>Who</th>
+                                    <th>Note</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="button" id="btnNotesSubmit" value="Submit" class="refresh_btn refreshBtnDefault ml-2" />
+                <button type="button" class="formsGlobalUniqueCloseBtn closeModal closeModalNotes" data-modal-id="historyNotesModel" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    //const { ajax } = require("jquery");
+
+    $(document).ready(function () {
+
+
+        //var now = new Date();
+        //var day = ("0" + now.getDate()).slice(-2);
+        //var month = ("0" + (now.getMonth() + 1)).slice(-2);
+
+        //var today = now.getFullYear() + "-" + (month) + "-" + (day);
+        //$("#txtGiveItToDate").val(today);
+
+        //var now = new Date();
+        //var day = ("0" + now.getDate()).slice(-2);
+        //var month = ("0" + (now.getMonth() + 1)).slice(-2);
+        //var year = now.getFullYear();
+
+        //var today = month + "/" + day + "/" + year;
+
+        //$("#txtDueDate").val(today);
+
+        flatpickr("#txtDueDate", {
+            dateFormat: "m/d/Y",
+            defaultDate: new Date()
+        });
+
+    });
+    function toIsoDate(dateString) {
+        const parts = dateString.split('/');
+        return parts[2] + "-" + parts[0].padStart(2, '0') + "-" + parts[1].padStart(2, '0');
+    }
+
+    $(document).on('click', '#SaveJobBag', function () {
+        const jobBagNo = $("#txtJobBagNo").val();
+        const setterName = $("#txtGiveItTo").val() || "";
+        const dueDatePlain = $("#txtDueDate").val();
+        let dueDate = toIsoDate(dueDatePlain);
+        const txtStyleNum = $("#txtStyleNum").val();
+        const txtQty = $("#txtQty").val();
+        const deltransactno = $("#delTransactNo").val();
+
+        if (jobBagNo == "") {
+            alert('JobBag # Required.');
+            $('#txtJobBagNo').focus();
+            return false;
+        }
+
+        const history = [];
+        $(".tblHistory tbody tr").each(function () {
+            const $tr = $(this);
+
+            // Skip placeholder rows
+            if ($tr.find(".GiveToPerson").length === 0) return;
+
+            history.push({
+                GiveToPerson: $tr.find(".GiveToPerson").text().trim(),
+                TakeBackFrom: $tr.find(".TakeBackFrom").text().trim(),
+                DateGiven: $tr.find(".DateGiven").text().trim(),
+                TimeGiven: $tr.find(".TimeGiven").text().trim(),
+                DateRcvd: $tr.find(".DateRcvd").text().trim(),
+                TimeRcvd: $tr.find(".TimeRcvd").text().trim(),
+                QtyGiven: parseFloat($tr.find(".QtyGiven").text()) || 0,
+                QtyRcvd: parseFloat($tr.find(".QtyRcvd").text()) || 0,
+                WtGiven: parseFloat($tr.find(".WtGiven").text()) || 0,
+                WtRcvd: parseFloat($tr.find(".WtRcvd").text()) || 0,
+                DueDate: $tr.find(".DueDate").text().trim(),
+                Note1: $tr.find(".Note1").text().trim(),
+                Note2: $tr.find(".Note2").text().trim(),
+                transact: $tr.find(".transact").text().trim(),
+            });
+        });
+
+        const payload = {
+            jobBagNo: jobBagNo,
+            history: history,
+            setterName: setterName,
+            dueDate: dueDate,
+            txtStyleNum: txtStyleNum,
+            txtQty: txtQty,
+            deltransactno: deltransactno
+        };
+
+        $.ajax({
+            url: '../SalesShopControl/SaveGiveOutJobBags',
+            type: 'POST',
+            contentType: 'application/json',  // send as JSON
+            data: JSON.stringify(payload),
+            success: function (response) {
+                if (response.success) {
+                    alert(response.message);
+                    location.reload();
+                } else {
+                    alert("Error : " + response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Error:", error);
+                alert('An error occurred while saving the details.');
+            }
+        });
+    });
+
+    $(document).on('click', '#gotoHome', function () {
+        if (confirm("Ok to Discard the changes and Close This Form ?")) {
+            window.location.href = "../Home/Index";
+        }
+    })
+
+    $(document).on('blur', '#txtJobBagNo', function () {
+
+        var jobBagNo = $(this).val();
+
+        if (jobBagNo == "") {
+            //alert('JobBag # Required.');
+            $('#txtJobBagNo').focus();
+            return false;
+        }
+
+
+        $.ajax({
+            url: '../SalesShopControl/loadGiveOutJobBagDetails',
+            type: 'GET',
+            data: {
+                jobBagNo: jobBagNo,
+            },
+            success: function (response) {
+                if (response.success) {
+                    populateJobBagInfo(response.jobbagInfo);
+                    populateHistoryTable(response.history);
+                    populateSetters(response.allSetters);
+                }
+                else {
+                    alert(response.message);
+                    $('#txtJobBagNo').val('');
+                }
+            },
+            error: function () {
+                alert('An error occurred while saving the details.');
+            }
+        });
+
+    })
+
+    function populateJobBagInfo(info) {
+        if (info && info.length > 0) {
+            const data = info[info.length - 1]; // get the last item in the array
+            $("#txtStyleNum").val(data["style"] || data["STYLE"] || "");
+            $("#txtJobBagNo").val(data["barcode"] || "");
+            $("#txtQty").val(data["QTY"] ? parseFloat(data["QTY"]).toFixed(2) : "0");
+        }
+    }
+
+    // helper to convert .NET JSON date to dd-mm-yyyy
+    function formatDate(dotNetDate) {
+        if (!dotNetDate) return "";
+        const timestamp = parseInt(dotNetDate.replace(/[^0-9]/g, ""));
+        const date = new Date(timestamp);
+        return date.toLocaleDateString("en-US"); // mm/dd/yyyy
+    }
+
+    function populateHistoryTable(history) {
+        const tbody = $(".tblHistory tbody");
+        tbody.empty();
+
+        if (history && history.length > 0) {
+            history.forEach(row => {
+                tbody.append(`
+                <tr>
+                    <td class="GiveToPerson">${row["giventoperson"] || ""}</td>
+                    <td class="TakeBackFrom">${row["takebackfrom"] || ""}</td>
+                    <td class="DateGiven">${formatDate(row["dategiven"])}</td>
+                    <td class="TimeGiven">${row["timegiven"] || ""}</td>
+                    <td class="DateRcvd">${formatDate(row["dateRCVD"])}</td>
+                    <td class="TimeRcvd">${row["timeRCVD"] || ""}</td>
+                    <td class="QtyGiven">${parseFloat(row["GIVENQTY"]).toFixed(2) || 0.00}</td>
+                    <td class="QtyRcvd">${parseFloat(row["RECEIVEDQTY"]).toFixed(2) || 0.00}</td>
+                    <td class="WtGiven">${parseFloat(row["GIVENWt"]).toFixed(2) || 0.00}</td>
+                    <td class="WtRcvd">${parseFloat(row["RECEIVEDWt"]).toFixed(2) || 0.00}</td>
+                    <td class="DueDate">${formatDate(row["DUE_DATE"])}</td>
+                    <td class="Note1">${row["NOTE1"] || ""}</td>
+                    <td class="Note2">${row["NOTE2"] || ""}</td>
+                    <td class="transact" style="display:none">${row["TRANSACT"] || ""}</td>
+                    <td><button class="btn btn-danger btn-sm del_transact"> <i class='fas fa-trash'></i ></button></td>
+                </tr>
+            `);
+            });
+        } else {
+            tbody.append(`<tr><td colspan="13" class="text-center text-muted">No records found</td></tr>`);
+        }
+    }
+    let allSetters = [];
+
+    function populateSetters(setters) {
+        const container = $(".radButtonsList");
+        container.empty();
+
+        allSetters = setters || [];
+
+        if (setters && setters.length > 0) {
+            let rowDiv = $('<div class="row g-2"></div>');
+            let colDiv = $('<div class="col-md-3"></div>');
+            let btnCount = 0;
+
+            setters.forEach((setter, index) => {
+                if (setter.freq_used === true) {
+                    const btn = $(`
+                    <button class="btn btn-info radButton w-100 mb-2" data-name="${setter.name}">
+                        ${setter.name}
+                    </button>
+                `);
+
+                    btn.on("click", function () {
+                        addRecordToHistory(setter.name);
+                    });
+
+                    colDiv.append(btn);
+                    btnCount++;
+
+                    // If 3 buttons added to a column, move to next column
+                    if (btnCount % 3 === 0) {
+                        rowDiv.append(colDiv);
+                        colDiv = $('<div class="col-md-3"></div>');
+                    }
+
+                    // If row is filled (4 columns = 12/3 = full width), start new row
+                    if (btnCount % 12 === 0) {
+                        container.append(rowDiv);
+                        rowDiv = $('<div class="row g-2"></div>');
+                    }
+                }
+            });
+
+            // Append remaining buttons if any left
+            if (colDiv.children().length > 0) rowDiv.append(colDiv);
+            if (rowDiv.children().length > 0) container.append(rowDiv);
+        }
+    }
+
+
+
+
+    let selectedSetter = "";
+
+    /*$(document).on('input', '#txtGiveItTo', function () {
+        const query = $(this).val().toLowerCase();
+        const $input = $(this);
+        selectedSetter = "";
+
+        $('.setter-suggestions').remove();
+        if (!query) return;
+
+        const filtered = allSetters
+            .filter(s => s.name && s.name.toLowerCase().includes(query))
+            .map(s => s.name);
+
+        if (filtered.length === 0) return;
+
+        const $list = $('<div class="setter-suggestions list-group" style="position:absolute; z-index:99999; max-height:200px; overflow-y:auto;"></div>');
+        filtered.forEach(name => {
+            $list.append(`<button type="button" class="list-group-item list-group-item-action">${name}</button>`);
+        });
+
+        $('body').append($list);
+
+        const offset = $input.offset();
+        $list.css({
+            top: offset.top + $input.outerHeight(),
+            left: offset.left,
+            width: $input.outerWidth()
+        });
+    });*/
+
+    $(document).on('focus', '#txtGiveItTo', function () {
+        if ($("#txtJobBagNo").val() == "") {
+            //alert("Please enter Jobbag number");
+            $("#txtJobBagNo").focus();
+            return false;
+        }
+    })
+
+    $("#txtGiveItTo").on("input", function () {
+        var query = $(this).val().toLowerCase();
+        var list = $("#autocomplete-list");
+        list.empty();
+
+        if (!query) return;
+        var results = allSetters.filter(function (item) {
+            return item.name.toLowerCase().indexOf(query) === 0;
+        });
+
+        results.forEach(function (item) {
+            var itemElement = $("<div>")
+                .addClass("autocomplete-item")
+                .text(item.name)
+                .on("click", function () {
+                    $("#txtGiveItTo").val(item.name);
+                    list.empty();
+                });
+
+            list.append(itemElement);
+        });
+    });
+
+    $(document).on('click', '.setter-suggestions button', function () {
+        const value = $(this).text();
+        $('#txtGiveItTo').val(value);
+        selectedSetter = value;
+        $('.setter-suggestions').remove();
+    });
+
+    $(document).on('click', function (e) {
+        if (!$(e.target).closest('#txtGiveItTo, .setter-suggestions').length) {
+            $('.setter-suggestions').remove();
+        }
+    });
+
+    $(document).on('blur', '#txtGiveItTo', function () {
+        setTimeout(function () {
+            const currentValue = $("#txtGiveItTo").val();
+            if (!currentValue) return;
+
+            const exists = allSetters.some(s => s.name.toLowerCase() === currentValue.toLowerCase());
+
+            if(!exists) {
+                alert("Invalid/Inactive setter");
+                $("#txtGiveItTo").val('').focus();
+                selectedSetter = "";
+            } else {
+                selectedSetter = currentValue; // valid
+            }
+        }, 1000)
+
+    });
+
+    $(document).on('click', '.del_transact', function () {
+        const $table = $(".tblHistory");
+        const $rows = $table.find("tbody tr");
+        const $row = $(this).closest('tr');
+        const rowIndex = $row.index(); // 0-based
+        const transactNo = $row.find(".transact").text().trim() || "";
+
+        let delTransactNo = $("#delTransactNo").val().trim();
+
+        if ($rows.length === 0) {
+            alert("No records to delete.");
+            return;
+        }
+
+        if (rowIndex === 0 && delTransactNo === "") {
+            if (!transactNo) {
+                alert("No transaction number found for this row.");
+                return;
+            }
+
+            if (confirm("Are you sure you want to delete this record?")) {
+                $("#delTransactNo").val(transactNo);
+
+                $row.remove();
+            }
+        } else {
+            // Not allowed to delete (any other row or already deleted)
+            alert("Not allowed to delete.");
+        }
+    });
+
+    function addRecordToHistory(setterName) {
+        const jobBagNo = $("#txtJobBagNo").val();
+        const dueDatePlain = $("#txtDueDate").val(); // optional field
+        let dueDate = toIsoDate(dueDatePlain);
+        const txtStyleNum = $("#txtStyleNum").val();
+        const txtQty = $("#txtQty").val();
+
+        $.ajax({
+            url: '/SalesShopControl/AddRecordToHistory',
+            type: 'POST',
+            data: {
+                settername: setterName,
+                jobbagno: jobBagNo,
+                duedate: dueDate,
+                txtStyleNum: txtStyleNum,
+                txtQty: txtQty
+            },
+            success: function (response) {
+                if (response.success) {
+                    alert(response.message);
+                    window.location.reload();
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function (xhr) {
+                console.error("Error:", xhr.responseText);
+                alert("An error occurred while updating job history.");
+            }
+        });
+    }
+
+    $(document).on("click", '#btnCompletedAddToStock', function () {
+        const jobBagNo = $("#txtJobBagNo").val();
+        const setterName = $("#txtGiveItTo").val() || "";
+        const fin_rsrv = $(this).data('fin_rsrv');
+
+        if (jobBagNo == "") {
+            alert('JobBag # Required.');
+            $('#txtJobBagNo').focus();
+            return false;
+        }
+
+        $.ajax({
+            url: '/SalesShopControl/saveJobAddToStock',
+            type: 'POST',
+            data: { jobbagno: jobBagNo, settername: setterName, fin_rsrv: fin_rsrv },
+            success: function (response) {
+                if (response.success) {
+                    alert(response.message);
+                    window.location.href = "../Home/Index";
+                }
+                else {
+                    alert(response.message);
+                }
+            },
+            error: function () {
+                alert("An error occurred while adding to stock.");
+            }
+        });
+    });
+
+    $(document).on("click", '#btnCompletedReadyforPickup', function () {
+        const jobBagNo = $("#txtJobBagNo").val();
+        const setterName = $("#txtGiveItTo").val() || "";
+        const fin_rsrv = $(this).data('fin_rsrv');
+
+        if (jobBagNo == "") {
+            alert('JobBag # Required.');
+            $('#txtJobBagNo').focus();
+            return false;
+        }
+        let communicationType = $('input[name="rdCommunicationType"]:checked').val() || '';
+
+        $.ajax({
+            url: '/SalesShopControl/SaveCompletedReadyForPickup',
+            type: 'POST',
+            data: { jobbagno: jobBagNo, settername: setterName, fin_rsrv: fin_rsrv, communicationType: communicationType },
+            success: function (response) {
+                if (response.success) {
+                    alert(response.message);
+                    window.location.href = "../Home/Index";
+                }
+                else {
+                    alert(response.message);
+                }
+            },
+            error: function () {
+                alert("An error occurred while adding to stock.");
+            }
+        });
+    });
+
+
+    /*$(document).on('click', '#btnNotes', function () {
+        var customerCode = $('#txtCustomerCode').val();
+        if (!customerCode) {
+            alert("Missing Billing  Acct");
+            return;
+        }
+        if (!acc1) {
+            alert("Invalid Billing Acct");
+            $('#txtCustomerCode').val('').focus();
+            return;
+        }
+        BindCustomerNotes(customerCode);
+    });*/
+
+    $(document).on('click', '#btnCustomerNotes', function () {
+        jobBagNo = $("#txtJobBagNo").val();
+        if (jobBagNo == "") {
+            alert("Job Bag Number is Empty");
+            //$('#txtJobBagNo').focus();
+            return;
+        }
+        const $modal = $('#customerNotesModal');
+        $modal.find('.modal-body').html('<p>Loading...</p>');
+        $modal.show().addClass('show'); // Show only once
+
+
+        $('.modal-backdrop').css('display', 'none');
+        $.ajax({
+            url: '../SalesShopControl/GetCustNotesBasedOnRepairNo',
+            type: 'post',
+            data: {
+                repair_no: jobBagNo
+            },
+            success: function (response) {
+                $modal.find('.modal-body').html(response);
+            }
+        })
+    })
+
+    $(document).on('click', '.closeCustModal', function () {
+        $('#customerNotesModal').hide().removeClass('show');
+    })
+
+
+    $(document).on('click', '#btnPartsUsed', function () {
+        openModalWithPartialViewforPartsUsed();
+    })
+
+    function openModalWithPartialViewforPartsUsed(strInvNo="", strStyle="") {
+        $('#costsModalBody').html("<p>Loading...</p>");
+        $('#costsModal').fadeIn();
+        scrollTo(200, 50);
+        var Repairno = $("#txtJobBagNo").val();
+        var url = '@Url.Action("ReservePartsJobBag", "POsReportsnew")' + '?JobBagNo=' + Repairno + '&strInvNo=' + strInvNo + '&strStyle=' + strStyle;
+
+         $.ajax({
+             url: url,
+             type: 'GET',
+             success: function (response) {
+
+                 $('#costsModalBody').html(response);
+
+                 //$('#costsModal').fadeIn();
+             },
+             error: function () {
+                 alert('Error loading the partial view');
+             }
+         });
+    }
+
+    $(document).on('click', '#jobBagNotes', function () {
+
+        if ($('#txtJobBagNo').val()) {
+            jobBagValue = $('#txtJobBagNo').val();
+            $('#historyNotesModel').show().addClass('show');
+            $('.modal-backdrop').hide();
+            getHistoryNotesJobBagValues(jobBagValue);
+        }
+        else {
+            alert("Job Bag # Required *");
+        }
+    })
+
+    function getHistoryNotesJobBagValues(jobBagValue) {
+
+        var url = '@Url.Action("GetListJobbagNotes", "SalesShopControl", new { Area = ""})';
+        var data = {
+            Jobbag : jobBagValue
+        }
+
+        var jqxhr = $.post(url, data, function () { })
+        .done(function (response) {
+            var json;
+            if (response instanceof Object)
+                json = response;
+            else
+                json = $.parseJSON(response);
+
+            var table = $('#dataTableForJobNoteHistory').DataTable();
+            table.clear().draw();
+
+            $('#dataTableForJobNoteHistory tbody').empty();
+
+            for (var i = 0; i < json.length; i++) {
+                var date = json[i].Date ? json[i].Date.split("T")[0] : "";
+                table.row.add([
+                     json[i].Job_no,
+                    '<input type="date"  value="' + date +'" class="form-control HistoryjobBag" readonly/>',
+                    json[i].Who,
+                    '<input type="text"  class="HistoryjobBag  form-control" value="' + json[i].Note + '" data-previous="' + json[i].Note + '" maxlength="20"  />'
+                ])
+            }
+            table.draw();
+            $('#dataTableForJobNoteHistory_filter').hide();
+
+             if ($('#addRowBtn').length === 0) {
+                 var addRowButtonHtml = '<tfoot><tr><td colspan="12" style="text-align: center;padding:0px">' +
+                     '<button id="addRowBtn" class="btn btn-alert" style="margin-top: 10px; display: inline-block;">* Click here to add a new row</button>' +
+                     '</td></tr></tfoot>';
+                 $('#dataTableForJobNoteHistory').append(addRowButtonHtml);
+
+                 $('#addRowBtn').on('click', function () {
+                     //var currentDate = new Date();
+                     //var currentTimestamp = currentDate.getTime();
+                     //var formattedCurrentDate = '/Date(' + currentTimestamp + ')/';
+                     //var currentModifiedDate = formatDate(formattedCurrentDate);
+                     var now = new Date();
+                     var day = ("0" + now.getDate()).slice(-2);
+                     var month = ("0" + (now.getMonth() + 1)).slice(-2);
+
+                     var today = now.getFullYear() + "-" + (month) + "-" + (day);
+
+                     var table = $('#dataTableForJobNoteHistory').DataTable();
+                     if ($('#txtJobBagNo').val()) {
+                         var jobBagNo = $('#txtJobBagNo').val();
+                     }
+                     var User = '@Session["UserId"]';
+
+                     table.row.add([
+                         jobBagNo ?? "",
+                         '<input type="date" value="' + today + '" class="form-control HisjobBag"/>',
+                         User ?? "",
+                         '<input type="text"  class="HisjobBag  form-control" value = "" data-previous="" maxlength="120"  />'
+                     ]);
+
+                     table.draw();
+                 });
+             };
+
+        })
+        .fail(function (jqxhr, textstatus, error) {
+            var err = textstatus + "," + error;
+            console.log("GetListJobbagNotes Request Failed: " + err);
+        });
+    }
+
+    $(document).on('click', '#btnNotesSubmit', function () {
+        let jobbagno = $('#txtJobBagNo').val();
+        saveHistoryRepairJobsNotes('Save', true, jobbagno);
+    });
+
+    function saveHistoryRepairJobsNotes(btnType, showSuccessAlert, jobbag) {
+        let customersourcesxml = '<?xml version="1.0" encoding="utf-16"?><DocumentElement>';
+
+        $('#dataTableForJobNoteHistory tbody tr').each(function () {
+            var rowData = $(this);
+
+            var jobNo = rowData.find("td:eq(0)").text().trim();
+            var date = rowData.find("td:eq(1)").find('input').val();
+            var who = rowData.find("td:eq(2)").text().trim();
+            var note = rowData.find("td:eq(3)").find('input').val();
+
+            if (jobNo || date || who || note) {
+                customersourcesxml += '<JobbagNote>';
+                customersourcesxml += '<Job_no>' + jobNo + '</Job_no>';
+                customersourcesxml += '<Date>' + date + '</Date>';
+                customersourcesxml += '<Who>' + who + '</Who>';
+                customersourcesxml += '<Note>' + note + '</Note>';
+                customersourcesxml += '</JobbagNote>';
+            }
+        });
+
+        customersourcesxml += '</DocumentElement>';
+
+        console.log(customersourcesxml);
+        if (customersourcesxml === '<?xml version="1.0" encoding="utf-16"?><DocumentElement></DocumentElement>') {
+            alert("Please enter at least one customer source.");
+            return;
+        }
+        var jobbag = jobbag;
+        var url = '@Url.Action("saveHistoryRepairJobNotes", "SalesShopControl", new {Area=""})'  + '?jobbag=' + encodeURIComponent(jobbag);
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: customersourcesxml,
+            contentType: "application/xml",
+            dataType: "json",
+            success: function (response) {
+                if (response.success == true) {
+                    alert('Updated Successfully!');
+                    $('#historyNotesModel').hide().removeClass('show');
+                } else {
+                    alert("Update Failed");
+                }
+            },
+            error: function (error) {
+                console.error('Error sending data:', error);
+            }
+        });
+
+    }
+
+
+</script>
+<style>
+    #content-center {
+        min-height: calc(100vh - 60px); /* Fills viewport except header/footer */
+        display: flex;
+        flex-direction: column;
+    }
+
+    .web-form {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+        .web-form .form-horizontal {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+            /* Keep bottom button row at bottom visually */
+            .web-form .form-horizontal .row.footer-buttons {
+                margin-top: auto;
+                padding: 15px 0 10px 0;
+                background-color: #fff;
+                border-top: 1px solid #ccc;
+            }
+
+    .empty-well {
+        min-height: 250px;
+        margin-bottom: 10px;
+        background: #fff;
+    }
+
+    .mh-500 {
+        max-height: 800px;
+        overflow-y: auto;
+    }
+
+    .setter-suggestions button {
+        width: 100%;
+        text-align: left;
+        padding: 6px 10px;
+        border: none;
+        background: none;
+    }
+
+        .setter-suggestions button:hover {
+            background-color: #f2f2f2;
+        }
+
+    .radButtonsList .btn {
+        font-size: 13px;
+        padding: 6px;
+        border-radius: 4px;
+        white-space: nowrap;
+    }
+
+    .radButtonsList .row {
+        margin-bottom: 10px;
+    }
+
+    .setter-suggestions {
+        position: absolute;
+        z-index: 9999;
+        background: #fff;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+        width: 100%;
+        max-height: 250px;
+        overflow-y: auto;
+    }
+
+        .setter-suggestions button {
+            width: 100%;
+            text-align: left;
+            padding: 6px 10px;
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+
+            .setter-suggestions button:hover {
+                background-color: #f2f2f2;
+            }
+
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    .col-5ths {
+        flex: 0 0 20%;
+        max-width: 20%;
+    }
+
+    #costsModal {
+        position: absolute;
+    }
+
+    #customerNotesModal, #historyNotesModel {
+        max-height: 100%;
+        padding-right: 15px;
+        position: absolute;
+        padding-bottom: 50px;
+        overflow-y: scroll;
+    }
+
+    body.modal-open {
+        overflow-y: scroll !important;
+    }
+</style>
+
