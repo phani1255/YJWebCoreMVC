@@ -1,11 +1,17 @@
-/.vs
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Build outputs
+bin/
+obj/
+
+# Rider / VS Code
+.idea/
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
 /YJWebCoreMVC/bin
-/YJWebCoreMVC/obj
-/YJWebCoreMVC/bin/Debug
-*.dll
-/YJWebCoreMVC/bin/Debug/net10.0
-/YJWebCoreMVC/bin/Debug
-/YJWebCoreMVC/bin
-*.dll
-/YJWebCoreMVC/bin/Debug
-*.dll
