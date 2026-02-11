@@ -11,7 +11,7 @@
 // Dharani 02/09/2026 Added CustomerService
 // Phanindra 02/09/2026 Added AddRazorRuntimeCompilation, RepairService, ListOfItemsSoldService, SalesmenService, ImageService, RegisterProvider
 // Dharani 02/09/2026 Added BankingDepositsService, BankAccService
-// Phanindra 02/11/2026 added SalesPaymentsCreditsService, CommonService
+// Phanindra 02/11/2026 added SalesPaymentsCreditsService, CommonService, SalesLayAwaysService, OrderRepairService
 
 using YJWebCoreMVC.ReportEngine;
 using YJWebCoreMVC.Services;
@@ -94,6 +94,8 @@ builder.Services.AddScoped<DefaultAccountsService>();
 builder.Services.AddScoped<InvoiceService>();
 builder.Services.AddScoped<SalesPaymentsCreditsService>();
 builder.Services.AddScoped<CommonService>();
+builder.Services.AddScoped<SalesLayAwaysService>();
+builder.Services.AddScoped<OrderRepairService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSession();
 

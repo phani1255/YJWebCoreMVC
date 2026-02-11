@@ -9,6 +9,17 @@
 
   <ItemGroup>
     <Content Remove="Views\Analytics\ItemsBoughtByCustomer.cshtml" />
+    <Content Remove="Views\SalesLayaways\CancelLayaway.cshtml" />
+    <Content Remove="Views\SalesLayaways\CancelLayawayPayments.cshtml" />
+    <Content Remove="Views\SalesLayaways\LayawayFollowup.cshtml" />
+    <Content Remove="Views\SalesLayaways\ListofLayawayPayments.cshtml" />
+    <Content Remove="Views\SalesLayaways\ListofLayaways.cshtml" />
+    <Content Remove="Views\SalesLayaways\PastDueLayawayPayments.cshtml" />
+    <Content Remove="Views\SalesLayaways\SpecialOrderPayments.cshtml" />
+    <Content Remove="Views\SalesLayaways\_LayawayFollowupHistory.cshtml" />
+    <Content Remove="Views\SalesLayaways\_LayawayFollowupNotes.cshtml" />
+    <Content Remove="Views\SalesLayaways\_LayawayFollowupSMSHistory.cshtml" />
+    <Content Remove="Views\SalesLayaways\_LaywayFollowupAddNote.cshtml" />
   </ItemGroup>
 
   <ItemGroup>

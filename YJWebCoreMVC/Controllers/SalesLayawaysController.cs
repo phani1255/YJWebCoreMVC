@@ -45,7 +45,7 @@ using System.Text.RegularExpressions;
 using YJWebCoreMVC.Models;
 using YJWebCoreMVC.Services;
 
-namespace YJWeb.Controllers
+namespace YJWebCoreMVC.Controllers
 {
     public class SalesLayawaysController : Controller
     {

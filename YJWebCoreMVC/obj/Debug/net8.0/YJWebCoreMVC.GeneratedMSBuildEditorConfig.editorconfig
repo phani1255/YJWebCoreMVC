@@ -182,52 +182,8 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9naW5cSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesLayaways/CancelLayaway.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FsZXNMYXlhd2F5c1xDYW5jZWxMYXlhd2F5LmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesLayaways/CancelLayawayPayments.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FsZXNMYXlhd2F5c1xDYW5jZWxMYXlhd2F5UGF5bWVudHMuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesLayaways/LayawayFollowup.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FsZXNMYXlhd2F5c1xMYXlhd2F5Rm9sbG93dXAuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
 [D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesLayaways/LayawayPayments.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FsZXNMYXlhd2F5c1xMYXlhd2F5UGF5bWVudHMuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesLayaways/ListofLayawayPayments.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FsZXNMYXlhd2F5c1xMaXN0b2ZMYXlhd2F5UGF5bWVudHMuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesLayaways/ListofLayaways.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FsZXNMYXlhd2F5c1xMaXN0b2ZMYXlhd2F5cy5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesLayaways/PastDueLayawayPayments.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FsZXNMYXlhd2F5c1xQYXN0RHVlTGF5YXdheVBheW1lbnRzLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesLayaways/SpecialOrderPayments.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FsZXNMYXlhd2F5c1xTcGVjaWFsT3JkZXJQYXltZW50cy5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesLayaways/_LayawayFollowupHistory.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FsZXNMYXlhd2F5c1xfTGF5YXdheUZvbGxvd3VwSGlzdG9yeS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesLayaways/_LayawayFollowupNotes.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FsZXNMYXlhd2F5c1xfTGF5YXdheUZvbGxvd3VwTm90ZXMuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesLayaways/_LayawayFollowupSMSHistory.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FsZXNMYXlhd2F5c1xfTGF5YXdheUZvbGxvd3VwU01TSGlzdG9yeS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesLayaways/_LaywayFollowupAddNote.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FsZXNMYXlhd2F5c1xfTGF5d2F5Rm9sbG93dXBBZGROb3RlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesPaymentsCredits/AddAdjReceivable.cshtml]
