@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿/*
+    Phanindra 02/11/2026 Converted to YJCore.
+*/
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace YJWebCoreMVC.Models
 {

@@ -1,0 +1,792 @@
+﻿<!--
+  * 01/30/2026 Created by Hemanth
+-->
+@model System.Data.DataTable
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Make Special Order Payment";
+}
+
+
+<div id="content-center" class="row">
+
+    <div class="web-form page login-page col-sm-12" id="FormForEndofMonth">
+
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Cust Code
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" id="txtAcc" class="form-control fs-13 activateFormRefreshBtn" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Invoice From
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtFromDate1" class="form-control fs-13 resetFromDate activateFormRefreshBtn" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Invoice To
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtToDate1" class="form-control fs-13 resetToDate activateFormRefreshBtn" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="row">
+                        <div class="col-sm-12 text-right">
+                            <input type="checkbox" id="cbFillFromToDates" checked /> <span>All Dates</span>
+                            <input type="button" value="Last Month" class="formsGlobalUniqueBtn btnGetLastMonthDates" />
+                            <input type="button" value="Last Week" class="formsGlobalUniqueBtn btnGetLastWeekDates" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Invoice#
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" id="txtInvoice" class="form-control fs-13 activateFormRefreshBtn" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Name
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" id="txtNameStart" class="form-control fs-13 activateFormRefreshBtn" placeholder="Starts With" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Name
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" id="txtNameContain" class="form-control fs-13 activateFormRefreshBtn" placeholder="Contains" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Tel
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" id="txtTel" class="form-control fs-13 activateFormRefreshBtn" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Address
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" id="txtAddress" class="form-control fs-13 activateFormRefreshBtn" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            State
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" id="txtState" class="form-control fs-13 activateFormRefreshBtn" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Zip
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" id="txtZip" class="form-control fs-13 activateFormRefreshBtn" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Total
+                        </label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtTotalFrom" class="form-control fs-13 activateFormRefreshBtn" placeholder="From" />
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtTotalTo" class="form-control fs-13 activateFormRefreshBtn" placeholder="To" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-8"></div>
+                <div class="col-sm-4 text-right">
+                    <input type="button" value="Reset" form-id="FormForEndofMonth" class="formsGlobalUniqueBtn btnResetFormValues" />
+                    <input type="button" id="btnFormResultsSearch" value="Refresh" class="refresh_btn refreshBtnDefault" />
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="mt-4 white-box pos-rel" id="divDataTableReport">
+
+        <div class="row col-md-6 report_buttons">
+            <div style="margin:3px;">
+                <input type="button" value="PDF" table-id="dataTableForMakeLayawayPayment-1" class="formsGlobalUniqueBtn btnDataTableDownloadPDF" id="btnPDF" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Excel" table-id="dataTableForMakeLayawayPayment-1" class="formsGlobalUniqueBtn btnDataTableDownloadExcel" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Preview" table-id="dataTableForMakeLayawayPayment-1" id="btnDataTablePreview" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Print" table-id="dataTableForMakeLayawayPayment-1" id="btnDataTablePrint" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Email" table-id="dataTableForMakeLayawayPayment-1" class="formsGlobalUniqueBtn" />
+            </div>
+
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Simple Excel" class="formsGlobalUniqueBtn" />
+            </div>
+        </div>
+        <div class="row dataTableReport">
+            <table id="dataTableForMakeLayawayPayment" class="dataTable display table" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Invoice#</th>
+                        <th>Acc</th>
+                        <th>Name</th>
+                        <th>Tel.</th>
+                        <th>Invoice Date</th>
+                        <th>Style</th>
+                        <th>Desc</th>
+                        <th class="numericColumns">Gr. Total</th>
+                        <th class="numericColumns">Balance</th>
+                        <th>Message</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+
+            
+        </div>
+        <div class="row" id="showHideReport" style="display:none;">
+            <table id="dataTableForMakeLayawayPayment-1" class="dataTable display table" style="width:100%;">
+                <thead>
+                    <tr>
+                        <th>Invoice#</th>
+                        <th>Acc</th>
+                        <th>Name</th>
+                        <th>Tel.</th>
+                        <th>Invoice Date</th>
+                        <th>Style</th>
+                        <th>Desc</th>
+                        <th class="numericColumns">Special Order Total</th>
+                        <th class="numericColumns">Special Order Balance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+    <div id="paymentMethodsDropdownContent" class="d-none">
+
+    </div>
+    <input type="hidden" value="0" class="paymentFormBalance" />
+    <div class="paymentTypeModalDiv"></div>
+    <input type="hidden" id="autonumforPayments" value="0" />
+
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var table = $('#dataTableForMakeLayawayPayment').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 25,
+            "aaSorting": [],
+            columnDefs: [
+                { targets: [7, 8], className: 'text-right' }
+            ]
+        });
+
+        var table1 = $('#dataTableForMakeLayawayPayment-1').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 25,
+            "aaSorting": [],
+            columnDefs: [
+                { targets: [7, 8], className: 'text-right' }
+            ]
+        });
+
+        existAutoFilledData("SPECIALITEM=1 AND PICKUPDATE IS NULL");
+    })
+
+    function existAutoFilledData(StrLayaway = "") {
+        if ($('#txtFromDate1').val() != "")
+            fromdate1 = $('#txtFromDate1').val();
+        else
+            fromdate1 = "1990-01-01";
+
+        if ($('#txtToDate1').val() != "")
+            todate1 = $('#txtToDate1').val();
+        else
+            todate1 = "2099-12-31";
+
+        islayawayfollowup = false;
+        txtInvoice = $("#txtInvoice").val();
+        //if (txtInvoice != "") {
+        //    islayawayfollowup = true;
+        //}
+        txtTel = $("#txtTel").val();
+        txtAcc = $("#txtAcc").val();
+        //txtInvoice = $("#txtInvoice").val();
+        txtNameStartsWith = $("#txtNameStart").val();
+        txtNameContains = $("#txtNameContain").val();
+        fromDate = $("#txtFromDate1").val();
+        toDate = $("#txtToDate1").val();
+        txtAddress = $("#txtAddress").val();
+        txtState = $("#txtState").val();
+        txtZip = $("#txtAddress").val();
+        txtAmount1 = $("#txtAmount1").val();
+        txtAmount2 = $("#txtAmount2").val();
+
+        $.ajax({
+            url: "../SalesLayaways/GetSpecialOrderPayments",
+            data: {
+                StrLayaway: StrLayaway,
+                islayawayfollowup: islayawayfollowup,
+                txtTel: txtTel,
+                txtAcc: txtAcc,
+                txtInvoice: txtInvoice,
+                txtNameStartsWith: txtNameStartsWith,
+                txtNameContains: txtNameContains,
+                fromDate: fromDate,
+                toDate: toDate,
+                txtAddress: txtAddress,
+                txtState: txtState,
+                txtZip: txtZip,
+                txtAmount1: txtAmount1,
+                txtAmount2, txtAmount2
+            },
+            type: "post",
+            success: function (response) {
+                //alert(res);
+                if (response == "No Records Found") {
+                    $("#dataTableForMakeLayawayPayment tbody").html("<tr><td colspan='11'>No Records Found</td></tr>");
+                    $("#dataTableForMakeLayawayPayment-1 tbody").html("<tr><td colspan='11'>No Records Found</td></tr>");
+                    return false;
+                }
+                var json;
+                if (response instanceof Object)
+                    json = response;
+                else
+                    json = $.parseJSON(response);
+
+                var table = $('#dataTableForMakeLayawayPayment').DataTable();
+                table.clear().draw();
+
+                var table1 = $('#dataTableForMakeLayawayPayment-1').DataTable();
+                table1.clear().draw();
+
+                $("#dataTableForMakeLayawayPayment tbody").empty();
+                $("#dataTableForMakeLayawayPayment-1 tbody").empty();
+
+                for (var i = 0; i < json.length; i++) {
+                    var orderdate = "";
+                    if (json[i].DATE != "") {
+                        var date = new Date(json[i].DATE);
+                        orderdate = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
+                    }
+                    table.row.add([
+                        `<span class='openPaymentForm' data-acc='` + json[i].ACC + `'>` + json[i].INV_NO + `</span>`,
+                        json[i].ACC,
+                        json[i].NAME,
+                        json[i].TEL,
+                        orderdate,
+                        json[i].STYLE,
+                        json[i].DESC.substring(0, 30),
+                        json[i].GR_TOTAL.toFixed(2),
+                        json[i].BALANCE.toFixed(2),
+                        json[i].Message
+                    ]);
+
+                    table1.row.add([
+                        `<span class='openPaymentForm' data-acc='` + json[i].ACC + `'>` + json[i].INV_NO + `</span>`,
+                        json[i].ACC,
+                        json[i].NAME,
+                        json[i].TEL,
+                        orderdate,
+                        json[i].STYLE,
+                        json[i].DESC.substring(0, 30),
+                        json[i].GR_TOTAL.toFixed(2),
+                        json[i].BALANCE.toFixed(2)
+                    ]);
+                }
+
+                table.draw();
+                table1.draw();
+            }
+        })
+    }
+
+    $(document).on('click', '.openPaymentForm', function () {
+        $("#firstCommonBsModal").show();
+        $("#firstCommonBsModal").addClass('show');
+        scrollTo(200, 50);
+        $("#firstCommonBsModal .modal-body").html('Loading...');
+        inv_acc = $(this).attr('data-acc');
+        inv_no = $(this).html();
+        $.ajax({
+            url: '../SalesLayaways/LoadPaymentFormData',
+            type: 'post',
+            data: {
+                inv_no: inv_no
+            },
+            success: function (response2) {
+                var json;
+                if (response2 instanceof Object) {
+                    response = response2;
+                }
+                else {
+                    response = $.parseJSON(response2);
+                }
+                json = response.paymentItems;
+                today = new Date().toISOString().split('T')[0];
+
+                $(".paymentFormBalance").val(response.balance);
+
+                $("#firstCommonBsModal .modal-body").html("<p>" + response.Payfor + " Payments (Balance : <span class='paymentsBalance'>" + response.balance + "</span>)</p>");
+                paymentMethods = response.paymentMethods;
+
+                var paymentMethodsDropdown = "<select class='paymentDropdown form-control'>";
+                paymentMethodsDropdown += "<option value=''></option>";
+                Object.entries(paymentMethods)
+                    .reverse() // reverse the order
+                    .forEach(function ([key, value]) {
+                        paymentMethodsDropdown += "<option>" + value + "</option>";
+                    });
+                paymentMethodsDropdown += "</select>";
+
+                $("#paymentMethodsDropdownContent").html(paymentMethodsDropdown);
+                tableData = "<table class='table table-sm table-bordered'>";
+                tableData += "<thead><tr><th>Date</th><th>Payment Method</th><th>Amount</th><th>Note</th></tr></thead>";
+                tableData += "<tbody class='paymentItemsList'>";
+                totAmt1 = 0;
+                if (json.length == 0) {
+                    tableData += "<tr class='addNewPaymentRow'>";
+                    tableData += "<td colspan='4'>Click here to add a new row</td>";
+                    tableData += "</tr>";
+                } else {
+                    newIndex = 0;
+                    for (i = 0; i < json.length; i++) {
+                        newIndex = i + 1;
+                        tableData += "<tr class='rowIndex" + newIndex + "' data-row-id='" + newIndex + "' data-isold='true' data-payno='" + json[i].PAY_NO + "'>";
+                        tableData += "<td><input type='date' class='paymentDate form-control' value='" + (json[i].DATE.split('T')[0]) + "'></td>";
+                        tableData += "<td>";
+                        tableData += "<select data-row-id='" + newIndex + "' class='paymentDropdown form-control'>";
+                        tableData += "<option></option>";
+                        Object.entries(paymentMethods)
+                            .reverse() // reverse the order
+                            .forEach(function ([key, value]) {
+                                if (value == json[i].METHOD) {
+                                    tableData += "<option selected='selected'>" + value + "</option>";
+                                } else {
+                                    tableData += "<option>" + value + "</option>";
+                                }
+                            });
+                        tableData += "</select>";
+                        tableData += "</td>";
+                        tableData += "<td><input type='text' class='paymentAmount form-control' value='" + json[i].AMOUNT.toFixed(2) + "'></td>";
+                        //tableData += "<td><input type='text' class='paymentNote form-control' value='" + json[i].SALESMAN + "'></td>";
+                        tableData += "<td>";
+                        tableData += "<input type='text' class='paymentNote form-control' value='" + json[i].NOTE + "'>";
+                        tableData += "<input type='hidden' class='CreditNo' value='" + json[i].CreditNo + "'>";
+                        tableData += "<input type='hidden' class='CreditAmt' value='" + json[i].CreditAmt + "'>";
+                        tableData += "<input type='hidden' class='EnteredAmt' value='" + json[i].CreditAmt + "'>";
+                        tableData += "<input type='hidden' class='NEW_CreditNo' value='" + json[i].NEW_CreditNo + "'>";
+                        tableData += "<input type='hidden' class='NEW_CreditAmt' value='" + json[i].NEW_CreditAmt + "'>";
+                        tableData += "<input type='hidden' class='NEW_EnteredAmt' value='" + json[i].NEW_EnteredAmt + "'>";
+                        tableData += "<input type='hidden' class='Style' value='" + json[i].Style + "'>";
+                        tableData += "<input type='hidden' class='askedSignature' value='" + json[i].askedSigature + "'>";
+                        tableData += "<input type='hidden' class='AUTHRIZED' value='" + json[i].AUTHRIZED + "'>";
+                        tableData += "</td>";
+                        tableData += "</tr>";
+                        totAmt1 += json[i].AMOUNT;
+                    }
+                    $("#autonumforPayments").val(newIndex);
+                    tableData += "<tr class='addNewPaymentRow'>";
+                    tableData += "<td colspan='4'>Click here to add a new row</td>";
+                    tableData += "</tr>";
+                }
+                tableData += "</tbody>";
+                tableData += "<tfoot>";
+                tableData += "<tr><td colspan='2'>Total</td><td colspan='2' class='totalAmt'>" + totAmt1.toFixed(2) + "</td></tr>";
+                tableData += "</tfoot>";
+                tableData += "</table>";
+                tableData += "<p><input type='hidden' id='invNoLayPayment' value='" + inv_no + "'></p>";
+                tableData += "<p><input type='hidden' id='txtCustomerCode' value='" + inv_acc + "'></p>";
+                $("#firstCommonBsModal .modal-body").append(tableData);
+                if ($(".saveLayawayPaymentsInfo").length == 0) {
+                    $("#firstCommonBsModal .modal-footer .closeModal").before("<button class='formsGlobalUniqueBtn saveLayawayPaymentsInfo'>Save</button>");
+                }
+
+            }
+        })
+    })
+
+    $(document).on('click', '.addNewPaymentRow', function (res) {
+        appendPaymentRow();
+    })
+
+    function appendPaymentRow() {
+        newIndex = parseInt($("#autonumforPayments").val()) + 1;
+        $(".addNewPaymentRow").remove();
+        today = new Date().toISOString().split('T')[0];
+        paymentMethodsDropdown = $("#paymentMethodsDropdownContent .paymentDropdown").html();
+        tableData = "<tr  class='rowIndex" + newIndex + "' data-row-id='" + newIndex + "' data-isold='false'>";
+        tableData += `<td><input type='date' class='paymentDate form-control' value='${today}'></td>`;
+        tableData += "<td><select class='paymentDropdown form-control' data-row-id='" + newIndex + "' >" + paymentMethodsDropdown + "</select></td>";
+        tableData += "<td><input type='text' class='paymentAmount form-control'></td>";
+        tableData += "<td>";
+        tableData += "<input type='text' class='paymentNote form-control'>";
+        tableData += "<input type='hidden' class='CreditNo'>";
+        tableData += "<input type='hidden' class='CreditAmt'>";
+        tableData += "<input type='hidden' class='EnteredAmt'>";
+        tableData += "<input type='hidden' class='NEW_CreditNo'>";
+        tableData += "<input type='hidden' class='NEW_CreditAmt'>";
+        tableData += "<input type='hidden' class='NEW_EnteredAmt'>";
+        tableData += "<input type='hidden' class='Style'>";
+        tableData += "<input type='hidden' class='askedSignature'>";
+        tableData += "<input type='hidden' class='AUTHRIZED'>";
+        tableData += "</td>";
+        tableData += "</tr>";
+        tableData += "<tr class='addNewPaymentRow'>";
+        tableData += "<td colspan='4'>Click here to add a new row</td>";
+        tableData += "</tr>";
+        $(".paymentItemsList").append(tableData);
+        $(".rowIndex" + newIndex).find(".paymentDate").focus();
+
+        $("#autonumforPayments").val(newIndex);
+    }
+    $(document).on("input", ".paymentAmount", function () {
+        let value = $(this).val();
+
+        // Remove everything except digits and dot
+        value = value.replace(/[^0-9.]/g, "");
+
+        // Allow only one dot
+        let parts = value.split(".");
+        if (parts.length > 2) {
+            value = parts[0] + "." + parts.slice(1).join("");
+        }
+
+        // Restrict to 2 decimal places
+        if (parts[1] && parts[1].length > 2) {
+            value = parts[0] + "." + parts[1].substring(0, 2);
+        }
+
+        $(this).val(value);
+    });
+
+    $(document).on('blur', '.paymentAmount', function () {
+        updatePaymentBalance();
+    });
+
+    function updatePaymentBalance() {
+        let totAmt = 0; let toDeduct = 0;
+        $(".paymentAmount").each(function () {
+            let val = parseFloat($(this).val());
+            if (!isNaN(val)) {
+                totAmt += val;
+            }
+            if ($(this).parent('td').parent('tr').attr('data-isold') == "false") {
+                toDeduct += val;
+            }
+        });
+        $(".totalAmt").html(totAmt.toFixed(2)); // optional: round to 2 decimals
+        balanceAmt = $(".paymentFormBalance").val() - toDeduct;
+        $(".paymentsBalance").html(balanceAmt);
+    }
+
+    $(document).on('click', ".saveLayawayPaymentsInfo", function () {
+
+        
+        saveLayawayPayments();
+
+    })
+
+    function saveLayawayPayments(paymentDone = false, payToAnotherStore = false, iSPicked = false) {
+
+        var paymentData = [];
+        inv_no = $("#invNoLayPayment").val();
+        isValid = true;
+        $('.paymentItemsList tr').each(function () {
+            if (!isValid) {
+                return;
+            }
+            if ($(this).find('.paymentAmount').val() == "" || $(this).find('.paymentAmount').val() < 0) {
+                alert("Amount Should be greater than zero.");
+                isValid = false;
+                return false;
+            }
+            //alert($(this).find('.paymentDropdown').val());
+            var date = $(this).find('.paymentDate').val();
+            var method = $(this).find('.paymentDropdown').val(); // assuming `paymentMethodsDropdown` is a <select>
+            if (method == "") {
+                alert("Payment Method Required.");
+                isValid = false;
+                return false;
+            }
+            var amount = parseFloat($(this).find('.paymentAmount').val()).toFixed(2);
+            var note = $(this).find('.paymentNote').val();
+            isold = $(this).attr('data-isold');
+            pay_no = $(this).attr('data-payno');
+            if (method == "CHECK" && note == "") {
+                alert("Check# cannot be empty");
+                isValid = false;
+                return false;
+            }
+            var CreditNo = $(this).find('.CreditNo').val();
+            var CreditAmt = $(this).find('.CreditAmt').val();
+            var EnteredAmt = $(this).find('.EnteredAmt').val();
+            var NEW_CreditAmt = $(this).find('.NEW_CreditAmt').val();
+            var NEW_EnteredAmt = $(this).find('.NEW_EnteredAmt').val();
+            var Style = $(this).find('.Style').val();
+            var askedSignature = $(this).find('.askedSignature').val();
+
+            if (isValid == true && !isNaN(amount)) {
+                paymentData.push({
+                    Date: date,
+                    Method: method,
+                    Amount: amount,
+                    Note: note,
+                    isold: isold,
+                    pay_no: pay_no,
+                    CreditNo: CreditNo,
+                    CreditAmt: CreditAmt,
+                    EnteredAmt: EnteredAmt,
+                    NEW_CreditAmt: NEW_CreditAmt,
+                    NEW_EnteredAmt: NEW_EnteredAmt,
+                    Style: Style,
+                    askedSignature: askedSignature,
+                });
+            }
+
+        });
+        if (isValid == false) {
+            return false;
+        }
+
+        totalbalance = $(".paymentFormBalance").val();
+        $.ajax({
+            url: '/SalesLayaways/SaveLaywaypayments',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                paymentDataList: paymentData,
+                totalbalance: totalbalance,
+                inv_no: inv_no,
+                paymentDone: paymentDone,
+                payToAnotherStore: payToAnotherStore,
+                iSPicked: iSPicked,
+                _IsSpeicalOrder: true
+            }),
+            success: function (response1) {
+                if (response1 instanceof Object)
+                    response = response1;
+                else
+                    response = $.parseJSON(response1);
+                if (response.code == "Success") {
+                    alert(response.message);
+                    printInvoiceReport(response.inv_no);
+                    $("#firstCommonBsModal").hide();
+                    $("#firstCommonBsModal").removeClass('show');
+                } else if (response.code == "Fail") {
+                    alert(response.message);
+                } else if (response.code == "Confirm") {
+                    if (response.confirmField == "payToAnotherStore") {
+                        if (confirm(response.message)) {
+                            saveLayawayPayments(true, true, false);
+                        }
+                    } else if (response.confirmField == "iSPicked") {
+                        if (confirm(response.message)) {
+                            if (response.balance2 == 0) {
+                                //if (confirm(response.message)) {
+                                saveLayawayPayments(true, true, true);
+                                return;
+                                //}
+                            } else {
+                                saveLayawayPayments(true, true, true);
+                            }
+                        }
+                    }
+                }
+                console.log('Success:', response.code);
+            },
+            error: function (err) {
+                console.log('Error:', err);
+            }
+        });
+    }
+
+    $(document).on('click', '.btnResetFormValues', function () {
+        $(".form-control").val('');
+        if ($("#cbFillFromToDates:checked").length > 0) {
+            $("#cbFillFromToDates").trigger('click');
+        }
+        $("#cbFillFromToDates").trigger('click');
+    })
+
+    function printInvoiceReport(inv_no) {
+        $.ajax({
+            url: "../ListOfItemsSold/PrintInvoice",
+            type: "post",
+            data: {
+                inv_no: inv_no,
+                DisableLayout: true
+            },
+            success: function (res) {
+                $("#secondCommonBsModal .modal-body").html(res);
+                $("#secondCommonBsModal").show();
+                $("#secondCommonBsModal").addClass('show');
+                $("#secondCommonBsModal").find(".closeModal").removeClass('closePrintInvoicePopup').addClass('closePrintInvoicePopup');
+                $("#secondCommonBsModal").find("#btnCancel").removeClass('closePrintInvoicePopup').addClass('closePrintInvoicePopup');
+            }
+        })
+    }
+
+    $(document).on('click', '.closePrintInvoicePopup', function () {
+        existAutoFilledData(" and Layaway = 1");
+        $("#secondCommonBsModal").hide();
+        $("#secondCommonBsModal").removeClass('show');
+    })
+    var rowId;
+    $(document).on('change', '.paymentDropdown', function () {
+        rowId = $(this).attr('data-row-id');
+        var payment_type = $(this).val();
+        if (payment_type == 'CASH') {
+            totalAmtNew = 0;
+            $(".paymentItemsList tr").each(function () {
+                if ($(this).data("isold") == "false") {
+                    totalAmtNew += $(this).find('.paymentAmount').val();
+                }
+            })
+            paymentsBalance = parseFloat($(".paymentsBalance").html()).toFixed(2);
+            //totalAmt = parseFloat($(".totalAmt").html()).toFixed(2);
+            cashAmt = parseFloat(paymentsBalance - totalAmtNew).toFixed(2);
+            $(".rowIndex" + rowId).find(".paymentAmount").val(cashAmt);
+            return false;
+        }
+
+        if (payment_type != 'GIFT CARD' && payment_type != 'STORE CREDIT')
+            return;
+
+        $.ajax({
+            url: '../SalesRepairs/repairPaymentTypeModal',
+            data: { payment_type: payment_type },
+            type: 'GET',
+            success: function (response) {
+                $('.paymentTypeModalDiv').html(response);
+                $('#AddGiftCardModal').show();
+                $('#firstCommonBsModal').hide();
+                //$(".ok_gift_cards").addClass('fetchCardDetails');
+                //$(".fetchCardDetails").removeClass('ok_gift_cards');
+            },
+            error: function () {
+                alert('Error loading the partial view');
+            }
+        });
+    })
+
+    $(document).on('click', '.cancel_gift_cards', function () {
+        $('#firstCommonBsModal').show();
+    })
+
+    $(document).on('click', '.ok_gift_cards', function () {
+        let available_amt = parseFloat($('#available_amt').val());
+        let entered_amt = parseFloat($('#entered_amount').val());
+        let gift_card_numder = $('#gift_card_numder').val();
+
+        if (isNaN(entered_amt) || entered_amt <= 0) {
+            alert('Please enter a valid amount');
+            return;
+        }
+
+        if (entered_amt > available_amt) {
+            alert('Amount should not exceed the available amount');
+            return;
+        }
+        entered_amt1 = entered_amt.toFixed(2);
+        $(".rowIndex" + rowId).find('.CreditNo').val($("#gift_card_numder").val());
+        $(".rowIndex" + rowId).find('.CreditAmt').val($("#credit_amt").val());
+        $(".rowIndex" + rowId).find('.EnteredAmt').val(entered_amt1);
+        $(".rowIndex" + rowId).find('.Style').val('GC');
+        $(".rowIndex" + rowId).find('.paymentAmount').val(entered_amt1);
+        $(".rowIndex" + rowId).find('.paymentNote').val('GC');
+        $('#AddGiftCardModal').hide();
+        $('#firstCommonBsModal').show();
+        updatePaymentBalance();
+    })
+
+</script>
+
+
+<style>
+    .openPaymentForm {
+        color: deeppink;
+        cursor: pointer;
+    }
+
+    .modal#AddGiftCardModal {
+        z-index: 1999999 !important
+    }
+
+    .modal#AddGiftCardSearchModal {
+        z-index: 2999999 !important
+    }
+
+    #AddGiftCardModal .modal-dialog {
+        max-width: 500px !important;
+    }
+</style>
+
+
+

@@ -1,6 +1,7 @@
 <!--
   * Created by Phanindra on 12-12-2024
     Phanindra 12/30/2024 Worked on print related changes.
+    Phanindra 02/11/2026 Converted to YJCore.
 -->
 @{
     Layout = "~/Views/Shared/_LayoutNew.cshtml";
@@ -15,19 +16,18 @@
         <div class="form-horizontal">
             <div>
                 <div class="row">
-                    <div class="col-sm-3 text-right">
+                    <div class="col-sm-5 text-right">
                         <label>Receipt No</label>
                     </div>
-                    <div class="col-sm-3 ">
-                        <input type="text" id="receipt_no" />
+                    <div class="col-sm-4 ">
+                        <input type="text" id="receipt_no" class="form-control" />
                     </div>
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         <button class="formsGlobalUniqueBtn printAdjRcvable" id="printAdjRcvable">OK</button>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-3"></div>
-                    <div class="col-sm-9 print_options"></div>
+                    <div class="col-sm-12 print_options"></div>
                 </div>
             </div>
         </div>
@@ -93,3 +93,14 @@
 
 
 </script>
+<style>
+    #FormForEditQuotation {
+        max-width: 500px;
+        margin: 0px auto;
+    }
+
+    .report_buttons1 {
+        width: 350px;
+        margin: 0px auto;
+    }
+</style>

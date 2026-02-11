@@ -15,7 +15,7 @@
  *  Phanindra 03/26/2025 Modified AddCashReceipt to pass ups_ins values
  *  Phanindra 04/06/2025 Added GetNextCheckNoByBank method.
  *  Phanindra 04/24/2025 Fixed issues in Save customer refund functionality in saveReceipt function
- *  Phanindra 02/10/2026 migrated controller to YJCore
+ *  Phanindra 02/11/2026 migrated controller to YJCore
  */
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;

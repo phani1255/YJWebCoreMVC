@@ -9,6 +9,7 @@
     Phanindra 04/06/2025 Worked on issues related checkno
     Phanindra 04/24/2025 Worked on issue while saving refund info.
     Phanindra 06/09/2025 Worked on fixing save issue for customer refund.
+    Phanindra 02/11/2026 Converted to YJCore.
 -->
 @{
     Layout = "~/Views/Shared/_LayoutNew.cshtml";
@@ -28,7 +29,7 @@
                         <label class="col-sm-4">
                             @(ViewBag.PageType == "Refund" ? "Refund No." : "Receipt No.")
                         </label>
-                        <div class="col-sm-8">
+                        <div class="col-sm-8" >
                             <input type="text" id="txtReceiptNo" class="form-control activateFormRefreshBtn" value="@ViewBag.ReceiptNo">
                             <input type="hidden" id="txtReceiptNoOrig" value="@ViewBag.ReceiptNo" />
                         </div>

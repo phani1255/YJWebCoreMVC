@@ -1,0 +1,206 @@
+﻿<!--
+ * Created by Manoj 25-OCT-2025
+ *  Manoj 10/31/2025 Fixed Model closing issue
+ *  Manoj 10/31/2025 changed btn ad btn class
+ *  Manoj 12/01/2025 changed btn name
+-->
+
+<div id="content-center" class="row">
+    <div class="mt-4 white-box pos-rel" id="divDataTableReport">
+        <div class="row dataTableReport" style="max-height:400px; overflow-y:auto; overflow-x:auto;">
+            <table id="dataTableForLayawayFollowupNotes" class="dataTable display nowrap table" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Select</th>
+                        <th>Date/Time</th>
+                        <th>User</th>
+                        <th>Note</th>
+                        <th>Spoke To</th>
+                        <th>Left Message</th>
+                        <th>No Communication</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (ViewBag.FollowUpNotes != null && ViewBag.FollowUpNotes.Rows.Count > 0)
+                    {
+                        foreach (System.Data.DataRow row in ViewBag.FollowUpNotes.Rows)
+                        {
+                            <tr>
+                                <td>
+                                    <input class="form-check is-sel-checked" type="checkbox" @(row["Sel"] != DBNull.Value && (bool)row["Sel"] ? "checked" : "") />
+                                </td>
+                                <td>@(row["Date/Time"] != DBNull.Value ? Convert.ToDateTime(row["Date/Time"]).ToString("MM-dd-yyyy") : "")</td>
+
+                                <td>@row["User"]</td>
+                                <td>@row["Note"]</td>
+                                <td>
+                                    <input class="form-check isSpokeToChecked" type="checkbox" @(row["SpokeTo"] != DBNull.Value && (bool)row["SpokeTo"] ? "checked" : "") />
+                                </td>
+                                <td>
+                                    <input class="form-check is-left-message-Checked" type="checkbox" @(row["LEFTMESSAGE"] != DBNull.Value && (bool)row["LEFTMESSAGE"] ? "checked" : "") />
+                                </td>
+                                <td>
+                                    <input class="form-check is-no-commu-hecked" type="checkbox" @(row["NOCOMMU"] != DBNull.Value && (bool)row["NOCOMMU"] ? "checked" : "") />
+                                </td>
+                                <td>
+                                    <div style="text-align:right !important;">
+                                        <button class="btn btn-danger btn-sm delete-row">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+
+
+                </tbody>
+            </table>
+            <br>
+        </div>
+        <div class="row mt-3 justify-content-end">
+            <div class="col-sm-12">
+                @*<input id="BtnOpenfrmLayawayAddNotesBtn" type="button" value="Add New" class="btn btn-info" />*@
+                <div class="row justify-content-end mr-5">
+                    <div style="margin: 3px;">
+                        <button type="button" class="btn btn-info formsGlobalUniqueBtn" id="BtnOpenfrmLayawayAddNotesBtn" style="width:100px;">
+                            <i class="fa-solid fa-check mr-1"></i>Add New
+                        </button>
+                    </div>
+                    <div style="margin: 3px;" class="ml-3">
+                        <button type="button" id="closed" class="btn btn-danger formsGlobalUniqueBtn">
+                            <i class="fa-solid fa-xmark mr-1"></i> Close
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="LayawayAddNoteModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="width: 50%;">
+        <div class="modal-content" style="width: 100%;">
+            <div class="modal-header heading">
+                <h4 class="text-center modalHeading mt-2">Layaway Follow Up Add Note</h4>
+                <button type="button" class="close" id="close1" data-dismiss="modal" aria-label="Close">X</button>
+            </div>
+
+            <div id="LayawayAddNoteModalBody" class="modal-body"></div>
+
+            <div class="modal-footer">
+                <button type="button" id="closed1" class="btn formsGlobalUniqueCloseBtn" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="confirmModal2" class="modal" tabindex="-1" style="display: none; position: fixed; z-index: 1050; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4);">
+    <div style="background: white; margin: 10% auto; padding: 20px; width: 400px; border-radius: 6px; text-align: center;">
+        <p id="confirmMessage"></p>
+        <div style="margin-top: 20px;">
+            <button id="btnConfirmYes" class="btn btn-primary">Yes</button>
+            <button id="btnConfirmNo" class="btn btn-secondary">No</button>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+
+        var InvoiceNo = '@(ViewBag.invNo ?? "")';
+
+        var isLayawayNoteSaved = false;
+
+    $(document).ready(function () {
+        var table = $('#dataTableForLayawayFollowupNotes').DataTable({
+            dom: 'Blfrtip',
+            searching: false,
+            select: false,
+            buttons: [],
+            pageLength: 25,
+            "aaSorting": []
+        });
+        //BindBagsGivenToPerson(InvoiceNo);
+
+        $(document).on('change', '.is-sel-checked', function () {
+            $('.is-sel-checked').not(this).prop('checked', false);
+        });
+
+
+        $('.delete-row').on('click', function () {
+            var inputData = $(this);
+            var $row = inputData.closest('tr');
+
+            var isSelected = $row.find('input.form-check.is-sel-checked').is(':checked');
+            if (!isSelected) {
+                alert("Please select a record first.");
+                return;
+            }
+
+            var date = "";
+            var commmethod = "";
+            var comm1 = false, comm2 = false, comm3 = false;
+
+            date = $row.find('td:nth-child(2)').text().trim();
+            comm1 = $row.find('input.isSpokeToChecked').is(':checked');
+            comm2 = $row.find('input.is-left-message-Checked').is(':checked');
+            comm3 = $row.find('input.is-no-commu-hecked').is(':checked');
+
+            if (comm1) commmethod = "SPOKETO";
+            else if (comm2) commmethod = "LEFTMESSAGE";
+            else if (comm3) commmethod = "NOCOMMUNICATION";
+
+            $.ajax({
+                url: '../SalesLayaways/DeleteLayawayfollowupNote',
+                method: 'POST',
+                data: { invno: InvoiceNo, commmethod: commmethod, date: date },
+                success: function (response) {
+                    if (response.code == "true") {
+                        $row.remove();
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function () {
+                    alert("Error while deleting record.");
+                }
+            });
+        })
+
+        $('#BtnOpenfrmLayawayAddNotesBtn').off('click').on('click', function () {
+            $.ajax({
+                url: '../SalesLayaways/getLaywayFollowUpAddNotes',
+                type: 'GET',
+                contentType: 'application/json',
+                data: {
+                    invoice: InvoiceNo,
+                },
+                success: function (response) {
+                    console.log(response);
+                    if (response) {
+                        $('#LayawayAddNoteModalBody').html(response);
+                        $('#LayawayAddNoteModal').fadeIn();
+                        isLayawayNoteSaved = false;
+                    }
+                },
+                error: function (err) {
+                    console.log('Error setting session:', err);
+                }
+            });
+        })
+
+        $('#close, #closed').off('click').on('click', function () {
+            $('#LayawaySMSHistoryModal').fadeOut();
+
+
+        });
+    });
+
+
+</script>
+
+

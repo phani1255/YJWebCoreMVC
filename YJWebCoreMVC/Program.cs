@@ -10,7 +10,8 @@
 // Neetha  02/06/2026 Added AdminMessagesService, AdminMiscService.
 // Dharani 02/09/2026 Added CustomerService
 // Phanindra 02/09/2026 Added AddRazorRuntimeCompilation, RepairService, ListOfItemsSoldService, SalesmenService, ImageService, RegisterProvider
-// Phanindra 02/10/2026 added BankAccService, SalesPaymentsCreditsService, CommonService
+// Dharani 02/09/2026 Added BankingDepositsService, BankAccService
+// Phanindra 02/11/2026 added SalesPaymentsCreditsService, CommonService
 
 using YJWebCoreMVC.ReportEngine;
 using YJWebCoreMVC.Services;
@@ -23,6 +24,7 @@ builder.Services.AddControllersWithViews().AddJsonOptions(options =>
     // This keeps property names exactly as they are in C# (PascalCase)
     options.JsonSerializerOptions.PropertyNamingPolicy = null;
 });
+//    .AddRazorRuntimeCompilation();
 
 // REQUIRED for session
 builder.Services.AddDistributedMemoryCache();   // 🔴 MISSING
@@ -84,8 +86,13 @@ builder.Services.AddScoped<CustomerService>();
 builder.Services.AddScoped<RepairService>();
 builder.Services.AddScoped<ListOfItemsSoldService>();
 builder.Services.AddScoped<ImageService>();
-builder.Services.AddScoped<SalesPaymentsCreditsService>();
+builder.Services.AddScoped<BankingDepositsService>();
 builder.Services.AddScoped<BankAccService>();
+builder.Services.AddScoped<BankingBankAccountsService>();
+builder.Services.AddScoped<EventService>();
+builder.Services.AddScoped<DefaultAccountsService>();
+builder.Services.AddScoped<InvoiceService>();
+builder.Services.AddScoped<SalesPaymentsCreditsService>();
 builder.Services.AddScoped<CommonService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSession();

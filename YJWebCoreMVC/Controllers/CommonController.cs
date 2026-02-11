@@ -5,6 +5,7 @@
  *  Phanindra 11/04/2024 Added GetCustomerNameByCode
  *  Phanindra 11/20/2024 Added GetPotCustomerNameByCode , GetStateCityByZip
  *  Phanindra 07/15/2025 Added GetCustomerByCode
+    Phanindra 02/11/2026 Converted to YJCore.
  */
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;

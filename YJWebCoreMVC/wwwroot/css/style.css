@@ -35,6 +35,7 @@
     Phanindra 01/09/2026 Added all global related popup styles from Layout page.
     Phanindra 01/24/2026 Worked on menu changes for medium and small screens.
     Phanindra 02/09/2026 Changed css for existing forms.
+    Phanindra 02/11/2026 Worked on button changes for reports
 */
 
 @import 'https://fonts.googleapis.com/css?family=Open%20Sans:400,500,600,700|Pacifico';
@@ -12019,12 +12020,12 @@ table.dataTable thead td {
     left: 300px;
     z-index: 999;
 }
-    .report_buttons > div {
+    .report_buttons > div, .report_buttons1 > div {
         width: auto;
         padding: 2px;
     }
 
-    .report_buttons .btn {
+    .report_buttons .btn, .report_buttons1 .btn {
         padding: 8px 20px !important;
         text-transform: uppercase;
     }
