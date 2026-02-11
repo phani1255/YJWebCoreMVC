@@ -2,10 +2,11 @@
   * Created by Phanindra
 -->
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_LayoutNew.cshtml";
 }
 
-@model YJWeb.Models.SalesPaymentsCreditsModel
+@model YJWebCoreMVC.Models.SalesPaymentsCreditsModel
+@using System.Text.Json
 
 <div id="content-center" class="row">
 
@@ -36,11 +37,11 @@
                         </label>
                         <div class="col-sm-8">
                             <div class="autocomplete-dropdown">
-                                <div id="CustomerCodesForAutofill" class="d-none">@Html.Raw(Json.Encode(Model.CustomerCodes)) </div>
+                                <div id="CustomerCodesForAutofill" class="d-none">@Html.Raw(JsonSerializer.Serialize(Model.CustomerCodes)) </div>
                                 <input type="text" id="txtCustomerCode" class="form-control activateFormRefreshBtn defaultdisabled" maxlength="15" placeholder="Search...">
                                 <div id="autocomplete-list1" class="autocomplete-items"></div>
                             </div>
-                            <div class="customerCodeSearchDiv">
+                            <div class="customerCodeSearchDiv">@using System.Text.Json
                                 <button class="formsGlobalUniqueBtn customerCodeSearchBtn1 showbsmodal activateFormRefreshBtn" data-modal-id="selectCustomerAccModal" data-bs-toggle="modal" data-bs-target="#selectCustomerAccModal">...</button>
                             </div>
 

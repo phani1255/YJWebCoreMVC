@@ -411,10 +411,10 @@ namespace YJWebCoreMVC.Controllers
                         message = "Credit saved successfully.",
                         //nextCreditNo,
                         //todo discuss on frmPrintCredit details;
-                        printDialogUrl = Url.Action("frmPrintCredit", "Credit", new { txtCreditNo })
+                        //printDialogUrl = Url.Action("frmPrintCredit", "Credit", new { txtCreditNo })
                     });
 
-                    HttpContext.Session.SetString("CreditNo", null);
+                    HttpContext.Session.SetString("CreditNo", "");
                     return result;
                 }
                 else
@@ -585,7 +585,7 @@ namespace YJWebCoreMVC.Controllers
             var data = _salesPaymentsCreditsService.SaveAdjRcvable(dtPayment, acc, adj_no, entry_date, showmemo);
             if (data == true)
             {
-                HttpContext.Session.SetString("AdjRcvableNo", null);
+                HttpContext.Session.SetString("AdjRcvableNo", "");
                 return "Success";
             }
             else

@@ -182,16 +182,52 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9naW5cSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesPaymentsCredits/AddAdjReceivable.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FsZXNQYXltZW50c0NyZWRpdHNcQWRkQWRqUmVjZWl2YWJsZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesPaymentsCredits/AddCashReceipt.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FsZXNQYXltZW50c0NyZWRpdHNcQWRkQ2FzaFJlY2VpcHQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesPaymentsCredits/AddEditCredit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FsZXNQYXltZW50c0NyZWRpdHNcQWRkRWRpdENyZWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesPaymentsCredits/EditAdjRcvable.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FsZXNQYXltZW50c0NyZWRpdHNcRWRpdEFkalJjdmFibGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesPaymentsCredits/EditCashReceipt.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FsZXNQYXltZW50c0NyZWRpdHNcRWRpdENhc2hSZWNlaXB0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesPaymentsCredits/ModifyAcc_ofReceipt.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FsZXNQYXltZW50c0NyZWRpdHNcTW9kaWZ5QWNjX29mUmVjZWlwdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesPaymentsCredits/PrintAdjRcvable.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FsZXNQYXltZW50c0NyZWRpdHNcUHJpbnRBZGpSY3ZhYmxlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesPaymentsCredits/PrintCashReceipt.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FsZXNQYXltZW50c0NyZWRpdHNcUHJpbnRDYXNoUmVjZWlwdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesPaymentsCredits/PrintCredit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FsZXNQYXltZW50c0NyZWRpdHNcUHJpbnRDcmVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesPaymentsCredits/ReprintAdjRcvable.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FsZXNQYXltZW50c0NyZWRpdHNcUmVwcmludEFkalJjdmFibGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesPaymentsCredits/ReprintCredit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FsZXNQYXltZW50c0NyZWRpdHNcUmVwcmludENyZWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesPaymentsCredits/ReprintReceipt.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FsZXNQYXltZW50c0NyZWRpdHNcUmVwcmludFJlY2VpcHQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/phani/YJWebCoreMVC/YJWebCoreMVC/Views/SalesSummary/SalesSummary.cshtml]

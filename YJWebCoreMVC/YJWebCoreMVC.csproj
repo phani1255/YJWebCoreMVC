@@ -9,18 +9,9 @@
 
   <ItemGroup>
     <Content Remove="Views\Analytics\ItemsBoughtByCustomer.cshtml" />
-    <Content Remove="Views\SalesPaymentsCredits\AddAdjReceivable.cshtml" />
-    <Content Remove="Views\SalesPaymentsCredits\AddEditCredit.cshtml" />
     <Content Remove="Views\SalesPaymentsCredits\DeleteAdjRcvable.cshtml" />
     <Content Remove="Views\SalesPaymentsCredits\DeleteCredit.cshtml" />
     <Content Remove="Views\SalesPaymentsCredits\DeleteReceipt.cshtml" />
-    <Content Remove="Views\SalesPaymentsCredits\EditAdjRcvable.cshtml" />
-    <Content Remove="Views\SalesPaymentsCredits\ModifyAcc_ofReceipt.cshtml" />
-    <Content Remove="Views\SalesPaymentsCredits\PrintAdjRcvable.cshtml" />
-    <Content Remove="Views\SalesPaymentsCredits\PrintCredit.cshtml" />
-    <Content Remove="Views\SalesPaymentsCredits\ReprintAdjRcvable.cshtml" />
-    <Content Remove="Views\SalesPaymentsCredits\ReprintCredit.cshtml" />
-    <Content Remove="Views\SalesPaymentsCredits\ReprintReceipt.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
