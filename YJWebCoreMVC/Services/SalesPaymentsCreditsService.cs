@@ -229,18 +229,18 @@ namespace YJWebCoreMVC.Services
                     dataAdapter.SelectCommand.CommandType = CommandType.StoredProcedure;
                     dataAdapter.SelectCommand.CommandText = "SaveCredit";
 
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@acc", txtBillAcc);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@credit_no", txtCreditNo);
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@acc", txtBillAcc ??= "");
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@credit_no", txtCreditNo ??= "");
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@date", txtDate);
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@rdate", txtRefDate);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@note", txtNote);
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@note", txtNote ??= "");
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@amt", Convert.ToDecimal(txtAmount));
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@cred_code", cred_code);
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@cred_code", cred_code ??= "");
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@showmemo", chkShowMemo);
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@storecodeinuse", StoreCodeInUse);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@reason", ddlReason);
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@reason", ddlReason ??= "");
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@loggeduser", LoggedUser);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@custRef", custRef);
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@custRef", custRef ??= "");
 
                     SqlParameter parameter = new SqlParameter();
                     parameter.ParameterName = "@TBLPAYMENT";
@@ -439,8 +439,8 @@ namespace YJWebCoreMVC.Services
                     dbCommand.CommandText = "EditAdjRcvable";
 
                     dbCommand.Parameters.AddWithValue("@TBLEDITRECEIPT", dtPayment);
-                    dbCommand.Parameters.AddWithValue("@acc", acc);
-                    dbCommand.Parameters.AddWithValue("@ADJ_NO", adj_no);
+                    dbCommand.Parameters.AddWithValue("@acc", acc ??= "");
+                    dbCommand.Parameters.AddWithValue("@ADJ_NO", adj_no ??= "");
                     dbCommand.Parameters.AddWithValue("@entry_date", entry_date);
 
                     dbCommand.CommandTimeout = 0;
