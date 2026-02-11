@@ -1,0 +1,353 @@
+<!--
+  * Created by Manoj 08-May-2025
+  * Added changes Print,Preview,PDF ,Execl Reports 
+-->
+@{
+    
+    ViewBag.Title = "List of Promised vs Completed Dates";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+@model YJWeb.Models.MfgModel
+
+<h2 class="text-center mt-2"> List of Promised vs Completed Dates</h2>
+<div id="content-center" class="row">
+    <div class="web-form page login-page col-sm-12" id="FormForBagsGivenToPerson">
+
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            From Date
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtFromDate1" class="form-control fs-13 resetFromDate activateFormRefreshBtn" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            To Date
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtToDate1" class="form-control fs-13 resetToDate activateFormRefreshBtn" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="row">
+                        <div class="col-sm-12 text-right">
+                            <input type="checkbox" id="cbFillFromToDates" checked /> <span>All Dates</span>
+                            <input type="button" value="Last Month" class="formsGlobalUniqueBtn btnGetLastMonthDates" />
+                            <input type="button" value="Last Week" class="formsGlobalUniqueBtn btnGetLastWeekDates" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-end">
+
+                <div class="col-sm-4">
+                </div>
+                <div class="col-sm-4 text-right">
+                    <input type="button" id="btnFormResultsSearch" value="Refresh" class="refresh_btn refreshBtnDefault" />
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="mt-4 white-box pos-rel" id="divDataTableReport">
+
+        <div class="row col-md-6 report_buttons">
+            <div style="margin:3px;">
+                <input type="button" value="PDF" table-id="dataTableForCompletedJobs" class="formsGlobalUniqueBtn btnDataTableDownloadPDF"  id="btnPDF"/>
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Excel" table-id="dataTableForCompletedJobs" class="formsGlobalUniqueBtn btnDataTableDownloadExcel" id="listOfCompletedJobsbtnExcel"/>
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Preview" table-id="dataTableForCompletedJobs" id="CompletedJobsbtnDataTablePreview" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Print" table-id="dataTableForCompletedJobs" id="listOfCompletedJobsbtnDataTablePrint" class="formsGlobalUniqueBtn" report-format="portrait" table-count="1" />
+            </div>
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Email" table-id="dataTableForCompletedJobs" class="formsGlobalUniqueBtn" />
+            </div>
+
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Simple Excel" class="formsGlobalUniqueBtn" />
+            </div>
+        </div>
+        <div class="row dataTableReport">
+
+            <table id="dataTableForCompletedJobs" class="dataTable display nowrap table" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>REPAIR#</th>
+                        <th>ACC</th>
+                        <th>DATE</th>
+                        <th>PROMISED</th>
+                        <th>COMPLETED</th>                      
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+
+            </table>
+            <br>
+
+        </div>
+    </div>
+    <div id="pdfReportHeadingText"></div>
+</div>
+
+
+
+
+<script type="text/javascript">
+
+    var txtFromDate1 = "1990-01-01", txtToDate1 = "2099-12-31";
+
+    function ClearControls() {
+        txtFromDate1 = "1990-01-01"; txtToDate1 = "2099-12-31";
+        $('#txtFromDate1').val('');
+        $('#txtToDate1').val('');
+        //$('#ddlPerson').val('All').change();
+
+        existAutoFilledData();
+    }
+    function existAutoFilledData() {
+        if ($('#txtFromDate1').val() != "")
+            fromdate1 = $('#txtFromDate1').val();
+        else
+            fromdate1 = "1990-01-01";
+
+        if ($('#txtToDate1').val() != "")
+            todate1 = $('#txtToDate1').val();
+        else
+            todate1 = "2099-12-31";
+
+        if ($('#cbFillFromToDates').prop('checked')) {
+            allDates = true;
+        } else {
+            allDates = false
+        }
+
+        //if ($('#ddlPerson option:selected').val() != 'All')
+        //    person = $('#ddlPerson option:selected').val();
+        //else
+        //    person = "";
+   
+
+        BindBagsGivenToPerson(fromdate1, todate1, allDates);
+    }
+
+    function BindBagsGivenToPerson(fromdate1, todate1, allDates) {
+
+        var url = '@Url.Action("ListofPromisedvsCompletedDates", "SalesShopControl", new { Area = "" })';
+
+        var data = {
+            fdate: fromdate1,
+            tdate: todate1,
+            AllDates: allDates
+        };
+
+        var jqxhr = $.post(url, data, function () { })
+        .done(function (response) {
+            var json;
+            if (response instanceof Object)
+                json = response;
+
+            else
+                json = $.parseJSON(response);
+
+            var table = $('#dataTableForCompletedJobs').DataTable();
+            table.clear().draw();
+
+            $("#dataTableForCompletedJobs tbody").empty();
+            var trans = json;
+            var totalPrice = 0;
+            var tr;
+            for (var i = 0; i < json.length; i++) {
+                //totalPrice += parseFloat(json[i].PRICE);
+                table.row.add([
+                    json[i].repair_no,
+                    json[i].acc,
+                    json[i].date ? json[i].date.split('T')[0]:'',                  
+                    json[i].promised ? json[i].promised.split('T')[0]:'',
+                    json[i].completed ? json[i].completed.split('T')[0]:''
+                ]);
+            }
+
+            table.draw();
+            //addNumericColumnsClasstoDT("dataTableForBagsGivenToPerson", [1]);
+
+            // TODO : Bind data to table
+        })
+        .fail(function (jqxhr, textStatus, error) {
+            var err = textStatus + ", " + error;
+            console.log("GetListofCompletedJobs Request Failed: " + err);
+        });
+    }
+
+
+    // Custom Date & Header For Reports
+    function getCustomTitleDateHeader(clickFrmDate, clickToDate) {
+
+        var cusfrmDate;
+        var custoDate;
+        var Title = "List of Promised vs Completed Dates";
+        var Currentdate = "Date: " + new Date().toLocaleDateString();
+        var customHeaderText;
+
+        if (clickFrmDate != "") {
+            var [year, month, date] = clickFrmDate.toString().split('-');
+            var cusfrmDate = date + "/" + month + "/" + year;
+        }
+
+        if (toDate != "") {
+            var [toYear, toMonth, toDate] = clickToDate.toString().split('-');
+            custoDate = toDate + "/" + toMonth + "/" + toYear;
+        }
+
+        if (cusfrmDate != "" && custoDate != "") {
+            customHeaderText = "From  " + cusfrmDate + "  To  " + custoDate;
+        }
+
+        if (customHeaderText != "") {
+            var containerHtml = '<div class="header-container" style="positio: relative; width:100%;">' +
+                '<div class="row" style="width:100%; display:flex; justify-content:center">' +
+                '<h4 class="item" id="listOfCompletedJobsTitle" style="text-align:center;flex-grow:1">' + Title + '</h4>' +
+                '</div > ' +
+                '<div class="row" style="width:100%; display:flex; justify-content: space-between;">' +
+                '<div class="row customHeaderText" style="width: 100%; display: flex; justify-content: center;">' +
+                '<h6 class="item" id="customSubHeader"   style="text-align: center; flex-grow: 1;">' + customHeaderText + '</h6>' +
+                '</div>' +
+
+                '</div>';
+        } else {
+            containerHtml = "";
+        }
+
+        $("#pdfReportHeadingText").html(containerHtml);
+
+        return containerHtml;
+
+    }
+
+
+    $(document).ready(function () {
+        var table = $('#dataTableForCompletedJobs').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 25,
+            "aaSorting": []
+        });
+
+        $(document).on('click', ".paginate_button", function () {
+            //addNumericColumnsClasstoDT("dataTableForBagsGivenToPerson", [1]);
+        });
+
+        fillFromToDates();
+
+        //Print Report
+
+        $('#listOfCompletedJobsbtnDataTablePrint').off('click').on('click', function () {
+            reportFormat = "";
+            if ($(this).attr('report-format') !== undefined) {
+                reportFormat = $(this).attr('report-format');
+            }
+
+            clickFromDate = $('#txtFromDate1').val();
+            clickToDate = $('#txtToDate1').val();
+
+            //Return Custom Date & Header html Content 
+            var customHeader = getCustomTitleDateHeader(clickFromDate, clickToDate);
+
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+            const tablesSubHeadings = $(this).attr("table-sub-headings");
+            // Append the container to the printable content
+            printDiv(tableid, tablesCount, tablesSubHeadings, customHeader, reportFormat);
+        });
+
+        //Preview Report 
+
+        $('#CompletedJobsbtnDataTablePreview').off('click').on('click', function () {
+            clickFromDate = $('#txtFromDate1').val();
+            clickToDate = $('#txtToDate1').val();
+
+            //Return Custom Date & Header html Content 
+            var customHeader = getCustomTitleDateHeader(clickFromDate, clickToDate);
+
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+            const tablesSubHeadings = $(this).attr("table-sub-headings");
+
+            // Append the container to the Preview content
+            previewDiv(tableid, tablesCount, tablesSubHeadings, customHeader);
+        });
+
+
+
+        //Excel Report
+        $('.btnDataTableDownloadExcel').off('click').on('click', function () {
+
+            clickFromDate = $('#txtFromDate1').val();
+            clickToDate = $('#txtToDate1').val();
+
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+
+            // Add Sub Heading text
+            var subTitile = " From_" + clickFromDate + "_To_" + clickToDate;
+
+            exportToExcel(tableid, tablesCount, subTitile);
+        });
+
+
+        // PDF Export
+
+        $('.btnDataTableDownloadPDF').off('click').on('click', function () {
+
+            //var cusfrmDate;
+            //var custoDate;
+
+            //if ($('#txtFromDate1').val() != "") {
+            //    var [year, month, date] = $('#txtFromDate1').val().toString().split('-');
+            //    var cusfrmDate = date + "/" + month + "/" + year;
+            //}
+
+            //if ($('#txtToDate1').val() != "") {
+            //    var [toYear, toMonth, toDate] = $('#txtToDate1').val().toString().split('-');
+            //    custoDate = toDate + "/" + toMonth + "/" + toYear;
+            //}
+
+            clickFromDate = $('#txtFromDate1').val();
+            clickToDate = $('#txtToDate1').val();
+            var customHeader = getCustomTitleDateHeader(clickFromDate, clickToDate);
+
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+
+           //// Add Sub Heading text
+           // if (cusfrmDate != "" && custoDate != "") {
+           //     subTitile = "From  " + cusfrmDate + "  To  " + custoDate;
+           // }
+
+            exportTableToPDF(tableid, tablesCount, customHeader);
+
+        });
+
+    });
+
+</script>
+
+

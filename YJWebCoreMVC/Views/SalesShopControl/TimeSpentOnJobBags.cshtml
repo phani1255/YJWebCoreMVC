@@ -1,0 +1,527 @@
+<!--
+  * Created by Manoj 21-May-2025
+  * Manoj 09-June-2025 Fixed Issues on Ajax call jobbag# And ddlPerson
+  * Manoj 17-June-2025 Fixed Issues on Single person response 
+-->
+
+@{
+    ViewBag.Title = "Time Spent On Job Bags";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+@model YJWeb.Models.MfgModel
+
+<h2 class="text-center mt-2">Time Spent On Job Bags</h2>
+<div id="content-center" class="row">
+
+    <div class="web-form page login-page col-sm-12" id="FormForTimeSpentOnJobBabgs">
+
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            JOBBAG # :
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" id="jobBagNo" class="form-control activateFormRefreshBtn" placeholder="" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            From Date
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtFromDate1" class="form-control fs-13 resetFromDate activateFormRefreshBtn" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            To Date
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtToDate1" class="form-control fs-13 resetToDate activateFormRefreshBtn" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="row">
+                        <div class="col-sm-12 text-right">
+                            <input type="checkbox" id="cbFillFromToDates" checked /> <span>All Dates</span>
+                            <input type="button" value="Last Month" class="formsGlobalUniqueBtn btnGetLastMonthDates" />
+                            <input type="button" value="Last Week" class="formsGlobalUniqueBtn btnGetLastWeekDates" />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row" style="display:flex; flex-direction:row; justify-content:start;">
+                <div class="col-sm-3">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Person :
+                        </label>
+                        <div class="col-sm-8">
+                            @Html.DropDownListFor(x => x.setter, Model.setters, new { @class = "form-control resetSelectField activateFormRefreshBtn", @id = "ddlPerson" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" style="display:flex; flex-direction:row; justify-content:end;">
+                <div class="col-sm-2">
+                </div>
+                <div class="col-sm-4 mt-2">
+                    <input type="button" id="btnFormResultsSearch" value="Refresh" class="refresh_btn refreshBtnDefault ml-2" />
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="mt-4 white-box pos-rel" id="divDataTableReport">
+
+        <div class="row col-md-6 report_buttons">
+            <div style="margin:3px;">
+                <input type="button" value="PDF" table-id="dataTableForTimeSpentJobBags" table-count="1" class="formsGlobalUniqueBtn btnDataTableDownloadPDF" id="btnPDF" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Excel" table-id="dataTableForTimeSpentJobBags" table-count="1" class="formsGlobalUniqueBtn btnDataTableDownloadExcel" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" id="TimeSpentJobBagbtnDataTablePreview" table-sub-headings="List" class="formsGlobalUniqueBtn mx-2" table-id="dataTableForTimeSpentJobBags" table-count="1" value="Preview" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Print" table-id="dataTableForTimeSpentJobBags" id="TimeSpentJobBagBtnDataTablePrint" class="formsGlobalUniqueBtn" table-count="1" report-format="portrait" />
+            </div>
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Email" table-id="dataTableForTimeSpentJobBags" class="formsGlobalUniqueBtn" />
+            </div>
+
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Simple Excel" class="formsGlobalUniqueBtn" />
+            </div>
+        </div>
+        <div class="row dataTableReport">
+
+            <table id="dataTableForTimeSpentJobBags" class="dataTable display nowrap table" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>JOB BAG #</th>
+                        <th>SETTER</th>
+                        <th>DATE</th>
+                        <th>ACTUAL DRUATION</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot id="tfooter">
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th style="font-weight: 600 !important; color: #444745 !important; ">Total Duration</th>
+                        <th class="numericColumns" style="text-align: left !important; color: #444745 !important; "></th>
+                    </tr>
+                </tfoot>
+
+            </table>
+            <br>
+
+        </div>
+    </div>
+    <div id="pdfReportHeadingText"></div>
+</div>
+
+
+<script type="text/javascript">
+
+    var txtFromDate1 = "1990-01-01", txtToDate1 = "2099-12-31"; filter = ""; jobBagValue = "";
+
+    function ClearControls() {
+        txtFromDate1 = "1990-01-01"; txtToDate1 = "2099-12-31";
+
+        $('#jobBagNo').val('')
+        $('#txtFromDate1').val('');
+        $('#txtToDate1').val('');
+        $('#ddlPerson').val('All').change();
+
+        existAutoFilledData();
+    }
+
+    function existAutoFilledData() {
+
+        if ($('#txtFromDate1').val() != "")
+            fromdate1 = $('#txtFromDate1').val();
+        else
+            fromdate1 = "1990-01-01";
+
+        if ($('#txtToDate1').val() != "")
+            todate1 = $('#txtToDate1').val();
+        else
+            todate1 = "2099-12-31";
+
+        if ($('#jobBagNo').val() != "")
+            jobBagValue = $('#jobBagNo').val();
+        else
+            jobBagValue = "";
+
+
+        if ($('#ddlPerson option:selected').text() != "All")
+            filter = $('#ddlPerson option:selected').val();
+        else
+            filter = "";
+
+        BindBagsGivenToPerson(fromdate1, todate1, jobBagValue, filter);
+
+    }
+
+    function BindBagsGivenToPerson(fromdate1, todate1, jobBagValue, filter) {
+        var url = '@Url.Action("GetListTimeSpentjobbag", "SalesShopControl", new { Area = "" })';
+
+        var data = {
+            FromDate: fromdate1,
+            ToDate: todate1,
+            jobbagno1: jobBagValue,
+            strPerson: filter
+        };
+
+        var jqxhr = $.post(url, data, function () { })
+            .done(function (response) {
+            var json;
+            if (response instanceof Object)
+                json = response;
+
+            else
+                json = $.parseJSON(response);
+
+            var table = $('#dataTableForTimeSpentJobBags').DataTable();
+                table.clear().draw();
+                $('#tfooter').show();
+            $("#dataTableForTimeSpentJobBags tbody").empty();
+
+                if (json.Table.length > 0) {
+                    for (var i = 0; i < json.Table.length; i++) {
+                        table.row.add([
+                            json.Table[i].Inovice,
+                            json.Table[i].Setter,
+                            json.Table[i].Date ? json.Table[i].Date.split("T")[0] : "",
+                            json.Table[i].ACTUAL_DURATION,
+                        ]);
+                    }
+
+                    if (json.Table1.length > 0) {
+                        $('#tfooter').find('th').eq(3).html(json.Table1[0].TOTALACTUALDURATION);
+                    }
+                }
+
+            table.draw();
+        })
+        .fail(function (jqxhr, textStatus, error) {
+            var err = textStatus + "," + error;
+            console.log("GetListTimeSpentjobbag Request Failed: " + err);
+        });
+    }
+
+    function getCustomTitleDateHeader(jobBagVal, clickFromDate, clickToDate, person) {
+
+        var cusfrmDate = "";
+        var custoDate = "";
+        var Title = "Time Spent On Job Bags";
+        var Currentdate = "Date: " + new Date().toLocaleDateString();
+        let customHeaderText = "";
+        var containerHtml = "";
+        var jobBag="All";
+
+        if (person == "" || person == "undefined") {
+            person = "All";
+        }
+
+        if (jobBagVal != "" || jobBagVal != "undefined") {
+            jobBag = jobBagVal
+        }
+        if (clickFromDate != "") {
+            var [year, month, date] = clickFromDate.toString().split('-');
+            var cusfrmDate = date + "/" + month + "/" + year;
+        }
+
+        if (toDate != "") {
+            var [toYear, toMonth, toDate] = clickToDate.toString().split('-');
+            custoDate = toDate + "/" + toMonth + "/" + toYear;
+        }
+
+        if (cusfrmDate == "01/01/1900" && custoDate == "30/12/2098") {
+            customHeaderText = "Dates : All Dates";
+        }
+
+        if (cusfrmDate != "" && custoDate != "") {
+            customHeaderText = "Dates : " + cusfrmDate + "  -  " + custoDate;
+        }
+
+        if (customHeaderText != "" && containerHtml == "") {
+            containerHtml = '<div class="header-container" style="positio: relative; width:100%;">' +
+                '<div class="row" style="width:100%; display:flex; justify-content:center">' +
+                '<h4 class="item" id="listOfCompletedJobsTitle" style="text-align:center;flex-grow:1">' + Title + '</h4>' +
+                '</div > ' +
+                '<div class="row mt-3 customHeaderText" style="width:100%; display:flex; flex-direction:column; justify-content: center;">' +
+                '<h6 class="item" id="customSubHeader"   style="text-align: center; flex-grow:1;">Job Bag #' + jobBag + '</h6>' +
+                '<h6 class="item " id="customSubHeader1"   style="text-align: center;  margin-top:-2px">Person : ' + person + '</h6>' +
+                '<h6 class="item" id="customSubHeader2"   style="text-align: center; flex-grow: 1; margin-top:-2px"">' + customHeaderText + '</h6>' +
+                '</div>' +
+                '</div>';
+        } else {
+            containerHtml = "";
+        }
+
+        if ($("#pdfReportHeadingText").html() == "") {
+            $("#pdfReportHeadingText").html(containerHtml);
+            $("#pdfReportHeadingText").hide();
+        }
+        return containerHtml;
+
+    }
+
+    async function exportTableToCustomPDF(tableid, tablesCount, reportSubTitile = "") {
+
+        if (typeof (tablesCount) != "undefined" && parseInt(tablesCount) > 1) {
+
+            // Create the PDF document
+            var { jsPDF } = window.jspdf;
+            var doc = new jsPDF('l', 'mm', [297, 210]);
+            for (dt = 1; dt <= parseInt(tablesCount); dt++) {
+
+                var dataTableId = tableid + "-" + dt;
+                var currentPageLength = $('#' + dataTableId).DataTable().page.len();
+                // Store the current pagination state
+                var currentPage = $('#' + dataTableId).DataTable().page();
+                var currentPageLength = $('#' + dataTableId).DataTable().page.len();
+
+                // Set the page length to show all entries
+                $('#' + dataTableId).DataTable().page.len(-1).draw();
+
+                // Get the table data
+                var table = document.getElementById(dataTableId);
+                var tableData = [];
+                for (var i = 0, row; row = table.rows[i]; i++) {
+                    var rowData = [];
+                    for (var j = 0, col; col = row.cells[j]; j++) {
+                        if (col.classList.contains("hide-on-print") || col.classList.contains("hideColumns")) {
+                            continue;
+                        }
+                        rowData.push(col.innerText);
+                    }
+                    tableData.push(rowData);
+                }
+
+                doc.autoTable({
+                    head: [tableData[0]],
+                    body: tableData.slice(1),
+                });
+                // Restore the original pagination state
+                $('#' + tableid).DataTable().page.len(currentPageLength).draw();
+                $('#' + tableid).DataTable().page(currentPage).draw(false);
+            }
+
+            // Save the PDF
+            let filname = ($('.form-h1').text() != "undefined" && $('.form-h1').text() != '') ? $('.form-h1').text() : 'data';
+            doc.save(filname + '.pdf');
+
+
+        } else {
+
+            // Store the current pagination state
+            var currentPage = $('#' + tableid).DataTable().page();
+            var currentPageLength = $('#' + tableid).DataTable().page.len();
+
+            // Set the page length to show all entries
+            $('#' + tableid).DataTable().page.len(-1).draw();
+
+            // Get the table data
+            var table = document.getElementById(tableid);
+            var tableData = [];
+            for (var i = 0, row; row = table.rows[i]; i++) {
+                var rowData = [];
+                for (var j = 0, col; col = row.cells[j]; j++) {
+                    if (col.classList.contains("hide-on-print") || col.classList.contains("hideColumns")) {
+                        continue;
+                    }
+                    rowData.push(col.innerText);
+                }
+                tableData.push(rowData);
+            }
+
+
+            // Create the PDF document
+            var { jsPDF } = window.jspdf;
+            var doc = new jsPDF();
+
+            let headingText = ($('.form-h1').text() != "undefined" && $('.form-h1').text() != '') ? $('.form-h1').text() : 'Data Report';
+
+            // Add heading to the PDF
+            let currentY = 15;
+            doc.setFontSize(16); // Set font size for heading
+            doc.text(headingText, 105, currentY, { align: "center" });
+            currentY += 7
+
+            //Add Sub Heading to PDF
+            if (reportSubTitile.length > 0 && reportSubTitile != "") {
+
+                let subHeading = $('#customSubHeader').text();
+                doc.setFontSize(11); // Set font size for heading
+                doc.text(subHeading, 105, currentY, { align: "center" });
+                currentY += 6
+
+
+                if ($('#customSubHeader1').text().length > 0 && $('#customSubHeader1').text() != "") {
+
+                    let subHeading1 = $('#customSubHeader1').text();
+                    doc.setFontSize(11); // Set font size for heading
+                    doc.text(subHeading1, 105, currentY, { align: "center" });
+                    currentY += 6
+
+                }
+
+                if ($('#customSubHeader2').text().length > 0 && $('#customSubHeader2').text() != "") {
+
+                    let subHeading2 = $('#customSubHeader2').text();
+                    doc.setFontSize(11); // Set font size for heading
+                    doc.text(subHeading2, 105, currentY, { align: "center" });
+                    currentY += 6
+                }
+            }
+
+            // Add the table to the PDF
+            doc.autoTable({
+                startY: currentY, // Position table below heading
+                head: [tableData[0]],
+                body: tableData.slice(1),
+                margin: { top: 5, bottom: 5, left: 5, right: 5 },
+                styles: { fontSize: 6, cellPadding: 0.5 },
+            });
+
+            // Save the PDF
+            let filname = headingText;
+            doc.save(filname + '.pdf');
+
+            // Restore the original pagination state
+            let dataTable = $('#' + tableid).DataTable();
+            $('#' + tableid).DataTable().page.len(currentPageLength).draw();
+            $('#' + tableid).DataTable().page(currentPage).draw(false);
+        }
+    }
+
+    $(document).ready(function () {
+
+        var table = $('#dataTableForTimeSpentJobBags').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 25,
+            "aaSortig":[]
+        })
+
+        $('#tfooter').hide();
+
+        $(document).on('click', ".paginate_button", function () {
+            //addNumericColumnsClasstoDT("dataTableForBagsGivenToPerson", [1]);
+        });
+
+        fillFromToDates();
+
+        //Print Report
+        $(document).on('click', '#TimeSpentJobBagBtnDataTablePrint', function () {
+            reportFormat = "";
+            if ($(this).attr('report-format') !== undefined) {
+                reportFormat = $(this).attr('report-format');
+            }
+
+            jobBagVal = $('#jobBagNo').val() != "" ? $('#jobBagNo').val() :"All";
+            clickFromDate = $('#txtFromDate1').val();
+            clickToDate = $('#txtToDate1').val();
+            person = $('#ddlPerson option:selected').val() != "All" ? $('#ddlPerson option:selected').val().toString().trim() : "All";
+
+            //Return Custom Date & Header html Content
+            var customHeader = getCustomTitleDateHeader(jobBagVal,clickFromDate, clickToDate, person);
+
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+            const tablesSubHeadings = $(this).attr("table-sub-headings");
+
+            printDiv(tableid, tablesCount, tablesSubHeadings, customHeader, reportFormat);
+        });
+
+        //Preview Report
+
+        $('#TimeSpentJobBagbtnDataTablePreview').off('click').on('click', function () {
+            jobBagVal = $('#jobBagNo').val() != "" ? $('#jobBagNo').val() : "All";
+            clickFromDate = $('#txtFromDate1').val();
+            clickToDate = $('#txtToDate1').val();
+            person = $('#ddlPerson option:selected').val() != "All" ? $('#ddlPerson option:selected').val().toString().trim() : "All";
+
+            //Return Custom Date & Header html Content
+            var customHeader = getCustomTitleDateHeader(jobBagVal, clickFromDate, clickToDate, person);
+
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+            const tablesSubHeadings = $(this).attr("table-sub-headings");
+
+            // Append the container to the Preview content
+
+            previewDiv(tableid, tablesCount, tablesSubHeadings, customHeader);
+
+        });
+
+
+
+        //Excel Report
+        $('.btnDataTableDownloadExcel').off('click').on('click', function () {
+
+            clickFromDate = $('#txtFromDate1').val();
+            clickToDate = $('#txtToDate1').val();
+            //charityname = $('#ddlcharitys option:selected').val() != "All" ? "All" : $('#ddlcharitys option:selected').val();
+
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+
+            // Add Sub Heading text
+            var subTitile = "Date_Range_" + clickFromDate + "_To_" + clickToDate;
+
+            exportToExcel(tableid, tablesCount, subTitile);
+        });
+
+        // PDF Report
+
+        $('.btnDataTableDownloadPDF').off('click').on('click', function () {
+
+            jobBagVal = $('#jobBagNo').val() != "" ? $('#jobBagNo').val() : "All";
+            clickFromDate = $('#txtFromDate1').val();
+            clickToDate = $('#txtToDate1').val();
+            person = $('#ddlPerson option:selected').val() != "All" ? $('#ddlPerson option:selected').val().toString().trim() : "All";
+
+            //Return Custom Date & Header html Content
+            var customHeader = getCustomTitleDateHeader(jobBagVal, clickFromDate, clickToDate, person);
+
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+
+            exportTableToCustomPDF(tableid, tablesCount, customHeader);
+
+        });
+
+
+    });
+
+
+
+
+</script>
+
+
