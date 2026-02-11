@@ -1,0 +1,412 @@
+﻿@* Neetha    05/29/2025 Created new form *@
+@* Neetha    06/04/2025 Added notes popup,removed inactive column. *@
+@* Neetha    06/09/2025 Store filter functionality changes. *@
+@* Neetha    06/11/2025 Select store refresh after selections. *@
+@* Neetha    12/29/2025 Number format changes, added form title, column width changes. *@
+@* Neetha    12/31/2025 datatable css changes. *@
+@* Neetha    01/09/2026 Removed extra space on right. *@
+@* Neetha    01/21/2026 Added close btn to the form. *@
+
+
+@using Newtonsoft.Json
+
+@{
+
+    if (Session["UserID"] == null)
+    {
+        Layout = null;
+        Response.Redirect("~/Login/Index");
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+}
+
+
+<style>
+    .row-selected {
+        background-color: #8aaf6abd !important;
+    }
+
+    .container {
+        max-width: 100% !important;
+    }
+
+    html, body {
+        overflow-x: hidden;
+    }
+
+    #content-center {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .dataTables_wrapper,
+    table.dataTable {
+        width: 100% !important;
+    }
+
+    .container,
+    .container-fluid {
+        padding-right: 0 !important;
+    }
+</style>
+
+<div id="content-center" class="row" style="height: 80vh; overflow-y: auto;">
+    <div class="col-sm-12">
+
+        <div class="card shadow-sm mb-3" style="margin-top: 20px; padding: 10px 15px; background-color: #f8f9fa; border-top: 1px solid #dee2e6;">
+            <h5 class="text-center mb-0">List Of Layaways</h5>
+        </div>
+
+        <div class="web-form page login-page col-sm-12" id="FormForEditQuotation">
+
+            <div class="form-horizontal">
+                <div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="row">
+                                <label class="col-sm-4">
+                                    Store
+                                </label>
+                                <div class="col-sm-8">
+                                    <select id="ddlStore" name="ddlStore" class="form-control activateFormRefreshBtn" onchange="onStoreChange()">
+                                        <option value="">-- Select Store --</option>
+                                        @foreach (System.Data.DataRow row in ((System.Data.DataTable)ViewBag.stores).Rows)
+                                        {
+                                            <option value="@row["Code"]">@row["Code"]</option>
+                                        }
+                                    </select>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-md-4" style=" padding-top: 8px;">
+                            <input type="checkbox" id="cbFillFromStores" checked /> <span>All Stores</span>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="mt-4 white-box pos-rel" id="divDataTableReport">
+
+                <div class="row col-md-6 report_buttons">
+                    <div style="margin-right: 6rem; margin: 3px;">
+                        <input type="button" value="Notes" class="formsGlobalUniqueBtn " id="Nbtn" />
+                    </div>
+                    <div style="margin:3px;">
+                        <input type="button" value="PDF" table-id="dataTableForListOfLayaways" class="formsGlobalUniqueBtn btnDataTableDownloadPDF" id="btnPDF" />
+                    </div>
+                    <div style="margin:3px;">
+                        <input type="button" value="Excel" table-id="dataTableForListOfLayaways" class="formsGlobalUniqueBtn btnDataTableDownloadExcel" />
+                    </div>
+                    <div style="margin:3px;">
+                        <input type="button" value="Preview" table-id="dataTableForListOfLayaways" id="btnDataTablePreviewLL" class="formsGlobalUniqueBtn" />
+                    </div>
+                    <div style="margin:3px;">
+                        <input type="button" value="Print" table-id="dataTableForListOfLayaways" id="btnDataTablePrintLL" class="formsGlobalUniqueBtn" />
+                    </div>
+                    <div style="margin:3px;display:none;">
+                        <input type="button" table-id="dataTableForListOfLayaways" value="Email" class="formsGlobalUniqueBtn" />
+                    </div>
+
+                    <div style="margin:3px;display:none;">
+                        <input type="button" value="Simple Excel" class="formsGlobalUniqueBtn" />
+                    </div>
+                </div>
+
+            </div>
+            <br><br>
+            <div class="row dataTableReport">
+
+                <table id="dataTableForListOfLayaways" class="dataTable display  table-bordered" style="width:100% ">
+
+                    <thead id="theader">
+                        <tr>
+
+                            <th class="">Log #</th>
+                            <th class="">Acc</th>
+                            <th class="">Name</th>
+                            <th class="">Tel.</th>
+                            <th class="">Inv Date</th>
+                            <th class="">Item</th>
+                            <th style="width:250px;">Description</th>
+                            <th class="">Layaway Total</th>
+                            <th class="">Layaway Balance</th>
+                            <th class="">Message</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot>
+                        <tr>
+                            <td style="text-align:right"><strong>Total:</strong></td>
+                            <td colspan="6"></td>
+                            <td style="text-align:right" id="total_grand"></td>
+                            <td style="text-align:right" id="total_balance"></td>
+                            <td colspan="1"></td>
+                        </tr>
+                    </tfoot>
+                </table>
+                <br>
+            </div>
+            <div style="text-align: right;">
+                <button type="button" id="btnCancel" class="formsGlobalUniqueCloseBtn">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="previewContentModald" style="display:none;">
+</div>
+<script type="text/javascript">
+        $("#btnCancel").click(function () {
+            window.location.href = '/Home/Index';
+        });
+        $('#btnDataTablePreviewLL').click(function () {
+            $.extend(true, $.fn.dataTable.defaults, {
+                paging: false,
+                searching: false,
+                info: false,
+                ordering: false,
+                lengthChange: false,
+                dom: 't'
+            });
+            tableid = $(this).attr("table-id");
+            tablesCount = $(this).attr("table-count");
+            tablesSubHeadings = $(this).attr("table-sub-headings");
+            var Title = "List Of Layaways";
+            var rowsPerPage = 25;
+            var totalRows = $("#" + tableid + " tbody tr").length;
+            var pageCount = Math.ceil(totalRows / rowsPerPage);
+            var Currentdate = new Date().toLocaleDateString('en-GB').replace(/\//g, '-');
+            var containerHtml = '<div class="header-container" style="position: relative; width: 100%;">' +
+                '<div class="row" style="width: 100%; display: flex; justify-content: center;">' +
+                '<h4 class="item" style="text-align: center; flex-grow: 1;">' + Title + '</h4>' +
+                '</div>' +
+                '<div class="row" style="width: 100%; display: flex; justify-content: space-between; padding: 0 20px;">' +
+                '<h6 class="item" style="margin: 0; text-align: right;">' + Currentdate + '</h6>' +
+                '</div>' +
+                '</div>';
+            previewDiv(tableid, tablesCount, tablesSubHeadings);
+            $("#previewContentModalLabel").html(containerHtml);
+        });
+        $('#btnDataTablePrintLL').click(function () {
+            $.extend(true, $.fn.dataTable.defaults, {
+                paging: false,
+                searching: false,
+                info: false,
+                ordering: false,
+                lengthChange: false,
+                dom: 't'
+            });
+            tableid = $(this).attr("table-id");
+            tablesCount = $(this).attr("table-count");
+            tablesSubHeadings = $(this).attr("table-sub-headings");
+            var Title = "List Of Scrap Gold";
+            var rowsPerPage = 25;
+            var totalRows = $("#" + tableid + " tbody tr").length;
+            var pageCount = Math.ceil(totalRows / rowsPerPage);
+            var Currentdate = new Date().toLocaleDateString('en-GB').replace(/\//g, '-');
+            var containerHtml = '<div class="header-container" style="position: relative; width: 100%;">' +
+                '<div class="row" style="width: 100%; display: flex; justify-content: center;">' +
+                '<h4 class="item" style="text-align: center; flex-grow: 1;">' + Title + '</h4>' +
+                '</div>' +
+                '<div class="row" style="width: 100%; display: flex; justify-content: space-between; padding: 0 20px;">' +
+                '<h6 class="item" style="margin: 0; text-align: right;">' + Currentdate + '</h6>' +
+                '</div>' +
+                '</div>';
+            $('.printableContent').append(containerHtml);
+            printDiv(tableid, tablesCount, tablesSubHeadings);
+        });
+        $(document).ready(function () {
+
+            $('#dataTableForListOfLayaways').on('click', 'tbody tr', function (e) {
+                if ($(e.target).is('input')) return;
+                $('#dataTableForListOfLayaways tbody tr').removeClass('row-selected');
+                $(this).addClass('row-selected');
+            });
+            function toggleStoreDropdown() {
+                const isChecked = $('#cbFillFromStores').is(':checked');
+                $('#ddlStore').prop('disabled', isChecked);
+                if (isChecked) {
+                    $('#ddlStore').val('');
+
+                }
+            }
+            toggleStoreDropdown();
+            $('#cbFillFromStores').on('change', function () {
+                toggleStoreDropdown();
+                if ($(this).is(':checked')) {
+                    getLayawayList('');
+                }
+            });
+
+            $('#ddlStore').on('change', function () {
+                const selectedValue = $(this).val();
+                if (selectedValue === "-- Select Store --") {
+                    $('#cbFillFromStores').prop('checked', true);
+                    toggleStoreDropdown();
+
+                }
+            });
+            getLayawayList('');
+        });
+        function onStoreChange() {
+            var selectedStore = document.getElementById("ddlStore").value;
+            getLayawayList(selectedStore);
+        }
+
+        function formatCurrency(value) {
+            if (value === null || value === undefined || value === '') return '$0.00';
+            return '$' + Number(value).toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+        function getLayawayList(cboStores) {
+            var tableId = '#dataTableForListOfLayaways';
+
+            if ($.fn.DataTable.isDataTable(tableId)) {
+                $(tableId).DataTable().clear().destroy();
+            }
+
+            $(`${tableId} tbody`).empty();
+
+            $.ajax({
+                url: '/SalesLayaways/ListofLayawaysDetails',
+                type: 'GET',
+                data: { cboStores: cboStores },
+                success: function (response) {
+                    if (response.success) {
+                        let totalGR = 0;
+                        let totalBAL = 0;
+
+                        response.dt.forEach(function (item) {
+                            var rawDate = item.DATE;
+                            var formattedDate = '';
+                            if (rawDate && rawDate.startsWith('/Date(')) {
+                                var dateValue = new Date(parseInt(rawDate.replace('/Date(', '').replace(')/', '')));
+                                formattedDate = dateValue.toLocaleDateString();
+                            }
+
+                            totalGR += parseFloat(item.GR_TOTAL) || 0;
+                            totalBAL += parseFloat(item.BALANCE) || 0;
+
+                            var row = `
+                            <tr>
+                                <td class="InvNoForSalesTaxReport" style="cursor: pointer; color: darkmagenta; user-select: none;">${item.INV_NO || ''}</td>
+                                <td>${item.ACC || ''}</td>
+                                <td>${item.NAME || ''}</td>
+                                <td>${item.TEL || ''}</td>
+                                <td>${formattedDate}</td>
+                                <td>${item.STYLE || ''}</td>
+                                <td>${item.DESC || ''}</td>
+                                @*<td style="text-align:right">$${item.GR_TOTAL || 0}</td>
+                                <td style="text-align:right">$${item.BALANCE || 0}</td>*@
+
+                                <td style="text-align:right">${formatCurrency(item.GR_TOTAL)}</td>
+                                <td style="text-align:right">${formatCurrency(item.BALANCE)}</td>
+                                <td>${item.Message || ''}</td>
+                            </tr>
+                        `;
+                            $(`${tableId} tbody`).append(row);
+                        });
+
+
+                        //$('#total_grand').text(`$${totalGR.toFixed(2)}`);
+                        //$('#total_balance').text(`$${totalBAL.toFixed(2)}`);
+                        $('#total_grand').text(formatCurrency(totalGR));
+                        $('#total_balance').text(formatCurrency(totalBAL));
+
+
+                        setTimeout(function () {
+                            $(tableId).DataTable({
+                                pageLength: 25,
+                                paging: true,
+                                searching: true,
+                                ordering: true,
+                                info: true,
+                                lengthChange: true
+                            });
+                        }, 0);
+                    } else {
+                        alert(response.message || "An error occurred.");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX Error:", status, error);
+                    alert("Something went wrong while fetching the layaways.");
+                }
+            });
+        }
+
+        $(document).on('dblclick', '.InvNoForSalesTaxReport', function () {
+            InvoiceNo = $(this).html();
+            printTitle = "Invoice";
+            posturl = "../SalesLayaways/GetSalesTaxBillForInvoiceNo";
+            postData = {
+                cboStores: $('#ddlStore').val(),
+                inv_no: InvoiceNo
+            };
+            $.ajax({
+                url: posturl,
+                type: 'GET',
+                data: postData,
+                success: function (result) {
+                    $("#previewContentModalLabel").html(printTitle);
+                    $('#previewContentModal .previewContent').html(result);
+                    $("#previewContentModal").show();
+                    $("#previewContentModal").addClass("show");
+                }
+            });
+        });
+        var accValue = "";
+        $('#Nbtn').click(function () {
+            if (!$.fn.DataTable.isDataTable('#dataTableForListOfLayaways')) {
+                $('#dataTableForListOfLayaways').DataTable({
+                    paging: false,
+                    searching: false,
+                    info: false,
+                    lengthChange: false,
+                    ordering: false
+                });
+            }
+            let selectedRow = $('#dataTableForListOfLayaways tbody tr.row-selected');
+            accValue = selectedRow.find('td').eq(1).text().trim();
+            if (accValue == '') {
+                alert('Please Select a Row')
+                return;
+            }
+            openPotentialCustNotes();
+            $('#dataTableForListOfLayaways tbody tr').removeClass('row-selected');
+        });
+        function openPotentialCustNotes() {
+            $.ajax({
+                url: '/SalesLayaways/openPotentialCustNotes',
+                type: 'GET',
+                data: { acc: accValue },
+                success: function (response) {
+                    $("#previewContentModalLabel").html("Customer Notes");
+                    $('#previewContentModal .previewContent').html(response);
+                    $("#previewContentModal").show();
+                    $("#previewContentModal").addClass("show");
+                    if (!$.fn.DataTable.isDataTable('#dataTableForListOfLayaways')) {
+                        $('#dataTableForListOfLayaways').DataTable({
+                            paging: false,
+                            searching: false,
+                            info: false,
+                            lengthChange: false,
+                            ordering: false
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX Error:", status, error);
+                    alert("Something went wrong while fetching the customer notes.");
+                }
+            });
+        }
+</script>

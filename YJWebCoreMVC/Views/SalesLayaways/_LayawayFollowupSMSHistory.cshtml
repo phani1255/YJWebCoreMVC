@@ -1,0 +1,57 @@
+<!--
+  * Created by Manoj 24-OCT-2025
+-->
+<div id="content-center" class="row">
+    <div class="mt-4 white-box pos-rel" id="divDataTableReport">
+        <div class="row dataTableReport">
+            <table id="dataTableForLayawayFollowupSMSHistory" class="dataTable display nowrap table" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Date/TIME</th>
+                        <th>Recevied</th>
+                        <th>Sent</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (ViewBag.LayawaySMSHistory != null &&
+                     ViewBag.LayawaySMSHistory.Rows != null &&
+                     ViewBag.LayawaySMSHistory.Rows.Count > 0)
+                    {
+                        foreach (System.Data.DataRow row in ViewBag.LayawaySMSHistory.Rows)
+                        {
+                            <tr>
+                                <td>@(row["Date/Time"] != DBNull.Value ? Convert.ToDateTime(row["Date/Time"]).ToString("MM-dd-yyyy hh:mm:ss tt") : "")</td>
+                                <td>@row["Received"]</td>
+                                <td>@row["Sent"]</td>
+                            </tr>
+                        }
+                    }
+                    
+                </tbody>
+            </table>
+            <br>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+
+        var table = $('#dataTableForBagsGivenToPerson').DataTable({
+            dom: 'Blfrtip',
+            searching: false,
+            select: false,
+            buttons: [],
+            pageLength: 25,
+            "aaSorting": []
+        });
+    });
+
+</script>
+
+

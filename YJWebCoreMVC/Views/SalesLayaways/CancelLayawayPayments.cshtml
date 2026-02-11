@@ -1,0 +1,380 @@
+﻿@* Neetha    04/29/2025 Created new form *@
+@* Neetha    05/15/2025 Refund column in datatable issue fixed. *@
+
+@using Newtonsoft.Json
+
+@{
+
+    if (Session["UserID"] == null)
+    {
+        Layout = null;
+        Response.Redirect("~/Login/Index");
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+}
+
+@model YJWeb.Models.PosDetailsModel
+
+
+<style>
+    /* Modal Background */
+    .customMessageModal_modal {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+    }
+
+    /* Modal Content */
+    .customMessageModal_modalContent {
+        background-color: #ffffff; /* Light blue color */
+        /*border: 2px solid #000080;*/ /* Dark blue border */
+        border-radius: 10px;
+        padding: 20px;
+        width: 500px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+
+
+    /* Button Group */
+    .customMessageModal_buttonGroup {
+        gap: 3px;
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 10px;
+    }
+
+
+
+    #theader th {
+        width: 120px;
+        white-space: nowrap;
+        padding: 8px 12px;
+        text-align: center;
+    }
+
+    table {
+        width: 100%;
+        table-layout: auto;
+    }
+</style>
+
+<div id="content-center" class="row" style="height: 80vh; overflow-y: auto;">
+
+    <div class="web-form page login-page col-sm-12" id="FormForEditQuotation">
+
+        <div class="form-horizontal">
+            <div>
+                <div class="row">
+                    <div class="col-sm-3 text-right">
+                        <label>Invoice #</label>
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="text" id="txtInvoiceCode" />
+                    </div>
+                    <div class="col-sm-2">
+                        <button class="formsGlobalUniqueBtn" id="search_inv" onclick="showInvoiceModal()">Search</button>
+                        <button name="showIvoiceModal" id="showIvoiceModal" class="showbsmodal" data-modal-id="selectInvoiceModal" data-bs-toggle="modal" data-bs-target="#selectInvoiceModal" style="display:none;"></button>
+                    </div>
+
+                    <div class="col-sm-4 text-right">
+                      
+                        <input type="button" id="refrsh" value="Refresh *" class="refresh_btn refreshBtnDefault" />
+                       
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <br><br>
+        <div class="row dataTableReport">
+
+            <table id="dataTableForCancelLaywayPayment" class="dataTable display nowrap table-bordered" style="width:100%">
+
+                <thead id="theader">
+                    <tr>
+                        <th>Name</th>
+                        <th>Date</th>
+                        <th>Method</th>
+                        <th>Amount</th>
+                        <th>Pay No</th>
+                        <th>Delete/Refunnd</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <br>
+        </div>
+        <br />
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
+            <button type="button" class="formsGlobalUniqueBtn" id="btnDel">Delete</button>
+        </div>
+    </div>
+
+</div>
+<div id="customMessageModal" class="customMessageModal_modal" style="display:none;">
+    <div class="customMessageModal_modalContent">
+        @*<h2>Information Message Box</h2>*@
+        <p id="customerName"><strong>Customer:</strong></p>
+        <p id="paymentDate"><strong>Date: </strong></p>
+        <p id="paymentAmount"><strong>Amount:</strong></p>
+        <p><strong>Are you sure you want to Delete or Refund this payment?</strong></p>
+        <div class="customMessageModal_buttonGroup">
+            <button class="formsGlobalUniqueBtn" id="customMessageModal_deleteBtn">Delete</button>
+            <button class="formsGlobalUniqueBtn" id="customMessageModal_refundBtn">Refund</button>
+            <button class="formsGlobalUniqueCloseBtn" id="customMessageModal_cancelBtn">Cancel</button>
+        </div>
+    </div>
+</div>
+
+
+<script>
+  
+
+    $(document).ready(function () {
+
+        $('#refrsh').removeClass('refreshBtnDefault').addClass('needToRefreshBtn');
+
+        $('#refrsh').click(function () {
+            $(this).removeClass('needToRefreshBtn').addClass('refreshBtnDefault');
+            $(this).val("Refresh");
+        });
+
+
+        $('#refrsh').on('click', function () {
+            var invoiceNo = $('#txtInvoiceCode').val();
+            var $tbody = $('#dataTableForCancelLaywayPayment tbody');
+            var totalAmount = 0;
+            var totalRefund = 0;
+
+            $.ajax({
+                type: "POST",
+                url: '/SalesLayaways/Searchinvoice',
+                data: { invoiceNo: invoiceNo },
+                success: function (response) {
+                    console.log(response);
+                    if (!response.success) {
+                        $("#errorMsgModal .errorMsg").html(response.message);
+                        $("#errorMsgModal").show();
+                        $("#errorMsgModal").addClass('show');
+                        return;
+                    }
+
+                    $tbody.empty();
+                    $.each(response.data, function (index, item) {
+                        var timestamp = parseInt(item.DATE?.match(/\d+/)?.[0] ?? NaN, 10);
+
+                        var formattedDate = isNaN(timestamp)
+                            ? ''
+                            : new Intl.DateTimeFormat('en-GB').format(new Date(timestamp));
+                        var amount = Number(item.AMOUNT) || 0;
+                        var refund = Number(item.RefundAmount) || 0;
+                        totalAmount += amount;
+                        totalRefund += refund;
+                        var row = '<tr>' +
+                            '<td>' + item.NAME + '</td>' +
+                            '<td>' + formattedDate + '</td>' +
+                            '<td>' + item.METHOD + '</td>' +
+                            '<td class="numericColumns">' + amount.toLocaleString('en-IN', { minimumFractionDigits: 2 }) + '</td>' +
+                            '<td>' + item.PAY_NO + '</td>' +
+                            '<td style="text-align:center;">' +'<input type="checkbox" class="refund-checkbox">' +'</td>' +
+                            '</tr>';
+                        $tbody.append(row);
+                    });
+                },
+                error: function (xhr, status, error) {
+                    $("#errorMsgModal .errorMsg").html(error);
+                    $("#errorMsgModal").show();
+                    $("#errorMsgModal").addClass('show');
+                   
+                }
+            });
+        });
+        function buildRefundDropdown(selectedKey) {
+            var dropdown = '<select class="form-control refund-method"><option value=""></option>';
+            if (paymentMethods && typeof paymentMethods === 'object') {
+                Object.keys(paymentMethods).forEach(function (key) {
+                    var isSelected = (key === selectedKey) ? ' selected' : '';
+                    dropdown += '<option value="' + key + '"' + isSelected + '>' + paymentMethods[key] + '</option>';
+                });
+            }
+            return dropdown + '</select>';
+        }
+        $(document).on('click', '.refund-checkbox', function () {
+            var row = $(this).closest('tr');
+            var customerName = row.find('td').eq(0).text();
+            var paymentDate = row.find('td').eq(1).text();
+            var paymentAmount = row.find('td').eq(3).text();
+            $('#customerName').html('<strong>Customer:</strong>' + customerName);
+            $('#paymentDate').html('<strong>Date:</strong>' + paymentDate);
+            $('#paymentAmount').html('<strong>Amount:</strong>' + paymentAmount);
+
+        });
+        function recalcTotals() {
+            var totalAmt = 0, totalRef = 0;
+            $('#dataTableForCancelSplOrder tbody tr').each(function () {
+                var amtText = $(this).find('td:nth-child(3)').text().replace(/[^0-9.-]+/g, '');
+                var refText = $(this).find('td:nth-child(7)').text().replace(/[^0-9.-]+/g, '');
+                var amt = parseFloat(amtText) || 0;
+                var ref = parseFloat(refText) || 0;
+                totalAmt += amt;
+                totalRef += ref;
+            });
+            $('#dataTableForCancelSplOrder tfoot td:nth-child(3) strong')
+                .text('₹' + totalAmt.toLocaleString('en-IN', { minimumFractionDigits: 2 }));
+            $('#dataTableForCancelSplOrder tfoot td:last-child strong')
+                .text('₹' + totalRef.toLocaleString('en-IN', { minimumFractionDigits: 2 }));
+            $('#differenceValue').text((totalAmt - totalRef).toLocaleString('en-IN', { minimumFractionDigits: 2 }));
+        }
+
+        $('#btnDel').on('click', function () {
+
+            var btn = $('#refrsh').text();
+            var isChecked = $('.refund-checkbox').is(':checked');
+            var invoiceNo = $('#txtInvoiceCode').val();
+            if (invoiceNo == "") {
+               
+                $("#errorMsgModal .errorMsg").html("Enter Invoice#..");
+                $("#errorMsgModal").show();
+                $("#errorMsgModal").addClass('show');
+                return;
+            }
+            if (isChecked == false) {
+                
+                $("#errorMsgModal .errorMsg").html("No Records Selected..");
+                $("#errorMsgModal").show();
+                $("#errorMsgModal").addClass('show');
+                return;
+            }
+            $('#customMessageModal').fadeIn();
+        });
+        $('#customMessageModal_deleteBtn').on('click', function () { deleteInvoice('Delete') });
+        $('#customMessageModal_refundBtn').on('click', function () { deleteInvoice('Refund') });
+        $('#customMessageModal_cancelBtn').on('click', function () { $('#customMessageModal').fadeOut(); });
+
+        function deleteInvoice(slectOption) {
+            var isChecked = $('.refund-checkbox').is(':checked');
+            var invoiceNo = $('#txtInvoiceCode').val();
+
+            $.ajax({
+                type: "POST",
+                url: '/SalesLayaways/deleteButton1_Click',
+                data: {
+                    invoice: invoiceNo,
+                    isChecked: isChecked,
+                    slectTOption: slectOption
+
+                },
+                success: function (response) {
+
+                    if (response.success) {
+                        $('#customMessageModal').fadeOut();
+                        alert(response.message);
+                            location.reload();
+                        
+
+                    } else {
+                        $("#errorMsgModal .errorMsg").html(response.message);
+                        $("#errorMsgModal").show();
+                        $("#errorMsgModal").addClass('show');
+                        
+                    }
+                },
+                error: function (xhr, status, error) {
+                   
+                    $("#errorMsgModal .errorMsg").html(error);
+                    $("#errorMsgModal").show();
+                    $("#errorMsgModal").addClass('show');
+                }
+            });
+        }
+    });
+
+    function showInvoiceModal() {
+        $('#txtFromDate').val('1900-01-01').prop('disabled', 'true');
+        $('#txtToDate').val('2098-12-31').prop('disabled', 'true');
+        $('#cbFillFromToDates').prop("checked", true);
+        $('#cCode').val('');
+        $('#fName').val('');
+        $('#lName').val('');
+        $('#address').val('');
+        $('#tel').val('');
+        $('#state').val('');
+        $('#zip').val('');
+        $('#store').prop('selectedIndex', 0);
+        $('#tFrom').val('');
+        $('#tTo').val('');
+        $('#searchResultsForInvoiceCodes').html("");
+        $('#showReturned').css('display', "block");
+        $('#showIvoiceModal').click();
+    }
+     function searchInvoice() {
+            $('#searchResultsForInvoiceCodes').html('');
+
+            if ($('#txtFromDate').val() != "")
+                fromdate = $('#txtFromDate').val();
+            else
+                fromdate = "1990-01-01";
+
+            if ($('#txtToDate').val() != "")
+                todate = $('#txtToDate').val();
+            else
+                todate = "2099-12-31";
+
+            cCode = $('#cCode').val();
+            fName = $('#fName').val();
+            lName = $('#lName').val();
+            address = $('#address').val();
+            tel = $('#tel').val();
+            state = $('#state').val();
+            zip = $('#zip').val();
+            store = $('#store').val();
+            tFrom = $('#tFrom').val();
+            tTo = $('#tTo').val();
+            itemsNotPreviouslyReturned = $('#itemsNotPreviouslyReturned').prop('checked') ? true : false;
+
+            var url = '@Url.Action("GetInvoiceDetails", "ListOfItemsSold", new { Area = "" })';
+
+            var data = {
+                FROMDATE: fromdate,
+                DateTo: todate,
+                Ccode: cCode,
+                FName: fName,
+                LName: lName,
+                Address: address,
+                Tel: tel,
+                State: state,
+                Zip: zip,
+                Store: store,
+                TotalFrom: tFrom,
+                TotalTo: tTo,
+                ItemsNotPreviouslyReturned: itemsNotPreviouslyReturned,
+                IsforSpecial:false,
+                LayAways:true
+            };
+
+            var jqxhr = $.post(url, data, function () { })
+                .done(function (response) {
+                    $('#searchResultsForInvoiceCodes').html(response);
+
+                });
+     }
+
+var paymentMethods = @Html.Raw(JsonConvert.SerializeObject(ViewBag.paymentmethods));
+    console.log('paymentMethods:', paymentMethods);
+    var totalAmount = 0;
+    var totalRefund = 0;
+
+
+</script>

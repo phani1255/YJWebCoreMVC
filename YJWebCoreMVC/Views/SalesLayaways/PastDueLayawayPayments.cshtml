@@ -1,0 +1,1079 @@
+<!--
+  * Created by Manoj 09-June-2025
+  * Manoj  06/16/2025 Fixed Issues on report buttons and alerts
+  * Manoj  06/18/2025 Fixed issues on checkboxes
+  * Manoj Added additional functionality for Layaway Payments That are Due
+  * Manoj 06/23/2025 Fixed isses on Layaway Payments That are Due
+  * Manoj 06/27/2025 Fixed isses on DropDown and reports Images Layaway Payments That are Due
+  * Manoj 06/27/2025 Fixed issues on dropdown
+-->
+@using YJWeb.Helpers
+@{
+    ViewBag.Title = "Past Due Layway Payments";
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var storeList = ViewBag.storeList;
+    var Logo = ViewBag.StoreLogo;
+    var storeName = ViewBag.StoreName;
+    var storeAddr1 = ViewBag.StoreAddress1;
+    var storeAddr2 = ViewBag.storeAddress2;
+    var storeTelNo = ViewBag.StorePhone;
+    var isDueReport = Helper.isDueReport;
+    var getMessages = ViewBag.emptyData;
+
+}
+
+@model YJWeb.Models.SalesLayAwaysModel
+<h2 class="text-center mt-2">Past Due Layway Payments</h2>
+<div id="AlertContainer"></div>
+<div id="content-center" class="row">
+
+    <div class="web-form page login-page col-sm-12" id="FormForBagsGivenToPerson">
+
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            No of Days :
+                        </label>
+                        <div class="col-sm-4 position-relative" id="DueDays">
+                            <input type="text" value="0" id="noOfDays" class="form-control fs-13 resetFromDate activateFormRefreshBtn" /> <span class="navbar-toggler-icon"></span>
+
+                            @if (isDueReport)
+                            {
+                                <span class="dropdown-toggle-icon pr-2" style="position:absolute; top:8px; right:10px; cursor:pointer;">&#x25BC;</span>
+                            }
+
+                            <div id="autocomplete-Duelist1" class="autocomplete-items" style="z-index: 9999 !important">></div>
+
+                            <input type="hidden" id="isDueLayway" class="form-control fs-13 resetFromDate activateFormRefreshBtn" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+
+                    <div class="row" style="border: 2px groove; border-radius:5px">
+
+                        <div class="col-sm-12 text-center m-1" id="cbFiltered">
+                            <label style="font-weight:700">Select Filter : </label>
+                            <input type="checkbox" id="cbFilteredCallData" class="checkbox ml-2" /> <span>Call</span>
+                            <input type="checkbox" id="cbFilteredTextData" class="checkbox ml-2" /> <span>Text</span>
+                            <input type="checkbox" id="cbFilteredEmailData" class="checkbox ml-2" /> <span>Email</span>
+                            @*<input type="checkbox" id="cbFilteredMailData" class="checkbox ml-2" /> <span>Mail</span>*@
+                            <input type="checkbox" id="cbFilteredAllData" class="checkbox ml-2" /> <span>All</span>
+                            <input type="checkbox" id="cbFilteredNoneData" class=" checkbox ml-2" /> <span>None</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Store :
+                        </label>
+                        <div class="col-sm-6">
+                            <select class="form-control resetSelectField activateFormRefreshBtn" id="ddlstores">
+                                @foreach (var item in storeList)
+                                {
+                                    <option value="@item.Text">@item.Text</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-sm-2 mt-2">
+                            <input type="checkbox" id="cbStoresCheckBox" checked class="ml-2" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row d-flex flex-row justify-content-end ">
+                <div class="col-sm-4">
+                </div>
+                <div class="col-sm-4 mt-2 text-right mr-4">
+                    <input type="button" id="btnFormResultsSearch" value="Refresh" class="btnFormResultsSearchForm refresh_btn refreshBtnDefault" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4 white-box pos-rel" id="divDataTableReport">
+
+        <div class="row col-md-6 report_buttons">
+            <div style="margin:3px;">
+                <input type="button" value="PDF" table-id="dataTableForPastDueLaywayPayments" table-count="1" class="formsGlobalUniqueBtn btnDataTableDownloadPDF" id="btnPDF" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Excel" table-id="dataTableForPastDueLaywayPayments" table-count="1" class="formsGlobalUniqueBtn btnDataTableDownloadExcel" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Preview" table-id="dataTableForPastDueLaywayPayments" id="PastDueLaywayPaymetsbtnDataTablePreview" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Print" table-id="dataTableForPastDueLaywayPayments" id="PastDueLaywayPaymetsbtnDataTablePrint" class="formsGlobalUniqueBtn" table-count="1" report-format="portrait" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" id="btnProcessFilters" value="Process" data-bs-toggle="modal" data-bs-target="#ConfigureMsgTextModel" class="formsGlobalUniqueBtn" style="background-color: #0fabbf !important;" />
+            </div>
+
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Simple Excel" class="formsGlobalUniqueBtn" />
+            </div>
+        </div>
+        <div class="row dataTableReport mt-5">
+            <table id="dataTableForPastDueLaywayPayments" class="dataTable display nowrap table" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Invoice #</th>
+                        <th>Customer Name</th>
+                        <th>Customer Tel</th>
+                        <th>Style</th>
+                        <th>Purchased</th>
+                        <th>Last Payments</th>
+                        <th id="lastDueDays">Due Days</th>
+                        <th><input type="checkbox" id="thcbFilteredCall" class="filtercheckbox   checkbox" /> <span>Call</span></th>
+                        <th><input type="checkbox" id="thcbFilteredText" class="filtercheckbox checkbox" /> <span>Text</span></th>
+                        <th><input type="checkbox" id="thcbFilteredEmail" class="filtercheckbox checkbox" /> <span>Email</span></th>
+                        @*<th><input type="checkbox" id="thcbFilteredMail" class=" checkbox" /> <span>Mail</span></th>*@
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <br>
+
+        </div>
+    </div>
+    <div id="pdfReportHeadingText"></div>
+</div>
+
+
+<div class="modal fade" id="ConfigureMsgTextModel" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @*style="max-height: 90vh; display: flex; flex-direction: column;"*@
+            <div class="modal-header" style="background: #5757ee; color: white;">
+                <h5 class="modal-title mt-2" style="display:flex; flex-direction:row; justify-content:center;" id="ConfigureMsgTextModelBsModalLabel">Configure Message For Text</h5>
+                <button type="button" class="formsGlobalUniqueCloseBtn btn-close closeModal closeModalNotes" data-modal-id="ConfigureMsgTextModel" data-bs-dismiss="modal" aria-label="Close">X</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="mt-4 white-box pos-rel" id="divDataTableReport">
+                    <div class="new-section d-flex flex-row">
+                        <!-- Left Half -->
+                        <div class="col-md-6">
+                            <div style="background: #5757ee; color: white; text-align: center; margin-bottom: 8px; border-radius:5px;">
+                                Double Click on any below message to use
+                            </div>
+                            <div class="row dataTableReport">
+                                <table style="width:100%;" id="dataTableForCustWarMessage" class="datatable display nowrap table">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Message</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        @*@if (getMessages != null && getMessages.Rows.Count > 0)
+                                            {
+                                                foreach (System.Data.DataRow row in getMessages.Rows)
+                                                {
+                                                    <tr>
+                                                        <td>@row["NAME"]</td>
+                                                        <td>@row["Message"]</td>
+                                                    </tr>
+                                                }
+                                            }*@
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+
+                        <!-- Right Half -->
+                        <div class="col-md-6">
+
+                            <div style="background: #5757ee; color: white; text-align: center; margin-bottom: 8px; border-radius: 5px;">
+                                Send Message
+                            </div>
+
+                            <textarea style="width:100%;height:268px" placeholder="Type your message here..." id="messageText"></textarea>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="button" id="btnNotesSubmit" value="Submit" class="refresh_btn refreshBtnDefault ml-2" />
+                <button type="button" class="formsGlobalUniqueCloseBtn closeModal closeModalNotes" data-modal-id="ConfigureMsgTextModel" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!---SMS Warrning Start--->
+<div class="modal" id="warningModal" tabindex="-1" role="dialog" style="display: none;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Warning</h5>
+                <button type="button" class="close" id="cancelWarning" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="warningMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="confirmWarning" class="btn formsGlobalUniqueBtn">Ok</button>
+                <button type="button" id="cancelWarning" class="btn formsGlobalUniqueCloseBtn" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!------>
+<!--ModAL Confirmation strat-->
+<div class="modal" id="confirmationModal" tabindex="-1" role="dialog" style="display: none;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Are you sure?</h5>
+                <button type="button" class="close" id="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to override on customer maintance ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="confirmMaintance" class="btn formsGlobalUniqueBtn">Ok</button>
+                <button type="button" id="closed" class="btn formsGlobalUniqueCloseBtn" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Modal Confirmation End-->
+<script type="text/javascript">
+
+    /*var txtFromDate1 = "1900-01-01",  txtToDate1 = "2099-12-31";*/
+    var noOfDays = 0; var store = "All"; var callFilters = ""; var textFilters = false; var emailFilters = false;
+    var allFilters = false; var noneFilters = false; var isDueLayway = false; var allStores = false;
+
+    function cleanControlls() {
+        /*txtFromDate1 = "1900-01-01", txtToDate1 = "2099-12-31";*/
+        $('#ddlstores').val('All').change();
+        $('#noOfDays').val('0');
+        $('#cbFilteredAllData').prop('checked', false);
+        $('#cbFilteredCallData').prop('checked', false);
+        $('#cbFilteredTextData').prop('checked', false);
+        $('#cbFilteredEmailData').prop('checked', false);
+        $('#cbFilteredNoneData').prop('checked', false)
+        existAutoFilledData();
+    }
+
+    function existAutoFilledData() {
+
+        if ($('#noOfDays').val() != 0) {
+            noOfDays = $('#noOfDays').val();
+        } else {
+            noOfDays = 0;
+        }
+        if ($('#cbFilteredCallData').prop('checked')) {
+            callFilters = true;
+        } else {
+            callFilters = false;
+        }
+        if ($('#cbFilteredTextData').prop('checked')) {
+            textFilters = true;
+        } else {
+            textFilters = false;
+        }
+        if ($('#cbFilteredEmailData').prop('checked')) {
+            emailFilters = true;
+        } else {
+            emailFilters = false;
+        }
+        //if ($('#cbFilteredMailData').prop('checked')) {
+        //    mailFilters = true;
+        //} else {
+        //    mailFilters = false;
+        //}
+        if ($('#cbFilteredAllData').prop('checked')) {
+            allFilters = true;
+        } else {
+            allFilters = false;
+        }
+        if ($('#cbFilteredNoneData').prop('checked')) {
+            noneFilters = true;
+        } else {
+            noneFilters = false;
+        }
+
+        if ($('#ddlstores option:selected').val() != 'All' )
+            store = $('#ddlstores option:selected').val();
+        else
+            store = "All";
+
+        if ($('#isDueLayway').val() == "True") {
+            isDueLayway = true;
+        } else {
+            isDueLayway = false;
+        }
+        if ($('#cbStoresCheckBox').prop('checked')) {
+            allStores = true;
+        } else {
+            allStores = false;
+        }
+
+
+        BindBagsGivenToPerson(noOfDays, store, allFilters, noneFilters, emailFilters, textFilters, callFilters, isDueLayway,allStores);
+    }
+
+    function BindBagsGivenToPerson(noOfDays, store, allFilters, noneFilters, emailFilters, textFilters, callFilters, isDueLayway, allStores) {
+
+        if (noOfDays == 0) {
+            var alert = ` <div class="alert alert-danger text-center" role="alert">
+                              No. of day should not be 0, Please specify the # of days!
+                          </div>`
+            $('#AlertContainer').fadeIn();
+            $('#AlertContainer').html(alert);
+            setTimeout(function () {
+                $('#AlertContainer').fadeOut();
+            }, 3000);
+            return;
+        }
+        else {
+            var url = '@Url.Action("GetListOfPastDueLayawayPayments", "SalesLayaways", new { Area = "" })';
+
+            var data = {
+                noOfDays: noOfDays,
+                store: store,
+                allFilters: allFilters,
+                noneFilters: noneFilters,
+                emailFilters: emailFilters,
+                textFilters: textFilters,
+                callFilters: callFilters,
+                isDueLayway: isDueLayway,
+                allStores: allStores
+
+            };
+
+            var jqxhr = $.post(url, data, function () { })
+                .done(function (response) {
+                    var json;
+                    if (response instanceof Object)
+                        json = response;
+
+                    else
+                        json = $.parseJSON(response);
+
+                    var table = $('#dataTableForPastDueLaywayPayments').DataTable();
+                    table.clear().draw();
+
+                    $("#dataTableForPastDueLaywayPayments tbody").empty();
+                    var trans = json;
+                    var totalPrice = 0;
+                    var tr;
+                    if (json.length > 0) {
+                        for (var i = 0; i < json.length; i++) {
+
+                            var CallChecked = json[i].CALL ? "checked" : "";
+                            var TextChecked = json[i].TEXT ? "checked" : "";
+                            var EmailChecked = json[i].EMAIL ? "checked" : "";
+                            var MailChecked = json[i].MAIL ? "checked" : "";
+
+                            table.row.add([
+                                json[i].Inv_No,
+                                json[i].name,
+                                json[i].TEL,
+                                json[i].Style,
+                                json[i].Date ? json[i].Date.split("T")[0] : "",
+                                json[i].Last_Pay_Dt ? json[i].Last_Pay_Dt.split("T")[0] : "",
+                                json[i]["Due/Days"],
+                                '<input type="checkbox" id="callcheckbox' + i + '" data-id="' + json[i].Inv_No + '" data-name = "CALL" class="callcheckbox" ' + CallChecked + '/>',
+                                '<input type="checkbox" id="textcheckbox' + i + '" data-id="' + json[i].Inv_No + '" data-name = "TEXT" class=" textcheckbox" ' + TextChecked + '/>',
+                                '<input type="checkbox" id="emailcheckbox' + i + '" data-id="' + json[i].Inv_No + '"   data-name = "EMAIL" class=" emailcheckbox" ' + EmailChecked + '/>'
+                                //'<input type="checkbox"  class=" mailcheckbox" ' + MailChecked +'/>'
+                            ]);
+                        }
+                    } else {
+                        var alert = ` <div class="alert alert-danger text-center" role="alert">
+                                  No Data Found!
+                              </div>`
+                        $('#AlertContainer').fadeIn();
+                        $('#AlertContainer').html(alert);
+                        setTimeout(function () {
+                            $('#AlertContainer').fadeOut();
+                        }, 3000);
+                    }
+
+                    table.draw();
+                })
+                .fail(function (jqxhr, textStatus, error) {
+                    var err = textStatus + ", " + error;
+                    console.log("GetListofCompletedJobs Request Failed: " + err);
+                });
+        }
+    }
+
+    function getCustomTitleDateHeader() {
+
+        var cusfrmDate = "";
+        var custoDate = "";
+        var Title = "Past Due Layway Payment List";
+        var Currentdate = "Date: " + new Date().toLocaleDateString();
+        let customHeaderText = "";
+        var containerHtml = "";
+
+        if ( containerHtml == "") {
+            containerHtml = '<div class="row header-container">' +
+                            '<div class="col-4 d-flex align-items-start" style="padding-left: 20px;">' +
+                               '<img alt="Logo" id="customImage"  style="max-width: 100px; height: auto; object-fit: contain;" src="data:image/png;base64,'+ '@Logo' +'"/>' +
+                            '</div>' +
+                             '<div>'+
+                                     '<h4 class="item class="item" id="customSubHeader" >' + Title + '</h4>' +
+                                    '<h6 class="item class="item mt-2" id="customSubHeader1"  >' + '@storeName' + '</h6>' +
+                                    '<h6 class="item" id="customSubHeader2"   >' + '@storeAddr1'  + '</h6>' +
+                                    '<h6 class="item" id="customSubHeader3"  > '+ '@storeAddr2' + '</h6>' +
+                                    '<h6 class="item" id="customSubHeader4" > ' + '@storeTelNo' + '</h6>' +
+                                    '<h6 class="item" id="customSubHeader5"   >  ' + Currentdate + '</h6>' +
+                             '</div>' +
+                    '</div>';
+        } else {
+            containerHtml = "";
+        }
+
+        if ($("#pdfReportHeadingText").html() == "") {
+            $("#pdfReportHeadingText").html(containerHtml);
+            $("#pdfReportHeadingText").hide();
+        }
+        return containerHtml;
+
+    }
+
+
+        async function exportTableToCustomPDF(tableid, tablesCount, reportSubTitile = "") {
+
+            if (typeof (tablesCount) != "undefined" && parseInt(tablesCount) > 1) {
+
+                // Create the PDF document
+                var { jsPDF } = window.jspdf;
+                var doc = new jsPDF('l', 'mm', [297, 210]);
+                for (dt = 1; dt <= parseInt(tablesCount); dt++) {
+
+                    var dataTableId = tableid + "-" + dt;
+                    var currentPageLength = $('#' + dataTableId).DataTable().page.len();
+                    // Store the current pagination state
+                    var currentPage = $('#' + dataTableId).DataTable().page();
+                    var currentPageLength = $('#' + dataTableId).DataTable().page.len();
+
+                    // Set the page length to show all entries
+                    $('#' + dataTableId).DataTable().page.len(-1).draw();
+
+                    // Get the table data
+                    var table = document.getElementById(dataTableId);
+                    var tableData = [];
+                    for (var i = 0, row; row = table.rows[i]; i++) {
+                        var rowData = [];
+                        for (var j = 0, col; col = row.cells[j]; j++) {
+                            if (col.classList.contains("hide-on-print") || col.classList.contains("hideColumns")) {
+                                continue;
+                            }
+                            rowData.push(col.innerText);
+                        }
+                        tableData.push(rowData);
+                    }
+
+                    doc.autoTable({
+                        head: [tableData[0]],
+                        body: tableData.slice(1),
+                    });
+                    // Restore the original pagination state
+                    $('#' + tableid).DataTable().page.len(currentPageLength).draw();
+                    $('#' + tableid).DataTable().page(currentPage).draw(false);
+                }
+
+                // Save the PDF
+                let filname = ($('.form-h1').text() != "undefined" && $('.form-h1').text() != '') ? $('.form-h1').text() : 'data';
+                doc.save(filname + '.pdf');
+
+
+            } else {
+
+                // Store the current pagination state
+                var currentPage = $('#' + tableid).DataTable().page();
+                var currentPageLength = $('#' + tableid).DataTable().page.len();
+
+                // Set the page length to show all entries
+                $('#' + tableid).DataTable().page.len(-1).draw();
+
+                // Get the table data
+                var table = document.getElementById(tableid);
+                var tableData = [];
+                for (var i = 0, row; row = table.rows[i]; i++) {
+                    var rowData = [];
+                    for (var j = 0, col; col = row.cells[j]; j++) {
+                        if (col.classList.contains("hide-on-print") || col.classList.contains("hideColumns")) {
+                            continue;
+                        }
+                        rowData.push(col.innerText);
+                    }
+                    tableData.push(rowData);
+                }
+
+
+                // Create the PDF document
+                var { jsPDF } = window.jspdf;
+                var doc = new jsPDF();
+
+                let headingText = ($('.form-h1').text() != "undefined" && $('.form-h1').text() != '') ? $('.form-h1').text() : 'Data Report';
+
+                // Add heading to the PDF
+                let currentY = 15;
+                doc.setFontSize(16); // Set font size for heading
+                doc.text(headingText, 105, currentY, { align: "center" });
+                currentY += 7
+
+                let format = "PNG";
+                var imageSrc = $('#customImage').attr('src');
+                if (imageSrc.startsWith('data:image/jpeg') || imageSrc.startsWith('data:image/jpg')) {
+                    format = 'JPEG';
+                } else if (imageSrc.startsWith('data:image/png')) {
+                    format = 'PNG';
+                }
+
+                doc.addImage(image, format, 10, 20, 50, 30);
+
+                //Add Sub Heading to PDF
+                if (reportSubTitile.length > 0 && reportSubTitile != "") {
+
+
+
+                    if ($('#customSubHeader1').text().length > 0 && $('#customSubHeader1').text() != "") {
+
+                        let subHeading1 = $('#customSubHeader1').text();
+                        doc.setFontSize(11); // Set font size for heading
+                        doc.text(subHeading1, 105, currentY, { align: "center" });
+                        currentY += 6
+
+                    }
+
+                    if ($('#customSubHeader2').text().length > 0 && $('#customSubHeader2').text() != "") {
+
+                        let subHeading2 = $('#customSubHeader2').text();
+                        doc.setFontSize(11); // Set font size for heading
+                        doc.text(subHeading2, 105, currentY, { align: "center" });
+                        currentY += 6
+                    }
+
+                    if ($('#customSubHeader3').text().length > 0 && $('#customSubHeader3').text() != "") {
+                        let subHeading3 = $('#customSubHeader3').text();
+                        doc.setFontSize(11); // Set font size for heading
+                        doc.text(subHeading3, 105, currentY, { align: "center" });
+                        currentY += 6
+                    }
+                    if ($('#customSubHeader4').text().length > 0 && $('#customSubHeader4').text() != "") {
+                        let subHeading3 = $('#customSubHeader4').text();
+                        doc.setFontSize(11); // Set font size for heading
+                        doc.text(subHeading3, 105, currentY, { align: "center" });
+                        currentY += 6
+                    }
+                    if ($('#customSubHeader5').text().length > 0 && $('#customSubHeader5').text() != "") {
+                        let subHeading3 = $('#customSubHeader5').text();
+                        doc.setFontSize(11); // Set font size for heading
+                        doc.text(subHeading3, 105, currentY, { align: "center" });
+                        currentY += 6
+                    }
+                }
+
+                // Add the table to the PDF
+                doc.autoTable({
+                    startY: currentY, // Position table below heading
+                    head: [tableData[0]],
+                    body: tableData.slice(1),
+                    margin: { top: 5, bottom: 5, left: 5, right: 5 },
+                    styles: { fontSize: 6, cellPadding: 0.5 },
+                });
+
+                // Save the PDF
+                let filname = headingText;
+                doc.save(filname + '.pdf');
+
+                // Restore the original pagination state
+                let dataTable = $('#' + tableid).DataTable();
+                $('#' + tableid).DataTable().page.len(currentPageLength).draw();
+                $('#' + tableid).DataTable().page(currentPage).draw(false);
+            }
+        }
+
+        function sendEmail(subject, message) {
+            var emailData = {
+                subject: subject,
+                message: message
+            };
+            $.ajax({
+                url: '@Url.Action("SendPastDueLaywayPaymentsEmail", "SalesLayaways")',
+                type: 'POST',
+                data: emailData,
+                success: function(response) {
+                    if (response.success) {
+                        alert('Email sent successfully!');
+                    } else {
+                        alert('Error: ' + response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert('An error occurred: ' + error);
+                }
+            });
+    }
+
+    function updatepastDueCustomerMaintaince(selectedCheckboxId, selectCell) {
+        var url = '@Url.Action("updatepastDueCustomerMaintainceList","SalesLayways",new { Area = ""})';
+        var body = {
+            uInvNo: selectedCheckboxId,
+            uField: selectCell,
+            uSetValue : 1
+        }
+        var jqxhr = $.post(url, body, function () { })
+            .done(function (response) {
+                if (response.success) {
+                    alert("Updated");
+                } else {
+                    alert("Unable to update")
+                }
+            })
+            .fail(function (xhr, status, error) {
+                alert('An error occurred: ' + error);
+            })
+    }
+
+    /*function listDueDaysValues() {
+        $("#autocomplete-Duelist1").show();
+        var capval = 0;
+        var list = $("#autocomplete-Duelist1");
+        list.empty();
+
+        var results = ['5', '10', '15', '20', '30', '>30'];
+        results.forEach(function (item) {
+            capval++;
+            if (capval <= 20) {
+                var itemElement = $("<div>")
+                    .addClass("autocomplete-item")
+                    .text(item)
+                    .on("click", function () {
+                        $("#noOfDays").val(item);
+                        list.empty();
+                        //$("#autocomplete-Duelist1").hide();
+                    });
+
+                list.append(itemElement);
+            }
+        });
+
+    }*/
+
+    $(document).ready(function () {
+
+        $('#isDueLayway').val("@isDueReport");
+
+        if ($('#cbStoresCheckBox').prop('checked')){
+            $('#ddlstores').prop('disabled', true);
+        }
+
+        $(document).on('change', '#cbStoresCheckBox', function () {
+            if ($('#cbStoresCheckBox').prop('checked')) {
+                $('#ddlstores').prop('disabled', true);
+            } else {
+                $('#ddlstores').prop('disabled', false);
+            }
+        })
+
+        $(document).on('change', '#cbFilteredAllData', function () {
+            if ($('#cbFilteredAllData').prop('checked')) {
+                $('#cbFilteredCallData').prop('checked', false);
+                $('#cbFilteredTextData').prop('checked', false);
+                $('#cbFilteredEmailData').prop('checked', false);
+                //$('#cbFilteredMailData').prop('checked', false);
+                $('#cbFilteredNoneData').prop('checked', false)
+            }
+        });
+        $(document).on('change', '#cbFilteredNoneData', function () {
+            if ($('#cbFilteredNoneData').prop('checked')) {
+                $('#cbFilteredCallData').prop('checked', false);
+                $('#cbFilteredTextData').prop('checked', false);
+                $('#cbFilteredEmailData').prop('checked', false);
+                //$('#cbFilteredMailData').prop('checked', false);
+                $('#cbFilteredAllData').prop('checked', false);
+            }
+        });
+
+        $(document).on('change', '#cbFilteredTextData, #cbFilteredEmailData,#cbFilteredCallData', function () {
+            if ($('#cbFilteredTextData').prop('checked') || $('#cbFilteredCallData').prop('checked') || $('#cbFilteredEmailData').prop('checked')) {
+                $('#cbFilteredAllData').prop('checked', false);
+                $('#cbFilteredNoneData').prop('checked', false);
+            }
+        })
+
+        $(document).on('change', '.filtercheckbox', function () {
+            if ($('#cbFilteredAllData').prop('checked') || $('#cbFilteredNoneData').prop('checked') || $('#cbFilteredTextData').prop('checked')
+                || $('#cbFilteredCallData').prop('checked')  || $('#cbFilteredEmailData').prop('checked')
+            ) {
+                alert("Click On Refresh Button");
+            }
+        })
+
+        $('#btnProcessFilters').hide();
+
+        $('.btnFormResultsSearchForm').click(function () {
+
+            /*if ($('#noOfDays').val() == 0) {
+                alert("No of Days Should Not be 0 , Please Specify Days ");
+            }*/
+
+                var isTextchecked = $('#cbFilteredTextData').prop('checked');
+                var isEmailChecked = $('#cbFilteredEmailData').prop('checked');
+
+            if (isTextchecked || isEmailChecked) {
+                $('#btnProcessFilters').show();
+            }
+
+            $(document).on('change', '#cbFilteredTextData, #cbFilteredEmailData', function () {
+                if ($('#cbFilteredTextData').prop('checked') || $('#cbFilteredEmailData').prop('checked')) {
+                    $('#btnProcessFilters').show();
+                } else {
+                    $('#btnProcessFilters').hide();
+                }
+            })
+        });
+
+
+        var table = $('#dataTableForPastDueLaywayPayments').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 25,
+            "aaSorting": []
+        });
+
+        fillFromToDates();
+
+        $(document).on('change', '#thcbFilteredCall', function () {
+            if ($('#thcbFilteredCall').prop('checked')) {
+                $('.callcheckbox').prop('checked', true);
+            } else {
+                $('.callcheckbox').prop('checked', false);
+            }
+        })
+        //textcheckbox,callcheckbox,emailcheckbox
+        $(document).on('change', '#thcbFilteredText', function () {
+            if ($('#thcbFilteredText').prop('checked')) {
+                $('.textcheckbox').prop('checked', true);
+            } else {
+                $('.textcheckbox').prop('checked', false);
+            }
+        })
+
+        $(document).on('change', '#thcbFilteredEmail', function () {
+            if ($('#thcbFilteredEmail').prop('checked')) {
+                $('.emailcheckbox').prop('checked', true);
+            } else {
+                $('.emailcheckbox').prop('checked', false);
+            }
+        })
+
+        $(document).on('click', '#PastDueLaywayPaymetsbtnDataTablePrint', function () {
+            var table = $('#dataTableForPastDueLaywayPayments').DataTable();
+            table.column(6).visible(false);
+            table.column(7).visible(false);
+            table.column(8).visible(false);
+            table.column(9).visible(false);
+            /*if (column && column.bVisible) {
+                // Proceed with logic
+            }*/
+           /* clickFromDate = $('#txtFromDate1').val();
+            clickToDate = $('#txtToDate1').val();
+            charityname = $('#ddlcharitys option:selected').val() != "All" ? $('#ddlcharitys option:selected').val().toString().trim() : "All";*/
+
+            //Return Custom Date & Header html Content
+            var customHeader = getCustomTitleDateHeader();
+
+            reportFormat = "";
+            if ($(this).attr('report-format') !== undefined) {
+                reportFormat = $(this).attr('report-format');
+            }
+            const tableid = $(this).attr("table-id");
+            console.log(tableid);
+            const tablesCount = $(this).attr("table-count");
+            const tablesSubHeadings = $(this).attr("table-sub-headings");
+
+            printDiv(tableid, tablesCount, tablesSubHeadings, customHeader, reportFormat);
+        });
+
+
+        //Preview Report
+
+        $('#PastDueLaywayPaymetsbtnDataTablePreview').off('click').on('click', function () {
+            var table = $('#dataTableForPastDueLaywayPayments').DataTable();
+            table.column(6).visible(false);
+            table.column(7).visible(false);
+            table.column(8).visible(false);
+            table.column(9).visible(false);
+
+
+            //Return Custom Date & Header html Content
+            var customHeader = getCustomTitleDateHeader();
+
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+            const tablesSubHeadings = $(this).attr("table-sub-headings");
+
+            // Append the container to the Preview content
+
+            previewDiv(tableid, tablesCount, tablesSubHeadings, customHeader);
+
+        });
+
+        // PDF Export
+
+        $('.btnDataTableDownloadPDF').off('click').on('click', function () {
+            var table = $('#dataTableForPastDueLaywayPayments').DataTable();
+            table.column(6).visible(false);
+            table.column(7).visible(false);
+            table.column(8).visible(false);
+            table.column(9).visible(false);
+            //Return Custom Date & Header html Content
+            var customHeader = getCustomTitleDateHeader();
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+
+            exportTableToCustomPDF(tableid, tablesCount, customHeader);
+
+        });
+
+
+
+
+        $(document).on('click', '#btnProcessFilters', function () {
+
+                $('#ConfigureMsgTextModel').modal('show');
+                $('.modal-backdrop').hide();
+
+                $('#ConfigureMsgTextModel').modal('show');
+                $('.modal-backdrop').hide();
+
+                var url = '@Url.Action("getListOfMessages", "SalesLayaways", new { Area = "" })'
+
+                var body = {};
+
+                var jqxhr = $.post(url, body, function () { })
+                    .done(function (response) {
+                        var json;
+                        if (response instanceof Object) {
+                            json = response;
+                        } else {
+                            json = $.parseJSON(response);
+                        }
+
+                        var table = $('#dataTableForCustWarMessage').DataTable();
+                        table.clear().draw();
+
+                        $("#dataTableForCustWarMessage tbody").empty();
+
+                        for (var i = 0; i < json.length; i++) {
+                            table.row.add([
+                                json[i].NAME,
+                                json[i].Message
+                            ])
+                        }
+                        table.draw();
+                    })
+                    .fail(function (jqxhr, textStatus, error) {
+                        var err = textStatus + ", " + error;
+                        console.log("getListOfMessages Request Failed: " + err);
+                    });
+                //}
+            });
+
+        var table = $('#dataTableForCustWarMessage').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 25,
+            "aaSorting": []
+        });
+
+        $('#dataTableForCustWarMessage tbody').on('dblclick', 'tr', function () {
+            var rowData = $(this).children('td');
+            var message = rowData.eq(1).text();
+            $('#messageText').val(message);
+        });
+
+        $(document).on('click', '.closeModalNotes', function () {
+            $('#ConfigureMsgTextModel').modal('hide');
+        });
+
+        $('#btnNotesSubmit').click(function () {
+            var smsTextChecked = $('#cbFilteredTextData').prop('checked');
+            var emailTextChecked = $('#cbFilteredEmailData').prop('checked');
+
+            if (smsTextChecked) {
+                var modalBody = $('#warningModal .modal-body');
+                $.ajax({
+                    url: '@Url.Action("SendPastDueLaywayPaymentsSMS", "SalesLayaways")',
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            subject = '@ViewBag.subject';
+                            $('#confirmWarning').text('Ok');
+                            $('#result').html('<p>' + response.message + '</p>');
+                        } else {
+                            modalBody.empty();
+                            $('#confirmWarning').text('Ok');
+
+                            messageField = `<div class="modal-body">
+                                <p id="warningMessage">${response.message}</p>
+                            </div>`
+                            modalBody.append(messageField);
+                            $('#warningModal').fadeIn();
+
+                            $('#confirmWarning').on('click', function () {
+
+                                modalBody.empty();
+                                var subjectField = `<div class="form-group">
+                                <label for="emailSubject">Enter Subject:</label>
+                                 <input type="text" class="form-control" id="emailSubject" value="${response.subject}">
+                                </div>`;
+                                var messageField = `<div class="form-group">
+                                <label for="emailMessage">Enter Message:</label>
+                                <textarea class="form-control" id="emailMessage" rows="4" value="Please contact me to enable texting.">Please contact me to enable texting.</textarea>
+                                </div>`;
+                                $('#confirmWarning').text('Send Email');
+                                modalBody.append(subjectField);
+                                modalBody.append(messageField);
+                                $('#warningModal').fadeOut();
+                            });
+
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        $('#result').html('<p>An error occurred: ' + error + '</p>');
+                    }
+                });
+            }
+
+            if (emailTextChecked) {
+                //alert("email c");
+                var subject = "YJewel Support Request From : " + '@Session["COMPANYNAME"]';
+                var message = $("#messageText").val();
+                console.log(message);
+                sendEmail(subject, message);
+            }
+
+        });
+        $('#cancelWarning').on('click', function () {
+            $('#warningModal').fadeOut();
+            //modalBody.empty();
+        });
+        document.getElementById('confirmWarning').addEventListener('click', function () {
+            var buttonText = this.innerText;
+            var subject = $("#emailSubject").val();
+            var message = $("#emailMessage").val()
+            console.log(buttonText);
+            if (buttonText === 'SEND EMAIL') {
+                sendEmail(subject, message);
+            }
+        });
+        $('#confirmationModal').fadeOut();
+        var invoice = null;
+        var selectedCheckboxId = null;
+        let clickedCheckbox = null;
+        $("#dataTableForPastDueLaywayPayments").on('click', '.textcheckbox,.callcheckbox,.emailcheckbox', function () {
+            clickedCheckbox = $(this);
+            if (clickedCheckbox.prop('checked')) {
+                $('#confirmationModal').fadeIn();
+            }
+        })
+        $(document).on('click', '#confirmMaintance', function () {
+
+            if (!clickedCheckbox) return;
+            invoice = clickedCheckbox.data('id');
+            selectedCheckboxId = clickedCheckbox.prop("checked") ? invoice : null;
+            rowData = clickedCheckbox.closest('tr');
+            selectCell = clickedCheckbox.data('name');
+
+            updatepastDueCustomerMaintaince(selectedCheckboxId, selectCell);
+            $('#confirmationModal').model('show');
+            clickedCheckbox = null;
+        })
+        $('#close,#closed').click(function () {
+            $('#confirmationModal').fadeOut();
+            document.getElementById('confirmationModal').classList.remove('modals');
+        });
+
+
+
+
+        $("#autocomplete-Duelist1").hide();
+
+        if ($('#isDueLayway').val() === "True") {
+            $("#noOfDays").prop('disabled', true);
+
+            $("#DueDays, #DueDays .dropdown-toggle-icon").on("click", function (e) {
+                e.stopPropagation();
+                var list = $("#autocomplete-Duelist1");
+
+                if (list.is(":visible")) {
+                    list.empty().hide();
+                } else {
+                    $("#noOfDays").prop('disabled', false);
+                    list.empty().show();
+                    var results = ['5', '10', '15', '20', '30', '>30'];
+                    results.forEach(function (item) {
+                        var itemElement = $("<div>")
+                            .addClass("autocomplete-item")
+                            .text(item)
+                            .css({ padding: '5px', cursor: 'pointer' })
+                            .on("click", function (e) {
+                                e.stopPropagation();
+                                $("#noOfDays").val(item);
+                                list.empty().hide();
+                            });
+                        list.append(itemElement);
+                    });
+                }
+            });
+
+
+            $("#autocomplete-Duelist1").on("click", function (e) {
+                e.stopPropagation();
+            });
+
+
+            $(document).on("click", function () {
+                $("#autocomplete-Duelist1").empty().hide();
+            });
+        }
+    });
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<style>
+    .modals {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        top: 0;
+        left: 0;
+        position: fixed;
+        z-index: 1050;
+        height: 100vh;
+        width: 100vw;
+    }
+
+    #previewContentModal .previewContent table {
+        table-layout: auto !important;
+    }
+</style>

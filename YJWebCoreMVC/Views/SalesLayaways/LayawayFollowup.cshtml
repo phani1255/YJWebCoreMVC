@@ -1,0 +1,1864 @@
+﻿<!--
+  * Created by Manoj 21-OCT-2025
+  * Manoj 10/31/2025 Fixed number input issues, Data issues, payment,sms,notes buttons issues
+  * Manoj 11/06/2025 Fixed payment form issue
+  * Manoj 11/17/2025 Fixed payment form issue
+  * Manoj 11/26/2025 updated payment form data saving and redirecting and table issues
+  * Manoj 12/03/2025 updated payment form for canceling posted data
+  * Manoj 12/08/2025 Fixed payments form payment method values updation in dropdown 
+-->
+@{
+    var getMessages = ViewBag.GetMessages as System.Data.DataTable;
+    var storeCodes = ViewBag.Stores;
+    var isCustCode = ViewBag.isCustomer;
+}
+
+@{
+    ViewBag.Title = "Layaway Follow Up";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model YJWeb.Models.SalesLayAwaysModel
+
+<h4 class="text-center heading mt-1">LAYAWAY FOLLOW UP</h4>
+<div id="content-center" class="row">
+    <div class="web-form page login-page col-md-12" id="FormForLayawayFollowUp">
+        <div class="form-horizontal">
+            <div class="row">
+                <input class="hidden" value="@isCustCode" id="customerCode" />
+                <div id="customerFilterContainer" class="col-md-4">
+                    <div class="row">
+                        <label class="col-md-3 mt-1" style="font-size:13px !important;  text-align:center;">
+                            Customer Code
+                        </label>
+                        <div class="col-md-7">
+                            <div class="autocomplete-dropdown">
+                                <div id="CustomerCodesForAutofill" class="d-none">@Html.Raw(Json.Encode(Model.CustomerCodes)) </div>
+                                <input type="text" id="txtCustomerCode" class="form-control activateFormRefreshBtn" autocomplete="off" placeholder="Search...">
+                                <div id="autocomplete-list1" class="autocomplete-items"></div>
+                            </div>
+                            <div class="customerCodeSearchDiv">
+                                <button class="formsGlobalUniqueBtn customerCodeSearchBtn1 showbsmodal activateFormRefreshBtn text-center" data-modal-id="selectCustomerAccModal" data-bs-toggle="modal" data-bs-target="#selectCustomerAccModal"><span class="navbar-toggler-icon"></span></button>
+                            </div>
+                        </div>
+                        <div class="col-md-2 mt-2">
+                            <input type="checkbox" id="cbFillCustomerNo" checked class="activateFormRefreshBtn" /> <span style="font-size:11px !important; font-weight:700; text-align:center;">All</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="row">
+                        <label class="col-sm-3 mt-1" style="font-size:13px !important;  text-align:center;">
+                            Store
+                        </label>
+                        <div class="col-sm-7">
+                            @*@Html.DropDownListFor(x => x.AllStores, Model.AllStores, new { @class = "form-control resetSelectField activateFormRefreshBtn", @id = "ddlStoreList" })*@
+                            <select class="form-control resetSelectField activateFormRefreshBtn" id="ddlStoreList">
+                                <option value="">-- Select Store --</option>
+                                @foreach (System.Data.DataRow row in ((System.Data.DataTable)storeCodes).Rows)
+                                {
+                                    <option value="@row["Code"]">@row["Code"]</option>
+                                }
+                            </select>
+
+                        </div>
+                        <div class="col-sm-2 ps-1 me-2">
+                            <div class="form-check mt-1 mb-0">
+                                <input type="checkbox" id="ddlStoreAll" class="form-check-input" checked />
+                                <label for="ddlStoreAll" class="form-check-label activateFormRefreshBtn" style="font-size:11px !important; font-weight:700; text-align:center;">All</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 small-date-container">
+                    <div id="allDatesContainer" class="row">
+                        <div class="row mb-1">
+                            <label id="DateFrm" class="col-sm-6 col-form-label-sm text-end">
+                                From Date
+                            </label>
+                            <div class="col-sm-5">
+                                <input type="date" id="txtFromDate1" class="form-control form-control-sm fs-13 resetFromDate activateFormRefreshBtn" />
+                            </div>
+                        </div>
+                        <div class="row mb-1">
+                            <label id="DateTo" class="col-sm-6 col-form-label-sm text-end">
+                                To Date
+                            </label>
+                            <div class="col-sm-5">
+                                <input type="date" id="txtToDate1" class="form-control form-control-sm fs-13 resetToDate activateFormRefreshBtn" />
+                            </div>
+                        </div>
+                        <div class="row mt-1 ml-4">
+                            <div class="col-sm-12 text-right">
+                                <input type="checkbox" id="cbFillFromToDates" checked />
+                                <span class="fs-13">All Dates</span>
+                                <input type="button" value="Last Month" class="btn btn-xs formsGlobalUniqueBtn btnGetLastMonthDates" />
+                                <input type="button" value="Last Week" class="btn btn-xs formsGlobalUniqueBtn btnGetLastWeekDates" />
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-1 d-flex flex-row justify-content-center mt-2">
+                    <div class="smsContainer">
+                        <input type="checkbox" id="cbFillSentSMS" class="form-check-input activateFormRefreshBtn" />
+                        <input type="button" id="btnSentSMS" value="Sent SMS" class="btn btn-success" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row ">
+                <div class="col-md-3">
+                    <div class="form-check" style="margin-left:20px !important;">
+                        <div class="row justify-content-between">
+                            <div>
+                                <label><input type="checkbox" id="checkLastPayment" class="form-check-input activateFormRefreshBtn"> No. of Days from last PAYMENT</label>
+                            </div>
+                            <div class="pr-3">
+                                <input type="text" id="lastPayment" value="0" class="ml-2 mt-1 activateFormRefreshBtn" style="width: 60px; height: 22px; font-size: 13px; border: 1px solid #ced4da; border-radius: .25rem;"
+                                       oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-check mr-2">
+
+                        <div class="form-check mr-2">
+                            <div class="row justify-content-between">
+                                <div>
+                                    <label><input type="checkbox" id="checkLastNote" class="form-check-input activateFormRefreshBtn"> No. of Days from Last Note</label>
+
+                                </div>
+                                <div>
+                                    <input type="text" id="lastNote" value="0" class="ml-2 mt-1 activateFormRefreshBtn" style="width: 60px; height: 22px; font-size: 13px; border: 1px solid #ced4da; border-radius: .25rem;"
+                                           oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="form-check mr-2">
+
+                        <div class="form-check mr-2">
+                            <div class="row justify-content-between">
+                                <div>
+                                    <label><input type="checkbox" id="checkLastSMS" class="form-check-input activateFormRefreshBtn"> No. of Days from last SMS</label>
+                                </div>
+                                <div>
+                                    <input type="text" value="0" id="lastSMS" class="ml-2 mt-1 activateFormRefreshBtn" style="width: 60px; height: 22px; font-size: 13px; border: 1px solid #ced4da; border-radius: .25rem;"
+                                           oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="form-check mr-2">
+
+                        <div class="form-check mr-2">
+                            <div class="row justify-content-between">
+                                <div>
+                                    <label><input type="checkbox" id="checkfinalDueDate" class="form-check-input activateFormRefreshBtn"> No. of Days from Final Due Date</label>
+                                </div>
+                                <div>
+                                    <input type="text" value="0" id="finalDueDate" class="ml-2 mt-1 activateFormRefreshBtn" style="width: 60px; height: 22px; font-size: 13px; border: 1px solid #ced4da; border-radius: .25rem;"
+                                           oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3 pl-5">
+                    <div class="form-check mr-2">
+                        <input type="checkbox" class="form-check-input activateFormRefreshBtn" id="isSpokeToCheck" />
+                        <label for="isSpokeToCheck" class="form-check-label" style="font-size:13px !important; ">Spoke To</label>
+                    </div>
+                    <div class="form-check mr-2">
+                        <input type="checkbox" class="form-check-input activateFormRefreshBtn" id="isLeftMsgCheck" />
+                        <label for="isLeftMsgCheck" class="form-check-label" style="font-size:13px !important; ">Left Message #</label>
+                    </div>
+                    <div class="form-check mr-2">
+                        <input type="checkbox" class="form-check-input activateFormRefreshBtn" id="isNoCommCheck" />
+                        <label for="isNoCommCheck" class="form-check-label" style="font-size:13px !important; ">No Communication</label>
+                    </div>
+                    <div class="form-check mr-2">
+                        <input type="checkbox" class="form-check-input activateFormRefreshBtn" id="isNoCallTxtCheck" />
+                        <label for="isNoCallTxtCheck" class="form-check-label" style="font-size:13px !important; ">Exclude No call/ Text</label>
+                    </div>
+                </div>
+
+                <div class="col-sm-5 mt-2 d-flex flex-column justify-content-center">
+                    <div id="SMSmallDatesContainer" class="small-date-container d-none">
+                        <div class="row">
+                            <div class="row mb-1">
+                                <label for="SMSDateFrm" class="col-sm-6 col-form-label-sm text-end">
+                                    SMS From Date
+                                </label>
+                                <div class="col-sm-5">
+                                    <input type="date" id="SMSDateFrm" class="form-control form-control-sm fs-13 resetFromDate activateFormRefreshBtn" />
+                                </div>
+                            </div>
+                            <div class="row mb-1">
+                                <label for="SMSDateTo" class="col-sm-6 col-form-label-sm text-end">
+                                    SMS To Date
+                                </label>
+                                <div class="col-sm-5">
+                                    <input type="date" id="SMSDateTo" class="form-control form-control-sm fs-13 resetToDate activateFormRefreshBtn" />
+                                </div>
+                            </div>
+                            <div class="row mt-1 ml-4">
+                                <div class="col-sm-12 text-right">
+                                    <input type="checkbox" id="cbFillSMSAllFromToDates" checked />
+                                    <span class="fs-13">All Dates</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        @*<input id="BtnOpenfrmNotesBtn" type="button" value="Notes" class="btn btn-info" />*@
+                        <button id="BtnOpenfrmNotesBtn" class="btn btn-info">
+                            <i class="fa-solid fa-note-sticky mr-1"></i> Notes
+                        </button>
+
+                        <input id="BtnOpenLayawayHistoryForm" type="button" value="History" class="btn btn-info ml-2" />
+                        <input id="BtnOpenLaywaySMSHistoryForm" type="button" value="SMS Log" class="btn btn-info ml-2" />
+                        <input id="BtnopenPaymentForm" type="button" value="Payment" class="btn btn-info ml-2" />
+                    </div>
+                </div>
+                <div class="col-sm-1 justify-content-end text-right mt-1 d-flex flex-column justify-content-end">
+                    <input type="button" id="btnFormResultsSearch" value="Refresh" class="refresh_btn btn-xs refreshBtnDefault" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4 white-box pos-rel" id="divDataTableReport">
+
+        <div class="row col-md-6 report_buttons">
+            <div style="margin:3px;">
+                <input type="button" value="PDF" table-id="dataTableForLayawayFollowup" class="formsGlobalUniqueBtn ItemsBoughtTOCusbtnDataTableDownloadPDF" id="btnPDF" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Excel" table-id="dataTableForLayawayFollowup" class="formsGlobalUniqueBtn ItemsBoughtTOCusbtnDataTableDownloadExcel" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Preview" table-id="dataTableForLayawayFollowup" id="ItemsBoughtTOCusbtnDataTablePreview" class="formsGlobalUniqueBtn" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Print" table-id="dataTableForLayawayFollowup" id="ItemsBoughtTOCusBtnDataTablePrint" class="formsGlobalUniqueBtn" report-format="portrait" table-count="1" />
+            </div>
+        </div>
+        <div class="row dataTableReport">
+
+            <table id="dataTableForLayawayFollowup" class="dataTable display nowrap table" style="width:100%">
+                <thead>
+                    <tr>
+
+                        <th>Select</th>
+                        <th>Acc</th>
+                        <th> Name</th>
+                        <th>Tel #</th>
+                        <th>Invoice #</th>
+                        <th>Invoice Date</th>
+                        <th>Style</th>
+                        <th>Description</th>
+                        <th>Invoice Total</th>
+                        <th>Layaway Balance</th>
+                        <th>Last Payment Amount</th>
+                        <th>Last Payment Date</th>
+                        <th>Final Due Date</th>
+                        <th>Last Notes Date</th>
+                        <th>Last SMS Date</th>
+                        <th>SMS</th>
+                        <th>No Call Text</th>
+                        <th> No Daily Followup </th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+
+            </table>
+            <br>
+
+        </div>
+    </div>
+
+    <div id="layawayTotalsContainer" class="mt-2 mb-3 white-box d-none" style="width:100%">
+        <div class="row" style="display:flex; justify-content:space-between; align-items:center;">
+            <div class="pl-4" style="font-weight:bold;">
+                No. of Layaways: <span id="layawayCount">0</span>
+            </div>
+            <div style="font-weight:bold;">
+                Invoice Total : <span id="invoiceTotal">0.00</span>
+            </div>
+            <div class="pr-4" style="font-weight:bold;">
+                Open Balance Total : <span id="openBalanceTotal">0.00</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-2 mb-3 white-box" style="width:100%">
+        <div class="row">
+            <div class="col-sm-7">
+                <h6 class="msgBoxHeading">Double Click on Any Message To Use</h6>
+                <div class="mt-2 white-box pos-rel" id="divDataTableReportSMSContent">
+                    <div class="row dataTableReport">
+                        <table id="dataTableForLayawayFollowupMessageContent" class="dataTable display nowrap table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Message</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (getMessages != null && getMessages.Rows.Count > 0)
+                                {
+                                    foreach (System.Data.DataRow row in getMessages.Rows)
+                                    {
+                                        <tr>
+                                            <td>@row["NAME"]</td>
+                                            <td>@row["Message"]</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+
+                        </table>
+                        <br>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-5">
+                <h6 class="msgBoxHeading">Send Message</h6>
+                <div class="form-floating">
+                    <textarea class="form-control" placeholder="Enter Text Here!" id="smsMsgTextArea" style="height: 150px"></textarea>
+                </div>
+                <div class="col-sm-12 mt-4">
+                    <div class="row justify-content-center">
+                        <div style="margin: 3px;">
+                            <button type="button" class="btn formsGlobalUniqueBtn" id="SaveTableBtn" style="width:80px;">
+                                <i class="fa-solid fa-check mr-1"></i>Save
+                            </button>
+                        </div>
+                        <input type="button" id="SendSMS" value="Send To All" class="btn formsGlobalUniqueBtn ml-3" />
+                        <div style="margin: 3px;" class="ml-3">
+                            <button type="button" id="BtnClose" class="btn btn-danger formsGlobalUniqueBtn">
+                                <i class="fa-solid fa-xmark mr-1"></i> Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div id="pdfReportHeadingText"></div>
+
+    <div id="paymentMethodsDropdownContent" class="d-none">
+
+    </div>
+    <input type="hidden" value="0" class="paymentFormBalance" />
+    <div class="paymentTypeModalDiv"></div>
+    <input type="hidden" id="autonumforPayments" value="0" />
+</div>
+
+<div class="modal" id="LayawaySMSHistoryModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header heading">
+                <h4 id="ModelHeading" class="text-center  mt-2">LAYAWAY FOLLOW UP SMS HISTORY</h4>
+                <button type="button" class="close" id="close" data-dismiss="modal" aria-label="Close">
+                    X
+                </button>
+            </div>
+            <div id="LayawaySMSHistoryModalBody" class="modal-body" style="max-height:70vh; overflow-y:auto; overflow-x:auto;">
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="closed" class="btn formsGlobalUniqueCloseBtn" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="paymentCommonBsModal" tabindex="-1" aria-labelledby="paymentCommonBsModalLabel" aria-hidden="true" style="overflow:auto">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="paymentCommonBsModalLabel"></h5>
+                <button type="button" class="formsGlobalUniqueCloseBtn btn-close closeModal paymentcloseModal" aria-label="Close">X</button>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="formsGlobalUniqueCloseBtn closeModal paymentcloseModal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="confirmModal2" class="modal" tabindex="-1" style="display: none; position: fixed; z-index: 1050; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4);">
+    <div style="background: white; margin: 10% auto; padding: 20px; width: 400px; border-radius: 6px; text-align: center;">
+        <p id="confirmMessage"></p>
+        <div style="margin-top: 20px;">
+            <button id="btnConfirmYes" class="btn btn-primary">Yes</button>
+            <button id="btnConfirmNo" class="btn btn-secondary">No</button>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+
+    var lastMonthDate = "", todayDate = ""
+    var printPreviewLableList;
+    var filtertable;
+    var Flag = false;
+
+    function ClearControls() {
+        $('#ddlStoreList').val('').change();
+        $('#txtCustomerCode').val('');
+        $('#isSpokeToCheck').prop('checked', false);
+        $('#isLeftMsgCheck').prop('checked')
+        $('#isNoCommCheck').prop('checked')
+        $('#isNoCallTxtCheck').prop('checked')
+        existAutoFilledData();
+
+    }
+    function processInput(selector) {
+        let value = $.trim($(selector).val());
+
+        if (value === "") {
+            return "0";
+        }
+
+        value = value.replace(/,/g, "");
+
+        if (value.length > 5) {
+            value = value.substring(0, 5);
+        }
+
+        return value;
+    }
+    function formatDateToMMDDYYYY(dateString) {
+        if (!dateString) return "";
+
+        const d = new Date(dateString);
+        if (isNaN(d)) return "";
+
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        const dd = String(d.getDate()).padStart(2, '0');
+        const yyyy = d.getFullYear();
+
+        return `${mm}-${dd}-${yyyy}`;
+    }
+
+
+    function existAutoFilledData() {
+
+        if ($('#txtCustomerCode').val() != "")
+            CustomerCode = $('#txtCustomerCode').val();
+        else
+            CustomerCode = "";
+
+
+        if ($('#ddlStoreAll').prop('checked'))
+            _strstore = "";
+        else
+            _strstore = $('#ddlStoreList option:selected').val();
+        //lastPayment,lastNote,lastSMS,finalDueDate
+
+        LastPayment = processInput("#lastPayment");
+        lastNote = processInput("#lastNote");
+        lastSMS = processInput("#lastSMS");
+        finalDueDate = processInput("#finalDueDate");
+
+        if ($('#txtFromDate1').val() != "")
+            fromDate1 = $('#txtFromDate1').val();
+        else
+            fromDate1 = "1990-01-01";
+
+        if ($('#txtToDate1').val() != "")
+            toDate1 = $('#txtToDate1').val();
+        else
+            toDate1 = "2099-12-31";
+
+        if ($('#isSpokeToCheck').prop('checked')) {
+            spokeTo = "SPOKETO";
+        } else {
+            spokeTo = "";
+        }
+
+        if ($('#isLeftMsgCheck').prop('checked')) {
+            leftMsg = "LEFTMESSAGE";
+        } else {
+            leftMsg = "";
+        }
+        if ($('#isNoCommCheck').prop('checked')) {
+            noCommunication = "NOCOMMUNICATION";
+        } else {
+            noCommunication = "";
+        }
+        if ($('#isNoCallTxtCheck').prop('checked')) {
+            noCallTxt = true;
+        } else {
+            noCallTxt = false;
+        }
+        if ($('#cbFillSentSMS').prop('checked')) {
+            isSMSCheck = true;
+        } else {
+            isSMSCheck = false;
+        }
+        if ($('#SMSDateFrm').val() != "")
+            smsFrmDate = $('#SMSDateFrm').val();
+        else
+            smsFrmDate = "1990-01-01";
+
+        if ($('#SMSDateTo').val() != "")
+            smsToDate = $('#SMSDateTo').val();
+        else
+            smsToDate = "2099-12-31";
+
+        BindBagsGivenToPerson(CustomerCode, _strstore, fromDate1, toDate1, spokeTo, leftMsg, noCommunication, noCallTxt, LastPayment, lastNote, lastSMS, finalDueDate, isSMSCheck, smsFrmDate, smsToDate);
+    }
+
+    function getCheckbox(val) {
+        return '<div style="text-align:center;">' +
+                '<input type="checkbox" ' + (val ? 'checked ' : '') + 'onclick="return false;" />' +
+            '</div>';
+    }
+
+    function formatUSTel(tel) {
+        if (!tel || tel === "0" || tel === 0) return "";
+        let cleaned = ('' + tel).replace(/\D/g, '');
+        let match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+        if (match) {
+            return '(' + match[1] + ')-' + match[2] + ' ' + match[3];
+        }
+        return tel;
+    }
+
+    function BindBagsGivenToPerson(CustomerCode, _strstore, fromDate1, toDate1, spokeTo, leftMsg, noCommunication, noCallTxt, LastPayment, lastNote, lastSMS, finalDueDate,
+        isSMSCheck, smsFrmDate, smsToDate) {
+        var url = '@Url.Action("GetListofAllLayawaysforFollowup", "SalesLayaways", new { Area = "" })';
+
+        var data = {
+            ccode: CustomerCode,
+            fdate: fromDate1,
+            tdate: toDate1,
+            lastpayment: LastPayment,
+            lastnote: lastNote,
+            lastsms: lastSMS,
+            spoketo: spokeTo,
+            leftmessage: leftMsg,
+            nocomm: noCommunication,
+            store: _strstore,
+            issmsfilter: isSMSCheck,
+            smsfdate: smsFrmDate,
+            smstdate: smsToDate,
+            finalduedate: finalDueDate,
+            Nocalltext: noCallTxt,
+
+        };
+
+
+        var jqxhr = $.post(url, data, function () { })
+        .done(function (response) {
+            var json;
+            if (response instanceof Object)
+                json = response;
+
+            else
+                json = $.parseJSON(response);
+
+
+            if (json.length > 0) {
+
+
+                var table = $('#dataTableForLayawayFollowup').DataTable();
+
+                table.clear().draw();
+
+                $("#dataTableForLayawayFollowup tbody").empty();
+
+                var TotalLayaways = json.length;
+                var InvoiceTotal = 0;
+                var totalOpenBalance = 0;
+
+                for (var i = 0; i < json.length; i++) {
+                    InvoiceVal = parseFloat(json[i].GR_TOTAL);
+                    totalOpenBalanceVal = parseFloat(json[i].BALANCE);
+
+                    InvoiceTotal += InvoiceVal;
+                    totalOpenBalance += totalOpenBalanceVal;
+
+                    let invoiceNo = (json[i].INV_NO && json[i].INV_NO.toString().toLowerCase() !== "null") ? json[i].INV_NO : "";
+                    let AccNo = (json[i].Acc && json[i].Acc.toString().toLowerCase() !== "null") ? json[i].Acc : "";
+
+                        table.row.add([
+                            '<div style="text-align:center;"><input class="form-check isSelectBtnChecked isChecked" name="selectCheckbox" type="checkbox" ' + (json[i].SEL ? 'checked ' : '') + ' /></div>',
+                            '<div class="CusCodeVal AccCode"  data-code="' + AccNo + '">' + AccNo + '</div>',
+                            json[i].Name,
+                            formatUSTel(json[i].TEL),
+                            '<div class="CusCodeVal InvoiceCode"  data-code="' + invoiceNo + '">' + invoiceNo + '</div>',
+                            //json[i].DATE ? json[i].DATE.split("T")[0] : "",
+                            json[i].DATE ? formatDateToMMDDYYYY(json[i].DATE) : "",
+                            '<div class="CusCodeVal">' + json[i].STYLE + '</div>',
+                            json[i].DESC,
+                            '<div style="text-align:right !important;">' + (json[i].GR_TOTAL > 0 ? numberWithCommas(json[i].GR_TOTAL) : "") + '</div>',
+                            '<div style="text-align:right !important;">' + (json[i].BALANCE > 0 ? numberWithCommas(json[i].BALANCE) : numberWithCommas(0)) + '</div>',
+                            '<div style="text-align:right !important;">' + (json[i].LastPaymentAmount > 0 ? numberWithCommas(json[i].LastPaymentAmount) : "")  + '</div>',
+                            json[i].LastPaymentDate ? formatDateToMMDDYYYY(json[i].LastPaymentDate) : "",
+                            json[i].FINAL_PAYMENT_DUE_DATE ? formatDateToMMDDYYYY(json[i].FINAL_PAYMENT_DUE_DATE) : "",
+                            json[i].LastNotesDate ? formatDateToMMDDYYYY(json[i].LastNotesDate) : "",
+                            json[i].LastSMSDate ? formatDateToMMDDYYYY(json[i].LastSMSDate) : "",
+                            '<div style="text-align:center;"><input class="form-check isChecked" type="checkbox" ' + (json[i].SMS ? 'checked ' : '') + ' /></div>',
+                            '<div style="text-align:center;"><input class="form-check isChecked Nocalltext" type="checkbox" ' + (json[i].Nocalltext ? 'checked ' : '') + ' /></div>',
+                            '<div style="text-align:center;"><input class="form-check isChecked NoDailyFollowup"  onClick="return false;" type="checkbox" ' + (json[i].NoDailyFollowup ? 'checked ' : '') + ' /></div>'
+                        ]);
+                    }
+                table.draw();
+
+
+                $('#layawayTotalsContainer').removeClass("d-none");
+                $('#layawayCount').text((TotalLayaways ? numberWithCommas(TotalLayaways) : 0));
+                $('#invoiceTotal').text((InvoiceTotal ? numberWithCommas(InvoiceTotal) : 0.00));
+                $('#openBalanceTotal').text((totalOpenBalance ? numberWithCommas(totalOpenBalance) : 0.00));
+
+                filtertable = json;
+
+            } else {
+                var table = $('#dataTableForLayawayFollowup').DataTable();
+                table.clear().draw();
+                alert("No Data Found");
+                $('#layawayTotalsContainer').addClass("d-none");
+                $('#layawayCount').val("");
+                $('#invoiceTotal').val("");
+                $('#openBalanceTotal').val("");
+            }
+
+            printPreviewLableList = json;
+        })
+        .fail(function (jqxhr, textStatus, error) {
+            var err = textStatus + ", " + error;
+            console.log("GETBagsGivenToPerson Request Failed: " + err);
+        });
+    }
+
+
+
+    function activateddlList(ddlId, CheckBoxId) {
+
+        if ($('#' + CheckBoxId).prop('checked')) {
+            $('#' + ddlId).prop('disabled', true);
+        }
+
+        $(document).on('change', '#' + CheckBoxId, function () {
+            if ($('#' + CheckBoxId).prop('checked')) {
+                $('#' + ddlId).prop('disabled', true);
+                $('#' + ddlId).val($('#' + ddlId + ' option:first').val());
+            } else {
+                $('#' + ddlId).prop('disabled', false);
+            }
+        })
+    }
+    //SMSDateTo,SMSDateFrm,cbFillSMSAllFromToDates
+    function fillSMSFromToDates() {
+        if ($("#cbFillSMSAllFromToDates").prop('checked')) {
+            if ($('#SMSDateFrm').length > 0) {
+                $('#SMSDateFrm').val('1900-01-01').prop('disabled', 'true');
+                $('#SMSDateTo').val('2098-12-31').prop('disabled', 'true');
+            }
+            for (i = 1; i <= 5; i++) {
+                $('#SMSDateFrm' + i).val('1900-01-01').prop('disabled', 'true');
+                $('#SMSDateTo' + i).val('2098-12-31').prop('disabled', 'true');
+            }
+
+        } else {
+            var now = new Date();
+            var day = ("0" + now.getDate()).slice(-2);
+            var month = ("0" + (now.getMonth() + 1)).slice(-2);
+
+            var today = now.getFullYear() + "-" + (month) + "-" + (day);
+            console.log(today)
+            if ($('#SMSDateFrm').length > 0) {
+                $('#SMSDateFrm').val(today).removeAttr('disabled');
+                $('#SMSDateTo').val(today).removeAttr('disabled');
+            }
+            for (i = 1; i <= 5; i++) {
+                $('#SMSDateFrm' + i).val(today).removeAttr('disabled');
+                $('#SMSDateTo' + i).val(today).removeAttr('disabled');
+            }
+        }
+
+    }
+
+    function paymetDaysValidation(checkboxid,inputId) {
+        if ($('#' + checkboxid).prop('checked')) {
+            $('#' + inputId).prop('disabled', false);
+        } else {
+            $('#' + inputId).prop('disabled', true);
+            $('#' + inputId).val(0);
+        }
+    }
+
+    $(document).ready(function () {
+        var table = $('#dataTableForLayawayFollowup').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 10,
+            "aaSorting": [],
+            columnDefs: [{
+                targets: 7,
+                width: '400px',
+                className: 'text-wrap description-col',
+            }]
+        });
+        table.column(17).visible(false);
+
+        var tableSms = $('#dataTableForLayawayFollowupMessageContent').DataTable({
+            dom: 'p',
+            searching: false,
+            select: false,
+            buttons: [],
+            pageLength: 5,
+        });
+        //dataTableForLayawayFollowupMessageContent
+
+        fillSMSFromToDates();
+
+        $(document).on('change', '#cbFillSMSAllFromToDates', function () {
+            fillSMSFromToDates();
+        })
+
+
+        //DDL List
+        activateddlList('ddlStoreList', 'ddlStoreAll')
+
+        //DDL END
+
+        if ($('#cbFillCustomerNo').prop('checked')) {
+            $('#txtCustomerCode').prop('disabled', true);
+            $('.customerCodeSearchBtn1').prop('disabled', true);
+
+        }
+
+        $(document).on('change', '#cbFillCustomerNo', function () {
+            if ($('#cbFillCustomerNo').prop('checked')) {
+                $('#txtCustomerCode').prop('disabled', true);
+                $('#txtCustomerCode').val('');
+                $('.customerCodeSearchBtn1').prop('disabled', true);
+            } else {
+                $('#txtCustomerCode').prop('disabled', false);
+                $('.customerCodeSearchBtn1').prop('disabled', false);
+            }
+        })
+
+        if (!$('#cbFillSentSMS').prop('checked')) {
+            $('#btnSentSMS').prop('disabled', true);
+            $('#btnSentSMS').addClass('disabled-btn');
+            $('#SMSmallDatesContainer').addClass("d-none");
+        }
+
+        $(document).on('change', '#cbFillSentSMS', function () {
+            if ($(this).prop('checked')) {
+                $('#btnSentSMS').prop('disabled', false);
+                $('#btnSentSMS').removeClass('disabled-btn');
+            } else {
+                $('#btnSentSMS').prop('disabled', true);
+                $('#btnSentSMS').addClass('disabled-btn');
+                $('#SMSmallDatesContainer').addClass("d-none");
+            }
+        });
+
+
+        $(document).on('click', '#btnSentSMS', function () {
+            $('#SMSmallDatesContainer').removeClass("d-none");
+        })
+
+        //$('#txtCustomerCode').val('');
+
+        $(document).on('input', '#txtCustomerCode', function () {
+            $('#txtCustomerCode').val($('#txtCustomerCode').val().toUpperCase());
+        });
+
+
+
+        paymetDaysValidation('checkLastPayment', 'lastPayment');
+        paymetDaysValidation('checkLastNote', 'lastNote');
+        paymetDaysValidation('checkLastSMS', 'lastSMS');
+        paymetDaysValidation('checkfinalDueDate', 'finalDueDate');
+
+        $(document).on('change', '#checkLastPayment', function () {
+            paymetDaysValidation('checkLastPayment', 'lastPayment');
+        });
+        $(document).on('change', '#checkLastNote', function () {
+            paymetDaysValidation('checkLastNote', 'lastNote');
+        });
+        $(document).on('change', '#checkLastSMS', function () {
+            paymetDaysValidation('checkLastSMS', 'lastSMS');;
+        });
+        $(document).on('change', '#checkfinalDueDate', function () {
+            paymetDaysValidation('checkfinalDueDate', 'finalDueDate');
+        });
+
+
+        //SaveTableBtn,Nocalltext,NoDailyFollowup,InvoiceCode
+
+        $(document).on('click','#SaveTableBtn', function () {
+            let table = $('#dataTableForLayawayFollowup').DataTable();
+
+            table.column(17).visible(true);
+
+            let rows = table.rows({ search: 'applied' }).nodes();
+
+            if (rows.length === 0) {
+                alert("No Records Found For Save");
+                table.column(17).visible(false);
+                //table.columns.adjust().draw(false);
+                return;
+            }
+            var isValidData = true;
+            let finalData = [];
+
+            $(rows).each(function (index, tr) {
+
+                let $tr = $(tr);
+                let InvnNo = String($tr.find('.InvoiceCode').text() || '');
+                let NoCallText = String($tr.find('.Nocalltext').prop('checked') ? 'True' : 'False' ).trim();
+                let NoDailyFollowUp = String($tr.find('.NoDailyFollowup').prop('checked') ? 'True' : 'False').trim();
+
+                finalData.push({
+                    Inv_no: InvnNo,
+                    Nocalltext: NoCallText,
+                    NoDailyFollowup: NoDailyFollowUp
+                });
+
+            });
+
+            console.log(finalData)
+
+            table.column(17).visible(false);
+            //table.columns.adjust().draw(false);
+            if (finalData) {
+                var url = '@Url.Action("SaveUpdateNoCalltext", "SalesLayaways", new {Area=""})'
+
+                var data = {
+                    tableData: JSON.stringify(finalData)
+                }
+
+                $.ajax({
+                    url: url,
+                    type: "POST",
+                    data: JSON.stringify(data),
+                    contentType: "application/json",
+                    dataType: "json",
+                    async: false,
+                    success: function (response) {
+                        if (response.code == true) {
+                            alert(response.message);
+                            existAutoFilledData();
+                        } else {
+                            alert(response.message);
+                        }
+
+                    }
+                })
+            }
+        })
+
+        $(document).on('click', '.CusCode', function () {
+
+            let btnColor = $('#btnFormResultsSearch').css('background-color');
+
+            if (btnColor === 'rgb(255, 247, 5)') {
+                alert('Please Click On Refresh First!');
+                return false;
+            }
+
+            let CusCodeNo = $(this).data('code');
+            if (CusCodeNo) {
+                const url = `/Sales/ItemsBoughtByCustomer?CusCodeNo=${encodeURIComponent(CusCodeNo)}`;
+                window.location.href = url;
+            }
+        })
+
+        $(document).on('click', '.InvoiceCode', function () {
+            let InvoiceVal = $(this).data('code');
+
+            if (InvoiceVal) {
+                $.ajax({
+                    url: "/Invoice/GetInvoiceDate",
+                    type: "GET",
+                    data: { invoiceNo: InvoiceVal },
+                    success: function (res) {
+                        if (res.success) {
+                            var InvoiceUrl = "/Invoice/Index?invoiceInput=" + encodeURIComponent(InvoiceVal);
+
+                            window.open(InvoiceUrl, "_blank");
+                        } else {
+                            alert(res.message);
+                        }
+                    }
+                });
+            }
+        })
+
+
+        $('#dataTableForLayawayFollowupMessageContent tbody').on('dblclick', 'tr',function () {
+            var rowData = $(this).find('td').eq(1).text().trim();
+            console.log(rowData);
+            $('#smsMsgTextArea').val(rowData);
+        })
+
+
+        $(document).on('change', '.isChecked', function () {
+            $('.isChecked').not(this).prop('checked', false);
+        });
+
+        $(document).on('click', '#BtnopenPaymentForm', function () {
+            //dataTableForLayawayFollowup
+            var DataTable = $('#dataTableForLayawayFollowup').DataTable();
+
+            if (DataTable.rows().count() == 0) {
+                return false;
+            }
+            var checkedRows = $('#dataTableForLayawayFollowup tbody .isSelectBtnChecked:checked');
+
+            if (checkedRows.length !== 1) {
+                alert("Please select one record.");
+                return false;
+            }
+            var selectedRow = checkedRows.closest('tr');
+
+            var accCode = selectedRow.find('.AccCode').data('code') || '';
+            var invoiceCode = selectedRow.find('.InvoiceCode').data('code') || '';
+
+            $("#paymentCommonBsModal").show();
+            $("#paymentCommonBsModal").addClass('show');
+            scrollTo(200, 50);
+            $("#paymentCommonBsModal .modal-body").html('Loading...');
+            inv_acc = accCode;
+            inv_no = invoiceCode;
+            $.ajax({
+                url: '../SalesLayaways/LoadPaymentFormData',
+                type: 'post',
+                data: {
+                    inv_no: inv_no
+                },
+                success: function (response2) {
+                    var json;
+                    if (response2 instanceof Object) {
+                        response = response2;
+                    }
+                    else {
+                        response = $.parseJSON(response2);
+                    }
+                    json = response.paymentItems;
+                    today = new Date().toISOString().split('T')[0];
+
+                    $(".paymentFormBalance").val(response.balance);
+
+                    $("#paymentCommonBsModal .modal-body").html("<p>" + response.Payfor + " Payments (Balance : <span class='paymentsBalance'>" + response.balance + "</span>)</p>");
+                    paymentMethods = response.paymentMethods;
+
+                    var paymentMethodsDropdown = "<select class='paymentDropdown form-control'>";
+                    paymentMethodsDropdown += "<option value=''></option>";
+                    Object.entries(paymentMethods)
+                        .reverse() // reverse the order
+                        .forEach(function ([key, value]) {
+                            paymentMethodsDropdown += "<option>" + value + "</option>";
+                        });
+                    paymentMethodsDropdown += "</select>";
+
+                    $("#paymentMethodsDropdownContent").html(paymentMethodsDropdown);
+                    tableData = "<table class='table table-sm table-bordered'>";
+                    tableData += "<thead><tr><th>Date</th><th>Payment Method</th><th>Amount</th><th>Note</th></tr></thead>";
+                    tableData += "<tbody class='paymentItemsList'>";
+                    totAmt1 = 0;
+                    if (json.length == 0) {
+                        tableData += "<tr class='addNewPaymentRow'>";
+                        tableData += "<td colspan='4'>Click here to add a new row</td>";
+                        tableData += "</tr>";
+                    } else {
+                        newIndex = 0;
+                        for (i = 0; i < json.length; i++) {
+                            newIndex = i + 1;
+                            tableData += "<tr class='rowIndex" + newIndex + "' data-row-id='" + newIndex + "' data-isold='true' data-payno='" + json[i].PAY_NO + "'>";
+                            tableData += "<td><input type='date' class='paymentDate form-control' value='" + (json[i].DATE.split('T')[0]) + "'></td>";
+                            tableData += "<td>";
+                            tableData += "<select data-row-id='" + newIndex + "' class='paymentDropdown form-control'>";
+                            tableData += "<option></option>";
+                            Object.entries(paymentMethods)
+                                .reverse() // reverse the order
+                                .forEach(function ([key, value]) {
+                                    if (value.trim().toLowerCase() == json[i].METHOD.trim().toLowerCase()) {
+                                        tableData += "<option value='" + value + "' selected='selected'>" + value + "</option>";
+                                    } else {
+                                        tableData += "<option value='" + value + "'>" + value + "</option>";
+                                    }
+
+                                });
+                            tableData += "</select>";
+                            tableData += "</td>";
+                            tableData += "<td><input type='text' readonly class='paymentAmount form-control' value='" + json[i].AMOUNT.toFixed(2) + "'></td>";
+                            //tableData += "<td><input type='text' class='paymentNote form-control' value='" + json[i].SALESMAN + "'></td>";
+                            tableData += "<td>";
+                            tableData += "<input type='text' class='paymentNote form-control' value='" + json[i].NOTE + "'>";
+                            tableData += "<input type='hidden' class='CreditNo' value='" + json[i].CreditNo + "'>";
+                            tableData += "<input type='hidden' class='CreditAmt' value='" + json[i].CreditAmt + "'>";
+                            tableData += "<input type='hidden' class='EnteredAmt' value='" + json[i].CreditAmt + "'>";
+                            tableData += "<input type='hidden' class='NEW_CreditNo' value='" + json[i].NEW_CreditNo + "'>";
+                            tableData += "<input type='hidden' class='NEW_CreditAmt' value='" + json[i].NEW_CreditAmt + "'>";
+                            tableData += "<input type='hidden' class='NEW_EnteredAmt' value='" + json[i].NEW_EnteredAmt + "'>";
+                            tableData += "<input type='hidden' class='Style' value='" + json[i].Style + "'>";
+                            tableData += "<input type='hidden' class='askedSignature' value='" + json[i].askedSigature + "'>";
+                            tableData += "<input type='hidden' class='AUTHRIZED' value='" + json[i].AUTHRIZED + "'>";
+                            tableData += "</td>";
+                            tableData += "</tr>";
+                            totAmt1 += json[i].AMOUNT;
+                        }
+                        $("#autonumforPayments").val(newIndex);
+                        tableData += "<tr class='addNewPaymentRow'>";
+                        tableData += "<td colspan='4'>Click here to add a new row</td>";
+                        tableData += "</tr>";
+                    }
+                    tableData += "</tbody>";
+                    tableData += "<tfoot>";
+                    tableData += "<tr><td colspan='2'>Total</td><td colspan='2' class='totalAmt'>" + totAmt1.toFixed(2) + "</td></tr>";
+                    tableData += "</tfoot>";
+                    tableData += "</table>";
+                    tableData += "<p><input type='hidden' id='invNoLayPayment' value='" + inv_no + "'></p>";
+                    tableData += "<p><input type='hidden' id='txtCustomerCode' value='" + inv_acc + "'></p>";
+                    $("#paymentCommonBsModal .modal-body").append(tableData);
+                    if ($(".saveLayawayPaymentsInfo").length == 0) {
+                        $("#paymentCommonBsModal .modal-footer .closeModal").before("<button class='formsGlobalUniqueBtn saveLayawayPaymentsInfo'>Save</button>");
+                    }
+
+                }
+            })
+        })
+
+        $(document).on('click', '.addNewPaymentRow', function (res) {
+            appendPaymentRow();
+        })
+
+        function appendPaymentRow() {
+            newIndex = parseInt($("#autonumforPayments").val()) + 1;
+            $(".addNewPaymentRow").remove();
+            today = new Date().toISOString().split('T')[0];
+            paymentMethodsDropdown = $("#paymentMethodsDropdownContent .paymentDropdown").html();
+            tableData = "<tr  class='rowIndex" + newIndex + "' data-row-id='" + newIndex + "' data-isold='false'>";
+            tableData += `<td><input type='date' class='paymentDate form-control' value='${today}'></td>`;
+            tableData += "<td><select class='paymentDropdown form-control' data-row-id='" + newIndex + "' >" + paymentMethodsDropdown + "</select></td>";
+            tableData += "<td><input type='text' class='paymentAmount form-control'></td>";
+            tableData += "<td>";
+            tableData += "<input type='text' class='paymentNote form-control'>";
+            tableData += "<input type='hidden' class='CreditNo'>";
+            tableData += "<input type='hidden' class='CreditAmt'>";
+            tableData += "<input type='hidden' class='EnteredAmt'>";
+            tableData += "<input type='hidden' class='NEW_CreditNo'>";
+            tableData += "<input type='hidden' class='NEW_CreditAmt'>";
+            tableData += "<input type='hidden' class='NEW_EnteredAmt'>";
+            tableData += "<input type='hidden' class='Style'>";
+            tableData += "<input type='hidden' class='askedSignature'>";
+            tableData += "<input type='hidden' class='AUTHRIZED'>";
+            tableData += "</td>";
+            tableData += "</tr>";
+            tableData += "<tr class='addNewPaymentRow'>";
+            tableData += "<td colspan='4'>Click here to add a new row</td>";
+            tableData += "</tr>";
+            $(".paymentItemsList").append(tableData);
+            $(".rowIndex" + newIndex).find(".paymentDate").focus();
+
+            $("#autonumforPayments").val(newIndex);
+        }
+        $(document).on("input", ".paymentAmount", function () {
+            let value = $(this).val();
+
+            // Remove everything except digits and dot
+            value = value.replace(/[^0-9.]/g, "");
+
+            // Allow only one dot
+            let parts = value.split(".");
+            if (parts.length > 2) {
+                value = parts[0] + "." + parts.slice(1).join("");
+            }
+
+            // Restrict to 2 decimal places
+            if (parts[1] && parts[1].length > 2) {
+                value = parts[0] + "." + parts[1].substring(0, 2);
+            }
+
+            $(this).val(value);
+        });
+
+        $(document).on('blur', '.paymentAmount', function () {
+            updatePaymentBalance();
+        });
+
+        function updatePaymentBalance() {
+            let totAmt = 0; let toDeduct = 0;
+            $(".paymentAmount").each(function () {
+                let val = parseFloat($(this).val());
+                if (!isNaN(val)) {
+                    totAmt += val;
+                }
+                if ($(this).parent('td').parent('tr').attr('data-isold') == "false") {
+                    toDeduct += val;
+                }
+            });
+            $(".totalAmt").html(totAmt.toFixed(2)); // optional: round to 2 decimals
+            balanceAmt = $(".paymentFormBalance").val() - toDeduct;
+            $(".paymentsBalance").html(balanceAmt);
+        }
+
+        $(document).on('click', ".saveLayawayPaymentsInfo", function () {
+
+            saveLayawayPayments();
+
+        })
+
+        function saveLayawayPayments(paymentDone = false, payToAnotherStore = false, iSPicked = false, isCancel = false) {
+            var paymentData = [];
+            inv_no = $("#invNoLayPayment").val();
+            isValid = true;
+            $('.paymentItemsList tr').each(function () {
+                if (!isValid) {
+                    return;
+                }
+                if ($(this).find('.paymentAmount').val() == "" || $(this).find('.paymentAmount').val() < 0) {
+                    alert("Amount Should be greater than zero.");
+                    isValid = false;
+                    return false;
+                }
+                //alert($(this).find('.paymentDropdown').val());
+                var date = $(this).find('.paymentDate').val();
+                var method = $(this).find('.paymentDropdown').val(); // assuming `paymentMethodsDropdown` is a <select>
+                //alert(method);
+                if (method == "") {
+                    alert("Payment Method Required.");
+                    isValid = false;
+                    return false;
+                }
+                var amount = parseFloat($(this).find('.paymentAmount').val()).toFixed(2);
+                var note = $(this).find('.paymentNote').val();
+                isold = $(this).attr('data-isold');
+                pay_no = $(this).attr('data-payno');
+                if (method == "CHECK" && note == "") {
+                    alert("Check# cannot be empty");
+                    isValid = false;
+                    return false;
+                }
+                var CreditNo = $(this).find('.CreditNo').val();
+                var CreditAmt = $(this).find('.CreditAmt').val();
+                var EnteredAmt = $(this).find('.EnteredAmt').val();
+                var NEW_CreditAmt = $(this).find('.NEW_CreditAmt').val();
+                var NEW_EnteredAmt = $(this).find('.NEW_EnteredAmt').val();
+                var Style = $(this).find('.Style').val();
+                var askedSignature = $(this).find('.askedSignature').val();
+
+                if (isValid == true && !isNaN(amount)) {
+                    paymentData.push({
+                        Date: date,
+                        Method: method,
+                        Amount: amount,
+                        Note: note,
+                        isold: isold,
+                        pay_no: pay_no,
+                        CreditNo: CreditNo,
+                        CreditAmt: CreditAmt,
+                        EnteredAmt: EnteredAmt,
+                        NEW_CreditAmt: NEW_CreditAmt,
+                        NEW_EnteredAmt: NEW_EnteredAmt,
+                        Style: Style,
+                        askedSignature: askedSignature,
+                    });
+                }
+
+            });
+            if (isValid == false) {
+                return false;
+            }
+
+            totalbalance = $(".paymentFormBalance").val();
+            $.ajax({
+                url: '/SalesLayaways/SaveLaywaypayments',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    paymentDataList: paymentData,
+                    totalbalance: totalbalance,
+                    inv_no: inv_no,
+                    paymentDone: paymentDone,
+                    payToAnotherStore: payToAnotherStore,
+                    iSPicked: iSPicked,
+                    isCancel: isCancel
+                }),
+                success: function (response1) {
+                    if (response1 instanceof Object)
+                        response = response1;
+                    else
+                        response = $.parseJSON(response1);
+                    if (response.code == "Success") {
+                        alert(response.message);
+                        printInvoiceReport(response.inv_no);
+                        $("#paymentCommonBsModal").hide();
+                        $("#paymentCommonBsModal").removeClass('show');
+
+                        $('#btnFormResultsSearch').click();
+
+                    } else if (response.code == "Fail") {
+                        alert(response.message);
+                    } else if (response.code == "Confirm") {
+                        if (response.confirmField == "payToAnotherStore") {
+                            if (confirm(response.message)) {
+                                saveLayawayPayments(true, true, false);
+                            }
+                        } else if (response.confirmField == "iSPicked") {
+                            if (confirm(response.message)) {
+                                if (response.balance2 == 0) {
+                                    //if (confirm(response.message)) {
+                                    saveLayawayPayments(true, true, true);
+                                    return;
+                                    //}
+                                } else {
+                                    saveLayawayPayments(true, true, true);
+                                }
+                            } else {
+                                saveLayawayPayments(false,false,false,true);
+                            }
+                        }
+                    }
+                    console.log('Success:', response.code);
+                },
+                error: function (err) {
+                    console.log('Error:', err);
+                }
+            });
+        }
+
+        $(document).on('click', '.cancel_gift_cards', function () {
+            $('#paymentCommonBsModal').show();
+        })
+
+
+        function printInvoiceReport(inv_no) {
+            $.ajax({
+                url: "../ListOfItemsSold/PrintInvoice",
+                type: "post",
+                data: {
+                    inv_no: inv_no,
+                    DisableLayout: true
+                },
+                success: function (res) {
+                    $("#secondCommonBsModal .modal-body").html(res);
+                    $("#secondCommonBsModal").show();
+                    $("#secondCommonBsModal").addClass('show');
+                    $("#secondCommonBsModal").find(".closeModal").removeClass('closePrintInvoicePopup').addClass('closePrintInvoicePopup');
+                    $("#secondCommonBsModal").find("#btnCancel").removeClass('closePrintInvoicePopup').addClass('closePrintInvoicePopup');
+                }
+            })
+        }
+
+        $(document).on('click', '.closePrintInvoicePopup', function () {
+            existAutoFilledData();
+            $("#secondCommonBsModal").hide();
+            $("#secondCommonBsModal").removeClass('show');
+        })
+        //BtnOpenLayawayHistoryForm,BtnOpenLaywaySMSHistoryForm
+
+        $(document).on('click', '#BtnOpenLaywaySMSHistoryForm', function () {
+            if (!$.fn.DataTable.isDataTable('#dataTableForLayawayFollowup')) {
+                $('#dataTableForLayawayFollowup').DataTable({
+                    paging: false,
+                    searching: false,
+                    info: false,
+                    lengthChange: false,
+                    ordering: false
+                });
+            }
+            var isChecked = $('#dataTableForLayawayFollowup tbody .isSelectBtnChecked:checked');
+
+            if (isChecked.length > 0) {
+                var selectedRow = $('#dataTableForLayawayFollowup tbody .isChecked:checked').closest('tr');
+                var accCode = selectedRow.find('.AccCode').data('code') || '';
+                var invoiceCode = selectedRow.find('.InvoiceCode').data('code') || '';
+
+
+                $.ajax({
+                    url: '../SalesLayaways/getLayawaySMSHistory',
+                    type: 'GET',
+                    contentType: 'application/json',
+                    data: {
+                        invoice: invoiceCode,
+                    },
+                    success: function (response) {
+                        console.log(response);
+                        if (response) {
+                            $('#LayawaySMSHistoryModalBody').html(response);
+                            $('#LayawaySMSHistoryModal').fadeIn();
+                        }
+                    },
+                    error: function (err) {
+                        console.log('Error setting session:', err);
+                    }
+                });
+
+            } else {
+                alert("Please select a record.");
+            }
+        })
+
+        $(document).on('click', '#BtnOpenLayawayHistoryForm', function () {
+            var isChecked = $('#dataTableForLayawayFollowup tbody .isSelectBtnChecked:checked');
+
+            if (isChecked.length > 0) {
+
+                var selectedRow = $('#dataTableForLayawayFollowup tbody .isChecked:checked').closest('tr');
+                var accCode = selectedRow.find('.AccCode').data('code') || '';
+                var invoiceCode = selectedRow.find('.InvoiceCode').data('code') || '';
+
+                $.ajax({
+                    url: '../SalesLayaways/getListOfLayawayHistory',
+                    type: 'GET',
+                    contentType: 'application/json',
+                    data: {
+                        invoice: invoiceCode,
+                    },
+                    success: function (response) {
+                        console.log(response);
+                        if (response) {
+                            $('#LayawaySMSHistoryModalBody').html(response);
+                            $('#LayawaySMSHistoryModal').fadeIn();
+                            $('#LayawaySMSHistoryModal .modal-header #ModelHeading').text("LAYAWAY FOLLOW UP HISTORY");
+                        }
+                    },
+                    error: function (err) {
+                        console.log('Error setting session:', err);
+                    }
+                });
+
+            } else {
+                alert("Please select a record.");
+            }
+        })
+
+        $(document).on('click', '#BtnOpenfrmNotesBtn', function () {
+            var isChecked = $('#dataTableForLayawayFollowup tbody .isSelectBtnChecked:checked');
+
+            if (isChecked.length > 0) {
+
+                var selectedRow = $('#dataTableForLayawayFollowup tbody .isChecked:checked').closest('tr');
+                var accCode = selectedRow.find('.AccCode').data('code') || '';
+                var invoiceCode = selectedRow.find('.InvoiceCode').data('code') || '';
+
+                $.ajax({
+                    url: '../SalesLayaways/getListOfLayawayFollowUpNotes',
+                    type: 'GET',
+                    contentType: 'application/json',
+                    data: {
+                        invoice: invoiceCode,
+                    },
+                    success: function (response) {
+                        console.log(response);
+                        if (response) {
+                            $('#LayawaySMSHistoryModalBody').html(response);
+                            $('#LayawaySMSHistoryModal .modal-header #ModelHeading').text("LAYAWAY FOLLOW UP NOTES");
+                            $('#LayawaySMSHistoryModal').fadeIn();
+                            $('#LayawaySMSHistoryModal .modal-footer').hide();
+                        }
+                    },
+                    error: function (err) {
+                        console.log('Error setting session:', err);
+                    }
+                });
+
+            } else {
+                alert("Please select a record.");
+            }
+        })
+
+
+        $('#close,#closed').click(function () {
+            $('#LayawaySMSHistoryModal').fadeOut();
+        });
+
+        $(document).on('click', '.paymentcloseModal', function () {
+            $('#confirmMessage').html(
+                "OK to Discard the Changes and Close This Form?"
+            );
+
+            $('#confirmModal2').fadeIn();
+
+            $('#btnConfirmYes').off('click').on('click', function () {
+                $('#confirmModal2').fadeOut();
+                $("#paymentCommonBsModal").hide();
+            });
+
+            $('#btnConfirmNo').off('click').on('click', function () {
+                $('#confirmModal2').fadeOut();
+                $("#paymentCommonBsModal").show();
+                console.log("User cancelled import.");
+                return;
+            });
+        })
+
+        var rowId;
+        $(document).on('change', '.paymentDropdown', function () {
+            rowId = $(this).attr('data-row-id');
+            var payment_type = $(this).val();
+            //== 'CASH'
+            if (payment_type != 'GIFT CARD' && payment_type != 'STORE CREDIT') {
+                totalAmtNew = 0;
+                $(".paymentItemsList tr").each(function () {
+                    if ($(this).data("isold") == "false") {
+                        totalAmtNew += $(this).find('.paymentAmount').val();
+                    }
+                })
+                paymentsBalance = parseFloat($(".paymentsBalance").html()).toFixed(2);
+                //totalAmt = parseFloat($(".totalAmt").html()).toFixed(2);
+                cashAmt = parseFloat(paymentsBalance - totalAmtNew).toFixed(2);
+                var balanceAmount = parseFloat(paymentsBalance - cashAmt).toFixed(2);
+                $(".rowIndex" + rowId).find(".paymentAmount").val(cashAmt);
+                $(".paymentAmount").blur();
+                $(".paymentsBalance").html(balanceAmount);
+                return false;
+            } else {
+                $(".rowIndex" + rowId).find(".paymentAmount").val(numberWithCommas(0));
+            }
+
+            if (payment_type != 'GIFT CARD' && payment_type != 'STORE CREDIT')
+                return;
+
+            $.ajax({
+                url: '../SalesRepairs/repairPaymentTypeModal',
+                data: { payment_type: payment_type },
+                type: 'GET',
+                success: function (response) {
+                    $('.paymentTypeModalDiv').html(response);
+                    $('#AddGiftCardModal').show();
+                    $('#paymentCommonBsModal').hide();
+                    //$(".ok_gift_cards").addClass('fetchCardDetails');
+                    //$(".fetchCardDetails").removeClass('ok_gift_cards');
+                },
+                error: function () {
+                    alert('Error loading the partial view');
+                }
+            });
+        })
+        $(document).on('click', '.ok_gift_cards', function () {
+            let available_amt = parseFloat($('#available_amt').val());
+            let entered_amt = parseFloat($('#entered_amount').val());
+            let gift_card_numder = $('#gift_card_numder').val();
+
+            if (isNaN(entered_amt) || entered_amt <= 0) {
+                alert('Please enter a valid amount');
+                return;
+            }
+
+            if (entered_amt > available_amt) {
+                alert('Amount should not exceed the available amount');
+                return;
+            }
+            entered_amt1 = entered_amt.toFixed(2);
+            $(".rowIndex" + rowId).find('.CreditNo').val($("#gift_card_numder").val());
+            $(".rowIndex" + rowId).find('.CreditAmt').val($("#credit_amt").val());
+            $(".rowIndex" + rowId).find('.EnteredAmt').val(entered_amt1);
+            $(".rowIndex" + rowId).find('.Style').val('GC');
+            $(".rowIndex" + rowId).find('.paymentAmount').val(entered_amt1);
+            $(".rowIndex" + rowId).find('.paymentNote').val('GC');
+            $('#AddGiftCardModal').hide();
+            $('#paymentCommonBsModal').show();
+            updatePaymentBalance();
+        })
+
+        $('#SendSMS').off('click').on('click', function () {
+            alert("SMS sent successfully.")
+        })
+
+        $(document).on('click', '#BtnClose', function () {
+            $('#confirmMessage').html(
+                "OK to Discard the Changes and Close This Form?"
+            );
+
+            $('#confirmModal2').fadeIn();
+
+            $('#btnConfirmYes').off('click').on('click', function () {
+                $('#confirmModal2').fadeOut();
+                window.location.href = "../Home";
+            });
+
+            $('#btnConfirmNo').off('click').on('click', function () {
+                $('#confirmModal2').fadeOut();
+                console.log("User cancelled import.");
+                return;
+            });
+        })
+
+        //preview
+        $('#ItemsBoughtTOCusbtnDataTablePreview').off('click').on('click', function () {
+
+
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+            const tablesSubHeadings = $(this).attr("table-sub-headings");
+            var table = $('#' + tableid).DataTable();
+
+            let columnWidths = [];
+            $('#' + tableid + ' thead th').each(function () {
+                columnWidths.push($(this).width());
+            });
+            setTimeout(function () {
+                table.column(0).visible(false);
+                table.column(6).visible(false);
+                table.column(7).visible(false);
+                table.column(15).visible(false);
+                table.column(16).visible(false);
+                table.column(1).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                table.column(4).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                table.column(6).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                $('#' + tableid + ' thead th').each(function (i) {
+                    $(this).css('width', columnWidths[i] + 'px');
+                });
+                previewDiv(tableid, tablesCount,tablesSubHeadings, "");
+                setTimeout(function () {
+                    table.column(0).visible(true);
+                    table.column(6).visible(true);
+                    table.column(7).visible(true);
+                    table.column(15).visible(true);
+                    table.column(16).visible(true);
+                    table.column(1).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+                    table.column(4).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+                    table.column(6).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+                    $('#' + tableid + ' thead th').each(function (i) {
+                        $(this).css('width', '');
+                    });
+                }, 300);
+            }, 300)
+        })
+
+        //print
+        $('#ItemsBoughtTOCusBtnDataTablePrint',).off('click').on('click', function () {
+
+
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+            const tablesSubHeadings = $(this).attr("table-sub-headings");
+            var tableEl = $('#' + tableid);
+            var colCount = tableEl.find('thead tr th').length;
+            var reportFormat = (colCount > 8) ? "landscape" : "portrait";
+
+            let columnWidths = [];
+            $('#' + tableid + ' thead th').each(function () {
+                columnWidths.push($(this).width());
+            });
+
+            setTimeout(function () {
+                table.column(0).visible(false);
+                table.column(6).visible(false);
+                table.column(7).visible(false);
+                table.column(15).visible(false);
+                table.column(16).visible(false);
+                table.column(1).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                table.column(4).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                table.column(6).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                $('#' + tableid + ' thead th').each(function (i) {
+                    $(this).css('width', columnWidths[i] + 'px');
+                });
+                printDiv(tableid, tablesCount,tablesSubHeadings, "", reportFormat);
+                setTimeout(function () {
+                    table.column(0).visible(true);
+                    table.column(6).visible(true);
+                    table.column(7).visible(true);
+                    table.column(15).visible(true);
+                    table.column(16).visible(true);
+                    table.column(1).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+                    table.column(4).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+                    table.column(6).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+                    $('#' + tableid + ' thead th').each(function (i) {
+                        $(this).css('width', '');
+                    });
+                }, 300);
+            }, 300)
+        })
+
+
+        //excel
+        $('.ItemsBoughtTOCusbtnDataTableDownloadExcel',).off('click').on('click', function () {
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+            const tablesSubHeadings = $(this).attr("table-sub-headings");
+            var table = $('#' + tableid).DataTable();
+
+            let columnWidths = [];
+            $('#' + tableid + ' thead th').each(function () {
+                columnWidths.push($(this).width());
+            });
+
+            setTimeout(function () {
+                table.column(0).visible(false);
+                table.column(6).visible(false);
+                table.column(7).visible(false);
+                table.column(15).visible(false);
+                table.column(16).visible(false);
+                table.column(1).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                table.column(4).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                table.column(6).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                $('#' + tableid + ' thead th').each(function (i) {
+                    $(this).css('width', columnWidths[i] + 'px');
+                });
+                exportToExcel(tableid, tablesCount);
+                setTimeout(function () {
+                    table.column(0).visible(true);
+                    table.column(6).visible(true);
+                    table.column(7).visible(true);
+                    table.column(15).visible(true);
+                    table.column(16).visible(true);
+                    table.column(1).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+                    table.column(4).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+                    table.column(6).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+                    $('#' + tableid + ' thead th').each(function (i) {
+                        $(this).css('width', '');
+                    });
+                }, 300);
+            }, 300)
+        })
+
+        //pdf
+        $('.ItemsBoughtTOCusbtnDataTableDownloadPDF',).off('click').on('click', function () {
+
+
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+            const tablesSubHeadings = $(this).attr("table-sub-headings");
+            var table = $('#' + tableid).DataTable();
+
+            let columnWidths = [];
+            $('#' + tableid + ' thead th').each(function () {
+                columnWidths.push($(this).width());
+            });
+            setTimeout(function () {
+                table.column(0).visible(false);
+                table.column(6).visible(false);
+                table.column(7).visible(false);
+                table.column(15).visible(false);
+                table.column(16).visible(false);
+                table.column(1).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                table.column(4).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                table.column(6).nodes().to$().find('.CusCodeVal').removeClass('CusCodeVal').addClass('reportTransNo');
+                $('#' + tableid + ' thead th').each(function (i) {
+                    $(this).css('width', columnWidths[i] + 'px');
+                });
+                exportTableToPDF(tableid, tablesCount);
+                setTimeout(function () {
+                    setTimeout(function () {
+                        table.column(0).visible(true);
+                        table.column(6).visible(true);
+                        table.column(7).visible(true);
+                        table.column(15).visible(true);
+                        table.column(16).visible(true);
+                        table.column(1).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+                        table.column(4).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+                        table.column(6).nodes().to$().find('.reportTransNo').removeClass('reportTransNo').addClass('CusCodeVal');
+                        $('#' + tableid + ' thead th').each(function (i) {
+                            $(this).css('width', '');
+                        });
+                }, 300);
+            }, 300)
+        })
+
+
+        })
+
+    });
+
+
+
+
+</script>
+
+
+
+<style>
+    body {
+        color: black !important;
+        font-family: Arial;
+    }
+
+    .form-h1 {
+        color: black !important;
+    }
+
+    .heading {
+        background-color: #13a303;
+        color: #fafafa;
+        font-family: 'sans-serif';
+    }
+
+    .msgBoxHeading {
+        background-color: #0f1cd4;
+        color: #fafafa;
+        font-family: 'sans-serif';
+        text-align: center;
+        height: 30px;
+        padding-top: 5px;
+    }
+
+    #dataTableForLayawayFollowup th,
+    #dataTableForLayawayFollowup td {
+        color: black !important;
+    }
+
+    #divDataTableReportForOccuasion th,
+    #divDataTableReportForOccuasion td {
+        color: black !important;
+    }
+
+    /*divDataTableReportForOccuasion*/
+
+    .CusCodeVal {
+        color: deeppink !important;
+    }
+
+    .reportTransNo {
+        color: black !important;
+    }
+
+    .highlight-row {
+        background-color: #ffffcc !important;
+    }
+
+    .bg-purple {
+        background-color: #7030a0 !important;
+        color: white;
+    }
+
+    .bg-orange {
+        background-color: #ed7d31 !important;
+        color: white;
+    }
+
+    #MassSmsExcelModel .modal-dialog {
+        max-width: 600px !important;
+        width: 100%;
+        margin: 1.75rem auto;
+    }
+
+    .bg-primary-custom {
+        background-color: #0aa8ed;
+        color: white;
+    }
+
+    .bg-orange-custom {
+        background-color: #f4a261;
+        color: white;
+    }
+
+    .bg-purple-custom {
+        background-color: #6f42c1;
+        color: white;
+    }
+
+    .text-center-custom {
+        text-align: center;
+    }
+
+    .custom-file-upload {
+        display: inline-flex;
+        align-items: center;
+        padding: 5px 12px;
+        font-size: 13px;
+        font-weight: bold;
+        color: #1f497d;
+        background-color: #dbeef3;
+        border: 1px solid #c6d9f1;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
+
+        .custom-file-upload:hover {
+            background-color: #cce4f7;
+        }
+
+        .custom-file-upload img {
+            height: 18px;
+            margin-right: 6px;
+        }
+
+    input[type="file"] {
+        display: none;
+    }
+
+    .report-title {
+        text-align: start;
+        position: absolute;
+        top: -14px;
+        left: 39%;
+        transform: translateX(-50%);
+        background: #fff;
+        padding: 0 10px;
+        font-weight: 600;
+        font-size: 10px;
+    }
+
+    .description-col {
+        white-space: normal !important;
+        word-wrap: break-word !important;
+        width: 400px !important;
+    }
+
+    .description-report {
+        white-space: normal !important;
+        word-wrap: break-word !important;
+        width: 100px;
+    }
+
+    .small-date-container label {
+        font-size: 13px;
+        padding-top: 3px;
+        padding-bottom: 0;
+    }
+
+    .small-date-container input[type="date"] {
+        width: 120px !important;
+        height: 24px !important;
+        font-size: 13px !important;
+        padding: 2px 4px !important;
+    }
+
+    .small-date-container .btn-xs {
+        padding: 1px 6px;
+        font-size: 12px;
+        height: 22px;
+    }
+
+    .disabled-btn {
+        background-color: #a6a4a4 !important;
+        cursor: not-allowed;
+    }
+
+    .description-col {
+        white-space: normal !important;
+        word-wrap: break-word !important;
+        min-width: 400px;
+    }
+
+    .modal#AddGiftCardModal {
+        z-index: 1999999 !important
+    }
+
+    .modal#AddGiftCardSearchModal {
+        z-index: 2999999 !important
+    }
+
+    #AddGiftCardModal .modal-dialog {
+        max-width: 500px !important;
+    }
+</style>

@@ -1,0 +1,588 @@
+<!--
+  * Created by Manoj 17-June-2025
+  * 23-June-2025 Manoj Fixed Reports Headings
+  * 27-June-2025 Manoj Fixed Reports Headings
+  * 01-July-2025 Manoj Fixed Spelling and report Issues
+-->
+@using YJWeb.Helpers
+@{
+    ViewBag.Title = "Layaway Payments List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var storeList = ViewBag.storeList;
+    var Logo = ViewBag.StoreLogo;
+    var storeName = ViewBag.StoreName;
+    var storeAddr1 = ViewBag.StoreAddress1;
+    var storeAddr2 = ViewBag.storeAddress2;
+    var storeTelNo = ViewBag.StorePhone;
+}
+
+@model YJWeb.Models.SalesLayAwaysModel
+<h2 class="text-center mt-2">Layaway Payments List</h2>
+<div id="content-center" class="row">
+
+    <div class="web-form page login-page col-sm-12" id="FormForLaywayPaymentsList">
+
+        <div class="form-horizontal">
+            <div class="row">
+                <div id="customerFilterContainer" class="col-md-3">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Customer
+                        </label>
+                        <div class="col-sm-8">
+                            <div class="autocomplete-dropdown">
+                                <div id="CustomerCodesForAutofill" class="d-none">@Html.Raw(Json.Encode(Model.CustomerCodes)) </div>
+                                <input type="text" id="txtCustomerCode" class="form-control activateFormRefreshBtn" placeholder="Search...">
+                                <div id="autocomplete-list1" class="autocomplete-items" style="z-index: 9999 !important"></div>
+                            </div>
+                            <input type="hidden" value="">
+                            <div class="customerCodeSearchDiv">
+                                <button class="formsGlobalUniqueBtn customerCodeSearchBtn1 showbsmodal activateFormRefreshBtn" data-modal-id="selectCustomerAccModal" data-bs-toggle="modal" data-bs-target="#selectCustomerAccModal"><span class="navbar-toggler-icon"></span></button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="row">
+                        <div class="col-sm-3 text-right">
+                            <input type="checkbox" id="cbFillCustomerNo" checked /> <span>All</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            Invoice # :
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" id="invoiceNo" class="form-control activateFormRefreshBtn" placeholder="" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            From Date
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtFromDate1" class="form-control fs-13 resetFromDate activateFormRefreshBtn" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            To Date
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="date" id="txtToDate1" class="form-control fs-13 resetToDate activateFormRefreshBtn" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="row">
+                        <div class="col-sm-12 text-right">
+                            <input type="checkbox" id="cbFillFromToDates" checked /> <span>All Dates</span>
+                            <input type="button" value="Last Month" class="formsGlobalUniqueBtn btnGetLastMonthDates" />
+                            <input type="button" value="Last Week" class="formsGlobalUniqueBtn btnGetLastWeekDates" />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row" style="display:flex; flex-direction:row; justify-content:end;">
+                <div class="col-sm-4 mt-2 text-right">
+                    <input type="button" id="btnFormResultsSearch" value="Refresh" class="refresh_btn btnLaywayReresh refreshBtnDefault ml-2" />
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="mt-4 white-box pos-rel" id="divDataTableReport">
+
+        <div class="row col-md-6 report_buttons">
+            <div style="margin:3px;">
+                <input type="button" value="PDF" table-id="dataTableForListOfLaywayPayments" table-count="1" class="formsGlobalUniqueBtn btnDataTableDownloadPDF" id="btnPDF" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" value="Excel" table-id="dataTableForListOfLaywayPayments" table-count="1" class="formsGlobalUniqueBtn btnDataTableDownloadExcel" />
+            </div>
+            <div style="margin:3px;">
+                <input type="button" id="ListOfLaywayPaymentsbtnDataTablePreview" table-sub-headings="List" class="formsGlobalUniqueBtn mx-2" table-id="dataTableForListOfLaywayPayments" table-count="1" value="Preview" />
+            </div>
+            <div style="margin:3px;">
+
+                <input type="button" value="Print" table-id="dataTableForListOfLaywayPayments" id="ListOfLaywayPaymentsBtnDataTablePrint" class="formsGlobalUniqueBtn" table-count="1" report-format="portrait" />
+            </div>
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Email" table-id="dataTableForListOfLaywayPayments" class="formsGlobalUniqueBtn" />
+            </div>
+
+            <div style="margin:3px;display:none;">
+                <input type="button" value="Simple Excel" class="formsGlobalUniqueBtn" />
+            </div>
+        </div>
+        <div class="row dataTableReport">
+
+            <table id="dataTableForListOfLaywayPayments" class="dataTable display nowrap table" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>INVOICE #</th>
+                        <th>ACC</th>
+                        <th>STYLE</th>
+                        <th>PURCHASE DATE</th>
+                        <th>LAST LAYWAY PAY DT</th>
+                        <th> AMOUNT</th>
+                        <th> COST</th>
+                        <th>DAYS </th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <br>
+
+        </div>
+    </div>
+    <div id="pdfReportHeadingText"></div>
+</div>
+
+
+<script type="text/javascript">
+
+    var txtFromDate1 = "1990-01-01", txtToDate1 = "2099-12-31"; customerNo1 = ""; invoiceNo1 = ""; allDates = true;
+
+    function ClearControls() {
+        txtFromDate1 = "1990-01-01"; txtToDate1 = "2099-12-31";
+
+        $('#customerNo').val('');
+        $('#invoiceNo').val('')
+        $('#txtFromDate1').val('');
+        $('#txtToDate1').val('');
+
+        existAutoFilledData();
+    }
+
+    function existAutoFilledData() {
+
+        if ($('#txtFromDate1').val() != "")
+            fromdate1 = $('#txtFromDate1').val();
+        else
+            fromdate1 = "1990-01-01";
+
+        if ($('#txtToDate1').val() != "")
+            todate1 = $('#txtToDate1').val();
+        else
+            todate1 = "2099-12-31";
+/*
+        if ($('#cbFillCustomerNo').prop('checked'))
+            customerNo1 = "";
+        else */
+        if ($('#txtCustomerCode').val() != "")
+            customerNo1 = $('#txtCustomerCode').val();
+        else
+            customerNo1 = "";
+
+        if ($('#invoiceNo').val() != "")
+            invoiceNo1 = $('#invoiceNo').val();
+        else
+            invoiceNo1 = "";
+
+        if ($('#cbFillFromToDates').prop('checked'))
+            allDates = true;
+        else
+            allDates = false;
+
+
+        BindBagsGivenToPerson(fromdate1, todate1, customerNo1, invoiceNo1, allDates);
+
+    }
+
+    function BindBagsGivenToPerson(fromdate1, todate1, customerNo1, invoiceNo1, allDates) {
+
+        var isAllChecked = $('#cbFillCustomerNo').prop('checked');
+
+        if (isAllChecked === false && customerNo1 == "")
+            return alert("Customer No Required");
+        else
+            var url = '@Url.Action("GetAllListofLayawayPayments", "SalesLayaways", new { Area = "" })';
+
+            var data = {
+                ReportFor:"LAYAWAY",
+                fromdate: fromdate1,
+                todate: todate1,
+                custcode: customerNo1,
+                invno: invoiceNo1,
+                isalldate: allDates
+            };
+
+            var jqxhr = $.post(url, data, function () { })
+                .done(function (response) {
+                var json;
+                if (response instanceof Object)
+                    json = response;
+
+                else
+                    json = $.parseJSON(response);
+
+                var table = $('#dataTableForListOfLaywayPayments').DataTable();
+                    table.clear().draw();
+                    $('#tfooter').show();
+                $("#dataTableForListOfLaywayPayments tbody").empty();
+
+                    if (json.length > 0) {
+                        for (var i = 0; i < json.length; i++) {
+                            table.row.add([
+                                json[i].Inv_No,
+                                json[i].ACC,
+                                json[i].Style,
+                                json[i].Purchase_Dt ? json[i].Purchase_Dt.split("T")[0] : "",
+                                json[i].Last_Dt ? json[i].Last_Dt.split("T")[0] : "",
+                                json[i].AMOUNT,
+                                json[i].COST,
+                                json[i].Days
+                            ]);
+                        }
+                    }
+
+                table.draw();
+            })
+            .fail(function (jqxhr, textStatus, error) {
+                var err = textStatus + "," + error;
+                console.log("GetListAllLaywayPayments Request Failed: " + err);
+            });
+    }
+
+    function getCustomTitleDateHeader(clickFromDate, clickToDate, customerNo) {
+
+        var cusfrmDate = "";
+        var custoDate = "";
+        var Title = "Layaway Payments List";
+        var Currentdate = "Date: " + new Date().toLocaleDateString();
+        let customHeaderText = "";
+        var containerHtml = "";
+
+        if (clickFromDate != "") {
+            var [year, month, date] = clickFromDate.toString().split('-');
+            var cusfrmDate = date + "/" + month + "/" + year;
+        }
+
+        if (toDate != "") {
+            var [toYear, toMonth, toDate] = clickToDate.toString().split('-');
+            custoDate = toDate + "/" + toMonth + "/" + toYear;
+        }
+
+        if (cusfrmDate != "" && custoDate != "") {
+            customHeaderText = "Dates : " + cusfrmDate + "  To Date : " + custoDate;
+        }
+
+        if (customHeaderText != "" && containerHtml == "") {
+            containerHtml = '<div class="row header-container" >' +
+                            '<div class="col-4 d-flex align-items-start mb-3" style="padding-left: 20px;">' +
+                                 '<img alt="Logo" id="customImage" style="max-width: 50%; height: auto; object-fit: contain;" src="data:image/png;base64,'+ '@Logo' +'"/>' +
+                            '</div>' +
+                             '<div>'+
+                                    '<h4 class="item " id="customSubHeader">' + Title + '</h4>' +
+                                    '<h6 class="item mt-2" id="customSubHeader1" >' + '@storeName' + '</h6>' +
+                                    '<h6 class="item" id="customSubHeader2"   >' + '@storeAddr1'  + '</h6>' +
+                                    '<h6 class="item" id="customSubHeader3"   > '+ '@storeAddr2' + '</h6>' +
+                                    '<h6 class="item mb-2" id="customSubHeader4"  > ' + '@storeTelNo' + '</h6>' +
+                                    '<h6 class="item" id="customSubHeader5"   >  customerNo : ' + customerNo + ' | ' + customHeaderText + '</h6>' +
+                             '</div>' +
+                    '</div>';
+        } else {
+            containerHtml = "";
+        }
+
+        if ($("#pdfReportHeadingText").html() == "") {
+            $("#pdfReportHeadingText").html(containerHtml);
+            $("#pdfReportHeadingText").hide();
+        }
+        return containerHtml;
+
+    }
+
+    async function exportTableToCustomPDF(tableid, tablesCount, reportSubTitile = "") {
+
+        if (typeof (tablesCount) != "undefined" && parseInt(tablesCount) > 1) {
+
+            // Create the PDF document
+            var { jsPDF } = window.jspdf;
+            var doc = new jsPDF('l', 'mm', [297, 210]);
+            for (dt = 1; dt <= parseInt(tablesCount); dt++) {
+
+                var dataTableId = tableid + "-" + dt;
+                var currentPageLength = $('#' + dataTableId).DataTable().page.len();
+                // Store the current pagination state
+                var currentPage = $('#' + dataTableId).DataTable().page();
+                var currentPageLength = $('#' + dataTableId).DataTable().page.len();
+
+                // Set the page length to show all entries
+                $('#' + dataTableId).DataTable().page.len(-1).draw();
+
+                // Get the table data
+                var table = document.getElementById(dataTableId);
+                var tableData = [];
+                for (var i = 0, row; row = table.rows[i]; i++) {
+                    var rowData = [];
+                    for (var j = 0, col; col = row.cells[j]; j++) {
+                        if (col.classList.contains("hide-on-print") || col.classList.contains("hideColumns")) {
+                            continue;
+                        }
+                        rowData.push(col.innerText);
+                    }
+                    tableData.push(rowData);
+                }
+
+                doc.autoTable({
+                    head: [tableData[0]],
+                    body: tableData.slice(1),
+                });
+                // Restore the original pagination state
+                $('#' + tableid).DataTable().page.len(currentPageLength).draw();
+                $('#' + tableid).DataTable().page(currentPage).draw(false);
+            }
+
+            // Save the PDF
+            let filname = ($('.form-h1').text() != "undefined" && $('.form-h1').text() != '') ? $('.form-h1').text() : 'data';
+            doc.save(filname + '.pdf');
+
+
+        } else {
+
+            // Store the current pagination state
+            var currentPage = $('#' + tableid).DataTable().page();
+            var currentPageLength = $('#' + tableid).DataTable().page.len();
+
+            // Set the page length to show all entries
+            $('#' + tableid).DataTable().page.len(-1).draw();
+
+            // Get the table data
+            var table = document.getElementById(tableid);
+            var tableData = [];
+            for (var i = 0, row; row = table.rows[i]; i++) {
+                var rowData = [];
+                for (var j = 0, col; col = row.cells[j]; j++) {
+                    if (col.classList.contains("hide-on-print") || col.classList.contains("hideColumns")) {
+                        continue;
+                    }
+                    rowData.push(col.innerText);
+                }
+                tableData.push(rowData);
+            }
+
+
+            // Create the PDF document
+            var { jsPDF } = window.jspdf;
+            var doc = new jsPDF();
+
+            let headingText = ($('.form-h1').text() != "undefined" && $('.form-h1').text() != '') ? $('.form-h1').text() : 'Data Report';
+
+            // Add heading to the PDF
+            let currentY = 15;
+            doc.setFontSize(16); // Set font size for heading
+            doc.text(headingText, 105, currentY, { align: "center" });
+            currentY += 7
+
+
+
+            let format = "PNG";
+            var imageSrc = $('#customImage').attr('src');
+            if (imageSrc.startsWith('data:image/jpeg') || imageSrc.startsWith('data:image/jpg')) {
+                format = 'JPEG';
+            } else if (imageSrc.startsWith('data:image/png')) {
+                format = 'PNG';
+            }
+
+            doc.addImage(imageSrc, format, 10, 20, 50, 30);
+            if (reportSubTitile.length > 0 && reportSubTitile != "") {
+
+                if ($('#customSubHeader1').text().length > 0 && $('#customSubHeader1').text() != "") {
+
+                    let subHeading1 = $('#customSubHeader1').text();
+                    doc.setFontSize(11); // Set font size for heading
+                    doc.text(subHeading1, 105, currentY, { align: "center" });
+                    currentY += 6
+
+                }
+
+                if ($('#customSubHeader2').text().length > 0 && $('#customSubHeader2').text() != "") {
+
+                    let subHeading2 = $('#customSubHeader2').text();
+                    doc.setFontSize(11); // Set font size for heading
+                    doc.text(subHeading2, 105, currentY, { align: "center" });
+                    currentY += 6
+                }
+                if ($('#customSubHeader3').text().length > 0 && $('#customSubHeader2').text() != "") {
+
+                    let subHeading2 = $('#customSubHeader3').text();
+                    doc.setFontSize(11); // Set font size for heading
+                    doc.text(subHeading2, 105, currentY, { align: "center" });
+                    currentY += 6
+                }
+                if ($('#customSubHeader4').text().length > 0 && $('#customSubHeader2').text() != "") {
+
+                    let subHeading2 = $('#customSubHeader4').text();
+                    doc.setFontSize(11); // Set font size for heading
+                    doc.text(subHeading2, 105, currentY, { align: "center" });
+                    currentY += 6
+                }
+                if ($('#customSubHeader5').text().length > 0 && $('#customSubHeader2').text() != "") {
+
+                    let subHeading2 = $('#customSubHeader5').text();
+                    doc.setFontSize(11); // Set font size for heading
+                    doc.text(subHeading2, 105, currentY, { align: "center" });
+                    currentY += 6
+                }
+            }
+
+            // Add the table to the PDF
+            doc.autoTable({
+                startY: currentY, // Position table below heading
+                head: [tableData[0]],
+                body: tableData.slice(1),
+                margin: { top: 5, bottom: 5, left: 5, right: 5 },
+                styles: { fontSize: 6, cellPadding: 0.5 },
+            });
+
+            // Save the PDF
+            let filname = headingText;
+            doc.save(filname + '.pdf');
+
+            // Restore the original pagination state
+            let dataTable = $('#' + tableid).DataTable();
+            $('#' + tableid).DataTable().page.len(currentPageLength).draw();
+            $('#' + tableid).DataTable().page(currentPage).draw(false);
+        }
+    }
+
+    $(document).ready(function () {
+
+        var table = $('#dataTableForListOfLaywayPayments').DataTable({
+            dom: 'Blfrtip',
+            searching: true,
+            select: true,
+            buttons: [],
+            pageLength: 25,
+            "aaSortig":[]
+        })
+
+        if ($('#cbFillCustomerNo').prop('checked')) {
+            $('#txtCustomerCode').prop('disabled', true);
+            $('.customerCodeSearchBtn1').prop('disabled', true);
+
+        }
+
+        $(document).on('change', '#cbFillCustomerNo', function () {
+            if ($('#cbFillCustomerNo').prop('checked')) {
+                $('#txtCustomerCode').prop('disabled', true);
+                $('#txtCustomerCode').val('');
+                $('.customerCodeSearchBtn1').prop('disabled', true);
+            } else {
+                $('#txtCustomerCode').prop('disabled', false);
+                $('.customerCodeSearchBtn1').prop('disabled', false);
+            }
+        })
+
+        //$('#tfooter').hide();
+
+        //btnLaywayReresh,cbFillCustomerNo,CustomerCodesForAutofill
+
+
+        $(document).on('click', ".paginate_button", function () {
+            //addNumericColumnsClasstoDT("dataTableForBagsGivenToPerson", [1]);
+        });
+
+        fillFromToDates();
+
+        //Print Report
+        $(document).on('click', '#ListOfLaywayPaymentsBtnDataTablePrint', function () {
+            reportFormat = "";
+            if ($(this).attr('report-format') !== undefined) {
+                reportFormat = $(this).attr('report-format');
+            }
+
+            customerNo = $('#txtCustomerCode').val() != "" ? $('#txtCustomerCode').val() :"All";
+            clickFromDate = $('#txtFromDate1').val();
+            clickToDate = $('#txtToDate1').val();
+            //Return Custom Date & Header html Content
+            var customHeader = getCustomTitleDateHeader( clickFromDate, clickToDate, customerNo);
+
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+            const tablesSubHeadings = $(this).attr("table-sub-headings");
+
+            printDiv(tableid, tablesCount, tablesSubHeadings, customHeader, reportFormat);
+        });
+
+        //Preview Report
+
+        $('#ListOfLaywayPaymentsbtnDataTablePreview').off('click').on('click', function () {
+            customerNo = $('#txtCustomerCode').val() != "" ? $('#txtCustomerCode').val() : "All";
+            clickFromDate = $('#txtFromDate1').val();
+            clickToDate = $('#txtToDate1').val();
+            //Return Custom Date & Header html Content
+            var customHeader = getCustomTitleDateHeader(clickFromDate, clickToDate, customerNo);
+
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+            const tablesSubHeadings = $(this).attr("table-sub-headings");
+
+            // Append the container to the Preview content
+
+            previewDiv(tableid, tablesCount, tablesSubHeadings, customHeader);
+
+        });
+
+
+
+        //Excel Report
+        $('.btnDataTableDownloadExcel').off('click').on('click', function () {
+
+            clickFromDate = $('#txtFromDate1').val();
+            clickToDate = $('#txtToDate1').val();
+            //charityname = $('#ddlcharitys option:selected').val() != "All" ? "All" : $('#ddlcharitys option:selected').val();
+
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+
+            // Add Sub Heading text
+            var subTitile = "Date_Range_" + clickFromDate + "_To_" + clickToDate;
+
+            exportToExcel(tableid, tablesCount, subTitile);
+        });
+
+        // PDF Report
+
+        $('.btnDataTableDownloadPDF').off('click').on('click', function () {
+
+            customerNo = $('#txtCustomerCode').val() != "" ? $('#txtCustomerCode').val() : "All";
+            clickFromDate = $('#txtFromDate1').val();
+            clickToDate = $('#txtToDate1').val();
+            //Return Custom Date & Header html Content
+            var customHeader = getCustomTitleDateHeader(clickFromDate, clickToDate, customerNo);
+
+            const tableid = $(this).attr("table-id");
+            const tablesCount = $(this).attr("table-count");
+
+            exportTableToCustomPDF(tableid, tablesCount, customHeader);
+
+        });
+
+    });
+
+
+
+
+</script>
+
+

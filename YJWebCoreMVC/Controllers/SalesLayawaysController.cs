@@ -31,6 +31,7 @@
 //   Manoj     10/27/2025 Adde getLaywayFollowUpAddNotes,SaveLayawayfollowupNotes methods
 //   Manoj     12/03/2025 Added  New parameter for SaveLaywaypayments for cancel posted data 
 //   Hemanth   01/30/2026 Added SpecialOrderPayments,GetSpecialOrderPayments,extra parameter in SaveLaywaypayments
+//   Phanindra 02/11/2026 Converted to YJCore.
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;

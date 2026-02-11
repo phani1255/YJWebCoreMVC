@@ -10,6 +10,7 @@
   *  Phanindra 06/17/2025 Fixed validation issue for applied amount.
   *  Phanindra 09/17/2025 Fixed validation issue while saving
   *  Phanindra 09/22/2025 Added Cancel button and fixed validations while saving form
+     Phanindra 02/11/2026 Converted to YJCore.
 -->
 
 @{
@@ -63,7 +64,7 @@
                         <label class="col-sm-4 customerType">
                             Billing Acct. No.
                         </label>
-                        <div class="col-sm-8">
+                        <div class="col-sm-8" style="position:relative;">
                             <div class="autocomplete-dropdown">
                                 <div id="CustomerCodesForAutofill1" class="d-none">@Html.Raw(JsonSerializer.Serialize(Model.CustomerCodes)) </div>
                                 <input type="text" id="txtCustomerCode" class="form-control activateFormRefreshBtn defaultdisabled" maxlength="15" placeholder="Search...">

@@ -2,9 +2,10 @@
   * Created by Phanindra on 12-12-2024
     Phanindra 12/30/2024 Worked on print related and credits and debits related changes.
   * Phanindra 01/07/2025 Worked on Customercode selection issue and data passing issue to save data.
+    Phanindra 02/11/2026 Converted to YJCore.
 -->
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_LayoutNew.cshtml";
 }
 
 @model YJWebCoreMVC.Models.SalesPaymentsCreditsModel
@@ -31,7 +32,7 @@
                         <label class="col-sm-4 customerType">
                             Customer
                         </label>
-                        <div class="col-sm-8">
+                        <div class="col-sm-8" style="position:relative">
                             <div class="autocomplete-dropdown">
                                 <div id="CustomerCodesForAutofill1" class="d-none">@Html.Raw(JsonSerializer.Serialize(Model.CustomerCodes)) </div>
                                 <input type="text" id="txtCustomerCode" class="form-control activateFormRefreshBtn defaultdisabled" maxlength="15" placeholder="Search...">
