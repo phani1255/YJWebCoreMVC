@@ -1,21 +1,12 @@
 <!--
   * Created by Phanindra
+    Phanindra 02/11/2026 Converted to YJCore.
 -->
 @{
-    if (Session["UserID"] == null)
-    {
-        Layout = null;
-        Response.Redirect("~/Login/Index");
-    }
-    else
-    {
-        Layout = null;
-        Layout = "~/Views/Shared/_Layout.cshtml";
-    }
-
+    Layout = "~/Views/Shared/_LayoutNew.cshtml";
 }
 
-@model YJWeb.Models.SalesPaymentsCreditsModel
+@model YJWebCoreMVC.Models.SalesPaymentsCreditsModel
 
 @if (ViewBag.Message != null)
 {

@@ -1,3 +1,6 @@
+/*
+ * Phanindra 02/11/2026 Removed duplicate GetInvoicePayments which is causing ambiguity.
+ */
 using Microsoft.Data.SqlClient;
 using System.Data;
 using YJWebCoreMVC.Models;
@@ -30,25 +33,6 @@ namespace YJWebCoreMVC.Services
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@IS_RETURN", is_return ? 1 : 0);
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@iSVatInclude", iSVatInclude ? 1 : 0);
 
-                dataAdapter.Fill(dataTable);
-                return dataTable;
-            }
-        }
-
-        public DataTable GetInvoicePayments(string inv_no, bool showlayaway = true, bool is_return = false, bool iSFromReturn = false)
-        {
-            DataTable dataTable = new DataTable();
-            using (SqlDataAdapter dataAdapter = new SqlDataAdapter())
-            {
-                dataAdapter.SelectCommand = new SqlCommand();
-                dataAdapter.SelectCommand.Connection = new SqlConnection(_connectionProvider.GetConnectionString());
-                dataAdapter.SelectCommand.CommandType = CommandType.StoredProcedure;
-                dataAdapter.SelectCommand.CommandText = "GetInvoicePayments";
-
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@inv_no", inv_no);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@showlayaway", showlayaway);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@is_return", is_return);
-                dataAdapter.SelectCommand.Parameters.AddWithValue("@iSFromReturn", iSFromReturn);
                 dataAdapter.Fill(dataTable);
                 return dataTable;
             }

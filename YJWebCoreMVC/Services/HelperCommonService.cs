@@ -1,5 +1,6 @@
 ﻿/*
  * Dharani 02/06/2026 Added GetDefaultValues() for core.
+ * Phanindra 02/11/2026 Added GetSpeicalorderinvoicedata from yjweb Helper file.
  */
 
 
@@ -11746,6 +11747,16 @@ namespace YJWebCoreMVC.Services
             catch { }
         }
 
+
+        public DataTable GetSpeicalorderinvoicedata(string filter)
+        {
+            return (GetSqlData(@"SELECT ID,INVOICE.INV_NO,CUSTOMER.ACC,INVOICE.NAME, 
+				   stuff(stuff(customer.TEL, 4, 0, '-'), 8, 0, '-') TEL,INVOICE.DATE, IN_ITEMS.STYLE,IN_ITEMS.[DESC],GR_TOTAL, 
+				   ISNULL(GR_TOTAL,0) - ISNULL(CREDITS,0) as BALANCE,[Message]  
+				   FROM INVOICE INNER JOIN CUSTOMER ON INVOICE.ACC = CUSTOMER.ACC     
+				   LEFT OUTER JOIN (SELECT INV_NO,MAX(STYLE)STYLE, MAX([DESC])[DESC],IsSpecialItem SPECIALITEM  FROM IN_ITEMS GROUP BY INV_NO,IsSpecialItem)IN_ITEMS ON INVOICE.INV_NO=IN_ITEMS.INV_NO 
+				   where " + filter + " AND ISNULL(INVOICE.ACC,'') <>''ORDER BY DATE desc"));
+        }
 
     }
 
