@@ -811,7 +811,7 @@ namespace YJWebCoreMVC.Controllers
         //        AnalyticsModel objModel = new AnalyticsModel();
         //        DataTable dtData = objModel.GetComponentSalesAnalysis(date1, date2, _helperCommonService.is_DiamondDealer);
         //        _helperCommonService.PrintDataTable = dtData;
-        //        return Json(new { code = true, message = JsonConvert.SerializeObject(dtData) });
+        //        return JsonConvert.SerializeObject(new { code = true, message = JsonConvert.SerializeObject(dtData) });
         //    }
 
         //    public IActionResult GenerateComponentSalesAnalysisReport(string type, string fromDate, string toDate, string daterange)

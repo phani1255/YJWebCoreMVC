@@ -10,7 +10,7 @@
     Phanindra 12/02/2025 Worked on modal related issues
 -->
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_LayoutNew.cshtml";
 }
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -301,8 +301,8 @@
         $.ajax({
             url: '../SalesShopControl/SaveGiveOutJobBags',
             type: 'POST',
-            contentType: 'application/json',  // send as JSON
-            data: JSON.stringify(payload),
+            //contentType: 'application/json',  // send as JSON
+            data: payload,
             success: function (response) {
                 if (response.success) {
                     alert(response.message);
@@ -368,13 +368,17 @@
         }
     }
 
-    // helper to convert .NET JSON date to dd-mm-yyyy
-    function formatDate(dotNetDate) {
-        if (!dotNetDate) return "";
-        const timestamp = parseInt(dotNetDate.replace(/[^0-9]/g, ""));
-        const date = new Date(timestamp);
-        return date.toLocaleDateString("en-US"); // mm/dd/yyyy
-    }
+        function formatDate(dateValue) {
+            if (!dateValue) return "";
+
+            const date = new Date(dateValue);
+
+            if (isNaN(date.getTime()))
+                return "";
+
+            return date.toLocaleDateString("en-US");
+        }
+
 
     function populateHistoryTable(history) {
         const tbody = $(".tblHistory tbody");
@@ -811,7 +815,7 @@
                      if ($('#txtJobBagNo').val()) {
                          var jobBagNo = $('#txtJobBagNo').val();
                      }
-                     var User = '@Session["UserId"]';
+                     var User = '@Context.Session.GetString("UserId")';
 
                      table.row.add([
                          jobBagNo ?? "",

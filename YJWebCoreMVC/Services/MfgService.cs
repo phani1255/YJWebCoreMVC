@@ -315,5 +315,6 @@ namespace YJWebCoreMVC.Services
         {
             return _helperCommonService.GetSqlData("select m.transact,m.inv_no,oi.style,m.note,s.vnd_style,m.rcv_date,m.rcv_time,m.qty,s.gold_wt,0 as labor_cost from mfg m left join or_items oi on oi.barcode = m.inv_no left join styles s on oi.style = s.style where m.log_no = @bagnumber", "@bagnumber", jobbagno);
         }
+
     }
 }

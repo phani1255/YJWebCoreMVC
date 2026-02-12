@@ -913,29 +913,7 @@ namespace YJWebCoreMVC.Controllers
                 return dataTable;
             }
         }
-        List<string> userList { get; set; } = new List<string>();
-        public DataTable loadall(string acc = "")
-        {
-            accname = acc;
-
-            if (blnIsPotentialCust)
-            {
-                dtNotes = ShowPotentialCustomerNotes(acc);
-            }
-            else
-            {
-                dtNotes = ShowCustomerNotes(acc);
-            }
-
-            dtUsers = _helperCommonService.GetSqlData("SELECT DISTINCT NAME FROM PASSFILE");
-            if (_helperCommonService.DataTableOK(dtUsers))
-            {
-                foreach (DataRow drUsers in dtUsers.Rows)
-                    userList.Add(drUsers["Name"].ToString());
-            }
-
-            return dtNotes;
-        }
+        
         [HttpPost]
         public JsonResult DeleteNotes(int ID)
         {
@@ -967,10 +945,10 @@ namespace YJWebCoreMVC.Controllers
         [HttpGet]
         public PartialViewResult openPotentialCustNotes(string acc)
         {
-            List<string> followUpTypes = getFollowUpTypes();
+            List<string> followUpTypes = _salesLayAwaysService.getFollowUpTypes();
             ViewBag.ACC = acc;
             ViewBag.Type = followUpTypes;
-            var data = loadall(acc);
+            var data = _salesLayAwaysService.loadall(acc, blnIsPotentialCust);
             ViewBag.Notes = data;
             return PartialView("../Shared/_CustomerNotes", data);
         }
@@ -1146,7 +1124,7 @@ namespace YJWebCoreMVC.Controllers
 
         public PartialViewResult PreviewCustNotes(string acc)
         {
-            DataTable dtCustFollowup = loadall(acc);
+            DataTable dtCustFollowup = _salesLayAwaysService.loadall(acc, blnIsPotentialCust);
 
             dtCustFollowup.Columns.Add("Customercode", typeof(string));
             dtCustFollowup.Columns.Add("Name", typeof(string));

@@ -16,4 +16,18 @@ namespace YJWebCoreMVC.Models
         public DataRow DrMasterDetail { get; set; }
         public IEnumerable<SelectListItem> CustomerCodes { get; set; }
     }
+
+    public class NoteModel
+    {
+        public int? ID { get; set; }
+        public string ACC { get; set; }
+        public string WHO { get; set; }
+        public DateTime DTIME { get; set; }
+        public string NOTE { get; set; }
+        public string TYPE { get; set; }
+        public DateTime? followup { get; set; }
+        public bool completed { get; set; }
+        public string time { get; set; }
+        public bool reminder { get; set; }
+    }
 }

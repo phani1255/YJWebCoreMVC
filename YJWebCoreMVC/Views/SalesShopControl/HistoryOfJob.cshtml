@@ -6,10 +6,11 @@
 -->
 @{
     ViewBag.Title = "History Of A Repair Job";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_LayoutNew.cshtml";
 
 }
-@model YJWeb.Models.MfgModel
+@model YJWebCoreMVC.Models.MfgModel
+@using Microsoft.AspNetCore.Http
 
 <h2 class="text-center mt-2">History Of A Repair Job</h2>
 <div id="content-center" class="row">
@@ -351,7 +352,7 @@
                      if ($('#jobBagNo').val()) {
                          var jobBagNo = $('#jobBagNo').val();
                      }
-                     var User = '@Session["UserId"]';
+                         var User = '@Context.Session.GetString("UserId")';
 
                      table.row.add([
                          jobBagNo ?? "",

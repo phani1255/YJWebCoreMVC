@@ -1,0 +1,125 @@
+@*
+    * Created by Phanindra 04-Nov-2025
+    * Phanindra 11/10/2025 Worked on issues
+    * Phanindra 11/19/2025 Added the class to hide the content.
+    * Phanindra 12/02/2025 Modified page design
+*@
+
+@{
+    Layout = null;
+}
+
+@{
+    var dtt = ViewBag.dtt as System.Data.DataTable;
+}
+
+
+<div id="content-center" class="row" style="">
+
+    <div class="web-form page login-page col-sm-12">
+
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    <div class="row report_buttons" style="left:220px;">
+                        <div style="margin:3px;">
+                            <input type="button" value="PDF" class="formsGlobalUniqueBtn" id="btnPDF" />
+                        </div>
+                        <div style="margin:3px;">
+                            <input type="button" value="Excel" class="formsGlobalUniqueBtn" id="btnExcel" onclick="" />
+                        </div>
+                        <div style="margin:3px;">
+                            <input type="button" value="Preview" class="formsGlobalUniqueBtn" id="btnPreview" onclick="" />
+                        </div>
+                        <div style="margin:3px;">
+                            <input type="button" value="Print" class="formsGlobalUniqueBtn" id="btnPrint" onclick="" />
+                        </div>
+                        <div style="margin:3px;display:none;">
+                            <input type="button" value="Email" table-id="dataTableListOfReturnedItems" class="formsGlobalUniqueBtn" />
+                        </div>
+
+                        <div style="margin:3px;display:none;">
+                            <input type="button" value="Simple Excel" class="formsGlobalUniqueBtn" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="printJobBagContent d-none">
+    <div class="row">
+        <div class="col-sm-4">
+            <strong>Given on No:</strong> @ViewBag.givenOnNo
+        </div>
+        <div class="col-sm-4">
+            <strong>Job Given To:</strong> @ViewBag.setername
+        </div>
+        <div class="col-sm-4">
+            <strong>Log No:</strong> @ViewBag.jbnumber
+        </div>
+    </div>
+    <div class="mt-4">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Trans. No</th>
+                    <th>Envelop No</th>
+                    <th>Style</th>
+                    <th>Note</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Qty</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (dtt != null && dtt.Rows.Count > 0)
+                {
+                    foreach (System.Data.DataRow row in dtt.Rows)
+                    {
+                        var dateValue = row["date"] == DBNull.Value || row["date"] == null
+                            ? ""
+                            : Convert.ToDateTime(row["date"]).ToString("yyyy-MM-dd");
+
+                        <tr>
+                            <td>@row["transact"]</td>
+                            <td>@row["jobno"]</td>
+                            <td>@row["style"]</td>
+                            <td>@row["note"]</td>
+                            <td>@dateValue</td>
+                            <td>@row["time"]</td>
+                            <td>@row["qty"]</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="7" class="text-center text-muted">No records found</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $(document).on('click', '#btnPreview', function () {
+            previewNormalHtmlTable('printJobBagContent');
+        })
+        $(document).on('click', '#btnPrint', function () {
+            printNormalHtmlTable('printJobBagContent');
+        })
+        $(document).on('click', '#btnPDF', function () {
+            pdfNormalHtmlDiv('printJobBagContent');
+        })
+        $(document).on('click', '#btnExcel', function () {
+            excelFromNormalDivTable('printJobBagContent');
+        })
+    })
+</script>
