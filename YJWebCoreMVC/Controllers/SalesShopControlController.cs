@@ -250,49 +250,54 @@ namespace YJWebCoreMVC.Controllers
             DataTable jobbagissplitted = _mfgService.checkJobBagIsSplitOrNot(jobbagno);
             DataTable chkJobBagSender = _mfgService.checkJobBagSendRecToShop(jobbagno);
 
-
-            if (_helperCommonService.DataTableOK(jobbaginfo) || _helperCommonService.DataTableOK(jobbagissplitted) || _helperCommonService.DataTableOK(chkJobBagSender))
+            if (_helperCommonService.DataTableOK(jobbaginfo) ||
+                _helperCommonService.DataTableOK(jobbagissplitted) ||
+                _helperCommonService.DataTableOK(chkJobBagSender))
             {
-                DataTable result = _mfgService.GETHISTORYOFJOBBAG(jobbagno, _helperCommonService.LoggedUser);
+                DataTable result =
+                    _mfgService.GETHISTORYOFJOBBAG(jobbagno,
+                        _helperCommonService.LoggedUser);
 
                 var data = new Dictionary<string, object>();
 
                 if (jobbaginfo.Rows.Count > 0)
-                {
-                    data.Add("jobbaginfo", jobbaginfo);
-                }
+                    data.Add("jobbaginfo", ToList(jobbaginfo));
 
-                data.Add("result", result);
+                data.Add("result", ToList(result));
 
-                if (_helperCommonService.CompanyName != null || _helperCommonService.CompanyName != "")
-                {
+                if (!string.IsNullOrEmpty(_helperCommonService.CompanyName))
                     data.Add("CompanyName", _helperCommonService.CompanyName);
-                }
-                if (_helperCommonService.CompanyAddr1 != null || _helperCommonService.CompanyAddr1 != "")
-                {
+
+                if (!string.IsNullOrEmpty(_helperCommonService.CompanyAddr1))
                     data.Add("storeAddress", _helperCommonService.CompanyAddr1);
-                }
-                if (_helperCommonService.CompanyAddr2 != null || _helperCommonService.CompanyAddr2 != "")
-                {
+
+                if (!string.IsNullOrEmpty(_helperCommonService.CompanyAddr2))
                     data.Add("storeAddress2", _helperCommonService.CompanyAddr2);
-                }
-                if (_helperCommonService.CompanyTel != null || _helperCommonService.CompanyTel != "")
-                {
+
+                if (!string.IsNullOrEmpty(_helperCommonService.CompanyTel))
                     data.Add("storePhone", _helperCommonService.CompanyTel);
-                }
-                if (_helperCommonService.GetStoreImage() != null)
-                {
-                    data.Add("storeImage", Convert.ToBase64String(_helperCommonService.GetStoreImage()));
-                }
+
+                var img = _helperCommonService.GetStoreImage();
+                if (img != null)
+                    data.Add("storeImage", Convert.ToBase64String(img));
 
                 return Json(data);
             }
-            else
-            {
-                DataTable result = _mfgService.GETHISTORYOFJOBBAG("", "");
-                return Json(result);
-            }
+
+            DataTable emptyResult =
+                _mfgService.GETHISTORYOFJOBBAG("", "");
+
+            return Json(ToList(emptyResult));
         }
+
+        private List<Dictionary<string, object>> ToList(DataTable table)
+        {
+            return table.AsEnumerable()
+                .Select(row => table.Columns.Cast<DataColumn>()
+                .ToDictionary(col => col.ColumnName, col => row[col]))
+                .ToList();
+        }
+
 
         public IActionResult GetListJobbagNotes(string Jobbag)
         {
