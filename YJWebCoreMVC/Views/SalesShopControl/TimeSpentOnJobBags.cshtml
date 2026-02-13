@@ -212,7 +212,7 @@
                         table.row.add([
                             json.Table[i].Inovice,
                             json.Table[i].Setter,
-                            json.Table[i].Date ? json.Table[i].Date.split("T")[0] : "",
+                            safeDate(json.Table[i].Date),
                             json.Table[i].ACTUAL_DURATION,
                         ]);
                     }

@@ -194,6 +194,9 @@
             return;
         }
 
+            const theadHtml = $table.find('thead').prop('outerHTML') || "";
+            const tbodyHtml = $table.find('tbody').prop('outerHTML') || "";
+
         // Build HTML content for preview
         let previewContent = `
             <html>
@@ -271,16 +274,15 @@
                     <div class="preview-container">
                         ${customHeader ? customHeader : '<h4>LIST OF SETTERS</h4>'}
                         <table>
-                            ${$table.find('thead').html() ?? ''}
-                            ${$table.find('tbody').html() ?? ''}
+                            ${theadHtml}
+                            ${tbodyHtml}
                         </table>
                         <div style="text-align:center;">
                             <button class="btn-close" onclick="window.close()">❌ Close</button>
                         </div>
                     </div>
                 </body>
-            </html>
-        `;
+            </html> `;
 
         const previewWindow = window.open('', '_blank', 'width=1000,height=700,scrollbars=yes');
         previewWindow.document.open();

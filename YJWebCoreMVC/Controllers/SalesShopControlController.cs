@@ -65,6 +65,7 @@ using YJWebCoreMVC.Filters;
 using YJWebCoreMVC.Models;
 using YJWebCoreMVC.ReportEngine;
 using YJWebCoreMVC.Services;
+using YJWebCoreMVC.Helpers;
 
 namespace YJWebCoreMVC.Controllers
 {
@@ -108,11 +109,19 @@ namespace YJWebCoreMVC.Controllers
             return View(mfgModel);
         }
 
-        public IActionResult GetListofJobsGiventoaPerson(string settername, string fromdate, string todate, string datecondition)
+        public IActionResult GetListofJobsGiventoaPerson(
+        string settername,
+        string fromdate,
+        string todate,
+        string datecondition)
         {
-            DataTable data = _mfgService.listofjobsgiventoaperson(settername, fromdate, todate, datecondition);
-            return Json(data);
+            DataTable data =
+                _mfgService.listofjobsgiventoaperson(
+                    settername, fromdate, todate, datecondition);
+
+            return Json(data.ToJsonData());
         }
+
 
         public IActionResult ListOfCompletedJobs()
         {
@@ -122,7 +131,7 @@ namespace YJWebCoreMVC.Controllers
         public IActionResult GetListofCompletedJobs(string fromdate, string todate)
         {
             DataTable data = _mfgService.listofjobscompleted(fromdate, todate);
-            return Json(data);
+            return Json(data.ToJsonData());
         }
 
         public IActionResult listofopenjobstoeachperson()
@@ -146,8 +155,8 @@ namespace YJWebCoreMVC.Controllers
         {
 
             DataTable data = _mfgService.GetListofOpenJobs(fromdate, todate, summaryBy, filter, frmDueDate, toDueDate, "", 0, 0, "", false, IsPastDue, IsPersonDueDate);
-            return Json(data);
 
+            return Json(data.ToJsonData());
         }
 
         public IActionResult GetFilteredSummarizedListofOpenJobs(string fromdate, string todate, string summaryBy, string filter, string frmDueDate, string toDueDate, bool IsPastDue, bool IsPersonDueDate)
@@ -190,7 +199,7 @@ namespace YJWebCoreMVC.Controllers
         {
             DataTable data = _mfgService.GetListofPromisedvsCompletedDates(fdate, tdate, AllDates);
 
-            return Json(data);
+            return Json(data.ToJsonData());
         }
 
         public IActionResult ListOfRepairJobsNotSentToAnyPerson()
@@ -368,7 +377,7 @@ namespace YJWebCoreMVC.Controllers
         public IActionResult GetListTimeSpentjobbag(string jobbagno1, string FromDate, string ToDate, string strPerson)
         {
             DataSet data = _helperCommonService.GetTimeSpentjobbag(jobbagno1, Convert.ToDateTime(FromDate), Convert.ToDateTime(ToDate), strPerson);
-            return Json(data);
+            return Json(data.ToJsonData());
         }
 
         public IActionResult ComparisionOfTime()
@@ -1404,8 +1413,18 @@ namespace YJWebCoreMVC.Controllers
         public IActionResult Getalldepts()
         {
             DataTable data = _mfgService.getalldepts();
-            return Json(data);
+
+            var result = data.AsEnumerable()
+                .Select(row => data.Columns.Cast<DataColumn>()
+                .ToDictionary(
+                    col => col.ColumnName,
+                    col => row[col]
+                ))
+                .ToList();
+
+            return Json(result);
         }
+
         [HttpPost]
         public IActionResult CheckValidDepat(string dept)
         {

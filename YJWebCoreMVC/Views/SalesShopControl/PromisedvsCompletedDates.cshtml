@@ -178,9 +178,9 @@
                 table.row.add([
                     json[i].repair_no,
                     json[i].acc,
-                    json[i].date ? json[i].date.split('T')[0]:'',                  
-                    json[i].promised ? json[i].promised.split('T')[0]:'',
-                    json[i].completed ? json[i].completed.split('T')[0]:''
+                    safeDate(json[i].date),                  
+                    safeDate(json[i].promised),
+                    safeDate(json[i].completed)
                 ]);
             }
 

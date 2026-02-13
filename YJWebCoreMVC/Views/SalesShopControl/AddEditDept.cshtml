@@ -140,7 +140,13 @@
             let rowNum = 0;
 
             $('#dataTableForAddEditDepartments tbody tr').each(function () {
-                rowNum++;
+                if ($(this).find('.dataTables_empty').length > 0) return;
+
+                // Skip rows without inputs
+                if ($(this).find('.dept-input').length === 0) return;
+
+                rowNum
+
                 const dept = $(this).find('.dept-input').val().trim();
                 const hours = $(this).find('.hours-input').val().trim();
 
@@ -185,8 +191,8 @@
             $.ajax({
                 url: '@Url.Action("SaveDepartments", "SalesShopControl")',
                 type: "POST",
-                contentType: "application/json; charset=utf-8",
-                data: JSON.stringify({ departments }),
+                //contentType: "application/json; charset=utf-8",
+                data: { departments },
                 success: function (res) {
                     if (res.success) {
                         alert(res.message);

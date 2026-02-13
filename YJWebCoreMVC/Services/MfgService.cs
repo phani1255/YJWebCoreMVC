@@ -39,8 +39,8 @@ namespace YJWebCoreMVC.Services
         }
         public DataTable listofjobsgiventoaperson(string settername, string fromdate, string todate, string datecondition)
         {
-            return _helperCommonService.GetStoreProc("listofjobsgiventoaperson", "@settername", settername,
-                "@fromdate", fromdate, "@todate", todate, "@DATECONDITION", datecondition);
+            return _helperCommonService.GetStoreProc("listofjobsgiventoaperson", "@settername", settername ??= "",
+                "@fromdate", fromdate, "@todate", todate, "@DATECONDITION", datecondition ??= "");
         }
 
         public DataTable listofjobscompleted(string fromdate, string todate)
@@ -50,7 +50,7 @@ namespace YJWebCoreMVC.Services
 
         public DataTable GetListofOpenJobs(string fromdate, string todate, string summaryBy, string filter, string frmDueDate, string toDueDate, string IsFor = "", int Pagesize = 0, int PageNum = 0, string acc = "", bool IsAll = false, bool IsPastDue = false, bool IsPersonDueDate = false)
         {
-            return _helperCommonService.GetStoreProc("GetListOfOpenJobs", "@FROMDATE", fromdate, "@TODATE", todate, "@FROMDUEDATE", frmDueDate, "@TODUEDATE", toDueDate, "@SUMMARYBY", summaryBy, "@FILTER", filter, "@ISFOR", IsFor, "@PageSize", Pagesize.ToString(), "@PageNumber", PageNum.ToString(), "@ACC", acc, "@IsAll", IsAll.ToString(), "@IsPastDue", IsPastDue.ToString(), "@IsPersonDueDate", IsPersonDueDate.ToString());
+            return _helperCommonService.GetStoreProc("GetListOfOpenJobs", "@FROMDATE", fromdate, "@TODATE", todate, "@FROMDUEDATE", frmDueDate, "@TODUEDATE", toDueDate, "@SUMMARYBY", summaryBy ??= "", "@FILTER", filter ??= "", "@ISFOR", IsFor, "@PageSize", Pagesize.ToString(), "@PageNumber", PageNum.ToString(), "@ACC", acc, "@IsAll", IsAll.ToString(), "@IsPastDue", IsPastDue.ToString(), "@IsPersonDueDate", IsPersonDueDate.ToString());
         }
 
         public DataTable SummarizedListofOpenJobs(string fromdate, string todate, string summaryBy, string filter, string frmDueDate, string toDueDate, bool IsPastDue = false, bool IsPersonDueDate = false)

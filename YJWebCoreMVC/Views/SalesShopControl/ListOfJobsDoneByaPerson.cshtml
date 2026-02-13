@@ -187,9 +187,9 @@
                 //totalPrice += parseFloat(json[i].PRICE);
                 table.row.add([
                     json[i].JOB_NO,
-                    json[i].DATE ? json[i].DATE.split('T')[0] : '',
+                    safeDate(json[i].DATE),
                     json[i].TIME,
-                    json[i].RCV_DATE ? json[i].RCV_DATE.split('T')[0] : '',
+                    safeDate(json[i].RCV_DATE),
                     json[i].RCVD,
                     json[i].QTY,
                     json[i].PERSON,

@@ -1486,6 +1486,25 @@ $(document).on('click', ".closePOModal", function () {
     $("#selectPOModal").hide();
 });
 
+function safeDate(value) {
+    if (!value) return "";
+
+    if (value instanceof Date)
+        return value.toISOString().split('T')[0];
+
+    if (typeof value === "string" && value.includes("T"))
+        return value.split("T")[0];
+
+    if (typeof value === "string")
+        return value;
+
+    const d = new Date(value);
+    if (!isNaN(d.getTime()))
+        return d.toISOString().split("T")[0];
+
+    return "";
+}
+
 
 document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.first_ul').forEach(firstUl => {
